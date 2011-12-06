@@ -38,9 +38,9 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 
 ## Documentation
 
-[Examples][]
-[FAQ][]
-[API][]
+[Examples][]  
+[FAQ][]  
+[API][]  
 
 
 ## Basic Usage
