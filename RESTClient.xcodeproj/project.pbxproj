@@ -161,7 +161,6 @@
 		A4A8CC57147ECF0A00BE6C0E /* RCUploadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUploadRequest.m; sourceTree = "<group>"; };
 		A4A8CC5B147ED16D00BE6C0E /* t_hero.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = t_hero.png; sourceTree = "<group>"; };
 		A4A8CC5D147ED3FF00BE6C0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		A4A8CC61147EDD1D00BE6C0E /* USAGE.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = USAGE.markdown; sourceTree = "<group>"; };
 		A4A8CC63147EDE8100BE6C0E /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
 		A4B2EFFA14217FDF000E8860 /* RCGetSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCGetSpec.h; sourceTree = "<group>"; };
 		A4B2EFFB14217FDF000E8860 /* RCGetSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCGetSpec.m; sourceTree = "<group>"; };
@@ -181,7 +180,6 @@
 		A4CD025714804612006EE89E /* RCResourceNestingSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCResourceNestingSpec.m; sourceTree = "<group>"; };
 		A4CD1950141A78C800FADC09 /* RCAuthSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAuthSpec.h; sourceTree = "<group>"; };
 		A4CD1951141A78C800FADC09 /* RCAuthSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCAuthSpec.m; sourceTree = "<group>"; };
-		A4D26EC9148E70580005DFE3 /* FAQ.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = FAQ.markdown; sourceTree = "<group>"; };
 		A4D40019141BBA8500E58873 /* run.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run.sh; sourceTree = "<group>"; };
 		A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		A4EEBA1914242D6100376DAC /* RCPostSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPostSpec.h; sourceTree = "<group>"; };
@@ -238,8 +236,6 @@
 			children = (
 				A40F3702144DCB9000FA723B /* LICENSE */,
 				A40F36FB144D198000FA723B /* README.markdown */,
-				A4A8CC61147EDD1D00BE6C0E /* USAGE.markdown */,
-				A4D26EC9148E70580005DFE3 /* FAQ.markdown */,
 				A414FD4713DB459200F96152 /* Source */,
 				A46269B614199082005544D6 /* Tests */,
 				A409B39B1408F355003495BA /* Ext */,
