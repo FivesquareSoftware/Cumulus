@@ -1,0 +1,10 @@
+//
+//  Specs.xcconfig
+//  RESTClient
+//
+//  Created by John Clayton on 11/27/11.
+//  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
+//
+
+RESTClientTestServerHost = localhost
+RESTClientTestServerPort = 4567
