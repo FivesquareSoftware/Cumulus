@@ -1,5 +1,5 @@
-[Examples]: wiki/Examples (Examples)
-[FAQ]: wiki/FAQ (FAQs)
+[Examples]: https://github.com/johnclayton/RESTClient/wiki/Examples (Examples)
+[FAQ]: https://github.com/johnclayton/RESTClient/wiki/FAQ (FAQs)
 [API]: http://johnclayton.github.com/RESTClient/api/html/index.html (Api Docs)
 
 ## About
