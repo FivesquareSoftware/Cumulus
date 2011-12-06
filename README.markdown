@@ -1,3 +1,7 @@
+[Examples:] http://johnclay.github.com/RESTClient/examples.html (Examples)
+[FAQ:] http://johnclay.github.com/RESTClient/faq.html (FAQs)
+[API:] http://johnclay.github.com/RESTClient/api/html/index.html (Api Docs)
+
 ## About
 
 RESTClient for Objective C is inspired by Ruby's [rest-client](https://github.com/archiloque/rest-client), and shares the goal of providing a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a resource. 
@@ -29,14 +33,14 @@ The simplest way to use RESTClient in your Xcode project is to just copy the fil
 
 The best way to include RESTClient is to drag the project into your workspace,  add libRESTClient.a to your main target's link phase and the Source dir ($(SRCROOT)/../RESTClient/Source/**) to your header search paths.
 
-That's it. There is detailed help in the [FAQs Page](FAQ.markdown) if you need more information about how to set up your workspace.
+That's it. There is detailed help in the [FAQ][] if you need more information about how to set up your workspace.
 
 
 ## Documentation
 
-[More Examples](http://johnclay.github.com/RESTClient/examples.html)  
-[FAQs](http://johnclay.github.com/RESTClient/faq.html)  
-[API Docs](http://johnclay.github.com/RESTClient/api/html/index.html)  
+[Examples][]
+[FAQ][]
+[API][]
 
 
 ## Basic Usage
@@ -119,5 +123,5 @@ RCResource *images = [site resource:@"images"];
 ```
 
 
-RESTClient does even more, like direct from disk uploads and post-processing on a background thread (great for core data mapping), See more detailed examples in the [Usage Page](USAGE.markdown).
+RESTClient does even more, like direct from disk uploads and post-processing on a background thread (great for core data mapping), See more detailed examples in  the [Examples][].
 
