@@ -1,6 +1,6 @@
 Running the specs for RESTClient is easy.
 
-1. Setup the server: 
+1. Setup the server:  
 	% cd Tests/Server  
 	% ./setup.sh  
 2. Build/Run RESTClientSpecs target
