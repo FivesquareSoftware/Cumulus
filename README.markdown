@@ -1,6 +1,6 @@
-[Examples]: http://johnclay.github.com/RESTClient/examples.html (Examples)
-[FAQ]: http://johnclay.github.com/RESTClient/faq.html (FAQs)
-[API]: http://johnclay.github.com/RESTClient/api/html/index.html (Api Docs)
+[Examples]: http://johnclayton.github.com/RESTClient/examples.html (Examples)
+[FAQ]: http://johnclayton.github.com/RESTClient/faq.html (FAQs)
+[API]: http://johnclayton.github.com/RESTClient/api/html/index.html (Api Docs)
 
 ## About
 
