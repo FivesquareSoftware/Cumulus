@@ -58,6 +58,8 @@ site.headers = [NSDictionary dictionaryWithObjectsAndKeys:
 				@"foo",@"X-MyCustomHeader"
 				, nil];
 site.contentType = RESTClientContentTypeJSON;
+site.username = @"foo";
+site.password = @"bar";
 ```
 Usually, you would store this somewhere you could access from anywhere in your app, like your app delegate or a singleton.
 	
