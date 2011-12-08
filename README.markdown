@@ -1,6 +1,7 @@
 [Examples]: https://github.com/johnclayton/RESTClient/wiki/Examples (Examples)
 [FAQ]: https://github.com/johnclayton/RESTClient/wiki/FAQ (FAQs)
 [API]: http://johnclayton.github.com/RESTClient/api/html/index.html (Api Docs)
+[TESTS]: https://github.com/johnclayton/RESTClient/tree/master/Tests#readme (Running the Tests)
 
 ## About
 
@@ -41,6 +42,7 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 [Examples][]  
 [FAQ][]  
 [API][]  
+[TESTS][]  
 
 
 ## Basic Usage
@@ -55,7 +57,7 @@ site.timeout = 20;
 site.headers = [NSDictionary dictionaryWithObjectsAndKeys:
 				@"foo",@"X-MyCustomHeader"
 				, nil];
-site.contentType = kRESTClientContentTypeJSON;
+site.contentType = RESTClientContentTypeJSON;
 ```
 Usually, you would store this somewhere you could access from anywhere in your app, like your app delegate or a singleton.
 	
