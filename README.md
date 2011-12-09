@@ -25,7 +25,7 @@ RESTClient handles the most common cases for you, but provides well defined inte
 
 #### Seeking An OS For Long Walks On The Beach
 
-RESTClient was implemented with automatic reference counting (ARC) and uses weak references, so it requires iOS 5 and/or Mac OS 10.7.
+RESTClient was implemented with automatic reference counting (ARC) and uses weak references, as well as new NSURLConnection APIs, so it requires iOS 5 and/or Mac OS 10.7.
 
 
 ## Including in Your Project
