@@ -34,10 +34,12 @@ The simplest way to use RESTClient in your Xcode project is to just copy the fil
 
 The best way to include RESTClient is to drag the project into your workspace,  add libRESTClient.a to your main target's link phase and the Source dir ($(SRCROOT)/../RESTClient/Source/**) to your header search paths.
 
+If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding RESTClient as a submodule, `git submodule update --recursive`) to be sure to fetch RESTClient's own externals.
+
 That's it. There is detailed help in the [FAQ][] if you need more information about how to set up your workspace.
 
 
-## Documentation
+## Links
 
 [Examples][]  
 [FAQ][]  
