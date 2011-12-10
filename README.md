@@ -1,6 +1,6 @@
-[Examples]: https://github.com/johnclayton/RESTClient/wiki/Examples (Examples)
+[HOWTO]: https://github.com/johnclayton/RESTClient/wiki/HowTo (How Tos)
 [FAQ]: https://github.com/johnclayton/RESTClient/wiki/FAQ (FAQs)
-[API]: http://johnclayton.github.com/RESTClient/api/html/index.html (Api Docs)
+[API]: http://johnclayton.github.com/RESTClient/api/html/index.html (API Docs)
 [TESTS]: https://github.com/johnclayton/RESTClient/tree/master/Tests#readme (Running the Tests)
 
 ## About
@@ -32,7 +32,7 @@ RESTClient was implemented with automatic reference counting (ARC) and uses weak
 
 The simplest way to use RESTClient in your Xcode project is to just copy the files in "Source" to your own project.
 
-The best way to include RESTClient is to drag the project into your workspace,  add libRESTClient.a to your main target's link phase and the Source dir ($(SRCROOT)/../RESTClient/Source/**) to your header search paths.
+The best way to include RESTClient is to drag the project into your workspace,  add libRESTClient.a to your main target's link phase and the Source dir (If you had RESTClient in ./Externals it would be "$(SRCROOT)/Externals/RESTClient/Source/**") to your header search paths.
 
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding RESTClient as a submodule, `git submodule update --recursive`) to be sure to fetch RESTClient's own externals.
 
@@ -41,10 +41,10 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 
 ## Links
 
-[Examples][]  
-[FAQ][]  
-[API][]  
-[TESTS][]  
+[How Tos][HOWTO]  
+[FAQs][FAQ]  
+[API Docs][API]  
+[Running the Tests][TESTS]  
 
 
 ## Basic Usage
