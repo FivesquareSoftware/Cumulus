@@ -18,6 +18,12 @@
 		A40924691492E62800C42E8B /* GeoloqiExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A40924671492E62800C42E8B /* GeoloqiExample.xcdatamodeld */; };
 		A409246C1492E62800C42E8B /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409246B1492E62800C42E8B /* MasterViewController.m */; };
 		A409246F1492E62800C42E8B /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409246E1492E62800C42E8B /* DetailViewController.m */; };
+		A4D26F981493D26B0005DFE3 /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D26F971493D26B0005DFE3 /* libRESTClient.a */; };
+		A4D26F9B1493D3050005DFE3 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26F9A1493D3050005DFE3 /* LoginController.m */; };
+		A4D26FA21493FB590005DFE3 /* NSManagedObjectContext+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26FA11493FB590005DFE3 /* NSManagedObjectContext+Demo.m */; };
+		A4D26FB31494223B0005DFE3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D26FB21494223B0005DFE3 /* MobileCoreServices.framework */; };
+		A4D26FB6149423270005DFE3 /* NSObject+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26FB5149423270005DFE3 /* NSObject+Demo.m */; };
+		A4D26FBA149429890005DFE3 /* MenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26FB9149429890005DFE3 /* MenuController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +44,16 @@
 		A409246B1492E62800C42E8B /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		A409246D1492E62800C42E8B /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		A409246E1492E62800C42E8B /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		A4D26F971493D26B0005DFE3 /* libRESTClient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRESTClient.a; path = "../../build/Release-iphoneos/libRESTClient.a"; sourceTree = "<group>"; };
+		A4D26F991493D3050005DFE3 /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginController.h; sourceTree = "<group>"; };
+		A4D26F9A1493D3050005DFE3 /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginController.m; sourceTree = "<group>"; };
+		A4D26FA01493FB590005DFE3 /* NSManagedObjectContext+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+Demo.h"; sourceTree = "<group>"; };
+		A4D26FA11493FB590005DFE3 /* NSManagedObjectContext+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+Demo.m"; sourceTree = "<group>"; };
+		A4D26FB21494223B0005DFE3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		A4D26FB4149423270005DFE3 /* NSObject+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Demo.h"; sourceTree = "<group>"; };
+		A4D26FB5149423270005DFE3 /* NSObject+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Demo.m"; sourceTree = "<group>"; };
+		A4D26FB8149429890005DFE3 /* MenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuController.h; sourceTree = "<group>"; };
+		A4D26FB9149429890005DFE3 /* MenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +61,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4D26FB31494223B0005DFE3 /* MobileCoreServices.framework in Frameworks */,
+				A4D26F981493D26B0005DFE3 /* libRESTClient.a in Frameworks */,
 				A40924511492E62800C42E8B /* UIKit.framework in Frameworks */,
 				A40924531492E62800C42E8B /* Foundation.framework in Frameworks */,
 				A40924551492E62800C42E8B /* CoreGraphics.framework in Frameworks */,
@@ -75,10 +93,12 @@
 		A409244F1492E62800C42E8B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A4D26FB21494223B0005DFE3 /* MobileCoreServices.framework */,
 				A40924501492E62800C42E8B /* UIKit.framework */,
 				A40924521492E62800C42E8B /* Foundation.framework */,
 				A40924541492E62800C42E8B /* CoreGraphics.framework */,
 				A40924561492E62800C42E8B /* CoreData.framework */,
+				A4D26F971493D26B0005DFE3 /* libRESTClient.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -86,14 +106,19 @@
 		A40924581492E62800C42E8B /* GeoloqiExample */ = {
 			isa = PBXGroup;
 			children = (
+				A40924671492E62800C42E8B /* GeoloqiExample.xcdatamodeld */,
+				A40924641492E62800C42E8B /* MainStoryboard.storyboard */,
 				A40924611492E62800C42E8B /* AppDelegate.h */,
 				A40924621492E62800C42E8B /* AppDelegate.m */,
-				A40924641492E62800C42E8B /* MainStoryboard.storyboard */,
+				A4D26F991493D3050005DFE3 /* LoginController.h */,
+				A4D26F9A1493D3050005DFE3 /* LoginController.m */,
+				A4D26FB8149429890005DFE3 /* MenuController.h */,
+				A4D26FB9149429890005DFE3 /* MenuController.m */,
 				A409246A1492E62800C42E8B /* MasterViewController.h */,
 				A409246B1492E62800C42E8B /* MasterViewController.m */,
 				A409246D1492E62800C42E8B /* DetailViewController.h */,
 				A409246E1492E62800C42E8B /* DetailViewController.m */,
-				A40924671492E62800C42E8B /* GeoloqiExample.xcdatamodeld */,
+				A4D26FB7149424000005DFE3 /* Extensions */,
 				A40924591492E62800C42E8B /* Supporting Files */,
 			);
 			path = GeoloqiExample;
@@ -108,6 +133,17 @@
 				A40924601492E62800C42E8B /* GeoloqiExample-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A4D26FB7149424000005DFE3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A4D26FB4149423270005DFE3 /* NSObject+Demo.h */,
+				A4D26FB5149423270005DFE3 /* NSObject+Demo.m */,
+				A4D26FA01493FB590005DFE3 /* NSManagedObjectContext+Demo.h */,
+				A4D26FA11493FB590005DFE3 /* NSManagedObjectContext+Demo.m */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +214,10 @@
 				A40924691492E62800C42E8B /* GeoloqiExample.xcdatamodeld in Sources */,
 				A409246C1492E62800C42E8B /* MasterViewController.m in Sources */,
 				A409246F1492E62800C42E8B /* DetailViewController.m in Sources */,
+				A4D26F9B1493D3050005DFE3 /* LoginController.m in Sources */,
+				A4D26FA21493FB590005DFE3 /* NSManagedObjectContext+Demo.m in Sources */,
+				A4D26FB6149423270005DFE3 /* NSObject+Demo.m in Sources */,
+				A4D26FBA149429890005DFE3 /* MenuController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +263,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -241,7 +280,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -253,7 +291,9 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GeoloqiExample/GeoloqiExample-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../Source/**";
 				INFOPLIST_FILE = "GeoloqiExample/GeoloqiExample-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -264,7 +304,9 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GeoloqiExample/GeoloqiExample-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../Source/**";
 				INFOPLIST_FILE = "GeoloqiExample/GeoloqiExample-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -16,13 +16,14 @@
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
+@synthesize service=service_;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-//	UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-//	MasterViewController *controller = (MasterViewController *)navigationController.topViewController;
-//	controller.managedObjectContext = self.managedObjectContext;
+	self.service = [RCResource withURL:@"https://api.geoloqi.com"];
+	self.service.contentType = RESTClientContentTypeJSON;
+	
     return YES;
 }
 							
