@@ -135,7 +135,8 @@ static NSUInteger requestCount = 0;
 @synthesize headers=headers_;
 @synthesize timeout=timeout_;
 @synthesize cachePolicy=cachePolicy_;
-@synthesize authProvider=authProvider_;
+@synthesize authProviders=authProviders_;
+@synthesize maxAuthRetries=maxAuthRequests_;
 @synthesize payload=payload_;
 
 
@@ -190,14 +191,21 @@ static NSUInteger requestCount = 0;
 
 - (NSMutableDictionary *) headers {
 	if (headers_ == nil) {
-		headers_ = [NSMutableDictionary dictionary];
+		headers_ = [NSMutableDictionary new];
 	}
 	return headers_;
 }
 
+- (NSMutableArray *) authProviders {
+	if (nil == authProviders_) {
+		authProviders_ = [NSMutableArray new];
+	}
+	return authProviders_;
+}
+
 - (NSMutableData *) data {
     if (data_ == nil) {
-        data_ = [NSMutableData data];
+        data_ = [NSMutableData new];
     }
     return data_;
 }
@@ -253,6 +261,7 @@ static NSUInteger requestCount = 0;
     if (self) {
 		self.originalURLRequest = URLRequest;
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
+		self.maxAuthRetries = 1;
     }
     
     return self;
@@ -282,15 +291,15 @@ static NSUInteger requestCount = 0;
 		return;
 	}
 	
-	
     self.started = YES;
 
 	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+	RCLog(@"%@", self);
     [self.connection start];
 
-	[self connectionDidSendDataHandler];
-	[self connectionDidReceiveDataHandler];
+	[self handleConnectionDidSendData];
+	[self handleConnectionDidReceiveData];
 	
 
 	if (self.timeout > 0) {
@@ -314,7 +323,7 @@ static NSUInteger requestCount = 0;
 //	[self.connection cancel];
 	// strangely, not calling this on the main thread will cause other calls to dispatch on the main thread (like to completion block) to deadlock, freakish
 	[self.connection performSelectorOnMainThread:@selector(cancel) withObject:nil waitUntilDone:NO];
-    [self connectionFinishedHandler];
+    [self handleConnectionFinished];
 }
 
 
@@ -357,26 +366,26 @@ static NSUInteger requestCount = 0;
 
 
 
-- (void) connectionFinishedHandler {
+- (void) handleConnectionFinished {
     if (self.connectionFinished) {
         return;
     }
 	self.connectionFinished = YES;
-	
+	RCResponse *response = [[RCResponse alloc] initWithRequest:self];
+
 	// Make sure processing the results doesn't stop us from calling our completion block
 	@try {
 		dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 		dispatch_queue_t q_current = dispatch_get_current_queue();
 		NSAssert(q != q_current, @"Tried to run response processing on the current queue! ** DEADLOCK **");
 		dispatch_sync(q, ^{
-			[self processResponse];
+			[self processResponse:response];
 		});
 	}
 	@catch (NSException *exception) {
 		self.error = [NSError errorWithDomain:kRESTClientErrorDomain code:kRESTClientErrorCodeErrorProcessingResponse userInfo:[exception userInfo]];
 	}
 	@finally {
-		RCResponse *response = [[RCResponse alloc] initWithRequest:self];
 		if (self.completionBlock) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				self.completionBlock(response);
@@ -388,7 +397,7 @@ static NSUInteger requestCount = 0;
 }
 
 
-- (void) connectionDidReceiveDataHandler {
+- (void) handleConnectionDidReceiveData {
 	float progress = 0;
 	if (self.expectedContentLength > 0) {
 		progress = self.receivedContentLength / self.expectedContentLength;
@@ -406,7 +415,7 @@ static NSUInteger requestCount = 0;
 	}
 }
 
-- (void) connectionDidSendDataHandler {
+- (void) handleConnectionDidSendData {
 	float progress = 0;
 	if (self.bodyContentLength > 0) {
 		progress = self.sentContentLength / self.bodyContentLength;
@@ -427,14 +436,14 @@ static NSUInteger requestCount = 0;
 
 // ========================================================================== //
 
-#pragma mark - Connection Helpers
+#pragma mark - URLRequest/Response Helpers
 
 
 - (void) configureURLRequest:(NSMutableURLRequest *)URLRequest {
 	[URLRequest setAllHTTPHeaderFields:self.headers];
 	
-	if (self.authProvider) {
-		[self.authProvider authorizeRequest:URLRequest];
+	for (id<RCAuthProvider> authProvider in self.authProviders) {
+		[authProvider authorizeRequest:URLRequest];
 	}
 	
 	URLRequest.cachePolicy = self.cachePolicy;
@@ -445,7 +454,7 @@ static NSUInteger requestCount = 0;
 	}
 }
 
-- (void) processResponse {
+- (void) processResponse:(RCResponse *)response {
     
 	// if there was a response body, decode it
     if (self.data.length) {
@@ -457,7 +466,7 @@ static NSUInteger requestCount = 0;
 		}
 		
 		if (self.postProcessorBlock) {
-			self.result = self.postProcessorBlock(self.result);
+			self.result = self.postProcessorBlock(response, self.result);
 		}
     }
 }
@@ -470,25 +479,38 @@ static NSUInteger requestCount = 0;
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	self.error = error;
-	[self connectionFinishedHandler];
+	[self handleConnectionFinished];
 }
 
+// NSURLConnection.h says this is still valid, docs say it's deprecated, in any event it seems to never get called anymore ...
 - (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection {
 	return NO;
 }
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-	if (self.authProvider) {
-		NSURLCredential *credential = [self.authProvider credentialForAuthenticationChallenge:challenge];	
+	NSString *authMethod = [[challenge protectionSpace] authenticationMethod];
+	
+	id<RCAuthProvider> providerForMethod = nil;
+	for (id<RCAuthProvider> provider in self.authProviders) {
+		if ([provider.providedAuthenticationMethod isEqualToString:authMethod]) {
+			providerForMethod = provider;
+			break;
+		}
+	}
+
+	if (providerForMethod) {		
+		NSURLCredential *credential = [providerForMethod credentialForAuthenticationChallenge:challenge];	
 		if (credential) {
-            if ([challenge previousFailureCount] < 2) {
+            if ([challenge previousFailureCount] < self.maxAuthRetries) {
                 [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
             } else {
                 [[challenge sender] cancelAuthenticationChallenge:challenge];
             }
+		} else {
+			[[challenge sender] cancelAuthenticationChallenge:challenge];
 		}
 	} else {
-        [[challenge sender] cancelAuthenticationChallenge:challenge];
+		[[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
     }
 }
 
@@ -499,9 +521,11 @@ static NSUInteger requestCount = 0;
 
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response {
-	if (response && self.authProvider) {
+	if (response && self.authProviders.count > 0) {
 		NSMutableURLRequest *authorizedRequest = [request mutableCopy];
-		[self.authProvider authorizeRequest:authorizedRequest];
+		for (id<RCAuthProvider> authProvider in self.authProviders) {
+			[authProvider authorizeRequest:authorizedRequest];
+		}
 		return authorizedRequest;
 	}
 	return request;
@@ -511,7 +535,7 @@ static NSUInteger requestCount = 0;
 	self.sentContentLength = totalBytesWritten;
 	self.bodyContentLength = totalBytesExpectedToWrite;
 	
-	[self connectionDidSendDataHandler];
+	[self handleConnectionDidSendData];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -524,11 +548,11 @@ static NSUInteger requestCount = 0;
 
 	NSUInteger dataLength = [data length];
 	self.receivedContentLength += dataLength;
-	[self connectionDidReceiveDataHandler];
+	[self handleConnectionDidReceiveData];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	[self connectionFinishedHandler];
+	[self handleConnectionFinished];
 }
 
 

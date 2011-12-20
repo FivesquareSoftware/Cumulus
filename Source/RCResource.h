@@ -74,14 +74,22 @@
 @property (nonatomic, readonly, strong) RCResource *parent;
 @property (nonatomic, readonly, strong) NSString *relativePath;
 @property (nonatomic, readonly, strong) NSURL *URL;
+
 /** Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. */
 @property (nonatomic, strong) NSMutableDictionary *headers;
-@property (nonatomic, readonly) NSMutableDictionary *mergedHeaders; ///< All headers from all ancestors and the receiver merged into one dictionary
+
+
 @property (nonatomic) NSTimeInterval timeout; ///< If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses
+
 @property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< The cache policy to pass on to request. By default uses the default for NSURLRequest.
-@property (nonatomic, strong) NSString *username; ///< If #authProvider is nil and #username and #password are not empty, and RCBasicAuthProvider is created on demand
+
+@property (nonatomic, strong) NSString *username; ///< If #authProviders is nil and #username and #password are not empty, an RCBasicAuthProvider is created on demand and added to #authProviders
+
 @property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong) id<RCAuthProvider> authProvider;
+
+/** Auth providers, like headers, are set on each individual resource, but when a request is marshaled, a merged array from the receiver and all it's ancestors is used. Per resource, auth providers are given a chance to authorize requests in the order they were added. However child providers take precedence over ancestors' providers. */
+@property (nonatomic, strong) NSMutableArray *authProviders;
+
 @property (nonatomic, assign) RESTClientContentType contentType; ///< When set, will set 'Content-Type' and 'Accept' headers appropriately
 @property (nonatomic, copy) RCPreflightBlock preflightBlock; ///< Runs before every request for the receiver, which is aborted if this block returns NO
 @property (nonatomic, copy) RCPostProcessorBlock postProcessorBlock; ///< Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
@@ -129,7 +137,11 @@
  *  @{
  */
 
+/** Convenience method for setting a single header. If @param value is nil, will remove the header from the receiver. */
 - (void) setValue:(id)value forHeaderField:(NSString *)key;
+
+/** Adds authProvider to the end of the provider list. */
+- (void) addAuthProvider:(id<RCAuthProvider>)authProvider;
 
 /** @} */
 

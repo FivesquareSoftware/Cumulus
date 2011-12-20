@@ -10,6 +10,7 @@
 #import "SpecHelper.h"
 
 NSString *kTestServerHost = RESTClientTestServer;
+NSString *kTestServerHostSSL = RESTClientTestServerSSL;
 
 @implementation SpecHelper
 

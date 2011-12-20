@@ -37,6 +37,7 @@
 
 @protocol RCAuthProvider <NSObject>
 
+- (NSString *) providedAuthenticationMethod;
 - (void) authorizeRequest:(NSMutableURLRequest *)urlRequest;
 - (NSURLCredential *) credentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 
@@ -45,3 +46,6 @@
 // import known auth providers
 
 #import "RCBasicAuthProvider.h"
+#import "RCServerTrustAuthProvider.h"
+#import "RCClientCertificateAuthProvider.h"
+#import "RCOAuth2AuthProvider.h"

@@ -52,6 +52,8 @@
 
 // Private Properties
 
+@property (nonatomic, readonly) NSMutableDictionary *mergedHeaders; ///< All headers from all ancestors and the receiver merged into one dictionary
+@property (nonatomic, readonly) NSMutableArray *mergedAuthProviders; ///< All #authProviders from all ancestors and the receiver merged into one array
 @property (nonatomic, strong) NSMutableSet *requests_; ///< The internal property for directly accessing request objects
 
 // Request Builder
@@ -97,7 +99,7 @@
 @synthesize cachePolicy=cachePolicy_;
 @synthesize username=username_;
 @synthesize password=password_;
-@synthesize authProvider=authProvider_;
+@synthesize authProviders=authProviders_;
 @synthesize contentType=contentType_;
 @synthesize preflightBlock=preflightBlock_;
 @synthesize postProcessorBlock=postprocessorBlock_;
@@ -109,16 +111,6 @@
         headers_ = [NSMutableDictionary dictionary];
     }
     return headers_;
-}
-
-@dynamic mergedHeaders;
-- (NSMutableDictionary *) mergedHeaders {
-	NSMutableDictionary *mergedHeaders = [NSMutableDictionary dictionary];
-	
-	[mergedHeaders addEntriesFromDictionary:parent_.mergedHeaders];
-	
-	[mergedHeaders addEntriesFromDictionary:headers_];
-	return mergedHeaders;
 }
 
 - (NSTimeInterval) timeout {
@@ -135,14 +127,11 @@
 	return cachePolicy_;
 }
 
-- (id<RCAuthProvider>) authProvider {
-	if (nil == authProvider_ && parent_.authProvider) {
-		return parent_.authProvider;
+- (NSMutableArray *) authProviders {
+	if (nil == authProviders_) {
+		authProviders_ = [NSMutableArray new];
 	}
-	if (nil == authProvider_ && username_.length && password_.length) {
-		authProvider_ = [RCBasicAuthProvider withUsername:username_ password:password_];
-	}
-	return authProvider_;
+	return authProviders_;
 }
 
 - (RESTClientContentType) contentType {
@@ -184,6 +173,26 @@
 
 // Private
 
+
+@dynamic mergedHeaders;
+- (NSMutableDictionary *) mergedHeaders {
+	NSMutableDictionary *mergedHeaders = [NSMutableDictionary dictionary];	
+	[mergedHeaders addEntriesFromDictionary:parent_.mergedHeaders];
+	[mergedHeaders addEntriesFromDictionary:headers_];
+	return mergedHeaders;
+}
+
+
+@dynamic mergedAuthProviders;
+- (NSMutableArray *) mergedAuthProviders {
+	NSMutableArray *mergedProviders = [NSMutableArray array];
+	if (self.authProviders.count == 0 && username_.length && password_.length) {
+		[self addAuthProvider:[RCBasicAuthProvider withUsername:username_ password:password_]];
+	}
+	[mergedProviders addObjectsFromArray:authProviders_];
+	[mergedProviders addObjectsFromArray:parent_.mergedAuthProviders];
+	return mergedProviders;
+}
 
 
 // ========================================================================== //
@@ -237,9 +246,21 @@
 	
 	//rdar: 10487909, must remove preceding slash because URLByAppendingPathComponent is adding one incorrectly
 	relativePath = [relativePath stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+	relativePath = [relativePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	
+	NSString *queryString = nil;
+	NSRange queryRange = [relativePath rangeOfString:@"?"];
+	if (queryRange.location != NSNotFound) {
+		queryString = [relativePath substringFromIndex:queryRange.location+1];
+		relativePath = [relativePath substringToIndex:queryRange.location];
+	}
 	
 	NSURL *resourceURL = [URL_ URLByAppendingPathComponent:relativePath];
 	resourceURL = [resourceURL standardizedURL];
+	
+	if (queryString.length) {
+		resourceURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",[resourceURL absoluteString],queryString]];
+	}
 	
 	RCResource *resource = [RCResource withURL:[resourceURL absoluteString]];
 	
@@ -263,10 +284,16 @@
 #pragma mark - Configuration
 
 - (void) setValue:(id)value forHeaderField:(NSString *)key {
-	[self.headers setObject:value forKey:key];
+	if (value) {
+		[self.headers setObject:value forKey:key];
+	} else {
+		[self.headers removeObjectForKey:key];
+	}
 }
 
-
+- (void) addAuthProvider:(id<RCAuthProvider>)authProvider {
+	[self.authProviders addObject:authProvider];
+}
 
 
 // ========================================================================== //
@@ -471,16 +498,15 @@
 - (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method {
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:self.URL];
 	[URLRequest setHTTPMethod:method];
-	[URLRequest setAllHTTPHeaderFields:self.mergedHeaders];
-	
 	return URLRequest;
 }
 
 - (void) configureRequest:(RCRequest *)request {
 	request.timeout = self.timeout;
-	request.authProvider = self.authProvider;
+	[request.authProviders addObjectsFromArray:self.mergedAuthProviders];
 	request.postProcessorBlock = self.postProcessorBlock;
 	request.cachePolicy = self.cachePolicy;
+	[request.headers addEntriesFromDictionary:self.mergedHeaders];
 }
 
 

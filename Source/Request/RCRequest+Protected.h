@@ -43,12 +43,12 @@
 // Helpers
 
 - (void) configureURLRequest:(NSMutableURLRequest *)URLRequest;
-- (void) processResponse;
+- (void) processResponse:(RCResponse *)response;
 
 // Connection event handlers
 
-- (void) connectionFinishedHandler;
-- (void) connectionDidReceiveDataHandler;
-- (void) connectionDidSendDataHandler;
+- (void) handleConnectionFinished;
+- (void) handleConnectionDidReceiveData;
+- (void) handleConnectionDidSendData;
 
 @end

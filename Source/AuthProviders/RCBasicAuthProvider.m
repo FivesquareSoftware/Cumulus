@@ -44,8 +44,27 @@
 
 @implementation RCBasicAuthProvider
 
-@synthesize username;
-@synthesize password;
+// ========================================================================== //
+
+#pragma mark - Properties
+
+
+
+@synthesize username=username_;
+@synthesize password=password_;
+
+
+// ========================================================================== //
+
+#pragma mark - Object
+
+- (BOOL) isEqual:(id)object {
+	if (NO == [object isKindOfClass:[self class]]) {
+		return NO;
+	}
+	RCBasicAuthProvider *other = (RCBasicAuthProvider *)object;
+	return [self.username isEqualToString:other.username] && [self.password isEqualToString:other.password];
+}
 
 + (id) withUsername:(NSString *)username password:(NSString *)password {
     RCBasicAuthProvider *provider = [self new];
@@ -59,7 +78,9 @@
 
 #pragma mark - RCAuthProvider
 
-
+- (NSString *) providedAuthenticationMethod {
+	return NSURLAuthenticationMethodHTTPBasic;
+}
 
 - (void) authorizeRequest:(NSMutableURLRequest *)urlRequest {
 	[self addAuthHeader:urlRequest];

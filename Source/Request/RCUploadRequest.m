@@ -92,7 +92,7 @@
 - (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 	self.sentContentLength = totalBytesWritten;
 	
-	[self connectionDidSendDataHandler];
+	[self handleConnectionDidSendData];
 }
 
 

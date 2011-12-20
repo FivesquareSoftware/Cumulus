@@ -35,7 +35,7 @@
 
 #import <Foundation/Foundation.h>
 
-#ifdef RESTClientLoggingEnabled
+#ifdef DEBUG
 	#ifdef RESTClientLoggingOn
 		#define RCLog(fmt,...) NSLog(fmt, ##__VA_ARGS__ )
 	#else

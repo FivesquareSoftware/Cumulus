@@ -84,7 +84,7 @@
 	
 	NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"foo" forKey:@"bar"];
 	[headers setValue:@"baz" forKey:@"bing"];
-	STAssertEqualObjects(self.parent.mergedHeaders, headers, @"Parent headers should equal parent headers merged with ancestor's headers: %@", parent.mergedHeaders);
+	STAssertEqualObjects(self.parent.mergedHeaders, headers, @"Parent headers should equal parent headers merged with ancestor's headers");
 	
 	[headers setValue:@"ping" forKey:@"pong"];
 	STAssertEqualObjects(self.child.mergedHeaders, headers, @"Child headers should equal child headers merged with all ancestor headers");
@@ -92,30 +92,37 @@
 
 // Auth
 
-- (void)shouldInheritAuthProviderFromParent {	
-	self.parent.authProvider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
-	STAssertEqualObjects(self.child.authProvider, parent.authProvider, @"Child should inherit parent auth provider");
+- (void)shouldInheritAuthProvidersFromAllParents {	
+	RCBasicAuthProvider *one = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
+	RCBasicAuthProvider *two = [RCBasicAuthProvider withUsername:@"baz" password:@"bat"];
+	RCBasicAuthProvider *three = [RCBasicAuthProvider withUsername:@"ping" password:@"pong"];
+	
+	[self.ancestor addAuthProvider:one];
+	[self.parent addAuthProvider:two];
+
+	NSMutableArray *providers = [NSMutableArray arrayWithObjects:two,one,nil];
+	STAssertEqualObjects(self.parent.mergedAuthProviders, providers, @"Child should inherit merged providers from ancestors");
+
+	[self.child addAuthProvider:three];
+
+	providers = [NSMutableArray arrayWithObjects:three,two,one,nil];
+	STAssertEqualObjects(self.child.mergedAuthProviders, providers, @"Child auth providers should be equal to child providers merged with all ancestor providers");
+	
 }
 
-- (void)shouldUseOwnAuthProviderOverParents {
-	self.parent.authProvider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
+- (void)shouldUseOwnProvidersBeforeParentProviders {
+	RCBasicAuthProvider *one = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
+	RCBasicAuthProvider *two = [RCBasicAuthProvider withUsername:@"baz" password:@"bat"];
 	
-	RCBasicAuthProvider *provider = [RCBasicAuthProvider withUsername:@"ping" password:@"pong"];
-	self.child.authProvider = provider;
+	[self.parent addAuthProvider:two];
 	
-	STAssertEquals(provider, self.child.authProvider, @"Child should prefer own auth provider over parent's");	
-}
+	NSMutableArray *providers = [NSMutableArray arrayWithObjects:two,nil];
+	STAssertEqualObjects(self.child.mergedAuthProviders, providers, @"Child should inherit parent auth providers");
+	
+	[self.child addAuthProvider:one];
 
-- (void)shouldInheritAuthProviderFromFirstParentOnlyIfSet {
-	RCBasicAuthProvider *provider = [RCBasicAuthProvider withUsername:@"ping" password:@"pong"];
-	self.child.authProvider = provider;
-	
-	STAssertEquals(provider, self.child.authProvider, @"Child should inherit auth provider from parent only if set");	
-}
-
-- (void)shouldInheritAuthProviderFromAnyParent {
-	self.ancestor.authProvider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];		
-	STAssertEquals(self.child.authProvider, self.ancestor.authProvider, @"Child should inherit auth provider from any ancestor up the chain");	
+	providers = [NSMutableArray arrayWithObjects:one,two,nil];	
+	STAssertEqualObjects(self.child.mergedAuthProviders, providers, @"Child providers should take precedence over ancestor providers");
 }
 
 
@@ -204,17 +211,17 @@
 // Postprocessor block
 
 - (void)shouldInheritPotsprocessorBlockFromParent {
-	RCPostProcessorBlock block = ^(id result) { return result; };
+	RCPostProcessorBlock block = ^(RCResponse *response, id result) { return result; };
 	self.parent.postProcessorBlock = block;
 	STAssertEqualObjects(self.child.postProcessorBlock, block, @"Child should inherit postprocessor block from parent");
 }
 
 - (void)shouldUseOwnPotsprocessorBlockOverParents {
-	RCPostProcessorBlock blockOne = ^(id result) { 
+	RCPostProcessorBlock blockOne = ^(RCResponse *response, id result) { 
 		NSLog(@"One");
 		return result; 
 	};
-	RCPostProcessorBlock blockTwo = ^(id result) { 
+	RCPostProcessorBlock blockTwo = ^(RCResponse *response, id result) { 
 		NSLog(@"Two");
 		return result; 
 	};
@@ -224,13 +231,13 @@
 }
 
 - (void)shouldInheritPotsprocessorBlockFromFirstParentOnlyIfSet {
-	RCPostProcessorBlock block = ^(id result) { return result; };
+	RCPostProcessorBlock block = ^(RCResponse *response, id result) { return result; };
 	self.child.postProcessorBlock = block;
 	STAssertEqualObjects(self.child.postProcessorBlock, block, @"Child should inherit postprocessor block from parent only if set");
 }
 
 - (void)shouldInheritPotsprocessorBlockFromAnyParent {
-	RCPostProcessorBlock block = ^(id result) { return result; };
+	RCPostProcessorBlock block = ^(RCResponse *response, id result) { return result; };
 	self.ancestor.postProcessorBlock = block;
 	STAssertEqualObjects(self.child.postProcessorBlock, block, @"Child should inherit postprocessor block from any parent");
 }

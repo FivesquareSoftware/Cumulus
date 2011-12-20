@@ -49,8 +49,8 @@ typedef BOOL (^RCPreflightBlock)(RCRequest *request);
  */
 typedef void (^RCProgressBlock)(NSDictionary *progressInfo);
 
-/** A block that is called once a request has processed its response using any coders that were applicable to the response mime-type. You can use this block to further process the result. The return value overwrites the current result for the request. */
-typedef id (^RCPostProcessorBlock)(id result);
+/** A block that is called once a request has processed its response using any coders that were applicable to the response mime-type. You can use this block to further process the result. The return value overwrites the current result for the request. The response is provided so you can determine whether there were any errors in your post-processing logic. */
+typedef id (^RCPostProcessorBlock)(RCResponse *response, id result);
 
 /** A block that is called once all request processing is complete. This block is always dispatched on the main queue so it is safe to do things like update your UI from here. */
 typedef void (^RCCompletionBlock)(RCResponse *response);

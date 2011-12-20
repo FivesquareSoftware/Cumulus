@@ -60,7 +60,7 @@
  *
  * Authentication
  *
- * Each request can have an instance of an authentication provider, which implements <RCAuthProvider> and can do any kind of authentication that is supported by the protocol. A BASIC auth provider is included with the system.
+ * Each request can have a collection of authentication providers, which implement <RCAuthProvider> and can do any kind of authentication that is supported by the protocol. Several common auth providers are included with RESTClient.
  *
  * Encoding/Decoding
  *
@@ -125,8 +125,11 @@
 @property (nonatomic, readonly, strong) NSMutableDictionary *headers;
 @property (nonatomic) NSTimeInterval timeout; ///< If this is non-zero and a response is not received by the time this interval has elapsed, the request is canceled.
 @property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< @see NSURLRequest#cachePolicy
-@property (nonatomic, strong) id<RCAuthProvider> authProvider;
-@property (nonatomic, strong) id payload; ///< If this is set, #payloadEncoder isused to turn the payload into data for the HTTPBody.
+@property (nonatomic, readonly, strong) NSMutableArray *authProviders; ///< Given the chance to authorize a request and respond to auth challenges, in order
+@property (nonatomic) NSUInteger maxAuthRetries; ///< Auth challenges will be canceled if they exceed this value. Defaults to 1.
+
+@property (nonatomic, strong) id payload; ///< If this is set, #payloadEncoder is used to turn the payload into data for the HTTPBody.
+
 
 /** @} */
 

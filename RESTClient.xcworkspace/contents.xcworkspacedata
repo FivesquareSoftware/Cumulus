@@ -5,7 +5,7 @@
       location = "group:RESTClient.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Examples/GeoloqiExample/GeoloqiExample.xcodeproj">
+      location = "group:Demo/RESTClientDemo.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Ext/OCSpec/OCSpec.xcodeproj">

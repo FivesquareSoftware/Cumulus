@@ -147,7 +147,7 @@
 	
 	STAssertTrue(touched, @"Should have run preflight block");
 	STAssertNotNil(localResponse, @"Response should not be nil when preflight allows a request to run");
-    STAssertTrue([localResponse isOk], @"Response should be ok");
+    STAssertTrue(localResponse.success, @"Response should be ok");
 
 }
 
@@ -223,7 +223,7 @@
 - (void) shouldExecutePostProcessorBlock {
 	RCResource *index = [self.service resource:@"index"];
 		
-	index.postProcessorBlock = ^(id result) {
+	index.postProcessorBlock = ^(RCResponse *response, id result) {
 		NSString *newResult = [NSString stringWithFormat:@"-- %@ --",result];
 		return newResult;
 	};
@@ -236,7 +236,7 @@
 	RCResource *index = [self.service resource:@"index"];
 	
 	__block BOOL highQueue = NO;
-	index.postProcessorBlock = ^(id result) {
+	index.postProcessorBlock = ^(RCResponse *response, id result) {
 		highQueue = dispatch_get_current_queue() == dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 		NSString *newResult = [NSString stringWithFormat:@"-- %@ --",result];
 		return newResult;

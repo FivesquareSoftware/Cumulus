@@ -96,7 +96,7 @@
 		if (NO == [data writeToURL:self.downloadedFileTempURL options:NSDataWritingAtomic error:&writeError]) {
 			RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
-			[self connectionFinishedHandler];
+			[self handleConnectionFinished];
 		}
 	} else {
 		NSFileHandle *fh = [NSFileHandle fileHandleForUpdatingURL:self.downloadedFileTempURL error:&writeError];
@@ -107,12 +107,12 @@
 		} else {
 			RCLog(@"Could not get filehandle for writing to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
-			[self connectionFinishedHandler];
+			[self handleConnectionFinished];
 		}
 	}
 	NSUInteger dataLength = [data length];
 	self.receivedContentLength += dataLength;
-	[self connectionDidReceiveDataHandler];
+	[self handleConnectionDidReceiveData];
 #endif	
 }
 
@@ -129,7 +129,7 @@
 		[progressInfo setObject:self.downloadedFilename forKey:kRESTClientProgressInfoKeyFilename];
 	}
 	self.result = progressInfo;
-	[self connectionFinishedHandler];
+	[self handleConnectionFinished];
 #endif
 	// we complete our connection in connectionDidFinishDownloading:
 }

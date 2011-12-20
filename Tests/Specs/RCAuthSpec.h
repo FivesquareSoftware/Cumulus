@@ -18,6 +18,8 @@
 
 // add properties as needed
 @property (nonatomic, strong) RCResource *service;
+@property (nonatomic, strong) RCResource *SSLService;
 @property (nonatomic, strong) RCResource *protectedResource;
+@property (nonatomic, strong) RCResource *SSLProtectedResource;
 
 @end

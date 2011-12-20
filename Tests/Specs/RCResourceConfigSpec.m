@@ -79,12 +79,15 @@
 	STAssertEqualObjects(resource.headers, headers, @"Should set resource headsers from content type");
 }
 
-- (void)shouldCreateAuthProviderFromUsernmaeAndPassword {
+- (void)shouldCreateAuthProviderFromUsernameAndPassword {
 	RCResource *resource = [self.service resource:@"test"];
 	resource.username = @"foo";
 	resource.password = @"bar";
 	
-	STAssertNotNil(resource.authProvider, @"Default auth provider should not be nil");
+	RCBasicAuthProvider *provider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
+	
+	STAssertNotNil([resource.mergedAuthProviders lastObject], @"Default auth provider should not be nil");
+	STAssertEqualObjects([resource.mergedAuthProviders lastObject], provider, @"Providers should contain the BASIC provider");
 }
 
 - (void)shouldStandardizeURLsWithLeadingSlashes {
@@ -119,6 +122,15 @@
 	
 	NSURL *fullURL = [[self.service  URL] URLByAppendingPathComponent:@"ancestor/child"];
 	STAssertEqualObjects([fullURL absoluteString], [child.URL absoluteString], @"Should standardize URLs with extra dots");
+}
+
+- (void) shouldParseQueryStringProperly {
+	RCResource *resource = [self.service resource:@"resource"];
+	RCResource *childWithQueryString = [resource resource:@"child?foo=bar"];
+	
+	NSString *baseString = [[resource URL] absoluteString];
+	NSURL *fullURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/child?foo=bar",baseString]];
+	STAssertEqualObjects([fullURL absoluteString], [childWithQueryString.URL absoluteString], @"Should properly append a query string");
 }
 
 @end
