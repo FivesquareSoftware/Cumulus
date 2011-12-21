@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import "CoordinateLike.h"
+
+
 @interface FetchedResultsMapViewController : UIViewController <NSFetchedResultsControllerDelegate, MKMapViewDelegate> {
 @protected
 	NSFetchedResultsController *fetchedResultsController_;
@@ -18,5 +21,6 @@
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 
+- (void) configureAnnotation:(MKPointAnnotation *)annotation withCoordinateLike:(id<CoordinateLike>)coordinateLike;
 
 @end

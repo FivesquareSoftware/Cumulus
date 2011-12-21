@@ -8,7 +8,6 @@
 
 #import "FetchedResultsMapViewController.h"
 
-#import "CoordinateLike.h"
 
 @interface FetchedResultsMapViewController()
 - (MKCoordinateRegion)regionFromCoordinates:(NSArray *)coordinates;
@@ -158,10 +157,16 @@
 	for (id<CoordinateLike> coordinateLike in coordinates) {
 		MKPointAnnotation *annotation = [MKPointAnnotation new];
 		annotation.coordinate = coordinateLike.coordinate;
+		[self configureAnnotation:annotation withCoordinateLike:coordinateLike];
 		[self.mapView addAnnotation:annotation];
 	}
 	[self.mapView setRegion:[self regionFromCoordinates:coordinates] animated:YES];
 }
+
+- (void) configureAnnotation:(MKPointAnnotation *)annotation withCoordinateLike:(id<CoordinateLike>)coordinateLike {
+	NSLog(@"Implement %@ in your subclass", NSStringFromSelector(_cmd));
+}
+
 
 
 // ========================================================================== //
@@ -202,6 +207,10 @@
 	NSLog(@"mapView:didFailToLocateUserWithError:%@",error);
 }
 
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+	NSLog(@"mapView:annotationView:calloutAccessoryControlTapped:");
+}
+
 - (MKCoordinateRegion)regionFromCoordinates:(NSArray *)coordinates {	
 	id<CoordinateLike> lastCoordinate = [coordinates lastObject];
 	CLLocationCoordinate2D upper = lastCoordinate.coordinate;
@@ -227,36 +236,6 @@
     return region;
 }
 
-
-// ========================================================================== //
-
-#pragma mark - Actions
-
-
-
-- (void)insertNewObject
-{
-    // Create a new instance of the entity managed by the fetched results controller.
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-    
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}
 
 
 

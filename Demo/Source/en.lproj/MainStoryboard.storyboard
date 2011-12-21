@@ -163,7 +163,7 @@
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
-                                            <segue destination="DSQ-ch-uub" kind="push" id="y97-Ht-4ME"/>
+                                            <segue destination="5C5-Ep-FsS" kind="push" id="vk3-qC-SLo"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="fT4-pC-gnw">
@@ -173,7 +173,7 @@
                                             <rect key="frame" x="10" y="1" width="280" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Geonotes" lineBreakMode="tailTruncation" minimumFontSize="10" id="rM9-mg-LVr">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Create Geonote" lineBreakMode="tailTruncation" minimumFontSize="10" id="rM9-mg-LVr">
                                                     <rect key="frame" x="20" y="11" width="260" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -185,7 +185,7 @@
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
-                                            <segue destination="hUZ-7N-pQh" kind="push" id="C0t-4G-knp"/>
+                                            <segue destination="lhn-Sz-HGO" kind="push" id="iSJ-QI-5LC"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -230,169 +230,89 @@
             </objects>
             <point key="canvasLocation" x="-121" y="718"/>
         </scene>
-        <scene sceneID="Xen-cy-I5J">
+        <scene sceneID="r6m-oS-Pi5">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WBJ-oU-OWE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tableViewController id="DSQ-ch-uub" customClass="NearbyPlacesController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="znw-kA-BBR">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IwK-k7-Kw4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="5C5-Ep-FsS" customClass="NearbyPlacesController" sceneMemberID="viewController">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="bhC-tz-KvF">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PlaceCell" id="leD-Tu-eOe">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="uOD-x3-Het">
-                                            <rect key="frame" x="10" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <connections>
-                                    <segue destination="6aT-v5-hii" kind="push" identifier="showPlace" id="fSv-ko-Vfa"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="DSQ-ch-uub" id="rSm-fx-LPu"/>
-                            <outlet property="delegate" destination="DSQ-ch-uub" id="iXq-4N-CqI"/>
+                            <outlet property="delegate" destination="5C5-Ep-FsS" id="iT6-dx-x7P"/>
                         </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Nearby Places" id="goa-a1-gTs">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="eJz-Dq-zCy"/>
-                    </navigationItem>
-                </tableViewController>
-            </objects>
-            <point key="canvasLocation" x="245" y="718"/>
-        </scene>
-        <scene sceneID="Ygl-eS-2hO">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2IH-ZN-rZg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tableViewController id="hUZ-7N-pQh" customClass="GeonotesController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="4gr-00-U2B">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GeonoteCell" id="Rx2-TS-f0p">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dw9-aQ-ziI">
-                                            <rect key="frame" x="10" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <connections>
-                                    <segue destination="pEB-E7-77g" kind="push" identifier="showGeonote" id="HY6-aR-gld"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="hUZ-7N-pQh" id="Jwa-0X-dKm"/>
-                            <outlet property="delegate" destination="hUZ-7N-pQh" id="8c6-1J-pkI"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Geonotes" id="g74-oE-qCV">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="mRg-sF-aW9"/>
-                    </navigationItem>
-                </tableViewController>
-            </objects>
-            <point key="canvasLocation" x="602" y="718"/>
-        </scene>
-        <scene sceneID="3VH-Vd-Vjj">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tKM-41-Fcg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="6aT-v5-hii" customClass="LocationDetailController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="RWq-3L-n6b">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Place" id="52N-z8-LZe"/>
+                    </mapView>
+                    <navigationItem key="navigationItem" title="Nearby Places" id="ovU-HG-au3"/>
+                    <connections>
+                        <outlet property="mapView" destination="bhC-tz-KvF" id="rfn-Er-Ao0"/>
+                        <outlet property="view" destination="bhC-tz-KvF" id="KRB-9l-Cch"/>
+                    </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="252" y="1349"/>
+            <point key="canvasLocation" x="249" y="719"/>
         </scene>
-        <scene sceneID="XCl-bj-UBj">
+        <scene sceneID="fj9-w9-rTE">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xWV-SH-g0O" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="pEB-E7-77g" customClass="LocationDetailController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6t5-Fl-InU">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FUe-1u-0Yc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="lhn-Sz-HGO" customClass="CreateGeonoteController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LAd-9A-DDc">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="djY-t1-gLy">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="lhn-Sz-HGO" id="eXR-h8-HCn"/>
+                                </connections>
+                            </mapView>
+                            <view contentMode="scaleToFill" id="RNY-pS-x4L">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="2Tb-cb-jXA" customClass="FormInputTextView">
+                                        <rect key="frame" x="20" y="20" width="280" height="160"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="lhn-Sz-HGO" id="KEJ-G6-mwt"/>
+                                        </connections>
+                                    </textView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Geonote" id="jub-0y-UrQ"/>
+                    <navigationItem key="navigationItem" title="Create Geonote" id="iMQ-kU-eHn">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="HVf-O3-IAk">
+                            <connections>
+                                <action selector="cancelAction:" destination="lhn-Sz-HGO" id="LGz-PC-NCP"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="hD7-Hf-dDI">
+                            <connections>
+                                <action selector="saveAction:" destination="lhn-Sz-HGO" id="81Z-c3-cLg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="djY-t1-gLy" id="MPZ-48-YVi"/>
+                        <outlet property="noteTextView" destination="2Tb-cb-jXA" id="tJ7-E3-4EU"/>
+                    </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="602" y="1349"/>
-        </scene>
-        <scene sceneID="fLh-n5-wFG">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2zJ-DH-70k" sceneMemberID="firstResponder"/>
-                <tableViewController storyboardIdentifier="" title="Master" id="lJb-OF-qxZ" customClass="MasterViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="grx-Om-RVI">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="LFx-4b-AIL" style="IBUITableViewCellStyleDefault" id="KJ1-Q4-kS1">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LFx-4b-AIL">
-                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableViewCell>
-                        </prototypes>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="lJb-OF-qxZ" id="rwm-4A-iaa"/>
-                            <outlet property="delegate" destination="lJb-OF-qxZ" id="on3-cn-tas"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Master" id="S4Y-h0-WOS"/>
-                </tableViewController>
-            </objects>
-            <point key="canvasLocation" x="1281" y="998"/>
+            <point key="canvasLocation" x="622" y="719"/>
         </scene>
     </scenes>
     <classes>
-        <class className="FetchedListController" superclassName="FetchedResultsMapViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/FetchedListController.h"/>
+        <class className="CreateGeonoteController" superclassName="FetchedResultsMapViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateGeonoteController.h"/>
             <relationships>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="action" name="saveAction:"/>
+                <relationship kind="outlet" name="noteTextView" candidateClass="UITextView"/>
             </relationships>
         </class>
         <class className="FetchedResultsMapViewController" superclassName="UIViewController">
@@ -401,8 +321,8 @@
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
             </relationships>
         </class>
-        <class className="GeonotesController" superclassName="FetchedListController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/GeonotesController.h"/>
+        <class className="FormInputTextView" superclassName="UITextView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FormInputTextView.h"/>
         </class>
         <class className="LoginController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginController.h"/>
@@ -412,16 +332,13 @@
                 <relationship kind="outlet" name="usernameTextField" candidateClass="UITextField"/>
             </relationships>
         </class>
-        <class className="MasterViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MasterViewController.h"/>
-        </class>
         <class className="MenuController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MenuController.h"/>
             <relationships>
                 <relationship kind="action" name="logOut:"/>
             </relationships>
         </class>
-        <class className="NearbyPlacesController" superclassName="FetchedListController">
+        <class className="NearbyPlacesController" superclassName="FetchedResultsMapViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NearbyPlacesController.h"/>
         </class>
         <class className="RecentLocationsController" superclassName="FetchedResultsMapViewController">

@@ -118,7 +118,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[self.fetchedResultsController fetch];
 	[self refreshFromRemoteResource];
 }
 
@@ -134,40 +133,25 @@
 
 // ========================================================================== //
 
-#pragma mark - Table View
+#pragma mark - MKMapViewDelegate
 
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *kPlaceCell = @"PlaceCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCell];
-	[self configureCell:cell atIndexPath:indexPath];
-    return cell;
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+	static NSString *kPlaceAnnotation = @"PlaceAnnotation";
+	MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:kPlaceAnnotation];
+	if (annotationView == nil) {
+		annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPlaceAnnotation];
+		annotationView.canShowCallout = YES;
+	} else {
+		annotationView.annotation = annotation;
+	}
+	return annotationView;
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    Place *place = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = place.displayName;
+- (void) configureAnnotation:(MKPointAnnotation *)annotation withCoordinateLike:(id<CoordinateLike>)coordinateLike {
+	Place *place = (Place *)coordinateLike;
+	annotation.title = place.displayName;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"showPlace"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        Place *selectedPlace = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-		//        [[segue destinationViewController] setDetailItem:selectedLocation];
-    }
-}
 
 // ========================================================================== //
 

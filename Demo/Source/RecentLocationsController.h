@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FetchedListController.h"
+#import "FetchedResultsMapViewController.h"
 
 @interface RecentLocationsController : FetchedResultsMapViewController <MKMapViewDelegate>
 

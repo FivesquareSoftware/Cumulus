@@ -15,17 +15,11 @@
 		A409245F1492E62800C42E8B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A409245E1492E62800C42E8B /* main.m */; };
 		A40924631492E62800C42E8B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A40924621492E62800C42E8B /* AppDelegate.m */; };
 		A40924661492E62800C42E8B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A40924641492E62800C42E8B /* MainStoryboard.storyboard */; };
-		A409246C1492E62800C42E8B /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409246B1492E62800C42E8B /* MasterViewController.m */; };
-		A409246F1492E62800C42E8B /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409246E1492E62800C42E8B /* DetailViewController.m */; };
 		A40925771494472E00C42E8B /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A40925741494472E00C42E8B /* SVProgressHUD.bundle */; };
 		A40925781494472E00C42E8B /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A40925761494472E00C42E8B /* SVProgressHUD.m */; };
 		A409257C1494488E00C42E8B /* RESTClientDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A409257A1494488E00C42E8B /* RESTClientDemo.xcdatamodeld */; };
 		A409257F1494972900C42E8B /* RecentLocationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409257E1494972800C42E8B /* RecentLocationsController.m */; };
 		A40925821494974200C42E8B /* NearbyPlacesController.m in Sources */ = {isa = PBXBuildFile; fileRef = A40925811494974200C42E8B /* NearbyPlacesController.m */; };
-		A40925851494975500C42E8B /* GeonotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = A40925841494975400C42E8B /* GeonotesController.m */; };
-		A409258B14949C3B00C42E8B /* PlaceDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409258A14949C3A00C42E8B /* PlaceDetailController.m */; };
-		A409258E14949C4B00C42E8B /* GeonoteDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409258D14949C4B00C42E8B /* GeonoteDetailController.m */; };
-		A409259114949E1500C42E8B /* FetchedListController.m in Sources */ = {isa = PBXBuildFile; fileRef = A409259014949E1500C42E8B /* FetchedListController.m */; };
 		A409259F1494B06100C42E8B /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = A409259E1494B06000C42E8B /* Place.m */; };
 		A40925A21494B06300C42E8B /* Geonote.m in Sources */ = {isa = PBXBuildFile; fileRef = A40925A11494B06200C42E8B /* Geonote.m */; };
 		A40925A51494B06400C42E8B /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = A40925A41494B06300C42E8B /* Location.m */; };
@@ -40,6 +34,8 @@
 		A4B6085B14A0F179003C43AE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4B6085A14A0F179003C43AE /* QuartzCore.framework */; };
 		A4B6086014A0FCE8003C43AE /* Location+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B6085F14A0FCE8003C43AE /* Location+Demo.m */; };
 		A4B6086314A0FD34003C43AE /* Place+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B6086214A0FD34003C43AE /* Place+Demo.m */; };
+		A4B608AC14A13149003C43AE /* CreateGeonoteController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B608AB14A13149003C43AE /* CreateGeonoteController.m */; };
+		A4D04A2614A25E6A001E3682 /* FormInputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D04A2514A25E6A001E3682 /* FormInputTextView.m */; };
 		A4D26F981493D26B0005DFE3 /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D26F971493D26B0005DFE3 /* libRESTClient.a */; };
 		A4D26F9B1493D3050005DFE3 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26F9A1493D3050005DFE3 /* LoginController.m */; };
 		A4D26FA21493FB590005DFE3 /* NSManagedObjectContext+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26FA11493FB590005DFE3 /* NSManagedObjectContext+Demo.m */; };
@@ -59,10 +55,6 @@
 		A40924611492E62800C42E8B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A40924621492E62800C42E8B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		A40924651492E62800C42E8B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		A409246A1492E62800C42E8B /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
-		A409246B1492E62800C42E8B /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		A409246D1492E62800C42E8B /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		A409246E1492E62800C42E8B /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		A409252B149442E800C42E8B /* RESTClientDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RESTClientDemo-Info.plist"; sourceTree = "<group>"; };
 		A409252C149442E800C42E8B /* RESTClientDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RESTClientDemo-Prefix.pch"; sourceTree = "<group>"; };
 		A40925741494472E00C42E8B /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
@@ -73,14 +65,6 @@
 		A409257E1494972800C42E8B /* RecentLocationsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentLocationsController.m; sourceTree = "<group>"; };
 		A40925801494974200C42E8B /* NearbyPlacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearbyPlacesController.h; sourceTree = "<group>"; };
 		A40925811494974200C42E8B /* NearbyPlacesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NearbyPlacesController.m; sourceTree = "<group>"; };
-		A40925831494975400C42E8B /* GeonotesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeonotesController.h; sourceTree = "<group>"; };
-		A40925841494975400C42E8B /* GeonotesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeonotesController.m; sourceTree = "<group>"; };
-		A409258914949C3A00C42E8B /* PlaceDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceDetailController.h; sourceTree = "<group>"; };
-		A409258A14949C3A00C42E8B /* PlaceDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceDetailController.m; sourceTree = "<group>"; };
-		A409258C14949C4A00C42E8B /* GeonoteDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeonoteDetailController.h; sourceTree = "<group>"; };
-		A409258D14949C4B00C42E8B /* GeonoteDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeonoteDetailController.m; sourceTree = "<group>"; };
-		A409258F14949E1500C42E8B /* FetchedListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchedListController.h; sourceTree = "<group>"; };
-		A409259014949E1500C42E8B /* FetchedListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchedListController.m; sourceTree = "<group>"; };
 		A409259D1494B06000C42E8B /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
 		A409259E1494B06000C42E8B /* Place.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Place.m; sourceTree = "<group>"; };
 		A40925A01494B06200C42E8B /* Geonote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geonote.h; sourceTree = "<group>"; };
@@ -106,6 +90,10 @@
 		A4B6085F14A0FCE8003C43AE /* Location+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Location+Demo.m"; sourceTree = "<group>"; };
 		A4B6086114A0FD34003C43AE /* Place+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Place+Demo.h"; sourceTree = "<group>"; };
 		A4B6086214A0FD34003C43AE /* Place+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Place+Demo.m"; sourceTree = "<group>"; };
+		A4B608AA14A13149003C43AE /* CreateGeonoteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateGeonoteController.h; sourceTree = "<group>"; };
+		A4B608AB14A13149003C43AE /* CreateGeonoteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateGeonoteController.m; sourceTree = "<group>"; };
+		A4D04A2414A25E6A001E3682 /* FormInputTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormInputTextView.h; sourceTree = "<group>"; };
+		A4D04A2514A25E6A001E3682 /* FormInputTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FormInputTextView.m; sourceTree = "<group>"; };
 		A4D26F971493D26B0005DFE3 /* libRESTClient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRESTClient.a; path = "../../build/Release-iphoneos/libRESTClient.a"; sourceTree = "<group>"; };
 		A4D26F991493D3050005DFE3 /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginController.h; sourceTree = "<group>"; };
 		A4D26F9A1493D3050005DFE3 /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginController.m; sourceTree = "<group>"; };
@@ -206,20 +194,11 @@
 				A4D26F9A1493D3050005DFE3 /* LoginController.m */,
 				A4D26FB8149429890005DFE3 /* MenuController.h */,
 				A4D26FB9149429890005DFE3 /* MenuController.m */,
-				A4B6085614A0EEB2003C43AE /* Fetched Results Controllers */,
+				A4B6085314A0EEA5003C43AE /* FetchedResultsMapViewController.h */,
+				A4B6085414A0EEA5003C43AE /* FetchedResultsMapViewController.m */,
 				A4B6085C14A0F1CC003C43AE /* Recent Locations */,
-				A40925801494974200C42E8B /* NearbyPlacesController.h */,
-				A40925811494974200C42E8B /* NearbyPlacesController.m */,
-				A409258914949C3A00C42E8B /* PlaceDetailController.h */,
-				A409258A14949C3A00C42E8B /* PlaceDetailController.m */,
-				A40925831494975400C42E8B /* GeonotesController.h */,
-				A40925841494975400C42E8B /* GeonotesController.m */,
-				A409258C14949C4A00C42E8B /* GeonoteDetailController.h */,
-				A409258D14949C4B00C42E8B /* GeonoteDetailController.m */,
-				A409246A1492E62800C42E8B /* MasterViewController.h */,
-				A409246B1492E62800C42E8B /* MasterViewController.m */,
-				A409246D1492E62800C42E8B /* DetailViewController.h */,
-				A409246E1492E62800C42E8B /* DetailViewController.m */,
+				A4B6086414A100F2003C43AE /* Nearby Places */,
+				A4B608AD14A13153003C43AE /* Geonotes */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -262,17 +241,6 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		A4B6085614A0EEB2003C43AE /* Fetched Results Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				A4B6085314A0EEA5003C43AE /* FetchedResultsMapViewController.h */,
-				A4B6085414A0EEA5003C43AE /* FetchedResultsMapViewController.m */,
-				A409258F14949E1500C42E8B /* FetchedListController.h */,
-				A409259014949E1500C42E8B /* FetchedListController.m */,
-			);
-			name = "Fetched Results Controllers";
-			sourceTree = "<group>";
-		};
 		A4B6085C14A0F1CC003C43AE /* Recent Locations */ = {
 			isa = PBXGroup;
 			children = (
@@ -282,6 +250,26 @@
 				A4B6085814A0F0EE003C43AE /* PointView.m */,
 			);
 			name = "Recent Locations";
+			sourceTree = "<group>";
+		};
+		A4B6086414A100F2003C43AE /* Nearby Places */ = {
+			isa = PBXGroup;
+			children = (
+				A40925801494974200C42E8B /* NearbyPlacesController.h */,
+				A40925811494974200C42E8B /* NearbyPlacesController.m */,
+			);
+			name = "Nearby Places";
+			sourceTree = "<group>";
+		};
+		A4B608AD14A13153003C43AE /* Geonotes */ = {
+			isa = PBXGroup;
+			children = (
+				A4B608AA14A13149003C43AE /* CreateGeonoteController.h */,
+				A4B608AB14A13149003C43AE /* CreateGeonoteController.m */,
+				A4D04A2414A25E6A001E3682 /* FormInputTextView.h */,
+				A4D04A2514A25E6A001E3682 /* FormInputTextView.m */,
+			);
+			name = Geonotes;
 			sourceTree = "<group>";
 		};
 		A4D26FB7149424000005DFE3 /* Extensions */ = {
@@ -367,8 +355,6 @@
 			files = (
 				A409245F1492E62800C42E8B /* main.m in Sources */,
 				A40924631492E62800C42E8B /* AppDelegate.m in Sources */,
-				A409246C1492E62800C42E8B /* MasterViewController.m in Sources */,
-				A409246F1492E62800C42E8B /* DetailViewController.m in Sources */,
 				A4D26F9B1493D3050005DFE3 /* LoginController.m in Sources */,
 				A4D26FA21493FB590005DFE3 /* NSManagedObjectContext+Demo.m in Sources */,
 				A4D26FB6149423270005DFE3 /* NSObject+Demo.m in Sources */,
@@ -377,10 +363,6 @@
 				A409257C1494488E00C42E8B /* RESTClientDemo.xcdatamodeld in Sources */,
 				A409257F1494972900C42E8B /* RecentLocationsController.m in Sources */,
 				A40925821494974200C42E8B /* NearbyPlacesController.m in Sources */,
-				A40925851494975500C42E8B /* GeonotesController.m in Sources */,
-				A409258B14949C3B00C42E8B /* PlaceDetailController.m in Sources */,
-				A409258E14949C4B00C42E8B /* GeonoteDetailController.m in Sources */,
-				A409259114949E1500C42E8B /* FetchedListController.m in Sources */,
 				A409259F1494B06100C42E8B /* Place.m in Sources */,
 				A40925A21494B06300C42E8B /* Geonote.m in Sources */,
 				A40925A51494B06400C42E8B /* Location.m in Sources */,
@@ -391,6 +373,8 @@
 				A4B6085914A0F0EE003C43AE /* PointView.m in Sources */,
 				A4B6086014A0FCE8003C43AE /* Location+Demo.m in Sources */,
 				A4B6086314A0FD34003C43AE /* Place+Demo.m in Sources */,
+				A4B608AC14A13149003C43AE /* CreateGeonoteController.m in Sources */,
+				A4D04A2614A25E6A001E3682 /* FormInputTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

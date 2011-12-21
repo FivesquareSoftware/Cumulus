@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FetchedListController.h"
+#import "FetchedResultsMapViewController.h"
 
-@interface NearbyPlacesController : FetchedListController <MKMapViewDelegate>
+@interface NearbyPlacesController : FetchedResultsMapViewController
 
 @end
