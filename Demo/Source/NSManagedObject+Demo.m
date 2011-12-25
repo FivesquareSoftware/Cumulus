@@ -74,6 +74,30 @@
 	 }];
 }
 
++ (id) findOrCreateWithPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context {
+	NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
+	[fetchRequest setPredicate:predicate];
+	[fetchRequest setFetchBatchSize:1];
+	[fetchRequest setFetchLimit:1];
+	
+	__block NSError *error = nil;
+	__block NSArray *results = nil;
+	
+	[context performBlockAndWait:^{
+		NSError __autoreleasing *localError = nil;
+		results = [context executeFetchRequest:fetchRequest error:&localError];
+		if (localError) {
+			error = localError;
+		}
+	}];
+	NSAssert3(error == nil, @"Error finding for fetchRequest %@ %@ (%@)",fetchRequest, [error localizedDescription], [error userInfo]);
+	
+	id found = [results lastObject];
+	if(found == nil) {
+		found = [NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
+	}
+	return found;
+}
 
 
 

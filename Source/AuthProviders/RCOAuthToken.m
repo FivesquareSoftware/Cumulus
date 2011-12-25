@@ -12,24 +12,27 @@
 
 @synthesize accessToken=accessToken_;
 @synthesize refreshToken=refreshToken_;
-@synthesize tokenExpiration=tokenExpiration_;
+@synthesize accessExpires=accessExpires_;
 @synthesize scope=scope_;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
 	[aCoder encodeObject:self.accessToken forKey:@"accessToken"];
 	[aCoder encodeObject:self.refreshToken forKey:@"refreshToken"];
-	[aCoder encodeObject:self.tokenExpiration forKey:@"tokenExpiration"];
+	[aCoder encodeObject:self.accessExpires forKey:@"tokenExpiration"];
 	[aCoder encodeObject:self.scope forKey:@"scope"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self.accessToken = [aDecoder decodeObjectForKey:@"accessToken"];
 	self.refreshToken = [aDecoder decodeObjectForKey:@"refreshToken"];
-	self.tokenExpiration = [aDecoder decodeObjectForKey:@"tokenExpiration"];
+	self.accessExpires = [aDecoder decodeObjectForKey:@"tokenExpiration"];
 	self.scope = [aDecoder decodeObjectForKey:@"scope"];
 	
 	return self;
 }
 
+- (NSString *) description {
+	return [NSString stringWithFormat:@"%@ (accessToken: %@, refreshToken: %@, accessExpires: %@, scope: %@)",[super description],accessToken_,refreshToken_,accessExpires_,scope_];
+}
 
 @end

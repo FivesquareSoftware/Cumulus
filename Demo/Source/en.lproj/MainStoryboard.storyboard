@@ -214,14 +214,20 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lOh-3Y-acA" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="1Wq-PZ-f7c" customClass="RecentLocationsController" sceneMemberID="viewController">
-                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="g0B-Qz-wKq">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="g0B-Qz-wKq">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <connections>
                             <outlet property="delegate" destination="1Wq-PZ-f7c" id="he1-9O-Xve"/>
                         </connections>
                     </mapView>
-                    <navigationItem key="navigationItem" title="Recent Locations" id="kPV-pg-FZv"/>
+                    <navigationItem key="navigationItem" title="Recent Locations" id="kPV-pg-FZv">
+                        <barButtonItem key="rightBarButtonItem" title="Reset" id="KGv-Zn-kce">
+                            <connections>
+                                <action selector="resetLocationsAction:" destination="1Wq-PZ-f7c" id="Z6F-6n-kdZ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="g0B-Qz-wKq" id="Lyg-fg-NnC"/>
                         <outlet property="view" destination="g0B-Qz-wKq" id="J6C-fl-Efq"/>
@@ -343,6 +349,9 @@
         </class>
         <class className="RecentLocationsController" superclassName="FetchedResultsMapViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentLocationsController.h"/>
+            <relationships>
+                <relationship kind="action" name="resetLocationsAction:"/>
+            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

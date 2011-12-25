@@ -10,6 +10,7 @@
 
 
 @interface FetchedResultsMapViewController()
+- (void) addAnnotationsForCoordinates:(NSArray *)coordinates;
 - (MKCoordinateRegion)regionFromCoordinates:(NSArray *)coordinates;
 @end
 
@@ -89,7 +90,12 @@
 	} else {
 		[super viewWillAppear:animated];
 		[self.fetchedResultsController fetch];
+		[self addAnnotationsForCoordinates:self.fetchedResultsController.fetchedObjects];
 	}
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -134,33 +140,31 @@
 	   atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
 	  newIndexPath:(NSIndexPath *)newIndexPath
 {
-	NSLog(@"Implement %@ in your subclass", NSStringFromSelector(_cmd));
+//	NSLog(@"Implement %@ in your subclass", NSStringFromSelector(_cmd));
 	
-//	switch(type) {
-//		case NSFetchedResultsChangeInsert:
-//			break;
-//			
-//		case NSFetchedResultsChangeDelete:
-//			break;
-//			
-//		case NSFetchedResultsChangeUpdate:
-//			break;
-//			
-//		case NSFetchedResultsChangeMove:
-//			break;
-//	}
+	MKPointAnnotation *annotation = [MKPointAnnotation new];
+	annotation.coordinate = [(id<CoordinateLike>)anObject coordinate];
+	[self configureAnnotation:annotation withCoordinateLike:(id<CoordinateLike>)anObject];
+
+	
+	switch(type) {
+		case NSFetchedResultsChangeInsert:
+			[self.mapView addAnnotation:annotation];
+			break;			
+		case NSFetchedResultsChangeDelete:
+			[self.mapView removeAnnotation:annotation];
+			break;
+			
+		case NSFetchedResultsChangeUpdate:
+			break;
+			
+		case NSFetchedResultsChangeMove:
+			break;
+	}
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-	NSArray *coordinates = [self.fetchedResultsController fetchedObjects];
-	[self.mapView removeAnnotations:self.mapView.annotations];
-	for (id<CoordinateLike> coordinateLike in coordinates) {
-		MKPointAnnotation *annotation = [MKPointAnnotation new];
-		annotation.coordinate = coordinateLike.coordinate;
-		[self configureAnnotation:annotation withCoordinateLike:coordinateLike];
-		[self.mapView addAnnotation:annotation];
-	}
-	[self.mapView setRegion:[self regionFromCoordinates:coordinates] animated:YES];
+	[self.mapView setRegion:[self regionFromCoordinates:controller.fetchedObjects] animated:YES];
 }
 
 - (void) configureAnnotation:(MKPointAnnotation *)annotation withCoordinateLike:(id<CoordinateLike>)coordinateLike {
@@ -209,6 +213,21 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
 	NSLog(@"mapView:annotationView:calloutAccessoryControlTapped:");
+}
+
+// ========================================================================== //
+
+#pragma mark - Map Helpers
+
+- (void) addAnnotationsForCoordinates:(NSArray *)coordinates {
+//	[self.mapView removeAnnotations:self.mapView.annotations];
+	for (id<CoordinateLike> coordinateLike in coordinates) {
+		MKPointAnnotation *annotation = [MKPointAnnotation new];
+		annotation.coordinate = coordinateLike.coordinate;
+		[self configureAnnotation:annotation withCoordinateLike:coordinateLike];
+		[self.mapView addAnnotation:annotation];
+	}
+	[self.mapView setRegion:[self regionFromCoordinates:coordinates] animated:YES];
 }
 
 - (MKCoordinateRegion)regionFromCoordinates:(NSArray *)coordinates {	

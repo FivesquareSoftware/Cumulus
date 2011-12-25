@@ -34,6 +34,7 @@
 - (RCResource *) geonoteResource {
 	if (nil == geonoteResource_) {
 		geonoteResource_  = [self.appDelegate.service resource:@"geonote/create"];
+		geonoteResource_.timeout = 15;
 	}
 	return geonoteResource_;
 }
@@ -126,6 +127,7 @@
 
 
 - (IBAction)cancelAction:(id)sender {
+	[self.geonoteResource cancelRequests];
 	[self.managedObjectContext rollback];
 	[self.navigationController popViewControllerAnimated:YES];
 }
@@ -133,6 +135,9 @@
 - (IBAction)saveAction:(id)sender {
 	NSString *trimmedText = [self.noteTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	if (trimmedText.length) {
+		
+		self.navigationItem.rightBarButtonItem.enabled = NO;
+		
 		CLLocation *location = self.appDelegate.locationManager.location;
 		NSDictionary *note = [NSDictionary dictionaryWithObjectsAndKeys:
 							  trimmedText, @"text"
@@ -147,6 +152,7 @@
 				[SVProgressHUD dismissWithSuccess:@"Success!"];
 				[self.navigationController popViewControllerAnimated:YES];
 			} else {
+				self.navigationItem.rightBarButtonItem.enabled = YES;
 				NSString *errorMsg = [response.result valueForKey:@"error_description"];
 				if (errorMsg.length == 0) {
 					errorMsg = response.error ? [response.error localizedDescription] : @"Unknown error";

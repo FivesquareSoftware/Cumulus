@@ -41,22 +41,23 @@
 			// map new data			
 			__block NSMutableArray *localLocations = [NSMutableArray array];
 			NSArray *remoteLocations = [result valueForKey:@"points"];
-						
-			// for the purposes of this demo we just wipe them all out and start over, you would probably do a find or create, then kill the stragglers
-			[Location deleteAllInContext:childContext];
-			
+									
 			for (id remoteLocation in remoteLocations) {
 				[childContext performBlockAndWait:^{
-					Location *localLocation = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:childContext];
+					NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid = %@",[remoteLocation valueForKey:@"uuid"]];
+					Location *localLocation = [Location findOrCreateWithPredicate:predicate inContext:childContext];
+
 					localLocation.uuid = [remoteLocation valueForKey:@"uuid"];
 					localLocation.date = [NSDate dateWithISO8601String:[remoteLocation valueForKey:@"date"]];
 					localLocation.latitude = [NSNumber numberWithDouble:[[remoteLocation valueForKeyPath:@"location.position.latitude"] doubleValue]];
 					localLocation.longitude = [NSNumber numberWithDouble:[[remoteLocation valueForKeyPath:@"location.position.longitude"] doubleValue]];
 					localLocation.altitude = [NSNumber numberWithInt:[[remoteLocation valueForKeyPath:@"location.position.altitude"] intValue]];
 					localLocation.speed = [NSNumber numberWithInt:[[remoteLocation valueForKeyPath:@"location.position.speed"] intValue]];
+
 					[localLocations addObject:localLocation];
 				}];
 			}
+			
 			__autoreleasing NSError *saveError = nil;
 			if (NO == [childContext saveChild:&saveError]) {
 				NSLog(@"Could not save locations: %@ (%@)",[saveError localizedDescription], [saveError userInfo]);
@@ -138,11 +139,16 @@
 #pragma mark - Helpers
 
 - (void) refreshFromRemoteResource {
-	[SVProgressHUD showWithStatus:@"Fetching.." networkIndicator:NO];
+	[SVProgressHUD showWithStatus:@"Updating.." networkIndicator:NO];
 	[self.locationsResource getWithCompletionBlock:^(RCResponse *response) {
 		if (response.success) {
 			[SVProgressHUD dismiss];
 		} else {
+			NSString *error = [response.result valueForKey:@"error"];
+			if ([error isEqualToString:@"expired_token"]) {
+				[self performSelectorOnMainThread:_cmd withObject:nil waitUntilDone:NO];
+				return;
+			}
 			NSString *errorMsg = [response.result valueForKey:@"error_description"];
 			if (errorMsg.length == 0) {
 				errorMsg = response.error ? [response.error localizedDescription] : @"Unknown error";
@@ -153,6 +159,19 @@
 	}];
 }
 
+// ========================================================================== //
+
+#pragma mark - Actions
+
+
+
+- (IBAction)resetLocationsAction:(id)sender {
+	[Location deleteAllInContext:self.managedObjectContext];
+	[self.managedObjectContext performBlockAndWait:^{
+		[self.managedObjectContext save:NULL];
+	}];
+	[self refreshFromRemoteResource];
+}
 
 
 @end

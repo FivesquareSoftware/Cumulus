@@ -12,5 +12,6 @@
 
 @interface RecentLocationsController : FetchedResultsMapViewController <MKMapViewDelegate>
 
+- (IBAction)resetLocationsAction:(id)sender;
 
 @end

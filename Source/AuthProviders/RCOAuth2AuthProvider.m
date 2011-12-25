@@ -14,6 +14,7 @@
 @interface RCOAuth2AuthProvider()
 - (void) refreshAccessToken;
 - (void) addAuthHeader:(NSMutableURLRequest *)URLRequest;
+- (void) mapTokenFromResult:(id)result;
 @end
 
 
@@ -47,9 +48,7 @@
 		RCCompletionBlock completionBlock = ^(RCResponse *response) {
 			if (response.success) {		
 				self.token = [RCOAuthToken new];
-				self.token.accessToken = [response.result valueForKey:@"access_token"];
-				self.token.refreshToken = [response.result valueForKey:@"refresh_token"];
-				self.token.tokenExpiration = [response.result valueForKey:@"expiration_date"];
+				[self mapTokenFromResult:response.result];
 			}
 			if (passedBlock) {
 				passedBlock(response);
@@ -75,8 +74,9 @@
 }
 
 - (void) authorizeRequest:(NSMutableURLRequest *)URLRequest {
-	if (self.token.tokenExpiration && [self.token.tokenExpiration compare:[NSDate date]] != NSOrderedAscending
-		&& self.token.refreshToken.length) {
+	NSDate *now = [NSDate date];
+	NSComparisonResult comparisonResult = [self.token.accessExpires compare:now];
+	if (self.token.accessExpires &&  comparisonResult != NSOrderedDescending) {
 		[self refreshAccessToken];
 	}
 	[self addAuthHeader:URLRequest];
@@ -102,21 +102,30 @@
 }
 
 - (void) refreshAccessToken {
-	NSDictionary *tokenPayload = [NSDictionary dictionaryWithObjectsAndKeys:
-								  @"refresh_token", @"grant_type"
-								  , self.token.refreshToken, @"refresh_token"
-								  , nil];
+	if (self.token.refreshToken.length) {
+		NSDictionary *tokenPayload = [NSDictionary dictionaryWithObjectsAndKeys:
+									  @"refresh_token", @"grant_type"
+									  , self.token.refreshToken, @"refresh_token"
+									  , nil];
 		
-	RCResponse *response = [self.tokenService post:tokenPayload];
-	if (response.success) {		
-		self.token.accessToken = [response.result valueForKey:@"access_token"];
-		self.token.refreshToken = [response.result valueForKey:@"refresh_token"];
-		self.token.tokenExpiration = [response.result valueForKey:@"expiration_date"];
-	} else {
-		RCLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);
+		RCResponse *response = [self.tokenService post:tokenPayload];
+		if (response.success) {
+			[self mapTokenFromResult:response.result];
+		} else {
+			RCLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);
+		}
 	}
 }
 
+- (void) mapTokenFromResult:(id)result {
+	self.token.accessToken = [result valueForKey:@"access_token"];
+	self.token.refreshToken = [result valueForKey:@"refresh_token"];
+	NSTimeInterval expiresIn = [[result valueForKey:@"expires_in"] doubleValue];
+	if (expiresIn > 0) {
+		self.token.accessExpires = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
+	}
+	self.token.scope = [result valueForKey:@"scope"];
+}
 
 
 @end

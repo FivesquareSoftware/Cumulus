@@ -136,6 +136,9 @@
 #pragma mark - MKMapViewDelegate
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+	if ([annotation isKindOfClass:[MKUserLocation class]]) {
+		return nil;
+	}
 	static NSString *kPlaceAnnotation = @"PlaceAnnotation";
 	MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:kPlaceAnnotation];
 	if (annotationView == nil) {

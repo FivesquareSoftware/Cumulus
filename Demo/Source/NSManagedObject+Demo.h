@@ -14,5 +14,6 @@
 + (id) firstInContext:(NSManagedObjectContext *)context;
 + (id) allInContext:(NSManagedObjectContext *)context;
 + (void) deleteAllInContext:(NSManagedObjectContext *)context;
++ (id) findOrCreateWithPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context;
 
 @end

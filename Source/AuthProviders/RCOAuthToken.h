@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSString *accessToken;
 @property (nonatomic, strong) NSString *refreshToken;
-@property (nonatomic, strong) NSDate *tokenExpiration;
+@property (nonatomic, strong) NSDate *accessExpires;
 @property (nonatomic, strong) NSString *scope;
 
 @end

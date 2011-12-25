@@ -71,6 +71,16 @@
 
 @implementation RCRequest
 
++ (NSOperationQueue *) opQ {
+	static NSOperationQueue *opQ = nil;
+	@synchronized(self) {
+		if (nil == opQ) {
+			opQ = [NSOperationQueue new];
+		}
+	}
+	return opQ;
+}
+
 
 static NSUInteger requestCount = 0;
 + (void) incrementRequestCount {
@@ -258,6 +268,10 @@ static NSUInteger requestCount = 0;
 
 - (id) initWithURLRequest:(NSURLRequest*)URLRequest {
     self = [super init];
+	NSAssert(URLRequest != nil, @"URLRequest cannot be nil!");
+	if (nil == URLRequest) {
+		self = nil;
+	}
     if (self) {
 		self.originalURLRequest = URLRequest;
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
@@ -275,7 +289,8 @@ static NSUInteger requestCount = 0;
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ : %@ %@",[super description],[self.URLRequest HTTPMethod],[self.URLRequest description]];
+	NSURLRequest *request = nil == URLRequest_ ? originalURLRequest_ : URLRequest_;
+	return [NSString stringWithFormat:@"%@ : %@ %@",[super description],[request HTTPMethod],[request description]];
 }
 
 
@@ -294,9 +309,10 @@ static NSUInteger requestCount = 0;
     self.started = YES;
 
 	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
-    [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-	RCLog(@"%@", self);
+//    [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+	[self.connection setDelegateQueue:[RCRequest opQ]];
     [self.connection start];
+	RCLog(@"%@", self);
 
 	[self handleConnectionDidSendData];
 	[self handleConnectionDidReceiveData];

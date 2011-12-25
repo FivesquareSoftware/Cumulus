@@ -1,5 +1,5 @@
-[HOWTO]: https://github.com/johnclayton/RESTClient/wiki/HowTo (How Tos)
-[FAQ]: https://github.com/johnclayton/RESTClient/wiki/FAQ (FAQs)
+[HOWTO]:https://github.com/johnclayton/RESTClient/tree/master/Docs/howto.md (How Tos)
+[FAQ]: https://github.com/johnclayton/RESTClient/tree/master/faq.md (FAQs)
 [API]: http://johnclayton.github.com/RESTClient/api/html/index.html (API Docs)
 [TESTS]: https://github.com/johnclayton/RESTClient/tree/master/Tests#readme (Running the Tests)
 
@@ -129,5 +129,5 @@ RCResource *images = [site resource:@"images"];
 ```
 
 
-RESTClient does even more, like direct from disk uploads and post-processing on a background thread (great for core data mapping), See more detailed examples in  the [Examples][].
+RESTClient does even more, like direct from disk uploads, OAuth2 authentication, and post-processing on a background thread (great for core data mapping), See more detailed examples in  the [HowTos][].
 

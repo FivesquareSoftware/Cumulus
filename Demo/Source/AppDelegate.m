@@ -82,8 +82,12 @@
 
 	RCResource *tokenService = [RCResource withURL:@"https://api.geoloqi.com/1/oauth/token"];
 	tokenService.contentType = RESTClientContentTypeJSON;
-	tokenService.username =  @"59f5e7440a1fc56e9cc096c802ce8649";
-	tokenService.password = @"f6d8f9485b66bc332ec3c084ba76f0fd";
+//	tokenService.username =  @"59f5e7440a1fc56e9cc096c802ce8649";
+//	tokenService.password = @"f6d8f9485b66bc332ec3c084ba76f0fd";
+
+	tokenService.username =  @"8487d79e6ffc2b7f5cd489d9d3e7466b";
+	tokenService.password = @"3c240df657788402367d2364642d86af";
+
 	
 	RCOAuth2AuthProvider *provider = [RCOAuth2AuthProvider withAuthorizationURL:authorizationURL tokenService:tokenService];
 	provider.token = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] dataForKey:@"authToken"]]; 

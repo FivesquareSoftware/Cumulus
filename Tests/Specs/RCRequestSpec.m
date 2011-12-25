@@ -55,7 +55,9 @@
 	RCRequest *request = [[RCRequest alloc] initWithURLRequest:URLRequest];
 
 	[request startWithCompletionBlock:nil];
+#ifdef DEBUG
 	STAssertThrows([request start], @"Should not be able to start a request twice");
+#endif
 }
 
 - (void)shouldNotBeAbleToStartARequestThatIsCanceled {
@@ -169,6 +171,16 @@
 	dispatch_release(request_sema);
 	
 	STAssertTrue(touched, @"Touched should be YES");
+}
+
+- (void) shouldFailToCreateARequestWithNoURLRequest {
+	RCRequest *request;
+#ifdef DEBUG	
+	STAssertThrows((request = [[RCRequest alloc] initWithURLRequest:nil]), @"Should not create a request without a URL request");
+#else
+	request = [[RCRequest alloc] initWithURLRequest:nil];
+	STAssertNil(request, @"Should not create a request without a URL request");
+#endif
 }
 
 @end
