@@ -46,7 +46,7 @@
 @property (readwrite) BOOL finished;
 @property (readwrite) BOOL canceled;
 
-@property (readwrite, strong) NSURLResponse *URLResponse;
+@property (readwrite, strong) NSHTTPURLResponse *URLResponse;
 
 @property (readwrite, strong) NSString *responseBody;
 
@@ -71,14 +71,14 @@
 
 @implementation RCRequest
 
-+ (NSOperationQueue *) opQ {
-	static NSOperationQueue *opQ = nil;
++ (NSOperationQueue *) delegateQueue {
+	static NSOperationQueue *delegateQueue = nil;
 	@synchronized(self) {
-		if (nil == opQ) {
-			opQ = [NSOperationQueue new];
+		if (nil == delegateQueue) {
+			delegateQueue = [NSOperationQueue new];
 		}
 	}
-	return opQ;
+	return delegateQueue;
 }
 
 
@@ -309,8 +309,8 @@ static NSUInteger requestCount = 0;
     self.started = YES;
 
 	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
-//    [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-	[self.connection setDelegateQueue:[RCRequest opQ]];
+    [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+//	[self.connection setDelegateQueue:[[self class] delegateQueue]];
     [self.connection start];
 	RCLog(@"%@", self);
 
@@ -392,11 +392,16 @@ static NSUInteger requestCount = 0;
 	// Make sure processing the results doesn't stop us from calling our completion block
 	@try {
 		dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-		dispatch_queue_t q_current = dispatch_get_current_queue();
-		NSAssert(q != q_current, @"Tried to run response processing on the current queue! ** DEADLOCK **");
-		dispatch_sync(q, ^{
+
+		dispatch_semaphore_t process_sema = dispatch_semaphore_create(1);
+		dispatch_semaphore_wait(process_sema, DISPATCH_TIME_FOREVER);
+		dispatch_async(q, ^{
 			[self processResponse:response];
+			dispatch_semaphore_signal(process_sema);
 		});
+		dispatch_semaphore_wait(process_sema, DISPATCH_TIME_FOREVER);
+		dispatch_semaphore_signal(process_sema);
+		dispatch_release(process_sema);
 	}
 	@catch (NSException *exception) {
 		self.error = [NSError errorWithDomain:kRESTClientErrorDomain code:kRESTClientErrorCodeErrorProcessingResponse userInfo:[exception userInfo]];

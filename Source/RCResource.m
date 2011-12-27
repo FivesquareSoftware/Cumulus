@@ -532,7 +532,13 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[self runRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
 
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	if ([NSThread currentThread] == [NSThread mainThread]) {
+		while(dispatch_semaphore_wait(request_sema, 0.01) != 0) {
+			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantPast]];
+		}
+	} else {
+		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	}
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
     return localResponse;
@@ -545,7 +551,8 @@
 - (void) runRequest:(RCRequest *)request withCompletionBlock:(RCCompletionBlock)completionBlock abortBlock:(RCAbortBlock)abortBlock {
 	if (self.preflightBlock) {
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if(self.preflightBlock(request)) {
+			BOOL success = self.preflightBlock(request);
+			if(success) {
 				[self dispatchRequest:request withCompletionBlock:completionBlock];
 			} else {
 				[request abortWithBlock:abortBlock];
