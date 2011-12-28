@@ -797,8 +797,8 @@
 					"RESTClientTestServerSSL=\"@\\\"https://$(RESTClientTestServerHost):$(RESTClientTestServerSSLPort)\\\"\"",
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Ext/OCSpec/Source/**",
-					"$(SRCROOT)/Ext/OCMock/Source/**",
+					"\"$(SRCROOT)/Ext/OCSpec/Source\"/**",
+					"\"$(SRCROOT)/Ext/OCMock/Source\"/**",
 				);
 				INFOPLIST_FILE = "Tests/Target/RESTClientSpecs-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
@@ -825,8 +825,8 @@
 					"RESTClientTestServer=\"@\\\"http://$(RESTClientTestServerHost):$(RESTClientTestServerPort)\\\"\"",
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Ext/OCSpec/Source/**",
-					"$(SRCROOT)/Ext/OCMock/Source/**",
+					"\"$(SRCROOT)/Ext/OCSpec/Source\"/**",
+					"\"$(SRCROOT)/Ext/OCMock/Source\"/**",
 				);
 				INFOPLIST_FILE = "Tests/Target/RESTClientSpecs-Info.plist";
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";

@@ -33,7 +33,7 @@ RESTClient was implemented with automatic reference counting (ARC) and uses weak
 
 The simplest way to use RESTClient in your Xcode project is to just copy the files in "Source" to your own project.
 
-The best way to include RESTClient is to drag the project into your workspace,  add libRESTClient.a to your main target's link phase and the Source dir (If you had RESTClient in ./Externals it would be "$(SRCROOT)/Externals/RESTClient/Source/**") to your header search paths.
+The best way to include RESTClient is to drag the project into your workspace,  add libRESTClient.a to your main target's link phase and the Source dir (If you had RESTClient in ./Externals it would be "$(SRCROOT)/Externals/RESTClient/Source") to your header search paths (make sure you check the 'recursive' checkbox).
 
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding RESTClient as a submodule, `git submodule update --recursive`) to be sure to fetch RESTClient's own externals.
 
