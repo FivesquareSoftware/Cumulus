@@ -1,5 +1,5 @@
-[HOWTO]: https://github.com/johnclayton/RESTClient/tree/master/Docs/howto.md (How Tos)
-[FAQ]: https://github.com/johnclayton/RESTClient/tree/master/faq.md (FAQs)
+[HOWTO]: https://github.com/johnclayton/RESTClient/blob/master/Docs/howto.md (How Tos)
+[FAQ]: https://github.com/johnclayton/RESTClient/blob/master/Docs/faq.md (FAQs)
 [API]: http://johnclayton.github.com/RESTClient/api/html/index.html (API Docs)
 [DEMO]: https://github.com/johnclayton/RESTClient/tree/master/Demo (See a Demo App)
 [TESTS]: https://github.com/johnclayton/RESTClient/tree/master/Tests#readme (Running the Tests)
@@ -45,7 +45,7 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 [How Tos][HOWTO]  
 [FAQs][FAQ]  
 [API Docs][API]  
-[Demo App][DEMO]
+[Demo App][DEMO]  
 [Running the Tests][TESTS]  
 
 
