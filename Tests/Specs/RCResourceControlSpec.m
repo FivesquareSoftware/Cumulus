@@ -56,7 +56,7 @@
 	smallResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
 	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_apply(1000, queue, ^(size_t i) {
+	dispatch_apply(100, queue, ^(size_t i) {
 		[smallResource getWithCompletionBlock:nil];
 	});
 	

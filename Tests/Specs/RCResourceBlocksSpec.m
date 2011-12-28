@@ -177,7 +177,7 @@
 	
 	
 	// Set up a mock to receive progress blocks
-	id mockProgressObject = [OCMockObject mockForClass:[NSObject class]];
+	__block id mockProgressObject = [OCMockObject mockForClass:[NSObject class]];
 	
 	
 	BOOL (^zeroProgressBlock)(id) = ^(id value) {
