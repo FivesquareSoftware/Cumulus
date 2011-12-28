@@ -1,4 +1,15 @@
-**How do I set up my workspace to use RESTClient?**
+[top]: <#top> "Top"
+<a name="top"/>
+
+
+[How do I set up my workspace to use RESTClient?](#workspace_setup)  
+[How do I turn on logging?](#logging)  
+[I am seeing deadlocks, what's the cause?](#deadlocks)  
+
+
+<a name="workspace_setup"/>
+
+#### How do I set up my workspace to use RESTClient?
 
 You can build and link libRESTClient.a as part of your project build by adding its Xcode project to your workspace and adding libRESTClient.a to the link phase. Workspaces don't currently provide a way to automatically search for headers in other projects in the workspace, so you'll also need to add the path to RESTClient to your header search path.  
 
@@ -27,10 +38,26 @@ If you are interested in tracking the bleeding edge (or if you just want a simpl
 % git commit -m "New version of RESTClient"  
 ```
 
+[Top &#x2191;][top]
 
-**How do I turn on logging?**
+
+<a name="logging"/>
+
+#### How do I turn on logging?
 
 Logging is disabled by default unless the 'DEBUG' preprocessor macro is set to YES|true|1|foo in your build settings. Once that flag is defined, logging can then be turned on or off in one of two ways:
 
 1. Pass in RESTClientLoggingOn=YES|true|foo in your builds settings, this will compile logging in.
 1. Set RESTClientLoggingOn=YES|true|1 in the environment in the Run phase of your target's scheme to turn logging on, or NO|false|0 to turn it off (the default is off). This is wicked handy, because you can turn on logging even on an already compiled library, simply by changing the process environment. The environment is only checked once at startup, but this will result in a BOOL comparison for every log statement. Thankfully, RESTClient doesn't log much.
+
+[Top &#x2191;][top]
+
+
+<a name="deadlocks"/>
+
+#### I am seeing deadlocks, what's the cause??
+
+Because RESTClient uses Grand Central Dispatch, it shares a few of the gotchas that GCD does, for example, dispatching synchronously (or asynchronously to a serial queue) from the same queue will produce deadlock. RESTClient runs some of the lifecyle blocks for a resource on the main queue, which is a serial queue. If you were to dispatch to the main queue again from inside of that block, you would see a deadlock.  Mostly, just know what your GCD environment is when dispatching, and you'll be fine. The RESTClient docs indicate how it dispatches the various blocks you provide. And, Apple's documentation on GCD is excellent.
+
+
+[Top &#x2191;][top]
