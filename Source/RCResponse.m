@@ -50,16 +50,8 @@
 
 - (NSInteger) status {
 	if(status_ == NSIntegerMax) {
-		if(self.error) {
-			if([self.error domain] == NSURLErrorDomain) {
-				switch ([self.error code]) {
-					case NSURLErrorUserCancelledAuthentication:
-						status_ = 401;
-						break;
-					default:
-						break;
-				}
-			}
+		if([self ErrorUserCancelledAuthentication]) {
+			status_ = 401;
 		} else {
 			status_ = [request_.URLResponse statusCode];
 		}
@@ -86,7 +78,7 @@
 
 @dynamic success;
 - (BOOL) success {
-	return self.error == nil && [self wasSuccessful];
+	return self.error == nil && [self HTTPSuccessful];
 }
 
 
@@ -118,6 +110,180 @@
 			];
 }
 
+// ========================================================================== //
+
+#pragma mark - NSURLErrorDomain Tests
+
+
+- (BOOL) ErrorBadURL {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorBadURL;
+}
+
+- (BOOL) ErrorTimedOut {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorTimedOut;
+}
+
+- (BOOL) ErrorUnsupportedURL {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorUnsupportedURL;
+}
+
+- (BOOL) ErrorCannotFindHost {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotFindHost;
+}
+
+- (BOOL) ErrorCannotConnectToHost {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotConnectToHost;
+}
+
+- (BOOL) ErrorDataLengthExceedsMaximum {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorDataLengthExceedsMaximum;
+}
+
+- (BOOL) ErrorNetworkConnectionLost {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorNetworkConnectionLost;
+}
+
+- (BOOL) ErrorDNSLookupFailed {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorDNSLookupFailed;
+}
+
+- (BOOL) ErrorHTTPTooManyRedirects {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorHTTPTooManyRedirects;
+}
+
+- (BOOL) ErrorResourceUnavailable {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorResourceUnavailable;
+}
+
+- (BOOL) ErrorNotConnectedToInternet {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorNotConnectedToInternet;
+}
+
+- (BOOL) ErrorRedirectToNonExistentLocation {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorRedirectToNonExistentLocation;
+}
+
+- (BOOL) ErrorBadServerResponse {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorBadServerResponse;
+}
+
+- (BOOL) ErrorUserCancelledAuthentication {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorUserCancelledAuthentication;
+}
+
+- (BOOL) ErrorUserAuthenticationRequired {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorUserAuthenticationRequired;
+}
+
+- (BOOL) ErrorZeroByteResource {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorZeroByteResource;
+}
+
+- (BOOL) ErrorCannotDecodeRawData {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotDecodeRawData;
+}
+
+- (BOOL) ErrorCannotDecodeContentData {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotDecodeContentData;
+}
+
+- (BOOL) ErrorCannotParseResponse {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotParseResponse;
+}
+
+- (BOOL) ErrorInternationalRoamingOff {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorInternationalRoamingOff;
+}
+
+- (BOOL) ErrorCallIsActive {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCallIsActive;
+}
+
+- (BOOL) ErrorDataNotAllowed {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorDataNotAllowed;
+}
+
+- (BOOL) ErrorRequestBodyStreamExhausted {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorRequestBodyStreamExhausted;
+}
+
+- (BOOL) ErrorFileDoesNotExist {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorFileDoesNotExist;
+}
+
+- (BOOL) ErrorFileIsDirectory {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorFileIsDirectory;
+}
+
+- (BOOL) ErrorNoPermissionsToReadFile {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorNoPermissionsToReadFile;
+}
+
+- (BOOL) ErrorSecureConnectionFailed {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorSecureConnectionFailed;
+}
+
+- (BOOL) ErrorServerCertificateHasBadDate {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorServerCertificateHasBadDate;
+}
+
+- (BOOL) ErrorServerCertificateUntrusted {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorServerCertificateUntrusted;
+}
+
+- (BOOL) ErrorServerCertificateHasUnknownRoot {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorServerCertificateHasUnknownRoot;
+}
+
+- (BOOL) ErrorServerCertificateNotYetValid {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorServerCertificateNotYetValid;
+}
+
+- (BOOL) ErrorClientCertificateRejected {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorClientCertificateRejected;
+}
+
+- (BOOL) ErrorClientCertificateRequired {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorClientCertificateRequired;
+}
+
+- (BOOL) ErrorCannotLoadFromNetwork {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotLoadFromNetwork;
+}
+
+- (BOOL) ErrorCannotCreateFile {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotCreateFile;
+}
+
+- (BOOL) ErrorCannotOpenFile {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotOpenFile;
+}
+
+- (BOOL) ErrorCannotCloseFile {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotCloseFile;
+}
+
+- (BOOL) ErrorCannotWriteToFile {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotWriteToFile;
+}
+
+- (BOOL) ErrorCannotRemoveFile {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotRemoveFile;
+}
+
+- (BOOL) ErrorCannotMoveFile {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorCannotMoveFile;
+}
+
+- (BOOL) ErrorDownloadDecodingFailedMidStream {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorDownloadDecodingFailedMidStream;
+}
+
+- (BOOL) ErrorDownloadDecodingFailedToComplete {
+	return self.error && [self.error domain] == NSURLErrorDomain && self.error.code == NSURLErrorDownloadDecodingFailedToComplete;
+}
+
+
 
 
 // ========================================================================== //
@@ -127,11 +293,11 @@
 
 #pragma mark -  -100's
 
-- (BOOL) isContinue {
+- (BOOL) HTTPContinue {
 	return self.status == 100;
 }
 
-- (BOOL) isSwitchingProtocols {
+- (BOOL) HTTPSwitchingProtocols {
 	return self.status == 101;
 }
 
@@ -139,31 +305,31 @@
 
 #pragma mark -  -200's
 
-- (BOOL) isOk {
+- (BOOL) HTTPOk {
 	return self.status == 200;
 }
 
-- (BOOL) isCreated {
+- (BOOL) HTTPCreated {
 	return self.status == 201;
 }
 
-- (BOOL) isAccepted {
+- (BOOL) HTTPAccepted {
 	return self.status == 202;
 }
 
-- (BOOL) isNonAuthoritative {
+- (BOOL) HTTPNonAuthoritative {
 	return self.status == 203;
 }
 
-- (BOOL) isNoContent {
+- (BOOL) HTTPNoContent {
 	return self.status == 204;
 }
 
-- (BOOL) isResetContent {
+- (BOOL) HTTPResetContent {
 	return self.status == 205;
 }
 
-- (BOOL) isPartialContent {
+- (BOOL) HTTPPartialContent {
 	return self.status == 206;
 }
 
@@ -171,149 +337,149 @@
 #pragma mark -  -300's
 
 
-- (BOOL) isMultipleChoices {
+- (BOOL) HTTPMultipleChoices {
 	return self.status == 300;
 }
 
-- (BOOL) isMovedPermanently {
+- (BOOL) HTTPMovedPermanently {
 	return self.status == 301;
 }
 
-- (BOOL) isFound {
+- (BOOL) HTTPFound {
 	return self.status == 302;
 }
 
-- (BOOL) isSeeOther {
+- (BOOL) HTTPSeeOther {
 	return self.status == 303;
 }
 
-- (BOOL) isNotModified {
+- (BOOL) HTTPNotModified {
 	return self.status == 304;
 }
 
-- (BOOL) isUseProxy {
+- (BOOL) HTTPUseProxy {
 	return self.status == 305;
 }
 
-- (BOOL) isSwitchProxy {
+- (BOOL) HTTPSwitchProxy {
 	return self.status == 306;
 }
 
-- (BOOL) isTemporaryRedirect {
+- (BOOL) HTTPTemporaryRedirect {
 	return self.status == 307;
 }
 
-- (BOOL) isResumeIncomplete {
+- (BOOL) HTTPResumeIncomplete {
 	return self.status == 308;
 }
 
 
 #pragma mark -  -400's
 
-- (BOOL) isBadRequest {
+- (BOOL) HTTPBadRequest {
 	return self.status == 400;
 }
 
-- (BOOL) isUnauthorized {
+- (BOOL) HTTPUnauthorized {
 	return self.status == 401;
 }
 
-- (BOOL) isPaymentRequired {
+- (BOOL) HTTPPaymentRequired {
 	return self.status == 402;
 }
 
-- (BOOL) isForbidden {
+- (BOOL) HTTPForbidden {
 	return self.status == 403;
 }
 
-- (BOOL) isNotFound {
+- (BOOL) HTTPNotFound {
 	return self.status == 404;
 }
 
-- (BOOL) isMethodNotAllowed {
+- (BOOL) HTTPMethodNotAllowed {
 	return self.status == 405;
 }
 
-- (BOOL) isNotAcceptable {
+- (BOOL) HTTPNotAcceptable {
 	return self.status == 406;
 }
 
-- (BOOL) isProxyAuthenticationRequired {
+- (BOOL) HTTPProxyAuthenticationRequired {
 	return self.status == 407;
 }
 
-- (BOOL) isRequestTimeout {
+- (BOOL) HTTPRequestTimeout {
 	return self.status == 408;
 }
 
-- (BOOL) isConflict {
+- (BOOL) HTTPConflict {
 	return self.status == 409;
 }
 
-- (BOOL) isGone {
+- (BOOL) HTTPGone {
 	return self.status == 410;
 }
 
-- (BOOL) isLengthRequired {
+- (BOOL) HTTPLengthRequired {
 	return self.status == 411;
 }
 
-- (BOOL) isPreconditionFailed {
+- (BOOL) HTTPPreconditionFailed {
 	return self.status == 412;
 }
 
-- (BOOL) isRequestEntityTooLarge {
+- (BOOL) HTTPRequestEntityTooLarge {
 	return self.status == 413;
 }
 
-- (BOOL) isRequestURITooLong {
+- (BOOL) HTTPRequestURITooLong {
 	return self.status == 414;
 }
 
-- (BOOL) isUnsupportedMediaType {
+- (BOOL) HTTPUnsupportedMediaType {
 	return self.status == 415;
 }
 
-- (BOOL) isRequestRangeNotSatisfied {
+- (BOOL) HTTPRequestRangeNotSatisfied {
 	return self.status == 416;
 }
 
-- (BOOL) isExpectationFailed {
+- (BOOL) HTTPExpectationFailed {
 	return self.status == 417;
 }
 
-- (BOOL) isUnprocessableEntity {
+- (BOOL) HTTPUnprocessableEntity {
 	return self.status == 422;
 }
 
 
 #pragma mark -  -500's
 
-- (BOOL) isInternalServerError {
+- (BOOL) HTTPInternalServerError {
 	return self.status == 500;
 }
 
-- (BOOL) isNotImplemented {
+- (BOOL) HTTPNotImplemented {
 	return self.status == 501;
 }
 
 
-- (BOOL) isBadGateway {
+- (BOOL) HTTPBadGateway {
 	return self.status == 502;
 }
 
 
-- (BOOL) isServiceUnavailable {
+- (BOOL) HTTPServiceUnavailable {
 	return self.status == 503;
 }
 
 
-- (BOOL) isGatewayTimeout {
+- (BOOL) HTTPGatewayTimeout {
 	return self.status == 504;
 }
 
 
-- (BOOL) isHTTPVersionNotSupported {
+- (BOOL) HTTPVersionNotSupported {
 	return self.status == 505;
 }
 
@@ -324,23 +490,23 @@
 #pragma mark - Status Ranges
 
 
-- (BOOL) wasInformational {
+- (BOOL) HTTPInformational {
 	return self.status >= 100 && self.status < 200;
 }
 
-- (BOOL) wasSuccessful {
+- (BOOL) HTTPSuccessful {
 	return self.status >= 200 && self.status < 300;
 }
 
-- (BOOL) wasRedirect {
+- (BOOL) HTTPRedirect {
 	return self.status >= 300 && self.status < 400;
 }
 
-- (BOOL) wasClientErrror {
+- (BOOL) HTTPClientErrror {
 	return self.status >= 400 && self.status < 500;
 }
 
-- (BOOL) wasServerError {
+- (BOOL) HTTPServerError {
 	return self.status >= 500 && self.status < 600;
 }
 

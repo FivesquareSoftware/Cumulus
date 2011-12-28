@@ -8,3 +8,4 @@
 
 RESTClientTestServerHost = localhost
 RESTClientTestServerPort = 4567
+RESTClientTestServerSSLPort = 4543

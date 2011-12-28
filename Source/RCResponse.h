@@ -37,6 +37,8 @@
 
 @class RCRequest;
 
+
+/** RCResponse contains a pointer back to the RCRequest that generated it, as well as numeroud conveniences that allow introspection of the HTTP response and any transformed results or NSError objects. */
 @interface RCResponse : NSObject {
     
 }
@@ -47,70 +49,118 @@
 @property (nonatomic, readonly) NSString *body;
 @property (nonatomic, readonly) id result;
 @property (nonatomic, readonly) NSError *error;
-@property (nonatomic, readonly) BOOL success; ///< @return YES if #error is nil and #wasSuccessful returns YES (status is in the range 200-299).
+@property (nonatomic, readonly) BOOL success; ///< @return YES if #error is nil and #wasSuccessful returns YES (status is in the range 200-299). This is the primary mechanism for quickly determining the success or failure of a request.
 
 - (id)initWithRequest:(RCRequest *)request;
 
 
-/** Specific codes */
-
-- (BOOL) isContinue; // 100
-- (BOOL) isSwitchingProtocols; // 101
+/** Some common NSURLErrorDomain error tests. */
 
 
-- (BOOL) isOk; // 200
-- (BOOL) isCreated; // 201
-- (BOOL) isAccepted; // 202
-- (BOOL) isNonAuthoritative; // 203
-- (BOOL) isNoContent; // 204
-- (BOOL) isResetContent; // 205
-- (BOOL) isPartialContent; // 206
-
-- (BOOL) isMultipleChoices; // 300
-- (BOOL) isMovedPermanently; // 301
-- (BOOL) isFound; // 302
-- (BOOL) isSeeOther; // 303
-- (BOOL) isNotModified; // 304
-- (BOOL) isUseProxy; // 305
-- (BOOL) isSwitchProxy; // 306
-- (BOOL) isTemporaryRedirect; // 307
-- (BOOL) isResumeIncomplete; // 308
-
-- (BOOL) isBadRequest; // 400
-- (BOOL) isUnauthorized; // 401
-- (BOOL) isPaymentRequired; // 402
-- (BOOL) isForbidden; // 403
-- (BOOL) isNotFound; // 404
-- (BOOL) isMethodNotAllowed; // 405
-- (BOOL) isNotAcceptable; // 406
-- (BOOL) isProxyAuthenticationRequired; // 407
-- (BOOL) isRequestTimeout; // 408
-- (BOOL) isConflict; // 409
-- (BOOL) isGone; // 410
-- (BOOL) isLengthRequired; // 411
-- (BOOL) isPreconditionFailed; // 412
-- (BOOL) isRequestEntityTooLarge; // 413
-- (BOOL) isRequestURITooLong; // 414
-- (BOOL) isUnsupportedMediaType; // 415
-- (BOOL) isRequestRangeNotSatisfied; // 416
-- (BOOL) isExpectationFailed; // 417
-- (BOOL) isUnprocessableEntity; // 422
-
-- (BOOL) isInternalServerError; // 500
-- (BOOL) isNotImplemented; // 501
-- (BOOL) isBadGateway; // 502
-- (BOOL) isServiceUnavailable; // 503
-- (BOOL) isGatewayTimeout; // 504
-- (BOOL) isHTTPVersionNotSupported; // 505
+- (BOOL) ErrorBadURL; // -1000
+- (BOOL) ErrorTimedOut; // -1001
+- (BOOL) ErrorUnsupportedURL; // -1002
+- (BOOL) ErrorCannotFindHost; // -1003
+- (BOOL) ErrorCannotConnectToHost; // -1004
+- (BOOL) ErrorDataLengthExceedsMaximum; // -1103
+- (BOOL) ErrorNetworkConnectionLost; // -1005
+- (BOOL) ErrorDNSLookupFailed; // -1006
+- (BOOL) ErrorHTTPTooManyRedirects; // -1007
+- (BOOL) ErrorResourceUnavailable; // -1008
+- (BOOL) ErrorNotConnectedToInternet; // -1009
+- (BOOL) ErrorRedirectToNonExistentLocation; // -1010
+- (BOOL) ErrorBadServerResponse; // -1011
+- (BOOL) ErrorUserCancelledAuthentication; // -1012
+- (BOOL) ErrorUserAuthenticationRequired; // -1013
+- (BOOL) ErrorZeroByteResource; // -1014
+- (BOOL) ErrorCannotDecodeRawData; // -1015
+- (BOOL) ErrorCannotDecodeContentData; // -1016
+- (BOOL) ErrorCannotParseResponse; // -1017
+- (BOOL) ErrorInternationalRoamingOff; // -1018
+- (BOOL) ErrorCallIsActive; // -1019
+- (BOOL) ErrorDataNotAllowed; // -1020
+- (BOOL) ErrorRequestBodyStreamExhausted; // -1021
+- (BOOL) ErrorFileDoesNotExist; // -1100
+- (BOOL) ErrorFileIsDirectory; // -1101
+- (BOOL) ErrorNoPermissionsToReadFile; // -1102
+- (BOOL) ErrorSecureConnectionFailed; // -1200
+- (BOOL) ErrorServerCertificateHasBadDate; // -1201
+- (BOOL) ErrorServerCertificateUntrusted; // -1202
+- (BOOL) ErrorServerCertificateHasUnknownRoot; // -1203
+- (BOOL) ErrorServerCertificateNotYetValid; // -1204
+- (BOOL) ErrorClientCertificateRejected; // -1205
+- (BOOL) ErrorClientCertificateRequired; // -1206
+- (BOOL) ErrorCannotLoadFromNetwork; // -2000
+- (BOOL) ErrorCannotCreateFile; // -3000
+- (BOOL) ErrorCannotOpenFile; // -3001
+- (BOOL) ErrorCannotCloseFile; // -3002
+- (BOOL) ErrorCannotWriteToFile; // -3003
+- (BOOL) ErrorCannotRemoveFile; // -3004
+- (BOOL) ErrorCannotMoveFile; // -3005
+- (BOOL) ErrorDownloadDecodingFailedMidStream; // -3006
+- (BOOL) ErrorDownloadDecodingFailedToComplete; // -3007
 
 
-/** Ranges of codes */
 
-- (BOOL) wasInformational; // 100's
-- (BOOL) wasSuccessful; // 200's
-- (BOOL) wasRedirect; // 300's
-- (BOOL) wasClientErrror; // 400's
-- (BOOL) wasServerError; // 500's
+/** Specific HTTP response codes */
+
+- (BOOL) HTTPContinue; // 100
+- (BOOL) HTTPSwitchingProtocols; // 101
+
+
+- (BOOL) HTTPOk; // 200
+- (BOOL) HTTPCreated; // 201
+- (BOOL) HTTPAccepted; // 202
+- (BOOL) HTTPNonAuthoritative; // 203
+- (BOOL) HTTPNoContent; // 204
+- (BOOL) HTTPResetContent; // 205
+- (BOOL) HTTPPartialContent; // 206
+
+- (BOOL) HTTPMultipleChoices; // 300
+- (BOOL) HTTPMovedPermanently; // 301
+- (BOOL) HTTPFound; // 302
+- (BOOL) HTTPSeeOther; // 303
+- (BOOL) HTTPNotModified; // 304
+- (BOOL) HTTPUseProxy; // 305
+- (BOOL) HTTPSwitchProxy; // 306
+- (BOOL) HTTPTemporaryRedirect; // 307
+- (BOOL) HTTPResumeIncomplete; // 308
+
+- (BOOL) HTTPBadRequest; // 400
+- (BOOL) HTTPUnauthorized; // 401
+- (BOOL) HTTPPaymentRequired; // 402
+- (BOOL) HTTPForbidden; // 403
+- (BOOL) HTTPNotFound; // 404
+- (BOOL) HTTPMethodNotAllowed; // 405
+- (BOOL) HTTPNotAcceptable; // 406
+- (BOOL) HTTPProxyAuthenticationRequired; // 407
+- (BOOL) HTTPRequestTimeout; // 408
+- (BOOL) HTTPConflict; // 409
+- (BOOL) HTTPGone; // 410
+- (BOOL) HTTPLengthRequired; // 411
+- (BOOL) HTTPPreconditionFailed; // 412
+- (BOOL) HTTPRequestEntityTooLarge; // 413
+- (BOOL) HTTPRequestURITooLong; // 414
+- (BOOL) HTTPUnsupportedMediaType; // 415
+- (BOOL) HTTPRequestRangeNotSatisfied; // 416
+- (BOOL) HTTPExpectationFailed; // 417
+- (BOOL) HTTPUnprocessableEntity; // 422
+
+- (BOOL) HTTPInternalServerError; // 500
+- (BOOL) HTTPNotImplemented; // 501
+- (BOOL) HTTPBadGateway; // 502
+- (BOOL) HTTPServiceUnavailable; // 503
+- (BOOL) HTTPGatewayTimeout; // 504
+- (BOOL) HTTPVersionNotSupported; // 505
+
+
+/** Ranges of HTTP response codes */
+
+- (BOOL) HTTPInformational; // 100's
+- (BOOL) HTTPSuccessful; // 200's
+- (BOOL) HTTPRedirect; // 300's
+- (BOOL) HTTPClientErrror; // 400's
+- (BOOL) HTTPServerError; // 500's
 
 
 

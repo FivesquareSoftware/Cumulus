@@ -11,8 +11,10 @@
 
 
 #import "RESTClient.h"
+#import "RCResource+Specs.h"
 
 extern NSString *kTestServerHost;
+extern NSString *kTestServerHostSSL;
 
 @interface SpecHelper : NSObject 
 

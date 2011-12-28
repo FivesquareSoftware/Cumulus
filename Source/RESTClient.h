@@ -82,8 +82,8 @@
 + (NSTimeInterval) timeout;
 + (void) setTimeout:(NSTimeInterval)timeout;
 
-+ (id<RCAuthProvider>)authProvider;
-+ (void) setAuthProvider:(id<RCAuthProvider>)authProvider;
++ (NSMutableArray *)authProviders;
++ (void) setAuthProviders:(NSMutableArray *)authProviders;
 
 + (NSMutableDictionary *) headers;
 + (void) setHeaders:(NSMutableDictionary *)headers;

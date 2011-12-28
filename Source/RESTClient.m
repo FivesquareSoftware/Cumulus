@@ -111,16 +111,16 @@ static NSTimeInterval timeout_ = 0;
 	}
 }
 
-static id<RCAuthProvider> authProvider_ = nil;
+static NSMutableArray *authProviders_ = nil;
 
-+ (id<RCAuthProvider>)authProvider {
-	return authProvider_;
++ (NSMutableArray *)authProviders {
+	return authProviders_;
 }
 
-+ (void) setAuthProvider:(id<RCAuthProvider>)authProvider {
-	@synchronized(@"RESTClient.authProvider") {
-		if (authProvider_ != authProvider) {
-			authProvider_ = authProvider;
++ (void) setAuthProviders:(NSMutableArray *)authProviders {
+	@synchronized(@"RESTClient.authProviders") {
+		if (authProviders_ != authProviders) {
+			authProviders_ = authProviders;
 		}
 	}
 }
@@ -250,7 +250,7 @@ static NSMutableDictionary *headers_ = nil;
 
 	resource.timeout = [self timeout];
 	resource.headers = [self headers];
-	resource.authProvider = [self authProvider];
+	resource.authProviders = [self authProviders];
 	
 	return resource;
 }

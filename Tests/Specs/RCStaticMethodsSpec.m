@@ -28,14 +28,15 @@
 
 - (void)beforeAll {
     // set up resources common to all examples here
-	[RESTClient setHeaders:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-							@"application/json", @"Content-Type"
-							, @"application/json", @"Accept"
-							, nil]];
 }
 
 - (void)beforeEach {
     // set up resources that need to be initialized before each example here 
+	[RESTClient setHeaders:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+							@"application/json", @"Content-Type"
+							, @"application/json", @"Accept"
+							, nil]];
+	[RESTClient setAuthProviders:nil];
 }
 
 - (void)afterEach {
@@ -52,6 +53,20 @@
 // ========================================================================== //
 
 #pragma mark - Specs
+
+- (void) shouldSetHeaders {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
+    RCResponse *response = [RESTClient get:endpoint];
+	STAssertEqualObjects(response.request.headers, [RESTClient headers], @"Request haeaders should equal static headers");
+}
+
+- (void)shouldBeAuthorized {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/test/protected",kTestServerHost];
+    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"test" password:@"test"];
+	[RESTClient setAuthProviders:[NSMutableArray arrayWithObject:authProvider]];
+    RCResponse *response = [RESTClient get:endpoint];
+    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+}
 
 - (void)shouldGet {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
