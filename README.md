@@ -1,6 +1,7 @@
-[HOWTO]: https://github.com/johnclayton/RESTClient/wiki/HowTo (How Tos)
-[FAQ]: https://github.com/johnclayton/RESTClient/wiki/FAQ (FAQs)
+[HOWTO]: https://github.com/johnclayton/RESTClient/tree/master/Docs/howto.md (How Tos)
+[FAQ]: https://github.com/johnclayton/RESTClient/tree/master/faq.md (FAQs)
 [API]: http://johnclayton.github.com/RESTClient/api/html/index.html (API Docs)
+[DEMO]: https://github.com/johnclayton/RESTClient/tree/master/Demo (See a Demo App)
 [TESTS]: https://github.com/johnclayton/RESTClient/tree/master/Tests#readme (Running the Tests)
 
 ## About
@@ -44,6 +45,7 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 [How Tos][HOWTO]  
 [FAQs][FAQ]  
 [API Docs][API]  
+[Demo App][DEMO]
 [Running the Tests][TESTS]  
 
 
