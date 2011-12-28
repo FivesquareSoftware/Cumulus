@@ -80,31 +80,35 @@
 
 
 - (IBAction)loginAction:(id)sender {
-	RCOAuth2AuthProvider *authProvider = [self.appDelegate.service.authProviders lastObject];
-	[SVProgressHUD showWithStatus:@"Logging in.." maskType:SVProgressHUDMaskTypeClear networkIndicator:NO];		
-	[authProvider requestAccessTokenWithUsername:self.usernameTextField.text password:self.passwordTextField.text completionBlock:^(RCResponse *response) {
-		if (response.success) {		
-			if (self.appDelegate.isLoggedIn) {
-				// You might want to store this in the keychain in your app ...
-				[[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:authProvider.token] forKey:@"authToken"];
-				[[NSUserDefaults standardUserDefaults] synchronize];
-				[SVProgressHUD dismiss];
-				[self dismissModalViewControllerAnimated:YES];
+	if (self.usernameTextField.text.length && self.passwordTextField.text.length) {
+		RCOAuth2AuthProvider *authProvider = [self.appDelegate.service.authProviders lastObject];
+		[SVProgressHUD showWithStatus:@"Logging in.." maskType:SVProgressHUDMaskTypeClear networkIndicator:NO];		
+		[authProvider requestAccessTokenWithUsername:self.usernameTextField.text password:self.passwordTextField.text completionBlock:^(RCResponse *response) {
+			if (response.success) {		
+				if (self.appDelegate.isLoggedIn) {
+					// You might want to store this in the keychain in your app ...
+					[[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:authProvider.token] forKey:@"authToken"];
+					[[NSUserDefaults standardUserDefaults] synchronize];
+					[SVProgressHUD dismiss];
+					[self dismissModalViewControllerAnimated:YES];
+				} else {
+					[SVProgressHUD dismissWithError:@"Try again.."];
+				}
 			} else {
-				[SVProgressHUD dismissWithError:@"Try again.."];
+				if (response.HTTPUnauthorized) {
+					[SVProgressHUD dismissWithError:@"Incorrect Client ID or Secret"];
+				} else {
+					NSString *errorMsg = [response.result valueForKey:@"error_description"];
+					[SVProgressHUD dismissWithError:errorMsg];
+				}
 			}
-		} else {
-			if (response.HTTPUnauthorized) {
-				[SVProgressHUD dismissWithError:@"Incorrect Client ID or Secret"];
-			} else {
-				NSString *errorMsg = [response.result valueForKey:@"error_description"];
-				[SVProgressHUD dismissWithError:errorMsg];
-			}
-		}
-	}];
+		}];
+	}
 }
 
-
+- (IBAction)getAccountAction:(id)sender {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.geoloqi.com"]];
+}
 
 
 @end

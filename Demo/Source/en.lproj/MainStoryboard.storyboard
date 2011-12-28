@@ -29,7 +29,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <inset key="contentInset" minX="0.0" minY="25" maxX="0.0" maxY="0.0"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="1S8-V3-Khb">
-                            <rect key="frame" x="0.0" y="110" width="320" height="75"/>
+                            <rect key="frame" x="0.0" y="110" width="320" height="125"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="sA4-dm-Ay8">
@@ -45,6 +45,21 @@
                                     </state>
                                     <connections>
                                         <action selector="loginAction:" destination="Ora-Yn-VGE" eventType="touchUpInside" id="h3m-fI-Qmq"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z4i-zh-bxc">
+                                    <rect key="frame" x="11" y="69" width="299" height="37"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                    <state key="normal" title="Get an Account">
+                                        <color key="titleColor" red="0.53725492949999998" green="0.60784316059999999" blue="0.65882354970000001" alpha="1" colorSpace="deviceRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <state key="highlighted">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="getAccountAction:" destination="Ora-Yn-VGE" eventType="touchUpInside" id="sS6-sh-4GB"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -333,6 +348,7 @@
         <class className="LoginController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginController.h"/>
             <relationships>
+                <relationship kind="action" name="getAccountAction:"/>
                 <relationship kind="action" name="loginAction:"/>
                 <relationship kind="outlet" name="passwordTextField" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="usernameTextField" candidateClass="UITextField"/>

@@ -27,6 +27,7 @@
 		A40925AF14954A0300C42E8B /* NSDate+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A40925AE14954A0300C42E8B /* NSDate+Demo.m */; };
 		A40925B21495518000C42E8B /* NSFetchedResultsController+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A40925B11495518000C42E8B /* NSFetchedResultsController+Demo.m */; };
 		A40925CE14957AF400C42E8B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A40925CD14957AF400C42E8B /* CoreLocation.framework */; };
+		A427F28314AAD51F00F6A67F /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26F9A1493D3050005DFE3 /* LoginController.m */; };
 		A4B6084F14A02EE1003C43AE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4B6084E14A02EE1003C43AE /* Security.framework */; };
 		A4B6085214A0ED3E003C43AE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4B6085114A0ED3E003C43AE /* MapKit.framework */; };
 		A4B6085514A0EEA6003C43AE /* FetchedResultsMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B6085414A0EEA5003C43AE /* FetchedResultsMapViewController.m */; };
@@ -37,7 +38,6 @@
 		A4B608AC14A13149003C43AE /* CreateGeonoteController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B608AB14A13149003C43AE /* CreateGeonoteController.m */; };
 		A4D04A2614A25E6A001E3682 /* FormInputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D04A2514A25E6A001E3682 /* FormInputTextView.m */; };
 		A4D26F981493D26B0005DFE3 /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D26F971493D26B0005DFE3 /* libRESTClient.a */; };
-		A4D26F9B1493D3050005DFE3 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26F9A1493D3050005DFE3 /* LoginController.m */; };
 		A4D26FA21493FB590005DFE3 /* NSManagedObjectContext+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26FA11493FB590005DFE3 /* NSManagedObjectContext+Demo.m */; };
 		A4D26FB31494223B0005DFE3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D26FB21494223B0005DFE3 /* MobileCoreServices.framework */; };
 		A4D26FB6149423270005DFE3 /* NSObject+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D26FB5149423270005DFE3 /* NSObject+Demo.m */; };
@@ -355,7 +355,6 @@
 			files = (
 				A409245F1492E62800C42E8B /* main.m in Sources */,
 				A40924631492E62800C42E8B /* AppDelegate.m in Sources */,
-				A4D26F9B1493D3050005DFE3 /* LoginController.m in Sources */,
 				A4D26FA21493FB590005DFE3 /* NSManagedObjectContext+Demo.m in Sources */,
 				A4D26FB6149423270005DFE3 /* NSObject+Demo.m in Sources */,
 				A4D26FBA149429890005DFE3 /* MenuController.m in Sources */,
@@ -375,6 +374,7 @@
 				A4B6086314A0FD34003C43AE /* Place+Demo.m in Sources */,
 				A4B608AC14A13149003C43AE /* CreateGeonoteController.m in Sources */,
 				A4D04A2614A25E6A001E3682 /* FormInputTextView.m in Sources */,
+				A427F28314AAD51F00F6A67F /* LoginController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
