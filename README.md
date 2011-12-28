@@ -131,5 +131,5 @@ RCResource *images = [site resource:@"images"];
 ```
 
 
-RESTClient does even more, like direct from disk uploads, OAuth2 authentication, and post-processing on a background thread (great for core data mapping), See more detailed examples in  the [HowTos][].
+RESTClient does even more, like direct from disk uploads, OAuth2 authentication, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
 
