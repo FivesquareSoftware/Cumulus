@@ -4,6 +4,3 @@
 [submodule "Ext/OCMock"]
 	path = Ext/OCMock
 	url = git@github.com:johnclayton/OCMock.git
-[submodule "Demo/Ext/SVProgressHUD"]
-	path = Demo/Ext/SVProgressHUD
-	url = git@github.com:johnclayton/SVProgressHUD.git
