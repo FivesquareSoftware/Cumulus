@@ -81,7 +81,7 @@
 	__block RCResponse *localResponse = nil;
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[RESTClient get:endpoint completionBlock:^(RCResponse *response){
+	[RESTClient get:endpoint withCompletionBlock:^(RCResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
@@ -111,7 +111,7 @@
 		dispatch_semaphore_signal(request_sema);
 	};
 	
-	[RESTClient get:endpoint progressBlock:progressBlock completionBlock:completionBlock];
+	[RESTClient get:endpoint withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
@@ -133,7 +133,7 @@
 	__block RCResponse *localResponse = nil;
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[RESTClient head:endpoint completionBlock:^(RCResponse *response){
+	[RESTClient head:endpoint withCompletionBlock:^(RCResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
@@ -158,7 +158,7 @@
 	__block RCResponse *localResponse = nil;
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[RESTClient delete:endpoint completionBlock:^(RCResponse *response){
+	[RESTClient delete:endpoint withCompletionBlock:^(RCResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
@@ -290,7 +290,7 @@
 	};
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[RESTClient download:endpoint progressBlock:progressBlock completionBlock:completionBlock];
+	[RESTClient download:endpoint withProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
@@ -320,7 +320,7 @@
 	
 	NSString *filePath = [[NSBundle mainBundle] pathForResource:@"t_hero" ofType:@"png"];
 	NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-	[RESTClient uploadFile:fileURL to:endpoint progressBlock:progressBlock completionBlock:completionBlock];
+	[RESTClient uploadFile:fileURL to:endpoint withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);

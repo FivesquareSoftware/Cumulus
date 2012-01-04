@@ -157,12 +157,12 @@ static NSMutableDictionary *headers_ = nil;
 	return [resource get];
 }
 
-+ (void) get:(NSString *)URLString completionBlock:(RCCompletionBlock)completionBlock {
++ (void) get:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource getWithCompletionBlock:completionBlock];
 }
 
-+ (void) get:(NSString *)URLString progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
++ (void) get:(NSString *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource getWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
@@ -175,7 +175,7 @@ static NSMutableDictionary *headers_ = nil;
 	return [resource head];
 }
 
-+ (void) head:(NSString *)URLString completionBlock:(RCCompletionBlock)completionBlock {
++ (void) head:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource headWithCompletionBlock:completionBlock];
 }
@@ -187,7 +187,7 @@ static NSMutableDictionary *headers_ = nil;
 	return [resource delete];
 }
 
-+ (void) delete:(NSString *)URLString completionBlock:(RCCompletionBlock)completionBlock {
++ (void) delete:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource deleteWithCompletionBlock:completionBlock];
 }
@@ -199,12 +199,12 @@ static NSMutableDictionary *headers_ = nil;
 	return [resource post:payload];
 }
 
-+ (void) post:(NSString *)URLString payload:(id)payload completionBlock:(RCCompletionBlock)completionBlock {
++ (void) post:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource post:payload completionBlock:completionBlock];
 }
 
-+ (void) post:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
++ (void) post:(NSString *)URLString payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource post:payload progressBlock:progressBlock completionBlock:completionBlock];
 }
@@ -216,12 +216,12 @@ static NSMutableDictionary *headers_ = nil;
 	return [resource put:payload];
 }
 
-+ (void) put:(NSString *)URLString payload:(id)payload completionBlock:(RCCompletionBlock)completionBlock {
++ (void) put:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource put:payload completionBlock:completionBlock];
 }
 
-+ (void) put:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
++ (void) put:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource put:payload progressBlock:progressBlock completionBlock:completionBlock];
 }
@@ -229,12 +229,12 @@ static NSMutableDictionary *headers_ = nil;
 
 #pragma mark -Files
 
-+ (void) download:(NSString  *)URLString progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
++ (void) download:(NSString  *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
-+ (void) uploadFile:(NSURL *)fileURL to:(NSString *)URLString progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
++ (void) uploadFile:(NSURL *)fileURL to:(NSString *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
 	[resource uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
 }

@@ -101,38 +101,38 @@
 /** @see RCResource#get. */
 + (RCResponse *) get:(NSString *)URLString;
 /** @see RCResource#getWithCompletionBlock:. */
-+ (void) get:(NSString *)URLString completionBlock:(RCCompletionBlock)completionBlock;
++ (void) get:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock;
 /** @see RCResource#getWithProgressBlock:completionBlock:. */
-+ (void) get:(NSString *)URLString progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
++ (void) get:(NSString *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
 /** @see RCResource#head. */
 + (RCResponse *) head:(NSString *)URLString;
 /** @see RCResource#deleteWithCompletionBlock:. */
-+ (void) head:(NSString *)URLString completionBlock:(RCCompletionBlock)completionBlock;
++ (void) head:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock;
 
 /** @see RCResource#delete. */
 + (RCResponse *) delete:(NSString *)URLString;
 /** @see RCResource#deleteWithCompletionBlock:. */
-+ (void) delete:(NSString *)URLString completionBlock:(RCCompletionBlock)completionBlock;
++ (void) delete:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock;
 
 /** @see RCResource#post:. */
 + (RCResponse *) post:(NSString *)URLString payload:(id)payload;
 /** @see RCResource#post:completionBlock:. */
-+ (void) post:(NSString *)URLString payload:(id)payload completionBlock:(RCCompletionBlock)completionBlock;
++ (void) post:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock;
 /** @see RCResource#post:progressBlock:completionBlock:. */
-+ (void) post:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
++ (void) post:(NSString *)URLString payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
 /** @see RCResource#put:. */
 + (RCResponse *) put:(NSString *)URLString payload:(id)payload;
 /** @see RCResource#put:completionBlock:. */
-+ (void) put:(NSString *)URLString payload:(id)payload completionBlock:(RCCompletionBlock)completionBlock;
++ (void) put:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock;
 /** @see RCResource#put:progressBlock:completionBlock:. */
-+ (void) put:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
++ (void) put:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock withCompletionBlock:(RCCompletionBlock)completionBlock;
 
 /** @see RCResource#downloadWithProgressBlock:completionBlock:. */
-+ (void) download:(NSString  *)URLString progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
++ (void) download:(NSString  *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 /** @see RCResource#uploadFile:withProgressBlock:completionBlock:. */
-+ (void) uploadFile:(NSURL *)fileURL to:(NSString *)URLString progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
++ (void) uploadFile:(NSURL *)fileURL to:(NSString *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
 /** @} */
 
