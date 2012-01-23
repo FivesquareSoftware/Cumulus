@@ -26,6 +26,7 @@ load 'routes/response_codes.rb'
 load 'routes/coding.rb'
 load 'routes/files.rb'
 load 'routes/benchmarks.rb'
+load 'routes/query.rb'
 
 head '/index' do
 	ok('OK')

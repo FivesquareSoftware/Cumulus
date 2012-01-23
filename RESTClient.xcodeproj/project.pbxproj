@@ -20,6 +20,8 @@
 		A409B3BC1410597D003495BA /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; };
 		A409B3BD1410597D003495BA /* RCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* RCConstants.m */; };
 		A409B3CD141A530C003495BA /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4213DB459200F96152 /* libRESTClient.a */; };
+		A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; };
+		A41410D614B680070026A8C1 /* NSDictionary+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */; };
 		A414FD4613DB459200F96152 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4513DB459200F96152 /* Foundation.framework */; };
 		A414FD4C13DB459200F96152 /* RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD4B13DB459200F96152 /* RESTClient.m */; };
 		A414FD5913DB466600F96152 /* RCResource.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5713DB466600F96152 /* RCResource.h */; };
@@ -27,21 +29,6 @@
 		A414FD6113DB468D00F96152 /* RCResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5F13DB468D00F96152 /* RCResponse.h */; };
 		A414FD6213DB468D00F96152 /* RCResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD6013DB468D00F96152 /* RCResponse.m */; };
 		A416122A14411A800008A235 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A416122914411A800008A235 /* libOCMock.a */; };
-		A429C35214AAA5DE005849D8 /* RCResponseCodesSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* RCResponseCodesSpec.m */; };
-		A429C35314AAA5DE005849D8 /* RCCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* RCCodingSpec.m */; };
-		A429C35414AAA5DE005849D8 /* RCResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* RCResourceConfigSpec.m */; };
-		A429C35514AAA5DE005849D8 /* RCResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* RCResourceNestingSpec.m */; };
-		A429C35614AAA5DE005849D8 /* RCAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* RCAuthSpec.m */; };
-		A429C35714AAA5DE005849D8 /* RCGetSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* RCGetSpec.m */; };
-		A429C35814AAA5DE005849D8 /* RCHeadSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23E81483F4FC0045CA21 /* RCHeadSpec.m */; };
-		A429C35914AAA5DE005849D8 /* RCDeleteSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23EA1483F50A0045CA21 /* RCDeleteSpec.m */; };
-		A429C35A14AAA5DE005849D8 /* RCPostSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EEBA1A14242D6100376DAC /* RCPostSpec.m */; };
-		A429C35B14AAA5DE005849D8 /* RCPutSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120B1441096A0008A235 /* RCPutSpec.m */; };
-		A429C35C14AAA5DE005849D8 /* RCResourceBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* RCResourceBlocksSpec.m */; };
-		A429C35D14AAA5DE005849D8 /* RCFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* RCFileHandlingSpec.m */; };
-		A429C35E14AAA5DE005849D8 /* RCStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* RCStaticMethodsSpec.m */; };
-		A429C35F14AAA5DE005849D8 /* RCBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* RCBenchmarksSpec.m */; };
-		A429C36014AAA5DE005849D8 /* RCRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* RCRequestSpec.m */; };
 		A432B46E149D0B56006582DB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B3991408F193003495BA /* Security.framework */; };
 		A43F86AD144AAC5D00C69C3D /* RCImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */; };
 		A43F86AE144AAC5D00C69C3D /* RCImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86AC144AAC5D00C69C3D /* RCImageCoder.m */; };
@@ -60,6 +47,8 @@
 		A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4626A931419993E005544D6 /* libOCSpec.a */; };
 		A468A774149FA73900612DA9 /* RCClientCertificateAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A468A772149FA73900612DA9 /* RCClientCertificateAuthProvider.h */; };
 		A468A775149FA73900612DA9 /* RCClientCertificateAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A468A773149FA73900612DA9 /* RCClientCertificateAuthProvider.m */; };
+		A49D484314B4BD8B0045D66F /* NSObject+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */; };
+		A49D484414B4BD8B0045D66F /* NSObject+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */; };
 		A4A22272148AA893001726E4 /* RCRequest+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A22271148AA893001726E4 /* RCRequest+Protected.h */; };
 		A4A22277148AB772001726E4 /* hs-2006-01-c-full_tif.png in Resources */ = {isa = PBXBuildFile; fileRef = A4A22276148AB772001726E4 /* hs-2006-01-c-full_tif.png */; };
 		A4A8CC51147ECEEE00BE6C0E /* RCDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC4C147ECEEE00BE6C0E /* RCDownloadRequest.h */; };
@@ -75,9 +64,9 @@
 		A4C2085A141852F6003412BA /* RCXMLCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C20858141852F6003412BA /* RCXMLCoder.h */; };
 		A4C2085B141852F6003412BA /* RCXMLCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C20859141852F6003412BA /* RCXMLCoder.m */; };
 		A4C9D1D41482DE57004E9B72 /* Item.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4C9D1D31482DE57004E9B72 /* Item.plist */; };
+		A4CCAF0E14B63C1500A8C21B /* RCQueryStringSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* RCQueryStringSpec.m */; };
 		A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1214199082005544D6 /* SpecHelper.m */; };
 		A4D4FFC7141A5A4E00E58873 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */; };
-		A4DE76E214AA62A900A7C525 /* RCResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* RCResourceControlSpec.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +86,9 @@
 		A409B3BB1410597D003495BA /* RCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConstants.m; sourceTree = "<group>"; };
 		A40AFC18144B881F00852EDE /* setup.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup.sh; sourceTree = "<group>"; };
 		A40F3702144DCB9000FA723B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+RESTClient.h"; sourceTree = "<group>"; };
+		A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+RESTClient.m"; sourceTree = "<group>"; };
+		A414784914CD4F3900C3EA48 /* query.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = query.rb; sourceTree = "<group>"; };
 		A414FD4213DB459200F96152 /* libRESTClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRESTClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A414FD4513DB459200F96152 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A414FD4913DB459200F96152 /* RESTClient-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RESTClient-Prefix.pch"; sourceTree = "<group>"; };
@@ -165,6 +157,8 @@
 		A46E23E81483F4FC0045CA21 /* RCHeadSpec.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCHeadSpec.m; sourceTree = "<group>"; };
 		A46E23E91483F50A0045CA21 /* RCDeleteSpec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCDeleteSpec.h; sourceTree = "<group>"; };
 		A46E23EA1483F50A0045CA21 /* RCDeleteSpec.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCDeleteSpec.m; sourceTree = "<group>"; };
+		A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+RESTClient.h"; sourceTree = "<group>"; };
+		A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+RESTClient.m"; sourceTree = "<group>"; };
 		A4A22271148AA893001726E4 /* RCRequest+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCRequest+Protected.h"; sourceTree = "<group>"; };
 		A4A22273148AAAFD001726E4 /* RCRequestSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCRequestSpec.h; sourceTree = "<group>"; };
 		A4A22274148AAAFD001726E4 /* RCRequestSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCRequestSpec.m; sourceTree = "<group>"; };
@@ -194,6 +188,8 @@
 		A4CC12591481D6050066C7E6 /* RCStaticMethodsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCStaticMethodsSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A4CC12741482EE2E0066C7E6 /* Specs.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Specs.xcconfig; sourceTree = "<group>"; };
 		A4CC12751482F91A0066C7E6 /* benchmarks.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = benchmarks.rb; sourceTree = "<group>"; };
+		A4CCAF0C14B63C1500A8C21B /* RCQueryStringSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCQueryStringSpec.h; sourceTree = "<group>"; };
+		A4CCAF0D14B63C1500A8C21B /* RCQueryStringSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCQueryStringSpec.m; sourceTree = "<group>"; };
 		A4CD025414802486006EE89E /* response_codes.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = response_codes.rb; sourceTree = "<group>"; };
 		A4CD025614804612006EE89E /* RCResourceNestingSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCResourceNestingSpec.h; sourceTree = "<group>"; };
 		A4CD025714804612006EE89E /* RCResourceNestingSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCResourceNestingSpec.m; sourceTree = "<group>"; };
@@ -308,6 +304,7 @@
 				A443AE3813DB4C7F00D55902 /* Coders */,
 				A409B33E1408E82D003495BA /* RCAuthProvider.h */,
 				A409B33D1408E7DE003495BA /* AuthProviders */,
+				A49D483F14B4BD760045D66F /* Extensions */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -418,6 +415,7 @@
 				A4CC125614816DBA0066C7E6 /* coding.rb */,
 				A4CC12571481A1650066C7E6 /* files.rb */,
 				A4CC12751482F91A0066C7E6 /* benchmarks.rb */,
+				A414784914CD4F3900C3EA48 /* query.rb */,
 			);
 			path = routes;
 			sourceTree = "<group>";
@@ -449,6 +447,8 @@
 				A4EEBA1A14242D6100376DAC /* RCPostSpec.m */,
 				A416120A1441096A0008A235 /* RCPutSpec.h */,
 				A416120B1441096A0008A235 /* RCPutSpec.m */,
+				A4CCAF0C14B63C1500A8C21B /* RCQueryStringSpec.h */,
+				A4CCAF0D14B63C1500A8C21B /* RCQueryStringSpec.m */,
 				A416121414410B640008A235 /* RCResourceBlocksSpec.h */,
 				A416121514410B640008A235 /* RCResourceBlocksSpec.m */,
 				A44C586B147DC15700CD592C /* RCFileHandlingSpec.h */,
@@ -472,6 +472,17 @@
 				A4626A1614199082005544D6 /* RESTClientSpecs-Prefix.pch */,
 			);
 			path = Target;
+			sourceTree = "<group>";
+		};
+		A49D483F14B4BD760045D66F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */,
+				A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */,
+				A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */,
+				A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		A4A8CC4B147ECEEE00BE6C0E /* Request */ = {
@@ -560,6 +571,8 @@
 				A4092786149835FD00C42E8B /* RCServerTrustAuthProvider.h in Headers */,
 				A468A774149FA73900612DA9 /* RCClientCertificateAuthProvider.h in Headers */,
 				A4B6080514A0224B003C43AE /* RCOAuthToken.h in Headers */,
+				A49D484314B4BD8B0045D66F /* NSObject+RESTClient.h in Headers */,
+				A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,6 +695,8 @@
 				A4092787149835FD00C42E8B /* RCServerTrustAuthProvider.m in Sources */,
 				A468A775149FA73900612DA9 /* RCClientCertificateAuthProvider.m in Sources */,
 				A4B6080614A0224B003C43AE /* RCOAuthToken.m in Sources */,
+				A49D484414B4BD8B0045D66F /* NSObject+RESTClient.m in Sources */,
+				A41410D614B680070026A8C1 /* NSDictionary+RESTClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,22 +706,7 @@
 			files = (
 				A4626A4D14199082005544D6 /* main.m in Sources */,
 				A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */,
-				A4DE76E214AA62A900A7C525 /* RCResourceControlSpec.m in Sources */,
-				A429C35214AAA5DE005849D8 /* RCResponseCodesSpec.m in Sources */,
-				A429C35314AAA5DE005849D8 /* RCCodingSpec.m in Sources */,
-				A429C35414AAA5DE005849D8 /* RCResourceConfigSpec.m in Sources */,
-				A429C35514AAA5DE005849D8 /* RCResourceNestingSpec.m in Sources */,
-				A429C35614AAA5DE005849D8 /* RCAuthSpec.m in Sources */,
-				A429C35714AAA5DE005849D8 /* RCGetSpec.m in Sources */,
-				A429C35814AAA5DE005849D8 /* RCHeadSpec.m in Sources */,
-				A429C35914AAA5DE005849D8 /* RCDeleteSpec.m in Sources */,
-				A429C35A14AAA5DE005849D8 /* RCPostSpec.m in Sources */,
-				A429C35B14AAA5DE005849D8 /* RCPutSpec.m in Sources */,
-				A429C35C14AAA5DE005849D8 /* RCResourceBlocksSpec.m in Sources */,
-				A429C35D14AAA5DE005849D8 /* RCFileHandlingSpec.m in Sources */,
-				A429C35E14AAA5DE005849D8 /* RCStaticMethodsSpec.m in Sources */,
-				A429C35F14AAA5DE005849D8 /* RCBenchmarksSpec.m in Sources */,
-				A429C36014AAA5DE005849D8 /* RCRequestSpec.m in Sources */,
+				A4CCAF0E14B63C1500A8C21B /* RCQueryStringSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

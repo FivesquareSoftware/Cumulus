@@ -49,7 +49,7 @@
  *
  * RCRequest is meant as a lovel-level class. Generally you will want to use RCResource directly unless you need more control than RCResource allows.
  *
- * Lifecycle
+ * = Lifecycle
  *
  * There are five blocks that are run, if defined, at various points in a request's lifecycle:
  *  - didSendData, which is passed a progress dictionary
@@ -58,11 +58,11 @@
  *  - completion, which runs when a request completes, regardless of success or failure
  *  - abort, which runs when a request is canceled before its url connection is started
  *
- * Authentication
+ * = Authentication
  *
  * Each request can have a collection of authentication providers, which implement <RCAuthProvider> and can do any kind of authentication that is supported by the protocol. Several common auth providers are included with RESTClient.
  *
- * Encoding/Decoding
+ * = Encoding/Decoding
  *
  * Payloads and results are serialized/deserialized automatically if a coder for the particular object type or content-type can be found. Custom coders can be added to the system by simply implementing <RCCoder> and registering the new coder with the system by calling RCCoder+registerCoder:objectType:mimeTypes:. Only one coder per object or content-type is allowed, with the last one added winning if there are more than one. It is also possible to simply set an instance of <RCCoder> on any instance of a request as either an encoder or decoder, though if the coder is registered with the system properly this generally shouldn't be necessary.
  */

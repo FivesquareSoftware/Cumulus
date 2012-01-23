@@ -201,12 +201,12 @@ static NSMutableDictionary *headers_ = nil;
 
 + (void) post:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
-	[resource post:payload completionBlock:completionBlock];
+	[resource post:payload withCompletionBlock:completionBlock];
 }
 
 + (void) post:(NSString *)URLString payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
-	[resource post:payload progressBlock:progressBlock completionBlock:completionBlock];
+	[resource post:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 #pragma mark -PUT
@@ -218,12 +218,12 @@ static NSMutableDictionary *headers_ = nil;
 
 + (void) put:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
-	[resource put:payload completionBlock:completionBlock];
+	[resource put:payload withCompletionBlock:completionBlock];
 }
 
-+ (void) put:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock withCompletionBlock:(RCCompletionBlock)completionBlock {
++ (void) put:(NSString *)URLString payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
 	RCResource *resource = [self configuredResourceForURLString:URLString];
-	[resource put:payload progressBlock:progressBlock completionBlock:completionBlock];
+	[resource put:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 

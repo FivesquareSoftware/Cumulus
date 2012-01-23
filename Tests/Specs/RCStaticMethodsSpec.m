@@ -183,7 +183,7 @@
 	__block RCResponse *localResponse = nil;
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[RESTClient post:endpoint payload:self.specHelper.item completionBlock:^(RCResponse *response){
+	[RESTClient post:endpoint payload:self.specHelper.item withCompletionBlock:^(RCResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
@@ -213,7 +213,7 @@
 		dispatch_semaphore_signal(request_sema);
 	};
 	
-	[RESTClient post:endpoint payload:self.specHelper.item progressBlock:progressBlock completionBlock:completionBlock];
+	[RESTClient post:endpoint payload:self.specHelper.item withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
@@ -235,7 +235,7 @@
 	__block RCResponse *localResponse = nil;
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[RESTClient put:endpoint payload:self.specHelper.item completionBlock:^(RCResponse *response){
+	[RESTClient put:endpoint payload:self.specHelper.item withCompletionBlock:^(RCResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
@@ -265,7 +265,7 @@
 		dispatch_semaphore_signal(request_sema);
 	};
 	
-	[RESTClient put:endpoint payload:self.specHelper.item progressBlock:progressBlock completionBlock:completionBlock];
+	[RESTClient put:endpoint payload:self.specHelper.item withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);

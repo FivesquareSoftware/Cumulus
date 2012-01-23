@@ -55,7 +55,7 @@
 			}
 		};
 		
-		[self.tokenService post:tokenPayload completionBlock:completionBlock];
+		[self.tokenService post:tokenPayload withCompletionBlock:completionBlock];
 	}	
 }
 

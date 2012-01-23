@@ -36,6 +36,8 @@
 #import "RCUploadRequest.h"
 #import "RCRequest+Protected.h"
 
+#import "RESTClient.h"
+
 
 @implementation RCUploadRequest
 

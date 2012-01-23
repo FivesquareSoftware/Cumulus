@@ -124,6 +124,12 @@
 	STAssertEqualObjects([fullURL absoluteString], [child.URL absoluteString], @"Should standardize URLs with extra dots");
 }
 
+- (void) shouldCorrectlyInitializeFromURLWithQueryString {
+	RCResource *resource = [RCResource withURL:@"http://example.com?foo==bar"];
+	NSString *URLString = @"http://example.com?foo==bar";
+	STAssertEqualObjects([resource.URL absoluteString], URLString, @"URL with query string should be equal to URL string");
+}
+
 - (void) shouldParseQueryStringProperly {
 	RCResource *resource = [self.service resource:@"resource"];
 	RCResource *childWithQueryString = [resource resource:@"child?foo=bar"];
@@ -132,5 +138,6 @@
 	NSURL *fullURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/child?foo=bar",baseString]];
 	STAssertEqualObjects([fullURL absoluteString], [childWithQueryString.URL absoluteString], @"Should properly append a query string");
 }
+
 
 @end

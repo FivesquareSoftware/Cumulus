@@ -45,11 +45,11 @@
  * @mainpage
  * RCResource is the primary public interface for RESTKit, and each instance is meant to reflect an actual resource residing on the WWW, generally accessed via a REST web service. 
  *
- * Configuration
+ * = Configuration
  *
  * Child resources can be constructed from parents, and will inherit all the configuration information of their ancestors. Their URLs are constructed as sub-URLs to their parents, and they retain their parents, to allow dynamic lookup of an ancestor's configuration information. With the exception of headers, configuration is an either/or prospect—it comes from only one resource in the chain, whether that is the receiver or one of the ancestors. Headers, being a mutable dictionary are merged down the whole tree.
  *
- * Lifecycle
+ * = Lifecycle
  *
  * A resource has a lifecycle that is defined by the blocks you can run at various points in the execution of a request for the resource. These points are:
  *  - preflight, which can abort a request
@@ -58,14 +58,30 @@
  *  - completion, which runs when a request completes, regardless of success or failure
  *  The posprocess block is unique because it runs on the high-priority concurrent global queue, whereas all the other blocks run on the main queue to allow UI code to safely run.
  *
- * Authentication
+ * = Authentication
  *
  * Each resource can have an instance of an authentication provider, which implements <RCAuthProvider> and can do any kind of authentication that is supported by the protocol. A BASIC auth provider is included with RESTClient, and if username and password are set on a resource, an instance of this provider will be created on demand.
  *
- * Encoding/Decoding
+ * = Encoding/Decoding
  *
  * Payloads and results are serialized/deserialized automatically using instances of <RCCoder>.
  *  @see RCRequest for more information
+ *
+ * = Query Strings
+ *
+ * To make it easier to reuse resource objects, you can pass a query argument—consisting either of a single dictionary or a list of values and keys—to one of the HTTP request methods, like getWithQuery: and it will be expanded for you to a query string for the request. The expansion follows these rules:
+ *    - NSString - <key>=<value>
+ *    - NSArray - <key[0]>=<value1>&<key[1]>=<value2>&...
+ *    - NSObject - <key>=<[value description]>
+ *    - NSDictionary - dictionary values are transformed recursively using the above rules, and query list processing is terminated.
+ *
+ *  For example, the following message:
+ *    [resource getWithQuery:@"bar",@"foo",@"bat",@"baz"] 
+ *  would yield ?foo=bar&baz=bat, while 
+ *    [resource getWithQuery:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"bar",@"foo"] 
+ *  would yield only ?foo=bar because the dictionary terminated processing
+ *
+ *  If there is a dictionary in the argument it must be the only object in the list or the request methods will raise an exception.
  */
 @interface RCResource : NSObject {
 	
@@ -168,24 +184,79 @@
  *  @{
  */
 
+// GET
+
 - (RCResponse *) get;
 - (void) getWithCompletionBlock:(RCCompletionBlock)completionBlock;
 - (void) getWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
+/**
+ * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
+ * @throws an exception if a dictionary appears and is not the sole argument
+ * @see RCResource for a detailed discussion of how to use the query argument
+ */
+- (RCResponse *) getWithQuery:firstValue,... ;
+- (void) getWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,... ; ///< @see getWithQuery:
+- (void) getWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,... ; ///< @see getWithQuery:
+
+
+// HEAD
+
 - (RCResponse *) head;
 - (void) headWithCompletionBlock:(RCCompletionBlock)completionBlock;
 
+/**
+ * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
+ * @throws an exception if a dictionary appears and is not the sole argument
+ * @see RCResource for a detailed discussion of how to use the query argument
+ */
+- (RCResponse *) headWithQuery:firstValue,...;
+- (void) headWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see headWithQuery:
+
+
+// DELETE
+
 - (RCResponse *) delete;
 - (void) deleteWithCompletionBlock:(RCCompletionBlock)completionBlock;
+/**
+ * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
+ * @throws an exception if a dictionary appears and is not the sole argument
+ * @see RCResource for a detailed discussion of how to use the query argument
+ */
+- (RCResponse *) deleteWithQuery:firstValue,...;
+- (void) deleteWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see deleteWithQuery:
 
+
+// POST
 
 - (RCResponse *) post:(id)payload;
-- (void) post:(id)payload completionBlock:(RCCompletionBlock)completionBlock;
-- (void) post:(id)payload progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
+- (void) post:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock;
+- (void) post:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
+
+/**
+ * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
+ * @throws an exception if a dictionary appears and is not the sole argument
+ * @see RCResource for a detailed discussion of how to use the query argument
+ */
+- (RCResponse *) post:(id)payload withQuery:firstValue,...;
+- (void) post:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see post:withQuery:
+- (void) post:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see post:withQuery:
+
+
+// PUT
 
 - (RCResponse *) put:(id)payload;
-- (void) put:(id)payload completionBlock:(RCCompletionBlock)completionBlock;
-- (void) put:(id)payload progressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
+- (void) put:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock;
+- (void) put:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
+
+/**
+ * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
+ * @throws an exception if a dictionary appears and is not the sole argument
+ * @see RCResource for a detailed discussion of how to use the query argument
+ */
+- (RCResponse *) put:(id)payload withQuery:firstValue,...;
+- (void) put:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see put:withQuery:
+- (void) put:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see put:withQuery:
 
 
 /** @} */

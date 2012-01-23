@@ -53,6 +53,17 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IPHONE
+	#import <MobileCoreServices/MobileCoreServices.h>
+#else
+	#import <CoreServices/CoreServices.h>
+#endif
+
+#ifndef NS_BLOCK_ASSERTIONS
+	#define NS_BLOCK_ASSERTIONS 0
+#endif
+
+
 #import "RCTypes.h"
 #import "RCConstants.h"
 
@@ -62,6 +73,7 @@
 #import "RCUploadRequest.h"
 #import "RCResponse.h"
 #import "RCCoder.h"
+
 
 /** 
  *  RESTClient is the main header for the RESTClient HTTP client and provides some static methods for making one-off or non-conforming requests. In general, however, the main point of usage for RESTClient is RCResource, which allows for simple configuration and resusability of requests.
@@ -127,7 +139,7 @@
 /** @see RCResource#put:completionBlock:. */
 + (void) put:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock;
 /** @see RCResource#put:progressBlock:completionBlock:. */
-+ (void) put:(NSString *)URLString payload:(id)payload progressBlock:(RCProgressBlock)progressBlock withCompletionBlock:(RCCompletionBlock)completionBlock;
++ (void) put:(NSString *)URLString payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
 /** @see RCResource#downloadWithProgressBlock:completionBlock:. */
 + (void) download:(NSString  *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;

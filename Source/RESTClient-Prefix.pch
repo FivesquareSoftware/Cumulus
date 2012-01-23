@@ -30,16 +30,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef __OBJC__
 	#import <Foundation/Foundation.h>
 
-#if TARGET_OS_IPHONE
-	#import <UIKit/UIKit.h>
-	#import <MobileCoreServices/MobileCoreServices.h>
-#else
-	#import <AppKit/AppKit.h>
-	#import <CoreServices/CoreServices.h>
-#endif
-
-#ifndef NS_BLOCK_ASSERTIONS
-	#define NS_BLOCK_ASSERTIONS 0
-#endif
+	#if TARGET_OS_IPHONE
+		#import <UIKit/UIKit.h>
+	#else
+		#import <AppKit/AppKit.h>
+	#endif
 
 #endif
