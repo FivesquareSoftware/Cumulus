@@ -145,6 +145,39 @@ if ([response isOK]) {
 }
 ```
 
+All of the HTTP methods take an optional query object, which can be an array or dictionary.
+
+```objective-c 
+RCResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:@"bar",@"foo",@"today",@"date",nil]];
+```
+
+will yield a query string like this: "foo=bar&date=today".
+
+A single dictionary could also produce a similar result:
+
+```objective-c 
+RCResponse *response = [posts getWithQuery:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"]];
+```
+
+However, anything after a dictionary is ignored.
+
+```objective-c 
+RCResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"today",@"date",nil]];
+```
+
+will yield "foo=bar" and drop the remaining parameters.
+
+Finally, specific objects, like arrays, know how to serialize themselves as query string objects correctly.
+
+```objective-c 
+RCResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSArray arrayWithObjects:@"1",@"2"],@"foo",@"today",@"date",nil]];
+```
+
+yields this query string: "foo[]=1&foo[]=2&date=today". You can extend this special handling to your own objects by implementing -queryWithKey:.
+
+
+
+
 [Top &#x2191;][top]
 
 

@@ -76,6 +76,10 @@ RCResource *posts = [site resource:@"posts"];
 [posts getWithCompletionBlock:^(RCResponse *response) {
 	postsController.posts = response.result;
 }];
+
+[posts getWithCompletionBlock:^(RCResponse *response) {
+	recentPostsController.posts = response.result;
+} query:[NSDictionary dictionaryWithObject:@"today" forKey:@"postDate"]];
 ```
 
 _Create stuff_
@@ -87,7 +91,7 @@ RCProgressBlock postProgressBlock = ^(NSDictionary *progressInfo) {
 
 NSDictionary *postData = ...;
 RCResource *firstPost = [posts resource:[NSNumber numberWithInt:1]];
-[firstPost post:postData progressBlock:postProgressBlock completionBlock:^(RCResponse *response) {
+[firstPost post:postData withProgressBlock:postProgressBlock completionBlock:^(RCResponse *response) {
 	if (response.success) {
 		[postsController addPost:postData];
 	}
@@ -131,5 +135,5 @@ RCResource *images = [site resource:@"images"];
 ```
 
 
-RESTClient does even more, like direct from disk uploads, OAuth2 authentication, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
+RESTClient does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
 
