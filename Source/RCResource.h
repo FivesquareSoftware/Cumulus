@@ -69,19 +69,18 @@
  *
  * = Query Strings
  *
- * To make it easier to reuse resource objects, you can pass a query argument—consisting either of a single dictionary or a list of values and keys—to one of the HTTP request methods, like getWithQuery: and it will be expanded for you to a query string for the request. The expansion follows these rules:
+ * To make it easier to reuse resource objects, you can pass a query argument—consisting either of a single dictionary or an array of values and keys—to one of the HTTP request methods, like getWithQuery: and it will be expanded for you to a query string for the request. The expansion follows these rules:
  *    - NSString - <key>=<value>
- *    - NSArray - <key[0]>=<value1>&<key[1]>=<value2>&...
+ *    - NSArray - <key>[]=<value1>&<key>[]=<value2>&...
  *    - NSObject - <key>=<[value description]>
  *    - NSDictionary - dictionary values are transformed recursively using the above rules, and query list processing is terminated.
  *
  *  For example, the following message:
- *    [resource getWithQuery:@"bar",@"foo",@"bat",@"baz"] 
+ *    [resource getWithQuery:[NSArray arrayWithObjects:@"bar",@"foo",@"bat",@"baz"]] 
  *  would yield ?foo=bar&baz=bat, while 
- *    [resource getWithQuery:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"bar",@"foo"] 
- *  would yield only ?foo=bar because the dictionary terminated processing
+ *    [resource getWithQuery:[NSArray arrayWithObjets:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"bar",@"foo",nil]]
+ *  would yield only ?foo=bar because the dictionary terminated argument processing.
  *
- *  If there is a dictionary in the argument it must be the only object in the list or the request methods will raise an exception.
  */
 @interface RCResource : NSObject {
 	
@@ -190,14 +189,10 @@
 - (void) getWithCompletionBlock:(RCCompletionBlock)completionBlock;
 - (void) getWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
-/**
- * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
- * @throws an exception if a dictionary appears and is not the sole argument
- * @see RCResource for a detailed discussion of how to use the query argument
- */
-- (RCResponse *) getWithQuery:firstValue,... ;
-- (void) getWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,... ; ///< @see getWithQuery:
-- (void) getWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,... ; ///< @see getWithQuery:
+/** @param query - may be either a single dictionary or an array of alternating values and keys. */
+- (RCResponse *) getWithQuery:(id)query ;
+- (void) getWithCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
+- (void) getWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
 
 
 // HEAD
@@ -205,26 +200,19 @@
 - (RCResponse *) head;
 - (void) headWithCompletionBlock:(RCCompletionBlock)completionBlock;
 
-/**
- * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
- * @throws an exception if a dictionary appears and is not the sole argument
- * @see RCResource for a detailed discussion of how to use the query argument
- */
-- (RCResponse *) headWithQuery:firstValue,...;
-- (void) headWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see headWithQuery:
+/** @param query - may be either a single dictionary or an array of alternating values and keys. */
+- (RCResponse *) headWithQuery:(id)query;
+- (void) headWithCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query; ///< @see headWithQuery:
 
 
 // DELETE
 
 - (RCResponse *) delete;
 - (void) deleteWithCompletionBlock:(RCCompletionBlock)completionBlock;
-/**
- * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
- * @throws an exception if a dictionary appears and is not the sole argument
- * @see RCResource for a detailed discussion of how to use the query argument
- */
-- (RCResponse *) deleteWithQuery:firstValue,...;
-- (void) deleteWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see deleteWithQuery:
+
+/** @param query - may be either a single dictionary or an array of alternating values and keys. */
+- (RCResponse *) deleteWithQuery:(id)query;
+- (void) deleteWithCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query; ///< @see deleteWithQuery:
 
 
 // POST
@@ -233,14 +221,10 @@
 - (void) post:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock;
 - (void) post:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
-/**
- * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
- * @throws an exception if a dictionary appears and is not the sole argument
- * @see RCResource for a detailed discussion of how to use the query argument
- */
-- (RCResponse *) post:(id)payload withQuery:firstValue,...;
-- (void) post:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see post:withQuery:
-- (void) post:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see post:withQuery:
+/** @param query - may be either a single dictionary or an array of alternating values and keys. */
+- (RCResponse *) post:(id)payload withQuery:(id)query;
+- (void) post:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
+- (void) post:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
 
 
 // PUT
@@ -249,14 +233,10 @@
 - (void) put:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock;
 - (void) put:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 
-/**
- * @param firstValue - may be either a single dictionary or a nil-terminated list of values and keys objects
- * @throws an exception if a dictionary appears and is not the sole argument
- * @see RCResource for a detailed discussion of how to use the query argument
- */
-- (RCResponse *) put:(id)payload withQuery:firstValue,...;
-- (void) put:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see put:withQuery:
-- (void) put:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,...; ///< @see put:withQuery:
+/** @param query - may be either a single dictionary or an array of alternating values and keys. */
+- (RCResponse *) put:(id)payload withQuery:(id)query;
+- (void) put:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
+- (void) put:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
 
 
 /** @} */

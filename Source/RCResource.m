@@ -41,20 +41,6 @@
 
 #import "NSDictionary+RESTClient.h"
 
-#define ProcessQueryList() 	\
-	NSMutableArray *_queryList = [NSMutableArray new]; \
-	[_queryList addObject:firstValue]; \
-	if (NO == [firstValue isKindOfClass:[NSDictionary class]]) { \
-		va_list args; \
-		va_start(args, firstValue); \
-		id queryObject; \
-		while ( (queryObject = va_arg(args, id)) ) { \
-			[_queryList addObject:queryObject]; \
-		} \
-		va_end(args); \
-	}
-
-
 
 @interface RCResource() {
 	dispatch_semaphore_t requests_semaphore_;
@@ -75,14 +61,14 @@
 // Request Builder
 
 - (RCRequest *) requestForHTTPMethod:(NSString *)method;
-- (RCRequest *) requestForHTTPMethod:(NSString *)method queryList:(NSArray *)queryList;
-- (RCDownloadRequest *) downloadRequestWithQueryList:(NSArray *)queryList;
-- (RCUploadRequest *) uploadRequestWithFileURL:(NSURL *)fileURL queryList:(NSArray *)queryList;
+- (RCRequest *) requestForHTTPMethod:(NSString *)method query:(id)query;
+- (RCDownloadRequest *) downloadRequestWithQuery:query;
+- (RCUploadRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query;
 
 // Helpers
 
 - (void) setHeadersForContentType:(RESTClientContentType)contentType;
-- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method queryList:(NSArray *)queryList ;
+- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(id)query ;
 - (void) configureRequest:(RCRequest *)request;
 
 // Runners
@@ -364,27 +350,19 @@
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
-- (RCResponse *) getWithQuery:firstValue,... {
-	ProcessQueryList()
-	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET queryList:_queryList];
+- (RCResponse *) getWithQuery:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
     return [self runBlockingRequest:request];	
 }
 
-- (void) getWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-//	va_list args;
-//	va_start(args, firstValue);
-//	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET queryList:args];
-//	va_end(args);
-//	[self runRequest:request withCompletionBlock:completionBlock];
+- (void) getWithCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	[self getWithProgressBlock:nil completionBlock:completionBlock query:query];
 }
 
-- (void) getWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-//	va_list args;
-//	va_start(args, firstValue);
-//	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET queryList:args];
-//	va_end(args);
-//	request.didReceiveDataBlock = progressBlock;
-//	[self runRequest:request withCompletionBlock:completionBlock];
+- (void) getWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
+	request.didReceiveDataBlock = progressBlock;
+	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 #pragma mark -HEAD
@@ -401,12 +379,14 @@
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
-- (RCResponse *) headWithQuery:firstValue,... {
-	return nil;
+- (RCResponse *) headWithQuery:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodHEAD query:query];
+    return [self runBlockingRequest:request];	
 }
 
-- (void) headWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-	
+- (void) headWithCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodHEAD query:query];
+	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -423,12 +403,14 @@
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
-- (RCResponse *) deleteWithQuery:firstValue,... {
-	return nil;
+- (RCResponse *) deleteWithQuery:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodDELETE query:query];
+    return [self runBlockingRequest:request];	
 }
 
-- (void) deleteWithCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-	
+- (void) deleteWithCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodDELETE query:query];
+	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -452,16 +434,21 @@
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
-- (RCResponse *) post:(id)payload withQuery:firstValue,... {
-	return nil;
+- (RCResponse *) post:(id)payload withQuery:(id)query {
+    RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPOST query:query];
+    request.payload = payload;
+    return [self runBlockingRequest:request];	
 }
 
-- (void) post:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-	
+- (void) post:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	[self post:payload withProgressBlock:nil completionBlock:completionBlock query:query];
 }
 
-- (void) post:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-	
+- (void) post:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPOST query:query];
+    request.payload = payload;
+	request.didReceiveDataBlock = progressBlock;
+	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -485,16 +472,21 @@
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
-- (RCResponse *) put:(id)payload withQuery:firstValue,... {
-	return nil;	
+- (RCResponse *) put:(id)payload withQuery:(id)query {
+    RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPUT query:query];
+    request.payload = payload;
+    return [self runBlockingRequest:request];	
 }
 
-- (void) put:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-	
+- (void) put:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	[self post:payload withProgressBlock:nil completionBlock:completionBlock query:query];
 }
 
-- (void) put:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:firstValue,... {
-	
+- (void) put:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock query:(id)query {
+	RCRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPUT query:query];
+    request.payload = payload;
+	request.didReceiveDataBlock = progressBlock;
+	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -502,13 +494,13 @@
 
 
 - (void) downloadWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCDownloadRequest *request = [self downloadRequestWithQueryList:nil];
+	RCDownloadRequest *request = [self downloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 - (void) uploadFile:(NSURL *)fileURL withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCRequest *request = [self uploadRequestWithFileURL:fileURL queryList:nil];
+	RCRequest *request = [self uploadRequestWithFileURL:fileURL query:nil];
 	request.didSendDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
@@ -521,25 +513,25 @@
 
 
 - (RCRequest *) requestForHTTPMethod:(NSString *)method {
-	return [self requestForHTTPMethod:method queryList:nil];
+	return [self requestForHTTPMethod:method query:nil];
 }
 
-- (RCRequest *) requestForHTTPMethod:(NSString *)method queryList:(NSArray *)queryList {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:method queryList:queryList];
+- (RCRequest *) requestForHTTPMethod:(NSString *)method query:(id)query {
+	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:method query:query];
 	RCRequest *request = [[RCRequest alloc] initWithURLRequest:URLRequest];
 	[self configureRequest:request];
 	return request;
 }
 
-- (RCDownloadRequest *) downloadRequestWithQueryList:(NSArray *)queryList {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodGET queryList:queryList];
+- (RCDownloadRequest *) downloadRequestWithQuery:query {
+	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
 	RCDownloadRequest *request = [[RCDownloadRequest alloc] initWithURLRequest:URLRequest];
 	[self configureRequest:request];
 	return request;
 }
 
-- (RCUploadRequest *) uploadRequestWithFileURL:(NSURL *)fileURL queryList:(NSArray *)queryList {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodPUT queryList:queryList];
+- (RCUploadRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query {
+	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodPUT query:query];
 	RCUploadRequest *request = [[RCUploadRequest alloc] initWithURLRequest:URLRequest];
 	[self configureRequest:request];
 	request.fileToUploadURL = fileURL;
@@ -573,31 +565,33 @@
 	}
 }
 
-- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method queryList:(NSArray *)queryList {
+- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(id)query {
 	NSString *queryString = nil;
-	
-	if (queryList) {
-		NSUInteger idx = 0;
-		NSMutableArray *queryValues = [NSMutableArray new];
-		NSMutableArray *queryKeys = [NSMutableArray new];
-		for (id queryObject in queryList) {
-			if (idx == 0 && [queryObject isKindOfClass:[NSDictionary class]]) {
-				queryString = [queryObject toQueryString];
-				break;
+	if (query) {
+		NSDictionary *queryDictionary;
+		if ([query isKindOfClass:[NSDictionary class]]) {
+			queryDictionary = query;
+		} else {
+			id firstObject = [query count] > 0 ? [query objectAtIndex:0] : nil;
+			if ([firstObject isKindOfClass:[NSDictionary class]]) {
+				queryDictionary = firstObject;
 			} else {
-				BOOL isValue = ( (idx % 2) == 0 );
-				if (isValue) {
-					[queryValues addObject:queryObject];
-				} else {
-					[queryKeys addObject:queryObject];
-				}
-			}
-			idx++;
+				NSUInteger idx = 0;
+				NSMutableArray *queryValues = [NSMutableArray new];
+				NSMutableArray *queryKeys = [NSMutableArray new];
+				for (id queryObject in query) {
+					BOOL isValue = ( (idx % 2) == 0 );
+					if (isValue) {
+						[queryValues addObject:queryObject];
+					} else {
+						[queryKeys addObject:queryObject];
+					}
+					idx++;
+				}	
+				queryDictionary = [NSDictionary dictionaryWithObjects:queryValues forKeys:queryKeys];
+			}			
 		}
-		if (nil == queryString) { // we are processing the values&keys list
-			NSDictionary *queryDict = [NSDictionary dictionaryWithObjects:queryValues forKeys:queryKeys];
-			queryString = [queryDict toQueryString];
-		}
+		queryString = [queryDictionary toQueryString];
 	}
 	
 	NSURL *requestURL;

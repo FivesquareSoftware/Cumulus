@@ -1,4 +1,19 @@
 get '/test/query' do
-	Log.debug(params.inspect)
+	ok(params)
+end
+
+head '/test/query' do
+	ok()
+end
+
+delete '/test/query' do
+	ok(params)
+end
+
+post '/test/query' do
+	ok(params)
+end
+
+put '/test/query' do
 	ok(params)
 end
