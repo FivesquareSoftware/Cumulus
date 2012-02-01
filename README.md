@@ -139,7 +139,7 @@ RESTClient does even more, like direct from disk uploads, OAuth2 authentication,
 
 ## Contributors
 
-John Clayton <RESTClient@fivesquaresoftware.com>
-James Cicenia <james@jimijon.com>
-Kurt Arnlund <kurt@IngeniousArtsAndTechnologies.com>
+John Clayton <RESTClient@fivesquaresoftware.com>  
+James Cicenia <james@jimijon.com>  
+Kurt Arnlund <kurt@IngeniousArtsAndTechnologies.com>  
 
