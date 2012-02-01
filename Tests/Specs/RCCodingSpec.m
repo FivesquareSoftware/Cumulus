@@ -114,19 +114,35 @@ static NSString *kHelloWorld = @"Hello World!";
 // XML coding
 
 - (void)shouldEncodeXMLWhenContentTypeSet {
-	//	RCResource *json = [self.service resource:@"test/json"];
-	//	json.contentType = RESTClientContentTypeJSON;
-	//	RCResponse *response = [json put:self.specHelper.item];	
-	STAssertTrue(NO,@"Unimplemented");
+	NSDictionary *payload = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
+	RCResource *resource = [self.service resource:@"test/encoding"];
+	resource.contentType = RESTClientContentTypeXML;
+	RCResponse *response = [resource put:payload];	
+	STAssertTrue([response.request.payloadEncoder isKindOfClass:[RCXMLCoder class]], @"Payload encoder should have been an XML coder: %@", response.request.payloadEncoder);
+	NSDictionary *bodyDictionary = [NSPropertyListSerialization propertyListWithData:response.request.URLRequest.HTTPBody options:NSPropertyListImmutable format:NULL error:NULL];
+	STAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
 }
 
 - (void)shouldDecodeXMLWhenServerSendsContentType {
-	STAssertTrue(NO,@"Unimplemented");
+	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
+	RCResource *resource = [self.service resource:@"test/decoding/plist/content-type"];
+	RCResponse *response = [resource get];	
+	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue([response.request.responseDecoder isKindOfClass:[RCXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
+	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
 
 - (void)shouldDecodeXMLUsingAcceptWhenServerSendsWrongContentType {
-	STAssertTrue(NO,@"Unimplemented");
+	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
+	RCResource *resource = [self.service resource:@"test/decoding/plist/wrong-content-type"];
+	[resource setValue:@"application/xml" forHeaderField:@"Accept"];
+	RCResponse *response = [resource get];	
+	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue([response.request.responseDecoder isKindOfClass:[RCXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
+	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
+
+
 
 // Text coding
 

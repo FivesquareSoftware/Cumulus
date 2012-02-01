@@ -8,8 +8,11 @@ helpers do
 		status(status)
 		if format == :json
 			object.json_proxy.to_json
+		elsif format == :plist
+			content_type(:xml)
+			object.to_plist
 		elsif format == :xml
-			#		object.to_xml
+			object.to_xml
 		elsif format == :text
 			object.to_s
 		end

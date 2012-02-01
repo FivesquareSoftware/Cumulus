@@ -31,11 +31,12 @@
 		A409B33F1408E82D003495BA /* RCAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B33E1408E82D003495BA /* RCAuthProvider.h */; };
 		A409B3421408E890003495BA /* RCBasicAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3401408E890003495BA /* RCBasicAuthProvider.h */; };
 		A409B3431408E890003495BA /* RCBasicAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3411408E890003495BA /* RCBasicAuthProvider.m */; };
-		A409B39E1408F355003495BA /* NSDataAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B39C1408F355003495BA /* NSDataAdditions.h */; };
-		A409B39F1408F355003495BA /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B39D1408F355003495BA /* NSDataAdditions.m */; };
 		A409B3BC1410597D003495BA /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; };
 		A409B3BD1410597D003495BA /* RCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* RCConstants.m */; };
 		A409B3CD141A530C003495BA /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4213DB459200F96152 /* libRESTClient.a */; };
+		A40EE13F14D8791100EBD8C3 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A40EE13E14D8791100EBD8C3 /* libxml2.dylib */; };
+		A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; };
+		A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
 		A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; };
 		A41410D614B680070026A8C1 /* NSDictionary+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */; };
 		A414FD4613DB459200F96152 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4513DB459200F96152 /* Foundation.framework */; };
@@ -96,11 +97,12 @@
 		A409B3401408E890003495BA /* RCBasicAuthProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCBasicAuthProvider.h; sourceTree = "<group>"; };
 		A409B3411408E890003495BA /* RCBasicAuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCBasicAuthProvider.m; sourceTree = "<group>"; };
 		A409B3991408F193003495BA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		A409B39C1408F355003495BA /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataAdditions.h; sourceTree = "<group>"; };
-		A409B39D1408F355003495BA /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataAdditions.m; sourceTree = "<group>"; };
 		A409B3BA1410597C003495BA /* RCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConstants.h; sourceTree = "<group>"; };
 		A409B3BB1410597D003495BA /* RCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConstants.m; sourceTree = "<group>"; };
 		A40AFC18144B881F00852EDE /* setup.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup.sh; sourceTree = "<group>"; };
+		A40EE13E14D8791100EBD8C3 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		A40F3702144DCB9000FA723B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+RESTClient.h"; sourceTree = "<group>"; };
 		A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+RESTClient.m"; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				A46269A314198ED3005544D6 /* UIKit.framework in Frameworks */,
 				A46269A414198ED3005544D6 /* Foundation.framework in Frameworks */,
 				A46269A614198ED3005544D6 /* CoreGraphics.framework in Frameworks */,
+				A40EE13F14D8791100EBD8C3 /* libxml2.dylib in Frameworks */,
 				A409B3CD141A530C003495BA /* libRESTClient.a in Frameworks */,
 				A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */,
 				A416122A14411A800008A235 /* libOCMock.a in Frameworks */,
@@ -260,15 +263,6 @@
 			path = AuthProviders;
 			sourceTree = "<group>";
 		};
-		A409B39B1408F355003495BA /* Ext */ = {
-			isa = PBXGroup;
-			children = (
-				A409B39C1408F355003495BA /* NSDataAdditions.h */,
-				A409B39D1408F355003495BA /* NSDataAdditions.m */,
-			);
-			path = Ext;
-			sourceTree = "<group>";
-		};
 		A414FD3713DB459200F96152 = {
 			isa = PBXGroup;
 			children = (
@@ -276,7 +270,6 @@
 				A4D26F61149274530005DFE3 /* README.md */,
 				A414FD4713DB459200F96152 /* Source */,
 				A46269B614199082005544D6 /* Tests */,
-				A409B39B1408F355003495BA /* Ext */,
 				A4223E3414A3AE7200CBC9C0 /* Docs */,
 				A414FD4813DB459200F96152 /* Supporting Files */,
 				A414FD4413DB459200F96152 /* Frameworks */,
@@ -493,6 +486,8 @@
 		A49D483F14B4BD760045D66F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */,
+				A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */,
 				A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */,
 				A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */,
 				A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */,
@@ -532,6 +527,7 @@
 				A409B3991408F193003495BA /* Security.framework */,
 				A414FD4513DB459200F96152 /* Foundation.framework */,
 				A4A8CC5D147ED3FF00BE6C0E /* MobileCoreServices.framework */,
+				A40EE13E14D8791100EBD8C3 /* libxml2.dylib */,
 			);
 			name = RESTClient;
 			sourceTree = "<group>";
@@ -575,7 +571,6 @@
 				A409B2B014001B14003495BA /* RCTypes.h in Headers */,
 				A409B33F1408E82D003495BA /* RCAuthProvider.h in Headers */,
 				A409B3421408E890003495BA /* RCBasicAuthProvider.h in Headers */,
-				A409B39E1408F355003495BA /* NSDataAdditions.h in Headers */,
 				A409B3BC1410597D003495BA /* RCConstants.h in Headers */,
 				A4C2085A141852F6003412BA /* RCXMLCoder.h in Headers */,
 				A43F86AD144AAC5D00C69C3D /* RCImageCoder.h in Headers */,
@@ -589,6 +584,7 @@
 				A4B6080514A0224B003C43AE /* RCOAuthToken.h in Headers */,
 				A49D484314B4BD8B0045D66F /* NSObject+RESTClient.h in Headers */,
 				A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */,
+				A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -700,7 +696,6 @@
 				A443AE4013DB4C9300D55902 /* RCIdentityCoder.m in Sources */,
 				A443AE4413DB4E8900D55902 /* RCTextCoder.m in Sources */,
 				A409B3431408E890003495BA /* RCBasicAuthProvider.m in Sources */,
-				A409B39F1408F355003495BA /* NSDataAdditions.m in Sources */,
 				A409B3BD1410597D003495BA /* RCConstants.m in Sources */,
 				A4C2085B141852F6003412BA /* RCXMLCoder.m in Sources */,
 				A43F86AE144AAC5D00C69C3D /* RCImageCoder.m in Sources */,
@@ -713,6 +708,7 @@
 				A4B6080614A0224B003C43AE /* RCOAuthToken.m in Sources */,
 				A49D484414B4BD8B0045D66F /* NSObject+RESTClient.m in Sources */,
 				A41410D614B680070026A8C1 /* NSDictionary+RESTClient.m in Sources */,
+				A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,6 +790,10 @@
 				DSTROOT = /tmp/RESTClient.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Source/RESTClient-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Ext/TouchXML/Source\"/**",
+					"\"$(SDKROOT)/usr/include/libxml2\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -806,6 +806,10 @@
 				DSTROOT = /tmp/RESTClient.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Source/RESTClient-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Ext/TouchXML/Source\"/**",
+					"\"$(SDKROOT)/usr/include/libxml2\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

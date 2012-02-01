@@ -8,6 +8,7 @@ end
 group :misc do
     gem 'json'
 	gem 'plist'
+	gem 'to_xml'
 end
 
 group :test do 

@@ -9,6 +9,7 @@
 [Showing Progress](#showing_progress)  
 [Up & Downloading Direct From Disk](#up_down_loading)  
 [Processing Results in the Background](#background_processing)  
+[Serializing Results To/From Native Types](#coding)  
 [Mapping Results to Core Data](#core_data)  
 [As a General Purpose HTTP Client](#general_http)  
 [Using Raw Requests](#raw_requests)  
@@ -35,9 +36,7 @@ You can configure settings on parent resources (they will be inherited by child 
 ```objective-c 
 site.contentType = RESTClientContentTypeJSON
 site.timeout = 20;
-site.headers = [NSDictionary dictionaryWithObjectsAndKeys:
-				@"foo",@"X-MyCustomHeader"
-				, nil];
+[site setValue:@"foo" forHeaderField:@"X-MyCustomHeader"];
 ```
 
 Create child resources using the `-resource:` method with a relative path (which can be any object that will output a useful description).
@@ -353,6 +352,52 @@ pictures.postProcessorBlock = ^(id result) {
 [Top &#x2191;][top]
 
 
+<a name="coding"/>
+	
+#### Serializing Results To/From Native Types 
+
+Out of the box, RESTClient handles the translation to/from native native types for a range of types and transfer encodings (Text, JSON, XML, Image). During outbound serialization, NSData, NSString and image types are converted directly to the response body, since the intent is obvious. When object types, like NSDictionary, are encountered RESTClient uses some heuristics—based on object type, and Accept and Content-Type headers—to determine the best possible conversion and instantiate the correct implementation of <RCCoder>. 
+
+Of course, you may have some unique serialization needs, maybe RESTClient's XML serialization (which uses Apple's XML propery list format) is not complex enough for your situation. Since <RCCoder> is a well-defined interface (very similar to NSValueTransformer), you can simply drop in your own, and it's easier than you might think.  
+
+Here is an example coder that uses [TouchXML](https://github.com/TouchCode/TouchXML) to convert between CXMLDocument objects and the XML used for the transfer encoding.
+
+MyXMLCoder.m:
+
+```objective-c 
++ (void) load {
+	[RCCoder registerCoder:self objectType:[CXMLDocument class] mimeTypes:nil];
+}
+
+- (NSData *) encodeObject:(id)payload {	
+	NSData *data = nil;
+	NSError *error = nil;
+	data = [NSPropertyListSerialization dataWithPropertyList:payload format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+	if (error) {
+		RCLog(@"XML coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
+	}
+    return data;
+}
+
+- (id) decodeData:(NSData *)data {
+	id object = nil;
+	NSError *error = nil;
+	object = [[CXMLDocument alloc] initWithData:data encoding:NSUTF8StringEncoding options:0 error:&error];
+	if (error) {
+		NSString *XMLString  __attribute__((unused)) = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		RCLog(@"XML coding error: '%@' %@ (%@)",XMLString, [error localizedDescription],[error userInfo]);
+	}
+    return object;
+}
+```
+
+That's it, now you can send XML documents in to, and get them back from, RESTClient.
+
+[Top &#x2191;][top]
+
+
+
+
 <a name="core_data"/>
 	
 #### Mapping Results to Core Data 
@@ -392,7 +437,7 @@ pictures.postProcessorBlock = ^(id result) {
 Maybe you have non-RESTful services, and just need to handle the odd endpoint. You can use the RESTClient class directly.
 
 ```objective-c 
-[RESTClient get:@"http://example.com/products.php?action=list" completionBlock:^(RCResponse *response){
+[RESTClient get:@"http://example.com/products.php?action=list" withCompletionBlock:^(RCResponse *response){
 	// do something with the response
 }];
 

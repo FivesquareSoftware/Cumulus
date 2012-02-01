@@ -58,9 +58,7 @@ The most common way to use RESTClient is to set up a base resource and some chil
 ```objective-c 
 RCResource *site = [RCResource withURL:@"http://example.com"];
 site.timeout = 20;
-site.headers = [NSDictionary dictionaryWithObjectsAndKeys:
-				@"foo",@"X-MyCustomHeader"
-				, nil];
+[site setValue:@"foo" forHeaderField:@"X-MyCustomHeader"];
 site.contentType = RESTClientContentTypeJSON;
 site.username = @"foo";
 site.password = @"bar";

@@ -35,6 +35,8 @@
 
 #import "RCXMLCoder.h"
 
+#import "RESTClient.h"
+
 @implementation RCXMLCoder
 
 + (void) load {
@@ -42,14 +44,31 @@
 	[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression]];
 }
 
-/** @todo implement encodeObject: for real. */
-- (NSData *) encodeObject:(id)payload {
-    return payload;
+- (NSData *) encodeObject:(id)payload {	
+	NSData *data = nil;
+	@try {
+		NSError *error = nil;
+		data = [NSPropertyListSerialization dataWithPropertyList:payload format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+		if (error) {
+			RCLog(@"XML coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
+		}
+	}
+	@catch (NSException *exception) {
+		RCLog(@"XML coding error: %@",[exception reason]);
+	}
+    return data;
 }
 
-/** @todo implement decodeData: for real. */
 - (id) decodeData:(NSData *)data {
-    return data;
+	id object = nil;
+	NSError *error = nil;
+	@try {
+		object = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&error];
+	}
+	@catch (NSException *exception) {
+		RCLog(@"XML coding error: %@",[exception reason]);
+	}
+    return object;
 }
 
 @end

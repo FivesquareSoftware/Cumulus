@@ -35,7 +35,7 @@
 
 #import "RCBasicAuthProvider.h"
 
-#import "NSDataAdditions.h"
+#import "NSData+Base64.h"
 
 @interface RCBasicAuthProvider()
 - (void) addAuthHeader:(NSMutableURLRequest *)urlRequest;
@@ -110,7 +110,7 @@
 	   && self.password && [self.password length] > 0) {
 		NSString *string = [NSString stringWithFormat:@"%@:%@",self.username,self.password];
 		NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
-		NSString *base64String = [stringData base64Encoding];
+		NSString *base64String = [stringData base64EncodedString];
 		encoded = [NSString stringWithFormat:@"Basic %@",base64String];
 	}
 	return encoded;
