@@ -370,12 +370,7 @@ MyXMLCoder.m:
 }
 
 - (NSData *) encodeObject:(id)payload {	
-	NSData *data = nil;
-	NSError *error = nil;
-	data = [NSPropertyListSerialization dataWithPropertyList:payload format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-	if (error) {
-		RCLog(@"XML coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
-	}
+	NSData *data = [payload XMLData];
     return data;
 }
 

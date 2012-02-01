@@ -35,7 +35,7 @@
 
 #import "RCXMLCoder.h"
 
-#import "RESTClient.h"
+#import "TouchXML.h"
 
 @implementation RCXMLCoder
 
@@ -44,31 +44,29 @@
 	[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression]];
 }
 
+/** @todo implement encodeObject: for real. */
 - (NSData *) encodeObject:(id)payload {	
 	NSData *data = nil;
-	@try {
-		NSError *error = nil;
-		data = [NSPropertyListSerialization dataWithPropertyList:payload format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-		if (error) {
-			RCLog(@"XML coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
+	if ([payload isKindOfClass:[CXMLDocument class]]) {
+		data = [payload XMLData];
+	} else {
+		@try {
+			data = [NSPropertyListSerialization dataWithPropertyList:payload format:NSPropertyListXMLFormat_v1_0 options:0 error:&encodingError];
 		}
-	}
-	@catch (NSException *exception) {
-		RCLog(@"XML coding error: %@",[exception reason]);
+		@catch (NSException *exception) {
+			RCLog(@"XML coding error: %@",[exception reason]);
+		}
 	}
     return data;
 }
 
 - (id) decodeData:(NSData *)data {
-	id object = nil;
-	NSError *error = nil;
-	@try {
-		object = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&error];
-	}
-	@catch (NSException *exception) {
-		RCLog(@"XML coding error: %@",[exception reason]);
-	}
-    return object;
+	NSError *parseError = nil;
+	CXMLDocument *document = [[CXMLDocument alloc] initWithData:data encoding:NSUTF8StringEncoding options:0 error:&parseError];
+	
+	NSString *XMLString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    return data;
 }
 
 @end
