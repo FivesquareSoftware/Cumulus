@@ -135,3 +135,11 @@ RCResource *images = [site resource:@"images"];
 
 RESTClient does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
 
+
+
+## Contributors
+
+John Clayton <RESTClient@fivesquaresoftware.com>
+James Cicenia <james@jimijon.com>
+Kurt Arnlund <kurt@IngeniousArtsAndTechnologies.com>
+

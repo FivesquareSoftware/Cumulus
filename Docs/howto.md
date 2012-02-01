@@ -356,9 +356,9 @@ pictures.postProcessorBlock = ^(id result) {
 	
 #### Serializing Results To/From Native Types 
 
-Out of the box, RESTClient handles the translation to/from native native types for a range of types and transfer encodings (Text, JSON, XML, Image). During outbound serialization, NSData, NSString and image types are converted directly to the response body, since the intent is obvious. When object types, like NSDictionary, are encountered RESTClient uses some heuristics—based on object type, and Accept and Content-Type headers—to determine the best possible conversion and instantiate the correct implementation of <RCCoder>. 
+Out of the box, RESTClient handles the translation to/from native native types for a range of types and transfer encodings (Text, JSON, XML, Image). During outbound serialization, NSData, NSString and image types are converted directly to the response body, since the intent is obvious. When object types, like NSDictionary, are encountered RESTClient uses some heuristics—based on object type, and Accept and Content-Type headers—to determine the best possible conversion and instantiate the correct implementation of `<RCCoder>`. 
 
-Of course, you may have some unique serialization needs, maybe RESTClient's XML serialization (which uses Apple's XML propery list format) is not complex enough for your situation. Since <RCCoder> is a well-defined interface (very similar to NSValueTransformer), you can simply drop in your own, and it's easier than you might think.  
+Of course, you may have some unique serialization needs, maybe RESTClient's XML serialization (which uses Apple's XML propery list format) is not complex enough for your situation. Since `<RCCoder>` is a well-defined interface (very similar to NSValueTransformer), you can simply drop in your own, and it's easier than you might think.  
 
 Here is an example coder that uses [TouchXML](https://github.com/TouchCode/TouchXML) to convert between CXMLDocument objects and the XML used for the transfer encoding.
 
