@@ -53,7 +53,7 @@
 
 - (void) shouldAppendQueryStringValuesAndKeys {
 	RCResource *resource = [self.service resource:@"test/query"];
-	RCResponse *response = [resource getWithQuery:[NSArray arrayWithObjects:@"bar",@"foo",nil]];
+	RCResponse *response = [resource getWithQuery:[NSArray arrayWithObjects:@"foo",@"bar",nil]];
 	STAssertTrue(response.success, @"Response should succeed");
 	NSDictionary *query = [NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"];
 	STAssertEqualObjects(query, response.result, @"Result should equal sent params:%@",response.result);
@@ -64,7 +64,7 @@
 - (void) shouldAppendArrayAsCollectionToQueryString {
 	RCResource *resource = [self.service resource:@"test/query"];
 	NSArray *arrayParam = [NSArray arrayWithObjects:@"1", @"2", nil];
-	RCResponse *response = [resource getWithQuery:[NSArray arrayWithObjects:arrayParam,@"foo",nil]];
+	RCResponse *response = [resource getWithQuery:[NSArray arrayWithObjects:@"foo",arrayParam,nil]];
 	STAssertTrue(response.success, @"Response should succeed");
 	NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:arrayParam, @"foo", nil];
 	STAssertEqualObjects(params, response.result, @"Result should equal sent params:%@",response.result);
@@ -90,6 +90,16 @@
 	STAssertEqualObjects(query, response.result, @"Result should equal sent params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
 	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+}
+
+- (void) shouldAppendQueryArgumentToAnExistingQueryString {
+	RCResource *resource = [self.service resource:@"test/query?key=value"];
+	RCResponse *response = [resource getWithQuery:[NSArray arrayWithObjects:@"foo",@"bar",nil]];
+	STAssertTrue(response.success, @"Response should succeed");
+	NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:@"value",@"key",@"bar",@"foo",nil];
+	STAssertEqualObjects(query, response.result, @"Result should equal sent params:%@",response.result);
+	NSString *queryString = [[response.request.URLRequest URL] query];
+	STAssertEqualObjects(@"key=value&foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldGetWithQueryAndBlocks {

@@ -46,6 +46,8 @@
 		A414FD6113DB468D00F96152 /* RCResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5F13DB468D00F96152 /* RCResponse.h */; };
 		A414FD6213DB468D00F96152 /* RCResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD6013DB468D00F96152 /* RCResponse.m */; };
 		A416122A14411A800008A235 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A416122914411A800008A235 /* libOCMock.a */; };
+		A41C901114F2ED4800E16A9E /* NSString+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */; };
+		A41C901214F2ED4800E16A9E /* NSString+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+RESTClient.m */; };
 		A432B46E149D0B56006582DB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B3991408F193003495BA /* Security.framework */; };
 		A43F86AD144AAC5D00C69C3D /* RCImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */; };
 		A43F86AE144AAC5D00C69C3D /* RCImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86AC144AAC5D00C69C3D /* RCImageCoder.m */; };
@@ -123,6 +125,8 @@
 		A416121414410B640008A235 /* RCResourceBlocksSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCResourceBlocksSpec.h; sourceTree = "<group>"; };
 		A416121514410B640008A235 /* RCResourceBlocksSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCResourceBlocksSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A416122914411A800008A235 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RESTClient.h"; sourceTree = "<group>"; };
+		A41C901014F2ED4800E16A9E /* NSString+RESTClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RESTClient.m"; sourceTree = "<group>"; };
 		A4223E3614A3AE8F00CBC9C0 /* faq.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = faq.md; sourceTree = "<group>"; };
 		A4223E3714A3AEA600CBC9C0 /* howto.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = howto.md; sourceTree = "<group>"; };
 		A432B470149D11D8006582DB /* RCResource+Specs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCResource+Specs.h"; sourceTree = "<group>"; };
@@ -492,6 +496,8 @@
 				A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */,
 				A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */,
 				A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */,
+				A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */,
+				A41C901014F2ED4800E16A9E /* NSString+RESTClient.m */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -585,6 +591,7 @@
 				A49D484314B4BD8B0045D66F /* NSObject+RESTClient.h in Headers */,
 				A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */,
 				A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */,
+				A41C901114F2ED4800E16A9E /* NSString+RESTClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,6 +716,7 @@
 				A49D484414B4BD8B0045D66F /* NSObject+RESTClient.m in Sources */,
 				A41410D614B680070026A8C1 /* NSDictionary+RESTClient.m in Sources */,
 				A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */,
+				A41C901214F2ED4800E16A9E /* NSString+RESTClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

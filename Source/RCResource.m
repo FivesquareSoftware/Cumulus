@@ -40,6 +40,7 @@
 #import "RESTClient.h"
 
 #import "NSDictionary+RESTClient.h"
+#import "NSString+RESTClient.h"
 
 
 @interface RCResource() {
@@ -107,6 +108,10 @@
 @synthesize postProcessorBlock=postprocessorBlock_;
 @synthesize requests_;
 
+@dynamic queryString;
+- (NSString *) queryString {
+	return [self.URL query];
+}
 
 - (NSMutableDictionary *) headers {
     if (nil == headers_) {
@@ -171,6 +176,7 @@
 	dispatch_semaphore_signal(requests_semaphore_);
 	return requests;
 }
+
 
 
 // Private
@@ -250,12 +256,7 @@
 	relativePath = [relativePath stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
 	relativePath = [relativePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	
-	NSString *queryString = nil;
-	NSRange queryRange = [relativePath rangeOfString:@"?"];
-	if (queryRange.location != NSNotFound) {
-		queryString = [relativePath substringFromIndex:queryRange.location+1];
-		relativePath = [relativePath substringToIndex:queryRange.location];
-	}
+	NSString *queryString = [relativePath queryString:&relativePath];
 	
 	NSURL *resourceURL = [URL_ URLByAppendingPathComponent:relativePath];
 	resourceURL = [resourceURL standardizedURL];
@@ -580,11 +581,11 @@
 				NSMutableArray *queryValues = [NSMutableArray new];
 				NSMutableArray *queryKeys = [NSMutableArray new];
 				for (id queryObject in query) {
-					BOOL isValue = ( (idx % 2) == 0 );
-					if (isValue) {
-						[queryValues addObject:queryObject];
-					} else {
+					BOOL isKey = ( (idx % 2) == 0 );
+					if (isKey) {
 						[queryKeys addObject:queryObject];
+					} else {
+						[queryValues addObject:queryObject];
 					}
 					idx++;
 				}	
@@ -596,7 +597,11 @@
 	
 	NSURL *requestURL;
 	if (queryString.length) {
-		requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",self.URL,queryString]];
+		if (self.queryString) {
+			requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@&%@",self.URL,queryString]];
+		} else {
+			requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",self.URL,queryString]];
+		}
 	} else {
 		requestURL = self.URL;
 	}

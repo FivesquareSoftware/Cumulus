@@ -76,10 +76,10 @@
  *    - NSDictionary - dictionary values are transformed recursively using the above rules, and query list processing is terminated.
  *
  *  For example, the following message:
- *    [resource getWithQuery:[NSArray arrayWithObjects:@"bar",@"foo",@"bat",@"baz"]] 
+ *    [resource getWithQuery:[NSArray arrayWithObjects:@"foo",@"bar",@"baz",@"bat"]] 
  *  would yield ?foo=bar&baz=bat, while 
- *    [resource getWithQuery:[NSArray arrayWithObjets:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"bar",@"foo",nil]]
- *  would yield only ?foo=bar because the dictionary terminated argument processing.
+ *    [resource getWithQuery:[NSArray arrayWithObjets:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"foo",@"bar",nil]]
+ *  would yield only ?foo=bar because the dictionary terminated argument processing. Notice that the order of parameter names and values is reversed when you pass a dictionary, because the values come before the keys in the dictionary constructors themselves.
  *
  */
 @interface RCResource : NSObject {
@@ -89,6 +89,7 @@
 @property (nonatomic, readonly, strong) RCResource *parent;
 @property (nonatomic, readonly, strong) NSString *relativePath;
 @property (nonatomic, readonly, strong) NSURL *URL;
+@property (nonatomic, readonly) NSString *queryString;
 
 /** Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. */
 @property (nonatomic, strong) NSMutableDictionary *headers;
