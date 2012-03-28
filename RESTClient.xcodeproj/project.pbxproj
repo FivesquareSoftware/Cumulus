@@ -34,7 +34,6 @@
 		A409B3BC1410597D003495BA /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; };
 		A409B3BD1410597D003495BA /* RCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* RCConstants.m */; };
 		A409B3CD141A530C003495BA /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4213DB459200F96152 /* libRESTClient.a */; };
-		A40EE13F14D8791100EBD8C3 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A40EE13E14D8791100EBD8C3 /* libxml2.dylib */; };
 		A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; };
 		A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
 		A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; };
@@ -102,7 +101,6 @@
 		A409B3BA1410597C003495BA /* RCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConstants.h; sourceTree = "<group>"; };
 		A409B3BB1410597D003495BA /* RCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConstants.m; sourceTree = "<group>"; };
 		A40AFC18144B881F00852EDE /* setup.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup.sh; sourceTree = "<group>"; };
-		A40EE13E14D8791100EBD8C3 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		A40F3702144DCB9000FA723B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -243,7 +241,6 @@
 				A46269A314198ED3005544D6 /* UIKit.framework in Frameworks */,
 				A46269A414198ED3005544D6 /* Foundation.framework in Frameworks */,
 				A46269A614198ED3005544D6 /* CoreGraphics.framework in Frameworks */,
-				A40EE13F14D8791100EBD8C3 /* libxml2.dylib in Frameworks */,
 				A409B3CD141A530C003495BA /* libRESTClient.a in Frameworks */,
 				A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */,
 				A416122A14411A800008A235 /* libOCMock.a in Frameworks */,
@@ -533,7 +530,6 @@
 				A409B3991408F193003495BA /* Security.framework */,
 				A414FD4513DB459200F96152 /* Foundation.framework */,
 				A4A8CC5D147ED3FF00BE6C0E /* MobileCoreServices.framework */,
-				A40EE13E14D8791100EBD8C3 /* libxml2.dylib */,
 			);
 			name = RESTClient;
 			sourceTree = "<group>";
