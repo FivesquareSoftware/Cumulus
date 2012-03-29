@@ -37,6 +37,8 @@ The best way to include RESTClient is to drag the project into your workspace,  
 
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding RESTClient as a submodule, `git submodule update --recursive`) to be sure to fetch RESTClient's own externals.
 
+Make sure you link the Security (to handle certificate based auth) and MobileCoreServices (to handle extracting mime types from files) frameworks.
+
 That's it. There is detailed help in the [FAQ][] if you need more information about how to set up your workspace.
 
 
