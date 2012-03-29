@@ -33,7 +33,13 @@ RESTClient was implemented with automatic reference counting (ARC) and uses weak
 
 The simplest way to use RESTClient in your Xcode project is to just copy the files in "Source" to your own project.
 
-The best way to include RESTClient is to drag the project into your workspace,  add libRESTClient.a to your main target's link phase and the Source dir (If you had RESTClient in ./Externals it would be "$(SRCROOT)/Externals/RESTClient/Source") to your header search paths (make sure you check the 'recursive' checkbox).
+The best way to include RESTClient is to drag the project into your workspace, then add libRESTClient.a to your main target's link phase. 
+
+RESTClient outputs its headers into $(BUILT_PRODUCTS_DIR)/include/RESTClient/ which Xcode automatically searches for headers, so as long as you are using a shared build directory (the default in Xcode 4.3.x) there is no need to modify your HEADER_SEARCH_PATHS. Import RESTClient like this in your source:
+
+```objective-c 
+#import <RESTClient/RESTClient.h>
+```
 
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding RESTClient as a submodule, `git submodule update --recursive`) to be sure to fetch RESTClient's own externals.
 
