@@ -34,7 +34,6 @@
 		A409B3BC1410597D003495BA /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A409B3BD1410597D003495BA /* RCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* RCConstants.m */; };
 		A409B3CD141A530C003495BA /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4213DB459200F96152 /* libRESTClient.a */; };
-		A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; };
 		A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
 		A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -49,6 +48,55 @@
 		A41C901114F2ED4800E16A9E /* NSString+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A41C901214F2ED4800E16A9E /* NSString+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+RESTClient.m */; };
 		A432B46E149D0B56006582DB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B3991408F193003495BA /* Security.framework */; };
+		A43E63A0152A47E6006AEBCD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43E639F152A47E6006AEBCD /* Cocoa.framework */; };
+		A43E63B6152A60FA006AEBCD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A43E63B4152A60FA006AEBCD /* InfoPlist.strings */; };
+		A43E63BB152A6185006AEBCD /* RCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* RCConstants.m */; };
+		A43E63BC152A6185006AEBCD /* RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD4B13DB459200F96152 /* RESTClient.m */; };
+		A43E63BD152A6185006AEBCD /* RCResource.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD5813DB466600F96152 /* RCResource.m */; };
+		A43E63BE152A6185006AEBCD /* RCRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A8CC50147ECEEE00BE6C0E /* RCRequest.m */; };
+		A43E63BF152A6185006AEBCD /* RCDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A8CC4D147ECEEE00BE6C0E /* RCDownloadRequest.m */; };
+		A43E63C0152A6185006AEBCD /* RCUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A8CC57147ECF0A00BE6C0E /* RCUploadRequest.m */; };
+		A43E63C1152A6185006AEBCD /* RCResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD6013DB468D00F96152 /* RCResponse.m */; };
+		A43E63C2152A6185006AEBCD /* RCCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A443AE3313DB4B8300D55902 /* RCCoder.m */; };
+		A43E63C3152A6185006AEBCD /* RCIdentityCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A443AE3E13DB4C9300D55902 /* RCIdentityCoder.m */; };
+		A43E63C4152A6185006AEBCD /* RCTextCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A443AE4213DB4E8900D55902 /* RCTextCoder.m */; };
+		A43E63C5152A6185006AEBCD /* RCJSONCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A443AE3A13DB4C7F00D55902 /* RCJSONCoder.m */; };
+		A43E63C6152A6185006AEBCD /* RCXMLCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C20859141852F6003412BA /* RCXMLCoder.m */; };
+		A43E63C7152A6185006AEBCD /* RCImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86AC144AAC5D00C69C3D /* RCImageCoder.m */; };
+		A43E63C8152A6185006AEBCD /* RCBasicAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3411408E890003495BA /* RCBasicAuthProvider.m */; };
+		A43E63C9152A6185006AEBCD /* RCServerTrustAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A4092785149835FC00C42E8B /* RCServerTrustAuthProvider.m */; };
+		A43E63CA152A6185006AEBCD /* RCClientCertificateAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A468A773149FA73900612DA9 /* RCClientCertificateAuthProvider.m */; };
+		A43E63CB152A6185006AEBCD /* RCOAuth2AuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A4092664149725F300C42E8B /* RCOAuth2AuthProvider.m */; };
+		A43E63CC152A6185006AEBCD /* RCOAuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B6080414A0224B003C43AE /* RCOAuthToken.m */; };
+		A43E63CD152A6185006AEBCD /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
+		A43E63CE152A6185006AEBCD /* NSObject+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */; };
+		A43E63CF152A6185006AEBCD /* NSDictionary+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */; };
+		A43E63D0152A6185006AEBCD /* NSString+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+RESTClient.m */; };
+		A43E63D2152A6192006AEBCD /* RCTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B2AF14001B14003495BA /* RCTypes.h */; };
+		A43E63D3152A6192006AEBCD /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; };
+		A43E63D4152A6192006AEBCD /* RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD4A13DB459200F96152 /* RESTClient.h */; };
+		A43E63D5152A6192006AEBCD /* RCResource.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5713DB466600F96152 /* RCResource.h */; };
+		A43E63D6152A6192006AEBCD /* RCRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC4F147ECEEE00BE6C0E /* RCRequest.h */; };
+		A43E63D7152A6192006AEBCD /* RCRequest+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A22271148AA893001726E4 /* RCRequest+Protected.h */; };
+		A43E63D8152A6192006AEBCD /* RCDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC4C147ECEEE00BE6C0E /* RCDownloadRequest.h */; };
+		A43E63D9152A6192006AEBCD /* RCUploadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC56147ECF0A00BE6C0E /* RCUploadRequest.h */; };
+		A43E63DA152A6192006AEBCD /* RCResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5F13DB468D00F96152 /* RCResponse.h */; };
+		A43E63DB152A6192006AEBCD /* RCCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3213DB4B8300D55902 /* RCCoder.h */; };
+		A43E63DC152A6192006AEBCD /* RCIdentityCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3D13DB4C9300D55902 /* RCIdentityCoder.h */; };
+		A43E63DD152A6192006AEBCD /* RCTextCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE4113DB4E8900D55902 /* RCTextCoder.h */; };
+		A43E63DE152A6192006AEBCD /* RCJSONCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3913DB4C7F00D55902 /* RCJSONCoder.h */; };
+		A43E63DF152A6192006AEBCD /* RCXMLCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C20858141852F6003412BA /* RCXMLCoder.h */; };
+		A43E63E0152A6192006AEBCD /* RCImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */; };
+		A43E63E1152A6192006AEBCD /* RCAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B33E1408E82D003495BA /* RCAuthProvider.h */; };
+		A43E63E2152A6192006AEBCD /* RCBasicAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3401408E890003495BA /* RCBasicAuthProvider.h */; };
+		A43E63E3152A6192006AEBCD /* RCServerTrustAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092784149835FC00C42E8B /* RCServerTrustAuthProvider.h */; };
+		A43E63E4152A6192006AEBCD /* RCClientCertificateAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A468A772149FA73900612DA9 /* RCClientCertificateAuthProvider.h */; };
+		A43E63E5152A6192006AEBCD /* RCOAuth2AuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092663149725F300C42E8B /* RCOAuth2AuthProvider.h */; };
+		A43E63E6152A6192006AEBCD /* RCOAuthToken.h in Headers */ = {isa = PBXBuildFile; fileRef = A4B6080314A0224B003C43AE /* RCOAuthToken.h */; };
+		A43E63E7152A6192006AEBCD /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; };
+		A43E63E8152A6192006AEBCD /* NSObject+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */; };
+		A43E63E9152A6192006AEBCD /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; };
+		A43E63EA152A6192006AEBCD /* NSString+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */; };
 		A43F86AD144AAC5D00C69C3D /* RCImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A43F86AE144AAC5D00C69C3D /* RCImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86AC144AAC5D00C69C3D /* RCImageCoder.m */; };
 		A443AE3413DB4B8300D55902 /* RCCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3213DB4B8300D55902 /* RCCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -130,6 +178,13 @@
 		A4223E3614A3AE8F00CBC9C0 /* faq.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = faq.md; sourceTree = "<group>"; };
 		A4223E3714A3AEA600CBC9C0 /* howto.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = howto.md; sourceTree = "<group>"; };
 		A432B470149D11D8006582DB /* RCResource+Specs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCResource+Specs.h"; sourceTree = "<group>"; };
+		A43E639E152A47E6006AEBCD /* RESTClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RESTClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A43E639F152A47E6006AEBCD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		A43E63A2152A47E6006AEBCD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		A43E63A3152A47E6006AEBCD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		A43E63A4152A47E6006AEBCD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A43E63B2152A60F1006AEBCD /* RESTClientFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RESTClientFramework-Info.plist"; sourceTree = SOURCE_ROOT; };
+		A43E63B5152A60FA006AEBCD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A43F86A9144A9AC200C69C3D /* proxy_string.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = proxy_string.rb; sourceTree = "<group>"; };
 		A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCImageCoder.h; sourceTree = "<group>"; };
 		A43F86AC144AAC5D00C69C3D /* RCImageCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCImageCoder.m; sourceTree = "<group>"; };
@@ -233,6 +288,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A43E639A152A47E6006AEBCD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A43E63A0152A47E6006AEBCD /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A462699E14198ED3005544D6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -274,6 +337,7 @@
 				A414FD4713DB459200F96152 /* Source */,
 				A46269B614199082005544D6 /* Tests */,
 				A4223E3414A3AE7200CBC9C0 /* Docs */,
+				A43E63B3152A60FA006AEBCD /* Resources */,
 				A414FD4813DB459200F96152 /* Supporting Files */,
 				A414FD4413DB459200F96152 /* Frameworks */,
 				A414FD4313DB459200F96152 /* Products */,
@@ -285,6 +349,7 @@
 			children = (
 				A414FD4213DB459200F96152 /* libRESTClient.a */,
 				A46269A114198ED3005544D6 /* RESTClient.app */,
+				A43E639E152A47E6006AEBCD /* RESTClient.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -294,6 +359,8 @@
 			children = (
 				A4A8CC5F147ED43700BE6C0E /* RESTClient */,
 				A4A8CC60147ED44700BE6C0E /* Specs */,
+				A43E639F152A47E6006AEBCD /* Cocoa.framework */,
+				A43E63A1152A47E6006AEBCD /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -324,6 +391,7 @@
 		A414FD4813DB459200F96152 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A43E63B2152A60F1006AEBCD /* RESTClientFramework-Info.plist */,
 				A414FD4913DB459200F96152 /* RESTClient-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -337,6 +405,24 @@
 				A4223E3714A3AEA600CBC9C0 /* howto.md */,
 			);
 			path = Docs;
+			sourceTree = "<group>";
+		};
+		A43E63A1152A47E6006AEBCD /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A43E63A2152A47E6006AEBCD /* AppKit.framework */,
+				A43E63A3152A47E6006AEBCD /* CoreData.framework */,
+				A43E63A4152A47E6006AEBCD /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		A43E63B3152A60FA006AEBCD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A43E63B4152A60FA006AEBCD /* InfoPlist.strings */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		A443AE3813DB4C7F00D55902 /* Coders */ = {
@@ -594,12 +680,44 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A43E639B152A47E6006AEBCD /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A43E63D2152A6192006AEBCD /* RCTypes.h in Headers */,
+				A43E63D3152A6192006AEBCD /* RCConstants.h in Headers */,
+				A43E63D4152A6192006AEBCD /* RESTClient.h in Headers */,
+				A43E63D5152A6192006AEBCD /* RCResource.h in Headers */,
+				A43E63D6152A6192006AEBCD /* RCRequest.h in Headers */,
+				A43E63D7152A6192006AEBCD /* RCRequest+Protected.h in Headers */,
+				A43E63D8152A6192006AEBCD /* RCDownloadRequest.h in Headers */,
+				A43E63D9152A6192006AEBCD /* RCUploadRequest.h in Headers */,
+				A43E63DA152A6192006AEBCD /* RCResponse.h in Headers */,
+				A43E63DB152A6192006AEBCD /* RCCoder.h in Headers */,
+				A43E63DC152A6192006AEBCD /* RCIdentityCoder.h in Headers */,
+				A43E63DD152A6192006AEBCD /* RCTextCoder.h in Headers */,
+				A43E63DE152A6192006AEBCD /* RCJSONCoder.h in Headers */,
+				A43E63DF152A6192006AEBCD /* RCXMLCoder.h in Headers */,
+				A43E63E0152A6192006AEBCD /* RCImageCoder.h in Headers */,
+				A43E63E1152A6192006AEBCD /* RCAuthProvider.h in Headers */,
+				A43E63E2152A6192006AEBCD /* RCBasicAuthProvider.h in Headers */,
+				A43E63E3152A6192006AEBCD /* RCServerTrustAuthProvider.h in Headers */,
+				A43E63E4152A6192006AEBCD /* RCClientCertificateAuthProvider.h in Headers */,
+				A43E63E5152A6192006AEBCD /* RCOAuth2AuthProvider.h in Headers */,
+				A43E63E6152A6192006AEBCD /* RCOAuthToken.h in Headers */,
+				A43E63E7152A6192006AEBCD /* NSData+Base64.h in Headers */,
+				A43E63E8152A6192006AEBCD /* NSObject+RESTClient.h in Headers */,
+				A43E63E9152A6192006AEBCD /* NSDictionary+RESTClient.h in Headers */,
+				A43E63EA152A6192006AEBCD /* NSString+RESTClient.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		A414FD4113DB459200F96152 /* RESTClient */ = {
+		A414FD4113DB459200F96152 /* RESTClientLib */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A414FD4F13DB459200F96152 /* Build configuration list for PBXNativeTarget "RESTClient" */;
+			buildConfigurationList = A414FD4F13DB459200F96152 /* Build configuration list for PBXNativeTarget "RESTClientLib" */;
 			buildPhases = (
 				A414FD3E13DB459200F96152 /* Sources */,
 				A414FD3F13DB459200F96152 /* Frameworks */,
@@ -609,10 +727,28 @@
 			);
 			dependencies = (
 			);
-			name = RESTClient;
+			name = RESTClientLib;
 			productName = RESTClient;
 			productReference = A414FD4213DB459200F96152 /* libRESTClient.a */;
 			productType = "com.apple.product-type.library.static";
+		};
+		A43E639D152A47E6006AEBCD /* RESTClientFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A43E63AF152A47E6006AEBCD /* Build configuration list for PBXNativeTarget "RESTClientFramework" */;
+			buildPhases = (
+				A43E6399152A47E6006AEBCD /* Sources */,
+				A43E639A152A47E6006AEBCD /* Frameworks */,
+				A43E639B152A47E6006AEBCD /* Headers */,
+				A43E639C152A47E6006AEBCD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RESTClientFramework;
+			productName = RESTClient;
+			productReference = A43E639E152A47E6006AEBCD /* RESTClient.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		A46269A014198ED3005544D6 /* RESTClientSpecs */ = {
 			isa = PBXNativeTarget;
@@ -653,13 +789,22 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A414FD4113DB459200F96152 /* RESTClient */,
+				A414FD4113DB459200F96152 /* RESTClientLib */,
+				A43E639D152A47E6006AEBCD /* RESTClientFramework */,
 				A46269A014198ED3005544D6 /* RESTClientSpecs */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A43E639C152A47E6006AEBCD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A43E63B6152A60FA006AEBCD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A462699F14198ED3005544D6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -719,6 +864,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A43E6399152A47E6006AEBCD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A43E63BB152A6185006AEBCD /* RCConstants.m in Sources */,
+				A43E63BC152A6185006AEBCD /* RESTClient.m in Sources */,
+				A43E63BD152A6185006AEBCD /* RCResource.m in Sources */,
+				A43E63BE152A6185006AEBCD /* RCRequest.m in Sources */,
+				A43E63BF152A6185006AEBCD /* RCDownloadRequest.m in Sources */,
+				A43E63C0152A6185006AEBCD /* RCUploadRequest.m in Sources */,
+				A43E63C1152A6185006AEBCD /* RCResponse.m in Sources */,
+				A43E63C2152A6185006AEBCD /* RCCoder.m in Sources */,
+				A43E63C3152A6185006AEBCD /* RCIdentityCoder.m in Sources */,
+				A43E63C4152A6185006AEBCD /* RCTextCoder.m in Sources */,
+				A43E63C5152A6185006AEBCD /* RCJSONCoder.m in Sources */,
+				A43E63C6152A6185006AEBCD /* RCXMLCoder.m in Sources */,
+				A43E63C7152A6185006AEBCD /* RCImageCoder.m in Sources */,
+				A43E63C8152A6185006AEBCD /* RCBasicAuthProvider.m in Sources */,
+				A43E63C9152A6185006AEBCD /* RCServerTrustAuthProvider.m in Sources */,
+				A43E63CA152A6185006AEBCD /* RCClientCertificateAuthProvider.m in Sources */,
+				A43E63CB152A6185006AEBCD /* RCOAuth2AuthProvider.m in Sources */,
+				A43E63CC152A6185006AEBCD /* RCOAuthToken.m in Sources */,
+				A43E63CD152A6185006AEBCD /* NSData+Base64.m in Sources */,
+				A43E63CE152A6185006AEBCD /* NSObject+RESTClient.m in Sources */,
+				A43E63CF152A6185006AEBCD /* NSDictionary+RESTClient.m in Sources */,
+				A43E63D0152A6185006AEBCD /* NSString+RESTClient.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A462699D14198ED3005544D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -746,6 +920,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A43E63B4152A60FA006AEBCD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A43E63B5152A60FA006AEBCD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		A414FD4D13DB459200F96152 /* Debug */ = {
@@ -802,8 +987,7 @@
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				PRODUCT_NAME = RESTClient;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -819,9 +1003,58 @@
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				PRODUCT_NAME = RESTClient;
 				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		A43E63B0152A47E6006AEBCD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Source/RESTClient-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "RESTClientFramework-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = RESTClient;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		A43E63B1152A47E6006AEBCD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Source/RESTClient-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "RESTClientFramework-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = RESTClient;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
 		};
@@ -894,11 +1127,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A414FD4F13DB459200F96152 /* Build configuration list for PBXNativeTarget "RESTClient" */ = {
+		A414FD4F13DB459200F96152 /* Build configuration list for PBXNativeTarget "RESTClientLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A414FD5013DB459200F96152 /* Debug */,
 				A414FD5113DB459200F96152 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A43E63AF152A47E6006AEBCD /* Build configuration list for PBXNativeTarget "RESTClientFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A43E63B0152A47E6006AEBCD /* Debug */,
+				A43E63B1152A47E6006AEBCD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
