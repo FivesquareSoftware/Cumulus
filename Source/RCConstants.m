@@ -45,8 +45,8 @@ NSString *kRESTClientHTTPMethodHEAD = @"HEAD";
 
 
 NSString *kRESTClientProgressInfoKeyURL = @"URL";
-NSString *kRESTClientProgressInfoKeyTempFileURL = @"TempFileURL";
-NSString *kRESTClientProgressInfoKeyFilename = @"Filename";
-NSString *kRESTClientProgressInfoKeyProgress = @"Progress";
+NSString *kRESTClientProgressInfoKeyTempFileURL = @"tempFileURL";
+NSString *kRESTClientProgressInfoKeyFilename = @"filename";
+NSString *kRESTClientProgressInfoKeyProgress = @"progress";
 
 NSString *kRESTClientCachesDirectoryName = @"RESTClient";

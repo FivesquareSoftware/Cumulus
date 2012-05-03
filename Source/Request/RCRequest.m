@@ -260,6 +260,8 @@ static NSUInteger requestCount = 0;
 }
 
 
+
+
 // ========================================================================== //
 
 #pragma mark - Object
@@ -431,12 +433,10 @@ static NSUInteger requestCount = 0;
 		progress = self.receivedContentLength / self.expectedContentLength;
 	}
 	if (self.didReceiveDataBlock) {
-		
-		NSMutableDictionary *progressInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-											 [NSNumber numberWithFloat:progress], kRESTClientProgressInfoKeyProgress
-											 , [self.URLRequest URL], kRESTClientProgressInfoKeyURL
-											 , nil];
-		
+		RCProgressInfo *progressInfo = [RCProgressInfo new];
+		progressInfo.progress = [NSNumber numberWithFloat:progress];
+		progressInfo.URL = [self.URLRequest URL];
+
 		dispatch_async(dispatch_get_main_queue(), ^{
 			self.didReceiveDataBlock(progressInfo);
 		});
@@ -449,12 +449,11 @@ static NSUInteger requestCount = 0;
 		progress = self.sentContentLength / self.bodyContentLength;
 	}
 	
-	if (self.didSendDataBlock) {		
-		NSMutableDictionary *progressInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-											 [NSNumber numberWithFloat:progress], kRESTClientProgressInfoKeyProgress
-											 , [self.URLRequest URL], kRESTClientProgressInfoKeyURL
-											 , nil];
-		
+	if (self.didSendDataBlock) {				
+		RCProgressInfo *progressInfo = [RCProgressInfo new];
+		progressInfo.progress = [NSNumber numberWithFloat:progress];
+		progressInfo.URL = [self.URLRequest URL];
+
 		dispatch_async(dispatch_get_main_queue(), ^{
 			self.didSendDataBlock(progressInfo);
 		});

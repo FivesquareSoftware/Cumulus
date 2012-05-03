@@ -120,14 +120,12 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 #ifdef BROKEN_DOWNLOAD_DELEGATE
 	// we need to finish the connection from here when the download delegate is broken
-	NSMutableDictionary *progressInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-										 [NSNumber numberWithFloat:1.f], kRESTClientProgressInfoKeyProgress
-										 , self.downloadedFileTempURL, kRESTClientProgressInfoKeyTempFileURL
-										 , [self.URLRequest URL], kRESTClientProgressInfoKeyURL
-										 , nil];
-	if (self.downloadedFilename.length) {
-		[progressInfo setObject:self.downloadedFilename forKey:kRESTClientProgressInfoKeyFilename];
-	}
+	RCProgressInfo *progressInfo = [RCProgressInfo new];
+	progressInfo.progress = [NSNumber numberWithFloat:1.f];
+	progressInfo.tempFileURL = self.downloadedFileTempURL;
+	progressInfo.URL = [self.URLRequest URL];
+	progressInfo.filename = self.downloadedFilename;
+
 	self.result = progressInfo;
 	[self handleConnectionFinished];
 #endif
@@ -152,12 +150,12 @@
 }
 
 - (void)connectionDidFinishDownloading:(NSURLConnection *)connection destinationURL:(NSURL *)destinationURL {
-	NSMutableDictionary *progressInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-										 [NSNumber numberWithFloat:1.f], kRESTClientProgressInfoKeyProgress
-										 , self.downloadedFileTempURL, kRESTClientProgressInfoKeyTempFileURL
-										 , self.downloadedFilename, kRESTClientProgressInfoKeyFilename
-										 , [self.URLRequest URL], kRESTClientProgressInfoKeyURL
-										 , nil];
+	RCProgressInfo *progressInfo = [RCProgressInfo new];
+	progressInfo.progress = [NSNumber numberWithFloat:1.f];
+	progressInfo.tempFileURL = self.downloadedFileTempURL;
+	progressInfo.URL = [self.URLRequest URL];
+	progressInfo.filename = self.downloadedFilename;
+
 	self.result = progressInfo;
 	[self connectionFinished];
 }
