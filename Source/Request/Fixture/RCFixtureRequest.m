@@ -57,13 +57,17 @@
 			switch (c) {
 				case 0xFF:
 					expectedContentType_ = @"image/jpeg";
+					break;
 				case 0x89:
 					expectedContentType_ = @"image/png";
+					break;
 				case 0x47:
 					expectedContentType_ = @"image/gif";
+					break;
 				case 0x49:
 				case 0x4D:
 					expectedContentType_ = @"image/tiff";
+					break;
 			}		
 		}
 
