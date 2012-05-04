@@ -67,7 +67,7 @@
 	
 	self.bodyContentLength = [attributes fileSize]; 	
 	URLRequest.HTTPBodyStream = [NSInputStream inputStreamWithURL:self.fileToUploadURL];
-	[URLRequest setValue:[[NSNumber numberWithLongLong:[attributes fileSize]] stringValue] forHTTPHeaderField:@"Content-Length"];
+	[URLRequest setValue:[[NSNumber numberWithUnsignedLongLong:[attributes fileSize]] stringValue] forHTTPHeaderField:@"Content-Length"];
 	
 	// Get the mime-type from UTI
 	
@@ -78,7 +78,7 @@
     if (nil == MIMEType) {
         MIMEType = @"text/plain";
     }
-	[URLRequest setValue:MIMEType forHTTPHeaderField:@"Content-Type"];
+	[URLRequest setValue:MIMEType forHTTPHeaderField:kRESTClientHTTPHeaderContentType];
 }
 
 // ========================================================================== //

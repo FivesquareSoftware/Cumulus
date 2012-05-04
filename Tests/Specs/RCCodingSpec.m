@@ -104,7 +104,7 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeJSONUsingAcceptWhenServerSendsWrongContentType {
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	RCResource *resource = [self.service resource:@"test/decoding/json/wrong-content-type"];
-	[resource setValue:@"application/json" forHeaderField:@"Accept"];
+	[resource setValue:@"application/json" forHeaderField:kRESTClientHTTPHeaderAccept];
 	RCResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[RCJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
@@ -135,7 +135,7 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeXMLUsingAcceptWhenServerSendsWrongContentType {
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	RCResource *resource = [self.service resource:@"test/decoding/plist/wrong-content-type"];
-	[resource setValue:@"application/xml" forHeaderField:@"Accept"];
+	[resource setValue:@"application/xml" forHeaderField:kRESTClientHTTPHeaderAccept];
 	RCResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[RCXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
@@ -157,7 +157,7 @@ static NSString *kHelloWorld = @"Hello World!";
 
 - (void)shouldDecodeTextUsingAcceptWhenServerSendsWrongContentType {
 	RCResource *resource = [self.service resource:@"test/decoding/text/wrong-content-type"];
-	[resource setValue:@"text/plain" forHeaderField:@"Accept"];
+	[resource setValue:@"text/plain" forHeaderField:kRESTClientHTTPHeaderAccept];
 	RCResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[RCTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
@@ -181,7 +181,7 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeImageUsingAcceptWhenServerSendsWrongContentType {
 	UIImage *image =  [UIImage imageNamed:@"t_hero.png"];
 	RCResource *resource = [self.service resource:@"test/decoding/image/wrong-content-type"];
-	[resource setValue:@"image/png" forHeaderField:@"Accept"];
+	[resource setValue:@"image/png" forHeaderField:kRESTClientHTTPHeaderAccept];
 	RCResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[RCImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);

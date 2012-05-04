@@ -58,6 +58,9 @@ extern NSString *kRESTClientHTTPMethodPUT;
 extern NSString *kRESTClientHTTPMethodDELETE;
 extern NSString *kRESTClientHTTPMethodHEAD;
 
+extern NSString *kRESTClientHTTPHeaderAccept;
+extern NSString *kRESTClientHTTPHeaderContentType;
+
 extern NSString *kRESTClientProgressInfoKeyURL;
 extern NSString *kRESTClientProgressInfoKeyTempFileURL;
 extern NSString *kRESTClientProgressInfoKeyFilename;

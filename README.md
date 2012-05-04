@@ -33,17 +33,28 @@ RESTClient was implemented with automatic reference counting (ARC) and uses weak
 
 The simplest way to use RESTClient in your Xcode project is to just copy the files in "Source" to your own project.
 
-The best way to include RESTClient is to drag the project into your workspace, then add libRESTClient.a to your main target's link phase. 
+The best way to include RESTClient is to drag the project into your workspace, then add either libRESTClient.a (iOS) or RESTClient.framework (Mac OS) to your main target's link phase. 
 
-RESTClient outputs its headers into $(BUILT_PRODUCTS_DIR)/include/RESTClient/ which Xcode automatically searches for headers, so as long as you are using a shared build directory (the default in Xcode 4.3.x) there is no need to modify your HEADER_SEARCH_PATHS. Import RESTClient like this in your source:
+If you are using the Mac OS framework, the headers are automatically in your header search path. To add them for iOS, add "${SRCROOT}/relative/path/to/RESTClient/Source" to your HEADER_SEARCH_PATHS build setting and check the recursive box.
+
+On Mac OS, import RESTClient like this in your source:
 
 ```objective-c 
 #import <RESTClient/RESTClient.h>
 ```
 
+On iOS, use:
+
+```objective-c 
+#import "RESTClient.h"
+```
+
+
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding RESTClient as a submodule, `git submodule update --recursive`) to be sure to fetch RESTClient's own externals.
 
-Make sure you link the Security (to handle certificate based auth) and MobileCoreServices (to handle extracting mime types from files) frameworks.
+Make sure you link the Security framework (to handle certificate based auth) and MobileCoreServices framework (for iOS), or CoreServices framework (for Mac OS).
+
+You must use the -ObjC linker flag (at least, you could also use -force_load=RESTClient or -all_load if you wanted to be more agressive) in order to link in the categories defined in RESTClient.
 
 That's it. There is detailed help in the [FAQ][] if you need more information about how to set up your workspace.
 
@@ -140,6 +151,17 @@ RCResource *images = [site resource:@"images"];
 }
 ```
 
+_Test stuff even before your services are ready_
+
+```objective-c 	
+RCResource *posts = [site resource:@"posts"];
+posts.fixture = [NSArray arrayWithObjects:postOne,posTwo,nil];
+[posts getWithCompletionBlock:^(RCResponse *response) {
+	postsController.posts = response.result;
+}];
+// the array from the fixture is turned into data and decoded & postprocessed normally into response.result
+```
+
 
 RESTClient does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
 
@@ -150,4 +172,7 @@ RESTClient does even more, like direct from disk uploads, OAuth2 authentication,
 John Clayton <RESTClient@fivesquaresoftware.com>  
 James Cicenia <james@jimijon.com>  
 Kurt Arnlund <kurt@IngeniousArtsAndTechnologies.com>  
+
+Patches are welcome, pull requests are encouraged.
+
 

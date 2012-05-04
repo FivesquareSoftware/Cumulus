@@ -81,6 +81,18 @@
  *    [resource getWithQuery:[NSArray arrayWithObjets:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"foo",@"bar",nil]]
  *  would yield only ?foo=bar because the dictionary terminated argument processing. Notice that the order of parameter names and values is reversed when you pass a dictionary, because the values come before the keys in the dictionary constructors themselves.
  *
+ * = Fixtures
+ *
+ *  To make it easier to get coding on your app, you can use fixtures to simulate a working set of web services. Fixtures are plist objects that are converted to NSData (if needed) and then used in processing the response as if this was the data that the server sent back. Using them is pretty simple:
+ *  
+ *	RCResource *posts = [site resource:@"posts"];
+ *  posts.fixture = [NSArray arrayWithObjects:postOne,posTwo,nil];
+ *  [posts getWithCompletionBlock:^(RCResponse *response) {
+ *		postsController.posts = response.result;
+ *  }];
+ *
+ *  One of the gotchas is that there is no Content-type header to rely on from the server, so make sure you have set an Accept header on your resource, either directly or by setting the #contentType.
+ *
  */
 @interface RCResource : NSObject {
 	
@@ -110,7 +122,9 @@
 @property (nonatomic, copy) RCPreflightBlock preflightBlock; ///< Runs before every request for the receiver, which is aborted if this block returns NO
 @property (nonatomic, copy) RCPostProcessorBlock postProcessorBlock; ///< Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
 @property (readonly) NSMutableSet *requests; ///< The array of non-blocking RCRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
-	
+
+/** When this property is set, the receiver will return a fake successful response using the fixture (converted to NSData as needed) as the HTTP response data. This means the fixture will undergo any coding and/or postprocessing that would have occurred normally if the data were received from the server. */
+@property (nonatomic, strong) id fixture;
 
 
 /** @name Creating Resources
@@ -118,12 +132,13 @@
  */
 
 
-+ (id) withURL:(NSString *)URLString;
++ (id) withURL:(id)URL;
 
 /** Constructs a base resource using an absolute URL string. 
+ *  @param URL may be an NSURL or an NSString representing an URL
  *  @returns nil if a URL cannot be constructed from the provided string.
  */
-- (id) initWithURL:(NSString *)URLString;
+- (id) initWithURL:(id)URL;
 
 /** Constructs a child resource from the receiver using the passed object. If
  *  the object is not a string, the value returned by calling #description on
@@ -248,13 +263,13 @@
  */
 
 
-/** Downloads the data represented by the receiver directly to disk instead of holding it in memory. When the request is complete #result holds a dictionary with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it. 
+/** Downloads the data represented by the receiver directly to disk instead of holding it in memory. When the request is complete #result holds an instance of RCProgressInfo with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it. 
  *
- * The keys in the result dictionary include:
- *   - kRESTClientProgressInfoKeyURL
- *   - kRESTClientProgressInfoKeyTempFileURL
- *   - kRESTClientProgressInfoKeyFilename
- *   - kRESTClientProgressInfoKeyProgress
+ * The progress info object IS KVC for the following keys, and you can use the constants if you wish:
+ *   - kRESTClientProgressInfoKeyURL (URL)
+ *   - kRESTClientProgressInfoKeyTempFileURL (tempFileURL)
+ *   - kRESTClientProgressInfoKeyFilename (filename)
+ *   - kRESTClientProgressInfoKeyProgress (progress)
  */
 - (void) downloadWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock;
 

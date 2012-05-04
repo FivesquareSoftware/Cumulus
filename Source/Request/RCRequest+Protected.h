@@ -40,6 +40,25 @@
 
 @property (readwrite, strong) id result;
 
+@property (readwrite) BOOL started;
+@property (readwrite) BOOL finished;
+@property (readwrite) BOOL canceled;
+
+@property (readwrite, strong) NSHTTPURLResponse *URLResponse;
+
+@property (readwrite, strong) NSString *responseBody;
+
+
+// Private properties
+
+@property BOOL connectionFinished;
+@property (readwrite, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSURLRequest *originalURLRequest;
+@property (weak) NSTimer *timeoutTimer;
+@property (readonly) BOOL canStart;
+@property (readonly) BOOL canCancel;
+@property (readonly) BOOL canAbort;
+
 // Helpers
 
 - (void) configureURLRequest:(NSMutableURLRequest *)URLRequest;

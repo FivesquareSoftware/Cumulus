@@ -123,10 +123,12 @@
 
 
 @property (nonatomic, readonly, strong) NSMutableDictionary *headers;
+@property (nonatomic, readonly) NSString *acceptHeader; ///< Convenience that returns the Accept header from headers if there is one
+@property (nonatomic, readonly) NSString *contentTypeHeader; ///< Convenience that returns the Content-Type header from headers if there is one
 @property (nonatomic) NSTimeInterval timeout; ///< If this is non-zero and a response is not received by the time this interval has elapsed, the request is canceled.
 @property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< @see NSURLRequest#cachePolicy
 @property (nonatomic, readonly, strong) NSMutableArray *authProviders; ///< Given the chance to authorize a request and respond to auth challenges, in order
-@property (nonatomic) NSUInteger maxAuthRetries; ///< Auth challenges will be canceled if they exceed this value. Defaults to 1.
+@property (nonatomic) NSInteger maxAuthRetries; ///< Auth challenges will be canceled if they exceed this value. Defaults to 1.
 
 @property (nonatomic, strong) id payload; ///< If this is set, #payloadEncoder is used to turn the payload into data for the HTTPBody.
 

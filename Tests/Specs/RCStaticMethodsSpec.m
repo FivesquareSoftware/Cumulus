@@ -33,8 +33,8 @@
 - (void)beforeEach {
     // set up resources that need to be initialized before each example here 
 	[RESTClient setHeaders:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-							@"application/json", @"Content-Type"
-							, @"application/json", @"Accept"
+							@"application/json", kRESTClientHTTPHeaderContentType
+							, @"application/json", kRESTClientHTTPHeaderAccept
 							, nil]];
 	[RESTClient setAuthProviders:nil];
 }

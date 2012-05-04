@@ -40,27 +40,6 @@
 
 @interface RCRequest() 
 
-// Readwrite versions of public properties
-
-@property (readwrite) BOOL started;
-@property (readwrite) BOOL finished;
-@property (readwrite) BOOL canceled;
-
-@property (readwrite, strong) NSHTTPURLResponse *URLResponse;
-
-@property (readwrite, strong) NSString *responseBody;
-
-
-// Private properties
-
-@property BOOL connectionFinished;
-@property (readwrite, strong) NSURLConnection *connection;
-@property (nonatomic, strong) NSURLRequest *originalURLRequest;
-@property (weak) NSTimer *timeoutTimer;
-@property (readonly) BOOL canStart;
-@property (readonly) BOOL canCancel;
-@property (readonly) BOOL canAbort;
-
 // Private Methods
 
 - (void) timeoutFired:(NSTimer *)timer;
@@ -206,6 +185,16 @@ static NSUInteger requestCount = 0;
 	return headers_;
 }
 
+@dynamic acceptHeader;
+- (NSString *) acceptHeader {
+	return [self.headers objectForKey:kRESTClientHTTPHeaderAccept];
+}
+
+@dynamic contentTypeHeader;
+- (NSString *) contentTypeHeader {
+	return [self.headers objectForKey:kRESTClientHTTPHeaderContentType];
+}
+
 - (NSMutableArray *) authProviders {
 	if (nil == authProviders_) {
 		authProviders_ = [NSMutableArray new];
@@ -226,7 +215,7 @@ static NSUInteger requestCount = 0;
 		// First, check for obvious conversions of payload by class
 		payloadEncoder_ = [RCCoder coderForObject:payload_];
 		
-		contentType = [URLRequest_ valueForHTTPHeaderField:@"Content-Type"];
+		contentType = [URLRequest_ valueForHTTPHeaderField:kRESTClientHTTPHeaderContentType];
 
         if (nil == payloadEncoder_) { // we have an non-literal object type, figure out encoding based on content type
             if (contentType && contentType.length > 0) {
@@ -241,13 +230,13 @@ static NSUInteger requestCount = 0;
 
 - (id<RCCoder>) responseDecoder {
     if (responseDecoder_ == nil) {
-        NSString *contentType = [[URLResponse_ allHeaderFields] valueForKey:@"Content-Type"];
+        NSString *contentType = [[URLResponse_ allHeaderFields] valueForKey:kRESTClientHTTPHeaderContentType];
         if (contentType.length > 0) { // First, let's try content type, because the server is telling us what it sent
             responseDecoder_ = [RCCoder coderForMimeType:contentType];
         }
         if (responseDecoder_ == nil) { 
             // If we didn't get a decoder from content type, we will try and build a decoder based on what we were expecting
-            NSString *accepts = [URLRequest_ valueForHTTPHeaderField:@"Accept"];
+            NSString *accepts = [URLRequest_ valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
             if (accepts && accepts.length > 0) {
                 responseDecoder_ = [RCCoder coderForMimeType:accepts];
             }

@@ -37,6 +37,7 @@
 
 #import "RCConstants.h"
 #import "RCRequest.h"
+#import "RCFixtureRequest.h"
 #import "RESTClient.h"
 
 #import "NSDictionary+RESTClient.h"
@@ -106,7 +107,7 @@
 @synthesize contentType=contentType_;
 @synthesize preflightBlock=preflightBlock_;
 @synthesize postProcessorBlock=postprocessorBlock_;
-@synthesize requests_;
+@synthesize fixture=fixture_;
 
 @dynamic queryString;
 - (NSString *) queryString {
@@ -181,6 +182,8 @@
 
 // Private
 
+@synthesize requests_;
+
 
 @dynamic mergedHeaders;
 - (NSMutableDictionary *) mergedHeaders {
@@ -211,14 +214,18 @@
 	dispatch_release(requests_semaphore_);
 }
 
-+ (id) withURL:(NSString *)URLString {
-	return [[RCResource alloc] initWithURL:URLString];
++ (id) withURL:(id)URL {
+	return [[RCResource alloc] initWithURL:URL];
 }
 
-- (id) initWithURL:(NSString *)URLString {
+- (id) initWithURL:(id)URL {
 	self = [super init];
 	if (self) {
-		self.URL = [NSURL URLWithString:URLString];
+		if ([URL isKindOfClass:[NSString class]]) {
+			self.URL = [NSURL URLWithString:URL];
+		} else {
+			self.URL = URL;
+		}
 		if (URL_ == nil) {
 			self = nil;
 			return self;
@@ -519,7 +526,12 @@
 
 - (RCRequest *) requestForHTTPMethod:(NSString *)method query:(id)query {
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:method query:query];
-	RCRequest *request = [[RCRequest alloc] initWithURLRequest:URLRequest];
+	RCRequest *request;
+	if (self.fixture) {
+		request = [[RCFixtureRequest alloc] initWithURLRequest:URLRequest fixture:self.fixture];
+	} else {
+		request = [[RCRequest alloc] initWithURLRequest:URLRequest];
+	}
 	[self configureRequest:request];
 	return request;
 }
@@ -550,16 +562,20 @@
 - (void) setHeadersForContentType:(RESTClientContentType)contentType {
 	switch (contentType) {
 		case RESTClientContentTypeJSON:
-			[self.headers setObject:@"application/json" forKey:@"Content-Type"];
-			[self.headers setObject:@"application/json" forKey:@"Accept"];
+			[self.headers setObject:@"application/json" forKey:kRESTClientHTTPHeaderContentType];
+			[self.headers setObject:@"application/json" forKey:kRESTClientHTTPHeaderAccept];
 			break;
 		case RESTClientContentTypeXML:
-			[self.headers setObject:@"application/xml" forKey:@"Content-Type"];
-			[self.headers setObject:@"application/xml" forKey:@"Accept"];
+			[self.headers setObject:@"application/xml" forKey:kRESTClientHTTPHeaderContentType];
+			[self.headers setObject:@"application/xml" forKey:kRESTClientHTTPHeaderAccept];
 			break;
 		case RESTClientContentTypeHTML:
-			[self.headers setObject:@"text/html" forKey:@"Content-Type"];
-			[self.headers setObject:@"text/html" forKey:@"Accept"];
+			[self.headers setObject:@"text/html" forKey:kRESTClientHTTPHeaderContentType];
+			[self.headers setObject:@"text/html" forKey:kRESTClientHTTPHeaderAccept];
+			break;			
+		case RESTClientContentTypeText:
+			[self.headers setObject:@"text/plain" forKey:kRESTClientHTTPHeaderContentType];
+			[self.headers setObject:@"text/plain" forKey:kRESTClientHTTPHeaderAccept];
 			break;			
 		default:
 			break;

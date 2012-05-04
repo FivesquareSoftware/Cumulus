@@ -36,7 +36,7 @@
 #import "RESTClient.h"
 
 @interface RESTClient()
-+ (RCResource *) configuredResourceForURLString:(NSString *)URLString;
++ (RCResource *) configuredResourceForURL:(id)URL;
 @end
 
 
@@ -144,6 +144,32 @@ static NSMutableDictionary *headers_ = nil;
 	}
 }
 
+static NSDictionary *fixtures_ = nil;
+
++ (void) loadFixtures:(NSDictionary *)fixtures {
+	@synchronized(@"RESTClient.fixtures") {
+		if (fixtures_ != fixtures) {
+			fixtures_ = fixtures;
+		}
+	}
+}
+
++ (void) loadFixturesNamed:(NSString *)plistName {
+	NSString *path = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
+	NSDictionary *fixtures = [NSDictionary dictionaryWithContentsOfFile:path];
+	[self loadFixtures:fixtures];
+}
+
+static BOOL usingFixtures_ = NO;
+
++ (BOOL) usingFixtures {
+	return usingFixtures_;
+}
+
++ (void) useFixtures:(BOOL)useFixtures {
+	usingFixtures_ = useFixtures;
+}
+
 
 // ========================================================================== //
 
@@ -152,90 +178,90 @@ static NSMutableDictionary *headers_ = nil;
 
 #pragma mark -GET
 
-+ (RCResponse *) get:(NSString *)URLString {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (RCResponse *) get:(id)URL {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	return [resource get];
 }
 
-+ (void) get:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) get:(id)URL withCompletionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource getWithCompletionBlock:completionBlock];
 }
 
-+ (void) get:(NSString *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) get:(id)URL withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource getWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 
 #pragma mark -HEAD
 
-+ (RCResponse *) head:(NSString *)URLString {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (RCResponse *) head:(id)URL {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	return [resource head];
 }
 
-+ (void) head:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) head:(id)URL withCompletionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource headWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -DELETE
 
-+ (RCResponse *) delete:(NSString *)URLString {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (RCResponse *) delete:(id)URL {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	return [resource delete];
 }
 
-+ (void) delete:(NSString *)URLString withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) delete:(id)URL withCompletionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource deleteWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -POST
 
-+ (RCResponse *) post:(NSString *)URLString payload:(id)payload {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (RCResponse *) post:(id)URL payload:(id)payload {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	return [resource post:payload];
 }
 
-+ (void) post:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) post:(id)URL payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource post:payload withCompletionBlock:completionBlock];
 }
 
-+ (void) post:(NSString *)URLString payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) post:(id)URL payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource post:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 #pragma mark -PUT
 
-+ (RCResponse *) put:(NSString *)URLString payload:(id)payload {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (RCResponse *) put:(id)URL payload:(id)payload {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	return [resource put:payload];
 }
 
-+ (void) put:(NSString *)URLString payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) put:(id)URL payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource put:payload withCompletionBlock:completionBlock];
 }
 
-+ (void) put:(NSString *)URLString payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) put:(id)URL payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource put:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 
 #pragma mark -Files
 
-+ (void) download:(NSString  *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) download:(id)URL withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
-+ (void) uploadFile:(NSURL *)fileURL to:(NSString *)URLString withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURLString:URLString];
++ (void) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
+	RCResource *resource = [self configuredResourceForURL:URL];
 	[resource uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
@@ -245,12 +271,19 @@ static NSMutableDictionary *headers_ = nil;
 
 #pragma mark - Helpers
 
-+ (RCResource *) configuredResourceForURLString:(NSString *)URLString {
-	RCResource *resource = [RCResource withURL:URLString];
++ (RCResource *) configuredResourceForURL:(id)URL {
+	RCResource *resource = [RCResource withURL:URL];
 
 	resource.timeout = [self timeout];
 	resource.headers = [self headers];
 	resource.authProviders = [self authProviders];
+	
+	if (usingFixtures_) {
+		id fixture = nil;
+		if ( (fixture = [fixtures_ objectForKey:[resource.URL absoluteString]]) ) {
+			resource.fixture = fixture;
+		}
+	}
 	
 	return resource;
 }

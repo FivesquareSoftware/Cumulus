@@ -43,6 +43,8 @@ NSString *kRESTClientHTTPMethodPUT = @"PUT";
 NSString *kRESTClientHTTPMethodDELETE = @"DELETE";
 NSString *kRESTClientHTTPMethodHEAD = @"HEAD";
 
+NSString *kRESTClientHTTPHeaderAccept = @"Accept";
+NSString *kRESTClientHTTPHeaderContentType = @"Content-Type";
 
 NSString *kRESTClientProgressInfoKeyURL = @"URL";
 NSString *kRESTClientProgressInfoKeyTempFileURL = @"tempFileURL";
