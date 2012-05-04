@@ -64,4 +64,5 @@ typedef enum {
 	, RESTClientContentTypeXML
 	, RESTClientContentTypeHTML
 	, RESTClientContentTypeText
+	, RESTClientContentTypePNG
 } RESTClientContentType;

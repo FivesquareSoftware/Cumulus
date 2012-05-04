@@ -146,7 +146,7 @@ static NSMutableDictionary *headers_ = nil;
 
 static NSDictionary *fixtures_ = nil;
 
-+ (void) loadFixtures:(NSDictionary *)fixtures {
++ (void) setFixtures:(NSDictionary *)fixtures {
 	@synchronized(@"RESTClient.fixtures") {
 		if (fixtures_ != fixtures) {
 			fixtures_ = fixtures;
@@ -157,7 +157,7 @@ static NSDictionary *fixtures_ = nil;
 + (void) loadFixturesNamed:(NSString *)plistName {
 	NSString *path = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
 	NSDictionary *fixtures = [NSDictionary dictionaryWithContentsOfFile:path];
-	[self loadFixtures:fixtures];
+	[self setFixtures:fixtures];
 }
 
 static BOOL usingFixtures_ = NO;

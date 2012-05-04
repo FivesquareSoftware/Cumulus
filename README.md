@@ -155,7 +155,8 @@ _Test stuff even before your services are ready_
 
 ```objective-c 	
 RCResource *posts = [site resource:@"posts"];
-posts.fixture = [NSArray arrayWithObjects:postOne,posTwo,nil];
+posts.contentType = RESTClientContentTypeJSON;
+posts.fixture = [NSArray arrayWithObjects:postOne,postTwo,nil];
 [posts getWithCompletionBlock:^(RCResponse *response) {
 	postsController.posts = response.result;
 }];

@@ -117,23 +117,27 @@
 		A4C2085B141852F6003412BA /* RCXMLCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C20859141852F6003412BA /* RCXMLCoder.m */; };
 		A4C9D1D41482DE57004E9B72 /* Item.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4C9D1D31482DE57004E9B72 /* Item.plist */; };
 		A4D17DF415533E880063B061 /* RCFixtureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17DF315533E880063B061 /* RCFixtureSpec.m */; };
-		A4D17E3E15545E7E0063B061 /* RCResponseCodesSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* RCResponseCodesSpec.m */; };
-		A4D17E3F15545E7E0063B061 /* RCCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* RCCodingSpec.m */; };
-		A4D17E4015545E7E0063B061 /* RCResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* RCResourceConfigSpec.m */; };
-		A4D17E4115545E7E0063B061 /* RCResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* RCResourceNestingSpec.m */; };
-		A4D17E4215545E7E0063B061 /* RCResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* RCResourceControlSpec.m */; };
-		A4D17E4315545E7E0063B061 /* RCAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* RCAuthSpec.m */; };
-		A4D17E4415545E7E0063B061 /* RCGetSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* RCGetSpec.m */; };
-		A4D17E4515545E7E0063B061 /* RCHeadSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23E81483F4FC0045CA21 /* RCHeadSpec.m */; };
-		A4D17E4615545E7E0063B061 /* RCDeleteSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23EA1483F50A0045CA21 /* RCDeleteSpec.m */; };
-		A4D17E4715545E7E0063B061 /* RCPostSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EEBA1A14242D6100376DAC /* RCPostSpec.m */; };
-		A4D17E4815545E7E0063B061 /* RCPutSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120B1441096A0008A235 /* RCPutSpec.m */; };
-		A4D17E4915545E7E0063B061 /* RCQueryStringSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* RCQueryStringSpec.m */; };
-		A4D17E4A15545E7E0063B061 /* RCResourceBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* RCResourceBlocksSpec.m */; };
-		A4D17E4B15545E7E0063B061 /* RCFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* RCFileHandlingSpec.m */; };
-		A4D17E4C15545E7E0063B061 /* RCStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* RCStaticMethodsSpec.m */; };
-		A4D17E4D15545E7E0063B061 /* RCBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* RCBenchmarksSpec.m */; };
-		A4D17E4E15545E7E0063B061 /* RCRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* RCRequestSpec.m */; };
+		A4D17EB1155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */; };
+		A4D17EB2155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */; };
+		A4D17EB3155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */; };
+		A4D17EB4155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */; };
+		A4D17EB51554895D0063B061 /* RCResponseCodesSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* RCResponseCodesSpec.m */; };
+		A4D17EB61554895D0063B061 /* RCCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* RCCodingSpec.m */; };
+		A4D17EB71554895D0063B061 /* RCResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* RCResourceConfigSpec.m */; };
+		A4D17EB81554895D0063B061 /* RCResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* RCResourceNestingSpec.m */; };
+		A4D17EB91554895D0063B061 /* RCResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* RCResourceControlSpec.m */; };
+		A4D17EBA1554895D0063B061 /* RCAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* RCAuthSpec.m */; };
+		A4D17EBB1554895D0063B061 /* RCGetSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* RCGetSpec.m */; };
+		A4D17EBC1554895D0063B061 /* RCHeadSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23E81483F4FC0045CA21 /* RCHeadSpec.m */; };
+		A4D17EBD1554895D0063B061 /* RCDeleteSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23EA1483F50A0045CA21 /* RCDeleteSpec.m */; };
+		A4D17EBE1554895D0063B061 /* RCPostSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EEBA1A14242D6100376DAC /* RCPostSpec.m */; };
+		A4D17EBF1554895D0063B061 /* RCPutSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120B1441096A0008A235 /* RCPutSpec.m */; };
+		A4D17EC01554895D0063B061 /* RCQueryStringSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* RCQueryStringSpec.m */; };
+		A4D17EC11554895D0063B061 /* RCResourceBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* RCResourceBlocksSpec.m */; };
+		A4D17EC21554895D0063B061 /* RCFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* RCFileHandlingSpec.m */; };
+		A4D17EC31554895D0063B061 /* RCStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* RCStaticMethodsSpec.m */; };
+		A4D17EC41554895D0063B061 /* RCBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* RCBenchmarksSpec.m */; };
+		A4D17EC51554895D0063B061 /* RCRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* RCRequestSpec.m */; };
 		A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1214199082005544D6 /* SpecHelper.m */; };
 		A4D4FFC7141A5A4E00E58873 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */; };
 		A4EFF1721551F9D100868358 /* RCProgressInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF1701551F9D100868358 /* RCProgressInfo.h */; };
@@ -287,6 +291,8 @@
 		A4CD1951141A78C800FADC09 /* RCAuthSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCAuthSpec.m; sourceTree = "<group>"; };
 		A4D17DF215533E880063B061 /* RCFixtureSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFixtureSpec.h; sourceTree = "<group>"; };
 		A4D17DF315533E880063B061 /* RCFixtureSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFixtureSpec.m; sourceTree = "<group>"; };
+		A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFixtureDownloadRequest.h; sourceTree = "<group>"; };
+		A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFixtureDownloadRequest.m; sourceTree = "<group>"; };
 		A4D26F61149274530005DFE3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		A4D40019141BBA8500E58873 /* run.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run.sh; sourceTree = "<group>"; };
 		A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -676,6 +682,8 @@
 			children = (
 				A4EFF209155334AE00868358 /* RCFixtureRequest.h */,
 				A4EFF20A155334AE00868358 /* RCFixtureRequest.m */,
+				A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */,
+				A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */,
 				A4EFF20F155334D200868358 /* RCFixtureHTTPResponse.h */,
 				A4EFF210155334D200868358 /* RCFixtureHTTPResponse.m */,
 			);
@@ -717,6 +725,7 @@
 				A4EFF1721551F9D100868358 /* RCProgressInfo.h in Headers */,
 				A4EFF20B155334AE00868358 /* RCFixtureRequest.h in Headers */,
 				A4EFF211155334D200868358 /* RCFixtureHTTPResponse.h in Headers */,
+				A4D17EB1155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,6 +761,7 @@
 				A4EFF1731551F9D100868358 /* RCProgressInfo.h in Headers */,
 				A4EFF20C155334AE00868358 /* RCFixtureRequest.h in Headers */,
 				A4EFF212155334D200868358 /* RCFixtureHTTPResponse.h in Headers */,
+				A4D17EB2155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -907,6 +917,7 @@
 				A4EFF1741551F9D100868358 /* RCProgressInfo.m in Sources */,
 				A4EFF20D155334AE00868358 /* RCFixtureRequest.m in Sources */,
 				A4EFF213155334D200868358 /* RCFixtureHTTPResponse.m in Sources */,
+				A4D17EB3155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -939,6 +950,7 @@
 				A4EFF1751551F9D100868358 /* RCProgressInfo.m in Sources */,
 				A4EFF20E155334AE00868358 /* RCFixtureRequest.m in Sources */,
 				A4EFF214155334D200868358 /* RCFixtureHTTPResponse.m in Sources */,
+				A4D17EB4155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -949,23 +961,23 @@
 				A4626A4D14199082005544D6 /* main.m in Sources */,
 				A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */,
 				A4D17DF415533E880063B061 /* RCFixtureSpec.m in Sources */,
-				A4D17E3E15545E7E0063B061 /* RCResponseCodesSpec.m in Sources */,
-				A4D17E3F15545E7E0063B061 /* RCCodingSpec.m in Sources */,
-				A4D17E4015545E7E0063B061 /* RCResourceConfigSpec.m in Sources */,
-				A4D17E4115545E7E0063B061 /* RCResourceNestingSpec.m in Sources */,
-				A4D17E4215545E7E0063B061 /* RCResourceControlSpec.m in Sources */,
-				A4D17E4315545E7E0063B061 /* RCAuthSpec.m in Sources */,
-				A4D17E4415545E7E0063B061 /* RCGetSpec.m in Sources */,
-				A4D17E4515545E7E0063B061 /* RCHeadSpec.m in Sources */,
-				A4D17E4615545E7E0063B061 /* RCDeleteSpec.m in Sources */,
-				A4D17E4715545E7E0063B061 /* RCPostSpec.m in Sources */,
-				A4D17E4815545E7E0063B061 /* RCPutSpec.m in Sources */,
-				A4D17E4915545E7E0063B061 /* RCQueryStringSpec.m in Sources */,
-				A4D17E4A15545E7E0063B061 /* RCResourceBlocksSpec.m in Sources */,
-				A4D17E4B15545E7E0063B061 /* RCFileHandlingSpec.m in Sources */,
-				A4D17E4C15545E7E0063B061 /* RCStaticMethodsSpec.m in Sources */,
-				A4D17E4D15545E7E0063B061 /* RCBenchmarksSpec.m in Sources */,
-				A4D17E4E15545E7E0063B061 /* RCRequestSpec.m in Sources */,
+				A4D17EB51554895D0063B061 /* RCResponseCodesSpec.m in Sources */,
+				A4D17EB61554895D0063B061 /* RCCodingSpec.m in Sources */,
+				A4D17EB71554895D0063B061 /* RCResourceConfigSpec.m in Sources */,
+				A4D17EB81554895D0063B061 /* RCResourceNestingSpec.m in Sources */,
+				A4D17EB91554895D0063B061 /* RCResourceControlSpec.m in Sources */,
+				A4D17EBA1554895D0063B061 /* RCAuthSpec.m in Sources */,
+				A4D17EBB1554895D0063B061 /* RCGetSpec.m in Sources */,
+				A4D17EBC1554895D0063B061 /* RCHeadSpec.m in Sources */,
+				A4D17EBD1554895D0063B061 /* RCDeleteSpec.m in Sources */,
+				A4D17EBE1554895D0063B061 /* RCPostSpec.m in Sources */,
+				A4D17EBF1554895D0063B061 /* RCPutSpec.m in Sources */,
+				A4D17EC01554895D0063B061 /* RCQueryStringSpec.m in Sources */,
+				A4D17EC11554895D0063B061 /* RCResourceBlocksSpec.m in Sources */,
+				A4D17EC21554895D0063B061 /* RCFileHandlingSpec.m in Sources */,
+				A4D17EC31554895D0063B061 /* RCStaticMethodsSpec.m in Sources */,
+				A4D17EC41554895D0063B061 /* RCBenchmarksSpec.m in Sources */,
+				A4D17EC51554895D0063B061 /* RCRequestSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

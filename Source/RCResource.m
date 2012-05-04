@@ -38,6 +38,7 @@
 #import "RCConstants.h"
 #import "RCRequest.h"
 #import "RCFixtureRequest.h"
+#import "RCFixtureDownloadRequest.h"
 #import "RESTClient.h"
 
 #import "NSDictionary+RESTClient.h"
@@ -538,7 +539,12 @@
 
 - (RCDownloadRequest *) downloadRequestWithQuery:query {
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
-	RCDownloadRequest *request = [[RCDownloadRequest alloc] initWithURLRequest:URLRequest];
+	RCRequest *request;
+	if (self.fixture) {
+		request = [[RCFixtureDownloadRequest alloc] initWithURLRequest:URLRequest fixture:self.fixture];
+	} else {
+		request = [[RCDownloadRequest alloc] initWithURLRequest:URLRequest];
+	}
 	[self configureRequest:request];
 	return request;
 }
@@ -576,6 +582,10 @@
 		case RESTClientContentTypeText:
 			[self.headers setObject:@"text/plain" forKey:kRESTClientHTTPHeaderContentType];
 			[self.headers setObject:@"text/plain" forKey:kRESTClientHTTPHeaderAccept];
+			break;			
+		case RESTClientContentTypePNG:
+			[self.headers setObject:@"image/png" forKey:kRESTClientHTTPHeaderContentType];
+			[self.headers setObject:@"image/png" forKey:kRESTClientHTTPHeaderAccept];
 			break;			
 		default:
 			break;

@@ -83,7 +83,7 @@
  *
  * = Fixtures
  *
- *  To make it easier to get coding on your app, you can use fixtures to simulate a working set of web services. Fixtures are plist objects that are converted to NSData (if needed) and then used in processing the response as if this was the data that the server sent back. Using them is pretty simple:
+ *  To make it easier to get coding on your app, you can use fixtures to simulate a working set of web services. Fixtures are objects that are converted to NSData using an instance of RCCoder and then used in processing the response as if this was the data that the server sent back. Using them is pretty simple:
  *  
  *	RCResource *posts = [site resource:@"posts"];
  *  posts.fixture = [NSArray arrayWithObjects:postOne,posTwo,nil];
@@ -91,7 +91,12 @@
  *		postsController.posts = response.result;
  *  }];
  *
- *  One of the gotchas is that there is no Content-type header to rely on from the server, so make sure you have set an Accept header on your resource, either directly or by setting the #contentType.
+ *  One of the gotchas with fixtures is that there is no Content-type header to rely on from the server when it comes time to decode the fixture data, so it needs to be inferred. If it is obvious from the kind of object that #fixture is, then that value is used. For example:
+ *    - NSString - results in text/plain, regardless of the type of data being represented
+ *    - UIImage - results in image/jpg, image/png, image/gif, image/tiff, or nothing, depending on the actual image type
+ *  Since there is no way to be 100% sure what the intended content type is—obviously a string could actually represent an object in any number of text based data encodings—the only way to fully control how the fixture is decoded is to make sure you have set an 'Accept' header on your resource, either directly or by setting the #contentType. The value there will be used to select a decoder if it is set.
+ *
+ *  At this time, upload requests do not support fixtures.
  *
  */
 @interface RCResource : NSObject {
@@ -123,7 +128,7 @@
 @property (nonatomic, copy) RCPostProcessorBlock postProcessorBlock; ///< Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
 @property (readonly) NSMutableSet *requests; ///< The array of non-blocking RCRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
 
-/** When this property is set, the receiver will return a fake successful response using the fixture (converted to NSData as needed) as the HTTP response data. This means the fixture will undergo any coding and/or postprocessing that would have occurred normally if the data were received from the server. */
+/** When this property is set, the receiver will return a fake successful response using the fixture (converted to NSData as needed) as the HTTP response data. This means the fixture will undergo any decoding and/or postprocessing that would have occurred normally if the data were received from the server. */
 @property (nonatomic, strong) id fixture;
 
 

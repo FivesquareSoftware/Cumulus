@@ -102,7 +102,7 @@
 + (void) setHeaders:(NSMutableDictionary *)headers;
 
 /** Loads a set of fake data to return for a request. The data should have URLs as keys and any valid plist data type as a value. */
-+ (void) loadFixtures:(NSDictionary *)fixtures;
++ (void) setFixtures:(NSDictionary *)fixtures;
 
 /** Loads fixtures from a plist. */
 + (void) loadFixturesNamed:(NSString *)plistName;

@@ -13,37 +13,62 @@
 #import "RCFixtureHTTPResponse.h"
 
 @interface RCFixtureRequest ()
-
-@property (nonatomic, readonly) NSData *fixtureData;
-
 @end
 
 @implementation RCFixtureRequest
 
 @synthesize fixture=fixture_;
+@synthesize fixtureData=fixtureData_;
+@synthesize expectedContentType=expectedContentType_;
 
-@dynamic fixtureData;
 - (NSData *) fixtureData {
 	if (fixture_ == nil) {
 		return nil;
 	}
 	
-	// First, check for obvious conversions of fixture by class
-	id<RCCoder> fixtureEncoder = [RCCoder coderForObject:fixture_];
-	
-	//Then look at the accept header, because we won't have a response from the server
-	NSString *contentType = [self.URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
-	
-	if (nil == fixtureEncoder) { // we have an non-literal object type, figure out encoding based on content type
-		if (contentType && contentType.length > 0) {
-			fixtureEncoder = [RCCoder coderForMimeType:contentType];
+	if (fixtureData_ == nil) {
+		// First, check for obvious conversions of fixture by class
+		id<RCCoder> fixtureEncoder = [RCCoder coderForObject:fixture_];
+		
+		//Then look at the accept header, because we won't have a response from the server
+		NSString *contentType = self.acceptHeader;
+		
+		if (nil == fixtureEncoder) { // we have an non-literal object type, figure out encoding based on content type
+			if (contentType && contentType.length > 0) {
+				fixtureEncoder = [RCCoder coderForMimeType:contentType];
+			}
 		}
-	}
-	
-	NSAssert2(fixtureEncoder != nil,  @"Unable to convert fixture to HTTPBody using fixture.class: %@, Accept: %@. Make sure you are using a compatible object type or have set an appropriate Accept.", NSStringFromClass([fixture_ class]), contentType);
+		
+		NSAssert2(fixtureEncoder != nil,  @"Unable to convert fixture to HTTPBody using fixture.class: %@, Accept: %@. Make sure you are using a compatible object type or have set an appropriate Accept.", NSStringFromClass([fixture_ class]), contentType);
+		
+		fixtureData_ = [fixtureEncoder encodeObject:fixture_];
+		
+		// set up the expected content type
+		if (self.acceptHeader && self.acceptHeader.length) {
+			expectedContentType_ = self.acceptHeader;
+		}
+		else if ([fixtureEncoder isKindOfClass:[RCTextCoder class]]) {
+			expectedContentType_ = @"text/plain"; // could be html, but no way to tell, really
+		}
+		else if ([fixtureEncoder isKindOfClass:[RCImageCoder class]]) {
+			uint8_t c;
+			[fixtureData_ getBytes:&c length:1];
+			
+			switch (c) {
+				case 0xFF:
+					expectedContentType_ = @"image/jpeg";
+				case 0x89:
+					expectedContentType_ = @"image/png";
+				case 0x47:
+					expectedContentType_ = @"image/gif";
+				case 0x49:
+				case 0x4D:
+					expectedContentType_ = @"image/tiff";
+			}		
+		}
 
-	NSData *fixtureData = [fixtureEncoder encodeObject:fixture_];
-	return fixtureData;
+	}	
+	return fixtureData_;
 }
 
 - (id)initWithURLRequest:(NSURLRequest *)URLRequest fixture:(id)fixture {
@@ -75,11 +100,13 @@
 	}	
 	
 	[self.data appendData:self.fixtureData];
-	NSString *mimeType = [self.URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
 
-	id fakeResponse = [[RCFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:mimeType expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
+	
+	id fakeResponse = [[RCFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:expectedContentType_ expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
 	[fakeResponse setStatusCode:200];
-	[fakeResponse setAllHeaderFields:[NSDictionary dictionaryWithObject:self.acceptHeader forKey:kRESTClientHTTPHeaderContentType]];
+	if (expectedContentType_) {
+		[fakeResponse setAllHeaderFields:[NSDictionary dictionaryWithObject:expectedContentType_ forKey:kRESTClientHTTPHeaderContentType]];
+	}
 	self.URLResponse = fakeResponse;
 	
 	self.expectedContentLength = [self.data length];

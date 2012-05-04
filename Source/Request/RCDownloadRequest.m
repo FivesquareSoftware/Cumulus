@@ -77,8 +77,6 @@
 	NSString *tempFilename = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, UUID);
 	CFRelease(UUID);
 
-	
-
 	NSString *filePath = [[RESTClient cachesDir] stringByAppendingPathComponent:tempFilename];
 	
 	self.downloadedFileTempURL = [NSURL fileURLWithPath:filePath];
