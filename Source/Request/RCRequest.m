@@ -419,7 +419,7 @@ static NSUInteger requestCount = 0;
 - (void) handleConnectionDidReceiveData {
 	float progress = 0;
 	if (self.expectedContentLength > 0) {
-		progress = self.receivedContentLength / self.expectedContentLength;
+		progress = (float)self.receivedContentLength / (float)self.expectedContentLength;
 	}
 	if (self.didReceiveDataBlock) {
 		RCProgressInfo *progressInfo = [RCProgressInfo new];

@@ -13,6 +13,8 @@
 
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "OCMock.h"
+
 
 
 @implementation RCFixtureSpec
@@ -105,6 +107,34 @@
 	NSData *imageData = UIImagePNGRepresentation(image);
 	resource.fixture = image;
 
+	
+	// Set up a mock to receive progress blocks
+	__block id mockProgressObject = [OCMockObject mockForClass:[NSObject class]];
+	
+	
+	BOOL (^zeroProgressBlock)(id) = ^(id value) {
+		float progress = [(NSNumber *)value floatValue];
+		return (BOOL)(progress == 0);
+	};
+	
+	BOOL (^someProgressBlock)(id) = ^(id value) {
+		float progress = [(NSNumber *)value floatValue];
+		return (BOOL)(0.f < progress && progress <= 1.f);
+	};
+	
+	[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:zeroProgressBlock] forKey:@"Progress"];
+	
+	
+	// Progress block
+	RCProgressBlock progressBlock = ^(RCProgressInfo *progressInfo){
+		NSNumber *progress = [progressInfo progress];
+		[mockProgressObject setValue:progress forKey:@"Progress"];
+		if ([progress floatValue] < 1.f) {
+			[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:someProgressBlock] forKey:@"Progress"];
+		}
+	};
+	
+	// Completion block
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
 	__block RCResponse *localResponse = nil;
 	RCCompletionBlock completionBlock = ^(RCResponse *response) {
@@ -113,13 +143,16 @@
 	};
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[resource downloadWithProgressBlock:nil completionBlock:completionBlock];
+	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
 	RCProgressInfo *resultObject = (RCProgressInfo *)localResponse.result;
 	
+	
+	[mockProgressObject verify];
+
 	NSString *filename = [resultObject filename];
 	NSURL *URL =  [resultObject URL];
 	NSURL *downloadedFileURL = [resultObject tempFileURL];
@@ -138,6 +171,5 @@
 
     STAssertEqualObjects(resultData, imageData, @"Result did not equal image");
 }
-
 
 @end

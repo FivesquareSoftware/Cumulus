@@ -66,9 +66,12 @@
 	}
 	self.URLResponse = fakeResponse;
 	
-	self.expectedContentLength = [self.data length];
-	self.receivedContentLength = [self.data length];
-	
+	self.expectedContentLength = [self.fixtureData length];
+
+	// Send a fake progress update for half the data
+	self.receivedContentLength = ([self.fixtureData length] / 2);
+	[self handleConnectionDidReceiveData];
+
 	NSError *writeError= nil;
 	NSFileManager *fm = [[NSFileManager alloc] init];
 	if (NO == [fm fileExistsAtPath:[self.downloadedFileTempURL path]]) {
@@ -76,8 +79,12 @@
 			RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
 			[self handleConnectionFinished];
+			return;
 		}
 	}
+
+	self.receivedContentLength = self.expectedContentLength;
+	[self handleConnectionDidReceiveData];
 
 	RCProgressInfo *progressInfo = [RCProgressInfo new];
 	progressInfo.progress = [NSNumber numberWithFloat:1.f];
