@@ -65,8 +65,8 @@
 
 - (RCRequest *) requestForHTTPMethod:(NSString *)method;
 - (RCRequest *) requestForHTTPMethod:(NSString *)method query:(id)query;
-- (RCDownloadRequest *) downloadRequestWithQuery:query;
-- (RCUploadRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query;
+- (RCRequest *) downloadRequestWithQuery:query;
+- (RCRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query;
 
 // Helpers
 
@@ -503,7 +503,7 @@
 
 
 - (void) downloadWithProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCDownloadRequest *request = [self downloadRequestWithQuery:nil];
+	RCRequest *request = [self downloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
@@ -537,7 +537,7 @@
 	return request;
 }
 
-- (RCDownloadRequest *) downloadRequestWithQuery:query {
+- (RCRequest *) downloadRequestWithQuery:query {
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
 	RCRequest *request;
 	if (self.fixture) {
@@ -549,7 +549,7 @@
 	return request;
 }
 
-- (RCUploadRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query {
+- (RCRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query {
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodPUT query:query];
 	RCUploadRequest *request = [[RCUploadRequest alloc] initWithURLRequest:URLRequest];
 	[self configureRequest:request];

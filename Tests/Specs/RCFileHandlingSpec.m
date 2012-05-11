@@ -72,7 +72,7 @@
 	
 	BOOL (^someProgressBlock)(id) = ^(id value) {
 		float progress = [(NSNumber *)value floatValue];
-		return (BOOL)(0.f <= progress && progress <= 1.f);
+		return (BOOL)(0.f < progress && progress <= 1.f);
 	};
 	
 	[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:zeroProgressBlock] forKey:@"Progress"];
