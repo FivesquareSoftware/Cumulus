@@ -26,7 +26,7 @@ If you are interested in tracking the bleeding edge (or if you just want a simpl
 1. In Terminal:
 ```sh
 % cd <your_project>  
-% git submodule add git@github.com:johnclayton/RESTClient.git Ext/RESTClient  
+% git submodule add git@github.com:FivesquareSoftware/RESTClient.git Ext/RESTClient  
 ```
 1. When you want to get an update:
 ```sh

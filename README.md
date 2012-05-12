@@ -1,8 +1,8 @@
-[HOWTO]: https://github.com/johnclayton/RESTClient/blob/master/Docs/howto.md (How Tos)
-[FAQ]: https://github.com/johnclayton/RESTClient/blob/master/Docs/faq.md (FAQs)
-[API]: http://johnclayton.github.com/RESTClient/api/html/index.html (API Docs)
-[DEMO]: https://github.com/johnclayton/RESTClient-Demo (See a Demo App)
-[TESTS]: https://github.com/johnclayton/RESTClient/tree/master/Tests#readme (Running the Tests)
+[HOWTO]: https://github.com/FivesquareSoftware/RESTClient/blob/master/Docs/howto.md (How Tos)
+[FAQ]: https://github.com/FivesquareSoftware/RESTClient/blob/master/Docs/faq.md (FAQs)
+[API]: http://FivesquareSoftware.github.com/RESTClient/api/html/index.html (API Docs)
+[DEMO]: https://github.com/FivesquareSoftware/RESTClient-Demo (See a Demo App)
+[TESTS]: https://github.com/FivesquareSoftware/RESTClient/tree/master/Tests#readme (Running the Tests)
 
 ## About
 
