@@ -1,7 +1,6 @@
 [HOWTO]: https://github.com/FivesquareSoftware/RESTClient/blob/master/Docs/howto.md (How Tos)
 [FAQ]: https://github.com/FivesquareSoftware/RESTClient/blob/master/Docs/faq.md (FAQs)
-[API]: http://FivesquareSoftware.github.com/RESTClient/api/html/index.html (API Docs)
-[DEMO]: https://github.com/FivesquareSoftware/RESTClient-Demo (See a Demo App)
+[DEMO]: https://github.com/FivesquareSoftware/RESTClient/tree/master/Examples (See Example Apps)
 [TESTS]: https://github.com/FivesquareSoftware/RESTClient/tree/master/Tests#readme (Running the Tests)
 
 ## About
@@ -63,7 +62,6 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 
 [How Tos][HOWTO]  
 [FAQs][FAQ]  
-[API Docs][API]  
 [Demo App][DEMO]  
 [Running the Tests][TESTS]  
 
