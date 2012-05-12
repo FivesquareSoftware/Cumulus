@@ -1,0 +1,507 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A4CDC34A155DC9C000A6299D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC349155DC9C000A6299D /* UIKit.framework */; };
+		A4CDC34C155DC9C000A6299D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC34B155DC9C000A6299D /* Foundation.framework */; };
+		A4CDC34E155DC9C000A6299D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC34D155DC9C000A6299D /* CoreGraphics.framework */; };
+		A4CDC350155DC9C000A6299D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC34F155DC9C000A6299D /* CoreData.framework */; };
+		A4CDC3A5155DCA7C00A6299D /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A4CDC371155DCA7C00A6299D /* SVProgressHUD.bundle */; };
+		A4CDC3A6155DCA7C00A6299D /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC373155DCA7C00A6299D /* SVProgressHUD.m */; };
+		A4CDC3A7155DCA7C00A6299D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC376155DCA7C00A6299D /* AppDelegate.m */; };
+		A4CDC3A8155DCA7C00A6299D /* CreateGeonoteController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC379155DCA7C00A6299D /* CreateGeonoteController.m */; };
+		A4CDC3AA155DCA7C00A6299D /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4CDC37C155DCA7C00A6299D /* MainStoryboard.storyboard */; };
+		A4CDC3AB155DCA7C00A6299D /* FetchedResultsMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC37F155DCA7C00A6299D /* FetchedResultsMapViewController.m */; };
+		A4CDC3AC155DCA7C00A6299D /* FormInputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC381155DCA7C00A6299D /* FormInputTextView.m */; };
+		A4CDC3AE155DCA7C00A6299D /* GeoloqiDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC384155DCA7C00A6299D /* GeoloqiDemo.xcdatamodeld */; };
+		A4CDC3AF155DCA7C00A6299D /* Geonote.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC387155DCA7C00A6299D /* Geonote.m */; };
+		A4CDC3B0155DCA7C00A6299D /* Location+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC389155DCA7C00A6299D /* Location+Demo.m */; };
+		A4CDC3B1155DCA7C00A6299D /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC38B155DCA7C00A6299D /* Location.m */; };
+		A4CDC3B2155DCA7C00A6299D /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC38D155DCA7C00A6299D /* LoginController.m */; };
+		A4CDC3B3155DCA7C00A6299D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC38E155DCA7C00A6299D /* main.m */; };
+		A4CDC3B4155DCA7C00A6299D /* MenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC390155DCA7C00A6299D /* MenuController.m */; };
+		A4CDC3B5155DCA7C00A6299D /* NearbyPlacesController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC392155DCA7C00A6299D /* NearbyPlacesController.m */; };
+		A4CDC3B6155DCA7C00A6299D /* NSDate+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC394155DCA7C00A6299D /* NSDate+Demo.m */; };
+		A4CDC3B7155DCA7C00A6299D /* NSFetchedResultsController+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC396155DCA7C00A6299D /* NSFetchedResultsController+Demo.m */; };
+		A4CDC3B8155DCA7C00A6299D /* NSManagedObject+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC398155DCA7C00A6299D /* NSManagedObject+Demo.m */; };
+		A4CDC3B9155DCA7C00A6299D /* NSManagedObjectContext+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC39A155DCA7C00A6299D /* NSManagedObjectContext+Demo.m */; };
+		A4CDC3BA155DCA7C00A6299D /* NSObject+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC39C155DCA7C00A6299D /* NSObject+Demo.m */; };
+		A4CDC3BB155DCA7C00A6299D /* Place+Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC39E155DCA7C00A6299D /* Place+Demo.m */; };
+		A4CDC3BC155DCA7C00A6299D /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC3A0155DCA7C00A6299D /* Place.m */; };
+		A4CDC3BD155DCA7C00A6299D /* PointView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC3A2155DCA7C00A6299D /* PointView.m */; };
+		A4CDC3BE155DCA7C00A6299D /* RecentLocationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC3A4155DCA7C00A6299D /* RecentLocationsController.m */; };
+		A4CDC3C0155DCAEE00A6299D /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3BF155DCAEE00A6299D /* libRESTClient.a */; };
+		A4CDC3C2155DCB7000A6299D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C1155DCB7000A6299D /* QuartzCore.framework */; };
+		A4CDC3C6155DCBB300A6299D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C3155DCBB300A6299D /* CoreLocation.framework */; };
+		A4CDC3C7155DCBB300A6299D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C4155DCBB300A6299D /* MobileCoreServices.framework */; };
+		A4CDC3C8155DCBB300A6299D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C5155DCBB300A6299D /* Security.framework */; };
+		A4CDC3CA155DCD1500A6299D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C9155DCD1500A6299D /* MapKit.framework */; };
+		A4CDC3CD155DCD3100A6299D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A4CDC3CB155DCD3100A6299D /* InfoPlist.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A41DF061155DD34700C88D9C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		A4CDC345155DC9C000A6299D /* Geoloqi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geoloqi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4CDC349155DC9C000A6299D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A4CDC34B155DC9C000A6299D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A4CDC34D155DC9C000A6299D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A4CDC34F155DC9C000A6299D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		A4CDC353155DC9C000A6299D /* Geoloqi-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Geoloqi-Info.plist"; sourceTree = "<group>"; };
+		A4CDC371155DCA7C00A6299D /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		A4CDC372155DCA7C00A6299D /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		A4CDC373155DCA7C00A6299D /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		A4CDC375155DCA7C00A6299D /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		A4CDC376155DCA7C00A6299D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		A4CDC377155DCA7C00A6299D /* CoordinateLike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinateLike.h; sourceTree = "<group>"; };
+		A4CDC378155DCA7C00A6299D /* CreateGeonoteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateGeonoteController.h; sourceTree = "<group>"; };
+		A4CDC379155DCA7C00A6299D /* CreateGeonoteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateGeonoteController.m; sourceTree = "<group>"; };
+		A4CDC37D155DCA7C00A6299D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		A4CDC37E155DCA7C00A6299D /* FetchedResultsMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchedResultsMapViewController.h; sourceTree = "<group>"; };
+		A4CDC37F155DCA7C00A6299D /* FetchedResultsMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchedResultsMapViewController.m; sourceTree = "<group>"; };
+		A4CDC380155DCA7C00A6299D /* FormInputTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormInputTextView.h; sourceTree = "<group>"; };
+		A4CDC381155DCA7C00A6299D /* FormInputTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FormInputTextView.m; sourceTree = "<group>"; };
+		A4CDC383155DCA7C00A6299D /* Geoloqi-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Geoloqi-Prefix.pch"; sourceTree = "<group>"; };
+		A4CDC385155DCA7C00A6299D /* GeoloqiDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GeoloqiDemo.xcdatamodel; sourceTree = "<group>"; };
+		A4CDC386155DCA7C00A6299D /* Geonote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geonote.h; sourceTree = "<group>"; };
+		A4CDC387155DCA7C00A6299D /* Geonote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Geonote.m; sourceTree = "<group>"; };
+		A4CDC388155DCA7C00A6299D /* Location+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Location+Demo.h"; sourceTree = "<group>"; };
+		A4CDC389155DCA7C00A6299D /* Location+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Location+Demo.m"; sourceTree = "<group>"; };
+		A4CDC38A155DCA7C00A6299D /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		A4CDC38B155DCA7C00A6299D /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		A4CDC38C155DCA7C00A6299D /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginController.h; sourceTree = "<group>"; };
+		A4CDC38D155DCA7C00A6299D /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginController.m; sourceTree = "<group>"; };
+		A4CDC38E155DCA7C00A6299D /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A4CDC38F155DCA7C00A6299D /* MenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuController.h; sourceTree = "<group>"; };
+		A4CDC390155DCA7C00A6299D /* MenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuController.m; sourceTree = "<group>"; };
+		A4CDC391155DCA7C00A6299D /* NearbyPlacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearbyPlacesController.h; sourceTree = "<group>"; };
+		A4CDC392155DCA7C00A6299D /* NearbyPlacesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NearbyPlacesController.m; sourceTree = "<group>"; };
+		A4CDC393155DCA7C00A6299D /* NSDate+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Demo.h"; sourceTree = "<group>"; };
+		A4CDC394155DCA7C00A6299D /* NSDate+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Demo.m"; sourceTree = "<group>"; };
+		A4CDC395155DCA7C00A6299D /* NSFetchedResultsController+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFetchedResultsController+Demo.h"; sourceTree = "<group>"; };
+		A4CDC396155DCA7C00A6299D /* NSFetchedResultsController+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFetchedResultsController+Demo.m"; sourceTree = "<group>"; };
+		A4CDC397155DCA7C00A6299D /* NSManagedObject+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+Demo.h"; sourceTree = "<group>"; };
+		A4CDC398155DCA7C00A6299D /* NSManagedObject+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+Demo.m"; sourceTree = "<group>"; };
+		A4CDC399155DCA7C00A6299D /* NSManagedObjectContext+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+Demo.h"; sourceTree = "<group>"; };
+		A4CDC39A155DCA7C00A6299D /* NSManagedObjectContext+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+Demo.m"; sourceTree = "<group>"; };
+		A4CDC39B155DCA7C00A6299D /* NSObject+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Demo.h"; sourceTree = "<group>"; };
+		A4CDC39C155DCA7C00A6299D /* NSObject+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Demo.m"; sourceTree = "<group>"; };
+		A4CDC39D155DCA7C00A6299D /* Place+Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Place+Demo.h"; sourceTree = "<group>"; };
+		A4CDC39E155DCA7C00A6299D /* Place+Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Place+Demo.m"; sourceTree = "<group>"; };
+		A4CDC39F155DCA7C00A6299D /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
+		A4CDC3A0155DCA7C00A6299D /* Place.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Place.m; sourceTree = "<group>"; };
+		A4CDC3A1155DCA7C00A6299D /* PointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointView.h; sourceTree = "<group>"; };
+		A4CDC3A2155DCA7C00A6299D /* PointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointView.m; sourceTree = "<group>"; };
+		A4CDC3A3155DCA7C00A6299D /* RecentLocationsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentLocationsController.h; sourceTree = "<group>"; };
+		A4CDC3A4155DCA7C00A6299D /* RecentLocationsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentLocationsController.m; sourceTree = "<group>"; };
+		A4CDC3BF155DCAEE00A6299D /* libRESTClient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRESTClient.a; path = libRESTClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4CDC3C1155DCB7000A6299D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		A4CDC3C3155DCBB300A6299D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		A4CDC3C4155DCBB300A6299D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		A4CDC3C5155DCBB300A6299D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A4CDC3C9155DCD1500A6299D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		A4CDC3CC155DCD3100A6299D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Source/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4CDC342155DC9C000A6299D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4CDC3CA155DCD1500A6299D /* MapKit.framework in Frameworks */,
+				A4CDC3C6155DCBB300A6299D /* CoreLocation.framework in Frameworks */,
+				A4CDC3C7155DCBB300A6299D /* MobileCoreServices.framework in Frameworks */,
+				A4CDC3C8155DCBB300A6299D /* Security.framework in Frameworks */,
+				A4CDC3C2155DCB7000A6299D /* QuartzCore.framework in Frameworks */,
+				A4CDC3C0155DCAEE00A6299D /* libRESTClient.a in Frameworks */,
+				A4CDC34A155DC9C000A6299D /* UIKit.framework in Frameworks */,
+				A4CDC34C155DC9C000A6299D /* Foundation.framework in Frameworks */,
+				A4CDC34E155DC9C000A6299D /* CoreGraphics.framework in Frameworks */,
+				A4CDC350155DC9C000A6299D /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A4CDC33A155DC9C000A6299D = {
+			isa = PBXGroup;
+			children = (
+				A41DF061155DD34700C88D9C /* README.md */,
+				A4CDC374155DCA7C00A6299D /* Source */,
+				A4CDC36E155DCA7C00A6299D /* Ext */,
+				A4CDC352155DC9C000A6299D /* Supporting Files */,
+				A4CDC348155DC9C000A6299D /* Frameworks */,
+				A4CDC346155DC9C000A6299D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A4CDC346155DC9C000A6299D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC345155DC9C000A6299D /* Geoloqi.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A4CDC348155DC9C000A6299D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC349155DC9C000A6299D /* UIKit.framework */,
+				A4CDC34B155DC9C000A6299D /* Foundation.framework */,
+				A4CDC34D155DC9C000A6299D /* CoreGraphics.framework */,
+				A4CDC34F155DC9C000A6299D /* CoreData.framework */,
+				A4CDC3C9155DCD1500A6299D /* MapKit.framework */,
+				A4CDC3C3155DCBB300A6299D /* CoreLocation.framework */,
+				A4CDC3C4155DCBB300A6299D /* MobileCoreServices.framework */,
+				A4CDC3C5155DCBB300A6299D /* Security.framework */,
+				A4CDC3C1155DCB7000A6299D /* QuartzCore.framework */,
+				A4CDC3CE155DD15C00A6299D /* Workspace */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A4CDC352155DC9C000A6299D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC353155DC9C000A6299D /* Geoloqi-Info.plist */,
+				A4CDC3CB155DCD3100A6299D /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			path = Geoloqi;
+			sourceTree = "<group>";
+		};
+		A4CDC36E155DCA7C00A6299D /* Ext */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC36F155DCA7C00A6299D /* SVProgressHUD */,
+			);
+			path = Ext;
+			sourceTree = SOURCE_ROOT;
+		};
+		A4CDC36F155DCA7C00A6299D /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC370155DCA7C00A6299D /* SVProgressHUD */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+		A4CDC370155DCA7C00A6299D /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC371155DCA7C00A6299D /* SVProgressHUD.bundle */,
+				A4CDC372155DCA7C00A6299D /* SVProgressHUD.h */,
+				A4CDC373155DCA7C00A6299D /* SVProgressHUD.m */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+		A4CDC374155DCA7C00A6299D /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC38E155DCA7C00A6299D /* main.m */,
+				A4CDC383155DCA7C00A6299D /* Geoloqi-Prefix.pch */,
+				A4CDC375155DCA7C00A6299D /* AppDelegate.h */,
+				A4CDC376155DCA7C00A6299D /* AppDelegate.m */,
+				A4CDC3D0155DD1A600A6299D /* Interface */,
+				A4CDC3CF155DD18900A6299D /* Model */,
+				A4CDC3D1155DD1CD00A6299D /* Extensions */,
+			);
+			path = Source;
+			sourceTree = SOURCE_ROOT;
+		};
+		A4CDC3CE155DD15C00A6299D /* Workspace */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC3BF155DCAEE00A6299D /* libRESTClient.a */,
+			);
+			name = Workspace;
+			sourceTree = "<group>";
+		};
+		A4CDC3CF155DD18900A6299D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC384155DCA7C00A6299D /* GeoloqiDemo.xcdatamodeld */,
+				A4CDC377155DCA7C00A6299D /* CoordinateLike.h */,
+				A4CDC386155DCA7C00A6299D /* Geonote.h */,
+				A4CDC387155DCA7C00A6299D /* Geonote.m */,
+				A4CDC388155DCA7C00A6299D /* Location+Demo.h */,
+				A4CDC389155DCA7C00A6299D /* Location+Demo.m */,
+				A4CDC38A155DCA7C00A6299D /* Location.h */,
+				A4CDC38B155DCA7C00A6299D /* Location.m */,
+				A4CDC39F155DCA7C00A6299D /* Place.h */,
+				A4CDC3A0155DCA7C00A6299D /* Place.m */,
+				A4CDC39D155DCA7C00A6299D /* Place+Demo.h */,
+				A4CDC39E155DCA7C00A6299D /* Place+Demo.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		A4CDC3D0155DD1A600A6299D /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC37C155DCA7C00A6299D /* MainStoryboard.storyboard */,
+				A4CDC378155DCA7C00A6299D /* CreateGeonoteController.h */,
+				A4CDC379155DCA7C00A6299D /* CreateGeonoteController.m */,
+				A4CDC38C155DCA7C00A6299D /* LoginController.h */,
+				A4CDC38D155DCA7C00A6299D /* LoginController.m */,
+				A4CDC38F155DCA7C00A6299D /* MenuController.h */,
+				A4CDC390155DCA7C00A6299D /* MenuController.m */,
+				A4CDC391155DCA7C00A6299D /* NearbyPlacesController.h */,
+				A4CDC392155DCA7C00A6299D /* NearbyPlacesController.m */,
+				A4CDC3A1155DCA7C00A6299D /* PointView.h */,
+				A4CDC3A2155DCA7C00A6299D /* PointView.m */,
+				A4CDC3A3155DCA7C00A6299D /* RecentLocationsController.h */,
+				A4CDC3A4155DCA7C00A6299D /* RecentLocationsController.m */,
+				A4CDC37E155DCA7C00A6299D /* FetchedResultsMapViewController.h */,
+				A4CDC37F155DCA7C00A6299D /* FetchedResultsMapViewController.m */,
+				A4CDC380155DCA7C00A6299D /* FormInputTextView.h */,
+				A4CDC381155DCA7C00A6299D /* FormInputTextView.m */,
+			);
+			name = Interface;
+			sourceTree = "<group>";
+		};
+		A4CDC3D1155DD1CD00A6299D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A4CDC393155DCA7C00A6299D /* NSDate+Demo.h */,
+				A4CDC394155DCA7C00A6299D /* NSDate+Demo.m */,
+				A4CDC395155DCA7C00A6299D /* NSFetchedResultsController+Demo.h */,
+				A4CDC396155DCA7C00A6299D /* NSFetchedResultsController+Demo.m */,
+				A4CDC397155DCA7C00A6299D /* NSManagedObject+Demo.h */,
+				A4CDC398155DCA7C00A6299D /* NSManagedObject+Demo.m */,
+				A4CDC399155DCA7C00A6299D /* NSManagedObjectContext+Demo.h */,
+				A4CDC39A155DCA7C00A6299D /* NSManagedObjectContext+Demo.m */,
+				A4CDC39B155DCA7C00A6299D /* NSObject+Demo.h */,
+				A4CDC39C155DCA7C00A6299D /* NSObject+Demo.m */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A4CDC344155DC9C000A6299D /* Geoloqi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4CDC36B155DC9C000A6299D /* Build configuration list for PBXNativeTarget "Geoloqi" */;
+			buildPhases = (
+				A4CDC341155DC9C000A6299D /* Sources */,
+				A4CDC342155DC9C000A6299D /* Frameworks */,
+				A4CDC343155DC9C000A6299D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Geoloqi;
+			productName = Geoloqi;
+			productReference = A4CDC345155DC9C000A6299D /* Geoloqi.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A4CDC33C155DC9C000A6299D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = Me;
+			};
+			buildConfigurationList = A4CDC33F155DC9C000A6299D /* Build configuration list for PBXProject "Geoloqi" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A4CDC33A155DC9C000A6299D;
+			productRefGroup = A4CDC346155DC9C000A6299D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A4CDC344155DC9C000A6299D /* Geoloqi */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A4CDC343155DC9C000A6299D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4CDC3A5155DCA7C00A6299D /* SVProgressHUD.bundle in Resources */,
+				A4CDC3AA155DCA7C00A6299D /* MainStoryboard.storyboard in Resources */,
+				A4CDC3CD155DCD3100A6299D /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A4CDC341155DC9C000A6299D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4CDC3A6155DCA7C00A6299D /* SVProgressHUD.m in Sources */,
+				A4CDC3A7155DCA7C00A6299D /* AppDelegate.m in Sources */,
+				A4CDC3A8155DCA7C00A6299D /* CreateGeonoteController.m in Sources */,
+				A4CDC3AB155DCA7C00A6299D /* FetchedResultsMapViewController.m in Sources */,
+				A4CDC3AC155DCA7C00A6299D /* FormInputTextView.m in Sources */,
+				A4CDC3AE155DCA7C00A6299D /* GeoloqiDemo.xcdatamodeld in Sources */,
+				A4CDC3AF155DCA7C00A6299D /* Geonote.m in Sources */,
+				A4CDC3B0155DCA7C00A6299D /* Location+Demo.m in Sources */,
+				A4CDC3B1155DCA7C00A6299D /* Location.m in Sources */,
+				A4CDC3B2155DCA7C00A6299D /* LoginController.m in Sources */,
+				A4CDC3B3155DCA7C00A6299D /* main.m in Sources */,
+				A4CDC3B4155DCA7C00A6299D /* MenuController.m in Sources */,
+				A4CDC3B5155DCA7C00A6299D /* NearbyPlacesController.m in Sources */,
+				A4CDC3B6155DCA7C00A6299D /* NSDate+Demo.m in Sources */,
+				A4CDC3B7155DCA7C00A6299D /* NSFetchedResultsController+Demo.m in Sources */,
+				A4CDC3B8155DCA7C00A6299D /* NSManagedObject+Demo.m in Sources */,
+				A4CDC3B9155DCA7C00A6299D /* NSManagedObjectContext+Demo.m in Sources */,
+				A4CDC3BA155DCA7C00A6299D /* NSObject+Demo.m in Sources */,
+				A4CDC3BB155DCA7C00A6299D /* Place+Demo.m in Sources */,
+				A4CDC3BC155DCA7C00A6299D /* Place.m in Sources */,
+				A4CDC3BD155DCA7C00A6299D /* PointView.m in Sources */,
+				A4CDC3BE155DCA7C00A6299D /* RecentLocationsController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A4CDC37C155DCA7C00A6299D /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A4CDC37D155DCA7C00A6299D /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+		A4CDC3CB155DCD3100A6299D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A4CDC3CC155DCD3100A6299D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A4CDC369155DC9C000A6299D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		A4CDC36A155DC9C000A6299D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A4CDC36C155DC9C000A6299D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Source/Geoloqi-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Source\"/**";
+				INFOPLIST_FILE = "Geoloqi-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = Geoloqi;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A4CDC36D155DC9C000A6299D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Source/Geoloqi-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Source\"/**";
+				INFOPLIST_FILE = "Geoloqi-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = Geoloqi;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A4CDC33F155DC9C000A6299D /* Build configuration list for PBXProject "Geoloqi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4CDC369155DC9C000A6299D /* Debug */,
+				A4CDC36A155DC9C000A6299D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A4CDC36B155DC9C000A6299D /* Build configuration list for PBXNativeTarget "Geoloqi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4CDC36C155DC9C000A6299D /* Debug */,
+				A4CDC36D155DC9C000A6299D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A4CDC384155DCA7C00A6299D /* GeoloqiDemo.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A4CDC385155DCA7C00A6299D /* GeoloqiDemo.xcdatamodel */,
+			);
+			currentVersion = A4CDC385155DCA7C00A6299D /* GeoloqiDemo.xcdatamodel */;
+			path = GeoloqiDemo.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = A4CDC33C155DC9C000A6299D /* Project object */;
+}

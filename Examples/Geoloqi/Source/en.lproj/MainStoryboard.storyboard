@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D50b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
+    <dependencies>
+        <deployment defaultVersion="1296" identifier="iOS"/>
+        <development defaultVersion="4200" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="11">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
+                <navigationController id="3" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ERb-xS-TBf" kind="relationship" relationship="rootViewController" id="5up-A0-rtg"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="-206" y="45"/>
+        </scene>
+        <!--Login Controller-->
+        <scene sceneID="zAV-UA-5nP">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aJY-iK-lRx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="Ora-Yn-VGE" customClass="LoginController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="se4-YB-r9A">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <inset key="contentInset" minX="0.0" minY="25" maxX="0.0" maxY="0.0"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="1S8-V3-Khb">
+                            <rect key="frame" x="0.0" y="110" width="320" height="125"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="sA4-dm-Ay8">
+                                    <rect key="frame" x="30" y="16" width="270" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <state key="normal" title="Log In To Geoloqi">
+                                        <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <state key="highlighted">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="loginAction:" destination="Ora-Yn-VGE" eventType="touchUpInside" id="h3m-fI-Qmq"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z4i-zh-bxc">
+                                    <rect key="frame" x="11" y="69" width="299" height="37"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                    <state key="normal" title="Get an Account">
+                                        <color key="titleColor" red="0.53725492949999998" green="0.60784316059999999" blue="0.65882354970000001" alpha="1" colorSpace="deviceRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <state key="highlighted">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="getAccountAction:" destination="Ora-Yn-VGE" eventType="touchUpInside" id="sS6-sh-4GB"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
+                        <sections>
+                            <tableViewSection id="doD-hd-7bd">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="paP-8S-0CW">
+                                        <rect key="frame" x="0.0" y="10" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Username or Email" minimumFontSize="17" clearButtonMode="whileEditing" id="sFv-c7-L1s">
+                                                    <rect key="frame" x="20" y="7" width="260" height="31"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Ora-Yn-VGE" id="uVm-oN-GSl"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ZlX-gg-QOQ">
+                                        <rect key="frame" x="0.0" y="55" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="17" clearButtonMode="whileEditing" id="Y6q-fw-V9v">
+                                                    <rect key="frame" x="20" y="6" width="260" height="31"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="go" secureTextEntry="YES"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Ora-Yn-VGE" id="bVe-O7-7tK"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Ora-Yn-VGE" id="EB5-7d-6bP"/>
+                            <outlet property="delegate" destination="Ora-Yn-VGE" id="Qf1-3e-tea"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="passwordTextField" destination="Y6q-fw-V9v" id="CTA-Hd-K0i"/>
+                        <outlet property="usernameTextField" destination="sFv-c7-L1s" id="7UX-TA-Try"/>
+                    </connections>
+                </tableViewController>
+            </objects>
+            <point key="canvasLocation" x="697" y="53"/>
+        </scene>
+        <!--Menu Controller - Geoloqi-->
+        <scene sceneID="8w1-Tq-qoA">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ige-xm-2g0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="ERb-xS-TBf" customClass="MenuController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="4vT-fc-bz3">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection id="J8w-Z9-gVH">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="iyA-AV-OeY">
+                                        <rect key="frame" x="0.0" y="10" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Recent Locations" lineBreakMode="tailTruncation" minimumFontSize="10" id="gkB-eS-Tno">
+                                                    <rect key="frame" x="20" y="11" width="260" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <segue destination="1Wq-PZ-f7c" kind="push" id="Tqu-Wj-Obo"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="g4w-RW-pP2">
+                                        <rect key="frame" x="0.0" y="55" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Nearby Places" lineBreakMode="tailTruncation" minimumFontSize="10" id="amu-cI-pPu">
+                                                    <rect key="frame" x="20" y="11" width="260" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <segue destination="5C5-Ep-FsS" kind="push" id="vk3-qC-SLo"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="fT4-pC-gnw">
+                                        <rect key="frame" x="0.0" y="99" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Create Geonote" lineBreakMode="tailTruncation" minimumFontSize="10" id="rM9-mg-LVr">
+                                                    <rect key="frame" x="20" y="11" width="260" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <segue destination="lhn-Sz-HGO" kind="push" id="iSJ-QI-5LC"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="ERb-xS-TBf" id="tqw-50-Mop"/>
+                            <outlet property="delegate" destination="ERb-xS-TBf" id="6eQ-cf-pZD"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Geoloqi" id="nbO-8M-zIf">
+                        <barButtonItem key="rightBarButtonItem" title="Log Out" id="17u-hD-Txg">
+                            <connections>
+                                <action selector="logOut:" destination="ERb-xS-TBf" id="WZq-Cr-zFA"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="Ora-Yn-VGE" kind="modal" identifier="showLoginController" modalTransitionStyle="crossDissolve" id="0OR-jg-Pnd"/>
+                    </connections>
+                </tableViewController>
+            </objects>
+            <point key="canvasLocation" x="245" y="53"/>
+        </scene>
+        <!--Recent Locations Controller - Recent Locations-->
+        <scene sceneID="bYn-AW-GRR">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lOh-3Y-acA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="1Wq-PZ-f7c" customClass="RecentLocationsController" sceneMemberID="viewController">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="g0B-Qz-wKq">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <connections>
+                            <outlet property="delegate" destination="1Wq-PZ-f7c" id="he1-9O-Xve"/>
+                        </connections>
+                    </mapView>
+                    <navigationItem key="navigationItem" title="Recent Locations" id="kPV-pg-FZv">
+                        <barButtonItem key="rightBarButtonItem" title="Reset" id="KGv-Zn-kce">
+                            <connections>
+                                <action selector="resetLocationsAction:" destination="1Wq-PZ-f7c" id="Z6F-6n-kdZ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="g0B-Qz-wKq" id="Lyg-fg-NnC"/>
+                        <outlet property="view" destination="g0B-Qz-wKq" id="J6C-fl-Efq"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="-121" y="718"/>
+        </scene>
+        <!--Nearby Places Controller - Nearby Places-->
+        <scene sceneID="r6m-oS-Pi5">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IwK-k7-Kw4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="5C5-Ep-FsS" customClass="NearbyPlacesController" sceneMemberID="viewController">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="bhC-tz-KvF">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <connections>
+                            <outlet property="delegate" destination="5C5-Ep-FsS" id="iT6-dx-x7P"/>
+                        </connections>
+                    </mapView>
+                    <navigationItem key="navigationItem" title="Nearby Places" id="ovU-HG-au3"/>
+                    <connections>
+                        <outlet property="mapView" destination="bhC-tz-KvF" id="rfn-Er-Ao0"/>
+                        <outlet property="view" destination="bhC-tz-KvF" id="KRB-9l-Cch"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="249" y="719"/>
+        </scene>
+        <!--Create Geonote Controller - Create Geonote-->
+        <scene sceneID="fj9-w9-rTE">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FUe-1u-0Yc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="lhn-Sz-HGO" customClass="CreateGeonoteController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LAd-9A-DDc">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="djY-t1-gLy">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="lhn-Sz-HGO" id="eXR-h8-HCn"/>
+                                </connections>
+                            </mapView>
+                            <view contentMode="scaleToFill" id="RNY-pS-x4L">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="2Tb-cb-jXA" customClass="FormInputTextView">
+                                        <rect key="frame" x="20" y="20" width="280" height="160"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="lhn-Sz-HGO" id="KEJ-G6-mwt"/>
+                                        </connections>
+                                    </textView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Create Geonote" id="iMQ-kU-eHn">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="HVf-O3-IAk">
+                            <connections>
+                                <action selector="cancelAction:" destination="lhn-Sz-HGO" id="LGz-PC-NCP"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="hD7-Hf-dDI">
+                            <connections>
+                                <action selector="saveAction:" destination="lhn-Sz-HGO" id="81Z-c3-cLg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="djY-t1-gLy" id="MPZ-48-YVi"/>
+                        <outlet property="noteTextView" destination="2Tb-cb-jXA" id="tJ7-E3-4EU"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="622" y="719"/>
+        </scene>
+    </scenes>
+    <classes>
+        <class className="CreateGeonoteController" superclassName="FetchedResultsMapViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateGeonoteController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="action" name="saveAction:"/>
+                <relationship kind="outlet" name="noteTextView" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="FetchedResultsMapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FetchedResultsMapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+        <class className="FormInputTextView" superclassName="UITextView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FormInputTextView.h"/>
+        </class>
+        <class className="LoginController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginController.h"/>
+            <relationships>
+                <relationship kind="action" name="getAccountAction:"/>
+                <relationship kind="action" name="loginAction:"/>
+                <relationship kind="outlet" name="passwordTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="usernameTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="MenuController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MenuController.h"/>
+            <relationships>
+                <relationship kind="action" name="logOut:"/>
+            </relationships>
+        </class>
+        <class className="NearbyPlacesController" superclassName="FetchedResultsMapViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NearbyPlacesController.h"/>
+        </class>
+        <class className="RecentLocationsController" superclassName="FetchedResultsMapViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentLocationsController.h"/>
+            <relationships>
+                <relationship kind="action" name="resetLocationsAction:"/>
+            </relationships>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>
