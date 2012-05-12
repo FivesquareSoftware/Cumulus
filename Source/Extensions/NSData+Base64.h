@@ -24,6 +24,9 @@
 // Modified by John Clayton 2012/02/01
 // Made ARC compatible
 
+// Modified by John Clayton 2012/05/11
+// Added a method that allows encoding from the NSData interface that has no line breaks
+
 #import <Foundation/Foundation.h>
 
 void *NewBase64Decode(
@@ -41,5 +44,6 @@ char *NewBase64Encode(
 
 + (NSData *)dataFromBase64String:(NSString *)aString;
 - (NSString *)base64EncodedString;
+- (NSString *)base64EncodedStringWithLineBreaks:(BOOL)shouldBreakAtLines;
 
 @end

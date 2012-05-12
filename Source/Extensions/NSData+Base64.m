@@ -296,15 +296,19 @@ char *NewBase64Encode(
 //
 - (NSString *)base64EncodedString
 {
+	return [self base64EncodedStringWithLineBreaks:YES];
+}
+
+- (NSString *)base64EncodedStringWithLineBreaks:(BOOL)shouldBreakAtLines {
 	size_t outputLength;
 	char *outputBuffer =
-		NewBase64Encode([self bytes], [self length], true, &outputLength);
+	NewBase64Encode([self bytes], [self length], shouldBreakAtLines, &outputLength);
 	
 	NSString *result =
-		[[NSString alloc]
-			initWithBytes:outputBuffer
-			length:outputLength
-			encoding:NSASCIIStringEncoding];
+	[[NSString alloc]
+	 initWithBytes:outputBuffer
+	 length:outputLength
+	 encoding:NSASCIIStringEncoding];
 	free(outputBuffer);
 	return result;
 }

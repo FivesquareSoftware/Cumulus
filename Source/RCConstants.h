@@ -60,6 +60,7 @@ extern NSString *kRESTClientHTTPMethodHEAD;
 
 extern NSString *kRESTClientHTTPHeaderAccept;
 extern NSString *kRESTClientHTTPHeaderContentType;
+extern NSString *kRESTClientHTTPHeaderAuthorization;
 
 extern NSString *kRESTClientProgressInfoKeyURL;
 extern NSString *kRESTClientProgressInfoKeyTempFileURL;

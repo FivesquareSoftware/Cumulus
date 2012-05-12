@@ -45,6 +45,7 @@ NSString *kRESTClientHTTPMethodHEAD = @"HEAD";
 
 NSString *kRESTClientHTTPHeaderAccept = @"Accept";
 NSString *kRESTClientHTTPHeaderContentType = @"Content-Type";
+NSString *kRESTClientHTTPHeaderAuthorization = @"Authorization";
 
 NSString *kRESTClientProgressInfoKeyURL = @"URL";
 NSString *kRESTClientProgressInfoKeyTempFileURL = @"tempFileURL";

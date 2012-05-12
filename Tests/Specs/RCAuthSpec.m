@@ -73,55 +73,62 @@
 
 #pragma mark - Specs
 
-//- (void) shouldBeUnauthorized {
-//	RCResponse *response = [self.protectedResource get];
-//    STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
-//}
-//
-//- (void) shouldFailAuthorizationWithBadCredentials {
-//    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
-//    [self.service addAuthProvider:authProvider];
-//	RCResponse *response = [self.protectedResource get];
-//	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
-//}
-//
-//- (void) shouldBeAuthorized {
-//    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"test" password:@"test"];
-//    [self.service addAuthProvider:authProvider];
-//	RCResponse *response = [self.protectedResource get];
-//    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
-//}
-//
-//- (void) shouldContinueWhenProviderReturnsNilCredential {
-//	OCMockObject<RCAuthProvider> *mockAuthProvider = [OCMockObject mockForProtocol:@protocol(RCAuthProvider)];
-//	[[mockAuthProvider stub] authorizeRequest:[OCMArg any]];
-//	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]  providedAuthenticationMethod];
-//	[[[mockAuthProvider expect] andReturn:nil] credentialForAuthenticationChallenge:[OCMArg any]];
-//	
-//	[self.protectedResource addAuthProvider:mockAuthProvider];
-//	RCResponse *response = [self.protectedResource get];
-//	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
-//	
-//	[mockAuthProvider verify];
-//}
-//
-//- (void) shouldRetryAuthMaxAuthRetryTimes {
-//    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
-//
-//	OCMockObject<RCAuthProvider> *mockAuthProvider = [OCMockObject mockForProtocol:@protocol(RCAuthProvider)];
-//	
-//	[[mockAuthProvider stub] authorizeRequest:[OCMArg any]];
-//	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]  providedAuthenticationMethod];
-//	[[[mockAuthProvider expect] andReturn:[authProvider credentialForAuthenticationChallenge:[OCMArg any]]] credentialForAuthenticationChallenge:[OCMArg any]];
-//	[[[mockAuthProvider expect] andReturn:[authProvider credentialForAuthenticationChallenge:[OCMArg any]]] credentialForAuthenticationChallenge:[OCMArg any]];
-//	
-//    [self.service addAuthProvider:mockAuthProvider];
-//	RCResponse *response = [self.protectedResource get];
-//	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
-//	
-//	[mockAuthProvider verify];
-//}
-//
+- (void) shouldBeUnauthorized {
+	RCResponse *response = [self.protectedResource get];
+    STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+}
+
+- (void) shouldFailAuthorizationWithBadCredentials {
+    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
+    [self.service addAuthProvider:authProvider];
+	RCResponse *response = [self.protectedResource get];
+	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+}
+
+- (void) shouldBeAuthorized {
+    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"test" password:@"test"];
+    [self.service addAuthProvider:authProvider];
+	RCResponse *response = [self.protectedResource get];
+    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+}
+
+- (void) shouldBeAuthorizedWithAReallyLongUsernameAndPassword {
+    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1" password:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1"];
+    [self.service addAuthProvider:authProvider];
+	RCResponse *response = [self.protectedResource get];
+    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+}
+
+- (void) shouldContinueWhenProviderReturnsNilCredential {
+	OCMockObject<RCAuthProvider> *mockAuthProvider = [OCMockObject mockForProtocol:@protocol(RCAuthProvider)];
+	[[mockAuthProvider stub] authorizeRequest:[OCMArg any]];
+	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]  providedAuthenticationMethod];
+	[[[mockAuthProvider expect] andReturn:nil] credentialForAuthenticationChallenge:[OCMArg any]];
+	
+	[self.protectedResource addAuthProvider:mockAuthProvider];
+	RCResponse *response = [self.protectedResource get];
+	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+	
+	[mockAuthProvider verify];
+}
+
+- (void) shouldRetryAuthMaxAuthRetryTimes {
+    RCBasicAuthProvider *authProvider = [RCBasicAuthProvider withUsername:@"foo" password:@"bar"];
+
+	OCMockObject<RCAuthProvider> *mockAuthProvider = [OCMockObject mockForProtocol:@protocol(RCAuthProvider)];
+	
+	[[mockAuthProvider stub] authorizeRequest:[OCMArg any]];
+	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]  providedAuthenticationMethod];
+	[[[mockAuthProvider expect] andReturn:[authProvider credentialForAuthenticationChallenge:[OCMArg any]]] credentialForAuthenticationChallenge:[OCMArg any]];
+	[[[mockAuthProvider expect] andReturn:[authProvider credentialForAuthenticationChallenge:[OCMArg any]]] credentialForAuthenticationChallenge:[OCMArg any]];
+	
+    [self.service addAuthProvider:mockAuthProvider];
+	RCResponse *response = [self.protectedResource get];
+	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+	
+	[mockAuthProvider verify];
+}
+
 
 - (void) shouldRejectSelfSignedCertWhenSecure {
 	RCServerTrustAuthProvider *authProvider = [RCServerTrustAuthProvider new];
