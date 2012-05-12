@@ -62,7 +62,7 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 
 [How Tos][HOWTO]  
 [FAQs][FAQ]  
-[Demo App][DEMO]  
+[Example Apps][DEMO]  
 [Running the Tests][TESTS]  
 
 
