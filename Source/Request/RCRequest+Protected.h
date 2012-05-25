@@ -66,6 +66,7 @@
 
 // Connection event handlers
 
+- (void) handleConnectionWillStart;
 - (void) handleConnectionFinished;
 - (void) handleConnectionDidReceiveData;
 - (void) handleConnectionDidSendData;

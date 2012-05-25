@@ -20,5 +20,6 @@
 
 @property (nonatomic, strong) RCResource *service;
 @property (strong) NSURL *downloadedFileURL;
+@property (nonatomic, strong) NSString *cachesDir;
 
 @end

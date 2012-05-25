@@ -166,7 +166,7 @@
 
 
 - (id) initWithURLRequest:(NSURLRequest *)URLRequest;
-+ (id) startRequestWithURLRequest:(NSURLRequest*)aURLRequest queue:(NSOperationQueue *)queue completionBlock:(RCCompletionBlock)block;
+//+ (id) startRequestWithURLRequest:(NSURLRequest*)aURLRequest queue:(NSOperationQueue *)queue completionBlock:(RCCompletionBlock)block;
 
 /** @} */
 

@@ -115,11 +115,9 @@
 
 
 @property (nonatomic) NSTimeInterval timeout; ///< If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses
-
 @property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< The cache policy to pass on to request. By default uses the default for NSURLRequest.
-
+@property (nonatomic, strong) NSString *cachesDir; ///< The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located. This directory is created on demand as needed. Defaults to RESTClient#cachesDir.
 @property (nonatomic, strong) NSString *username; ///< If #authProviders is nil and #username and #password are not empty, an RCBasicAuthProvider is created on demand and added to #authProviders
-
 @property (nonatomic, strong) NSString *password;
 
 /** Auth providers, like headers, are set on each individual resource, but when a request is marshaled, a merged array from the receiver and all it's ancestors is used. Per resource, auth providers are given a chance to authorize requests in the order they were added. However child providers take precedence over ancestors' providers. */

@@ -272,12 +272,12 @@ static NSUInteger requestCount = 0;
     return self;
 }
 
-+ (id) startRequestWithURLRequest:(NSURLRequest*)URLRequest queue:(NSOperationQueue *)queue completionBlock:(RCCompletionBlock)block {
-	RCRequest *request = [[self alloc] initWithURLRequest:URLRequest];
-	request.completionBlock = block;
-	[request start];
-    return request;
-}
+//+ (id) startRequestWithURLRequest:(NSURLRequest*)URLRequest queue:(NSOperationQueue *)queue completionBlock:(RCCompletionBlock)block {
+//	RCRequest *request = [[self alloc] initWithURLRequest:URLRequest];
+//	request.completionBlock = block;
+//	[request start];
+//    return request;
+//}
 
 - (NSString *) description {
 	NSURLRequest *request = nil == URLRequest_ ? originalURLRequest_ : URLRequest_;
@@ -296,6 +296,8 @@ static NSUInteger requestCount = 0;
 	if (NO == self.canStart) {
 		return;
 	}
+	
+	[self handleConnectionWillStart];
 	
     self.started = YES;
 
@@ -373,6 +375,9 @@ static NSUInteger requestCount = 0;
 #pragma mark - Connection Event Handlers
 
 
+- (void) handleConnectionWillStart {
+	
+}
 
 - (void) handleConnectionFinished {
     if (self.connectionFinished) {

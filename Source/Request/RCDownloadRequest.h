@@ -36,4 +36,6 @@
 
 @interface RCDownloadRequest : RCRequest
 
+@property (nonatomic, strong) NSString *cachesDir; ///< The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located.
+
 @end

@@ -18,6 +18,12 @@
 
 @implementation RCFixtureDownloadRequest
 
+// Public
+
+@synthesize cachesDir=cachesDir_;
+
+// Private
+
 @synthesize expectedContentType=expectedContentType_;
 @synthesize downloadedFileTempURL=downloadedFileTempURL_;
 
@@ -28,7 +34,7 @@
 		NSString *tempFilename = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, UUID);
 		CFRelease(UUID);
 		
-		NSString *filePath = [[RESTClient cachesDir] stringByAppendingPathComponent:tempFilename];
+		NSString *filePath = [self.cachesDir stringByAppendingPathComponent:tempFilename];
 		
 		downloadedFileTempURL_ = [NSURL fileURLWithPath:filePath];
 	}
@@ -36,11 +42,29 @@
 }
 
 
+
+// ========================================================================== //
+
+#pragma mark - RCRequest
+
+- (void) handleConnectionWillStart {
+	NSAssert(self.cachesDir && self.cachesDir.length, @"Attempted a download with setting cachesDir!");
+	NSFileManager *fm = [NSFileManager new];
+	if (NO == [fm fileExistsAtPath:self.cachesDir]) {
+		NSError *error = nil;
+		if (NO == [fm createDirectoryAtPath:self.cachesDir withIntermediateDirectories:YES attributes:nil error:&error]) {
+			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
+		}
+	}
+}
+
 - (void) start {
 	NSAssert(NO == self.started, @"Attempting to start a request that has already been started, canceled or finished");
 	if (NO == self.canStart) {
 		return;
 	}
+	
+	[self handleConnectionWillStart];
 	
     self.started = YES;
 	
@@ -68,9 +92,12 @@
 	
 	self.expectedContentLength = [self.fixtureData length];
 
-	// Send a fake progress update for half the data
-	self.receivedContentLength = ([self.fixtureData length] / 2);
-	[self handleConnectionDidReceiveData];
+	// Send fake progress updates
+	for (int i = 1; i < 49; i ++) {
+		[NSThread sleepForTimeInterval:.1];
+		self.receivedContentLength = (self.expectedContentLength * ((float)i/50.f));
+		[self handleConnectionDidReceiveData];
+	}
 
 	NSError *writeError= nil;
 	NSFileManager *fm = [[NSFileManager alloc] init];
@@ -96,6 +123,16 @@
 
 	
 	[self handleConnectionFinished];
+	
+	// Remove the file on the main Q so we know the completion block has had a chance to run
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSFileManager *fm = [NSFileManager new];
+		NSError *error = nil;
+		if (NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
+			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+		}
+	});
+
 }
 
 @end

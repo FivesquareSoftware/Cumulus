@@ -48,8 +48,32 @@
 
 @implementation RCDownloadRequest
 
+
+// Public
+
+@synthesize cachesDir=cachesDir_;
+
+// Private
+
 @synthesize downloadedFileTempURL=downloadedFileTempURL_;
 @synthesize downloadedFilename=downloadedFilename_;
+
+
+// ========================================================================== //
+
+#pragma mark - RCRequest
+
+- (void) handleConnectionWillStart {
+	NSAssert(self.cachesDir && self.cachesDir.length, @"Attempted a download with setting cachesDir!");
+	NSFileManager *fm = [NSFileManager new];
+	if (NO == [fm fileExistsAtPath:self.cachesDir]) {
+		NSError *error = nil;
+		if (NO == [fm createDirectoryAtPath:self.cachesDir withIntermediateDirectories:YES attributes:nil error:&error]) {
+			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
+		}
+	}
+}
+
 
 
 
@@ -77,7 +101,7 @@
 	NSString *tempFilename = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, UUID);
 	CFRelease(UUID);
 
-	NSString *filePath = [[RESTClient cachesDir] stringByAppendingPathComponent:tempFilename];
+	NSString *filePath = [self.cachesDir stringByAppendingPathComponent:tempFilename];
 	
 	self.downloadedFileTempURL = [NSURL fileURLWithPath:filePath];
 #endif
@@ -126,6 +150,15 @@
 
 	self.result = progressInfo;
 	[self handleConnectionFinished];
+	
+	// Remove the file on the main Q so we know the completion block has had a chance to run
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSFileManager *fm = [NSFileManager new];
+		NSError *error = nil;
+		if (NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
+			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+		}
+	});
 #endif
 	// we complete our connection in connectionDidFinishDownloading:
 }
@@ -147,7 +180,16 @@
 
 }
 
-- (void)connectionDidFinishDownloading:(NSURLConnection *)connection destinationURL:(NSURL *)destinationURL {
+- (void)connectionDidFinishDownloading:(NSURLConnection *)connection destinationURL:(NSURL *)destinationURL {	
+
+	// Copy the file to a new temp location so that we can run blocks against the file which may run after this method returns (and after the OS may have removed the file)
+	NSFileManager *fm = [NSFileManager new];
+	NSError *moveError;
+	if ([fm moveItemAtURL:destinationURL toURL:self.downloadedFileTempURL error:&moveError]) {
+		RCLog(@"Could not move destination to temp file: %@ %@ (%@)", destinationURL, self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+		self.error = moveError;
+	}
+	
 	RCProgressInfo *progressInfo = [RCProgressInfo new];
 	progressInfo.progress = [NSNumber numberWithFloat:1.f];
 	progressInfo.tempFileURL = self.downloadedFileTempURL;
@@ -156,6 +198,15 @@
 
 	self.result = progressInfo;
 	[self connectionFinished];
+	
+	// Remove the file on the main Q so we know the completion block has had a chance to run
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSFileManager *fm = [NSFileManager new];
+		NSError *error = nil;
+		if (NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
+			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+		}
+	});
 }
 #endif
 

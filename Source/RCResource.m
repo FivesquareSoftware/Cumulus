@@ -104,6 +104,7 @@
 @synthesize headers=headers_;
 @synthesize timeout=timeout_;
 @synthesize cachePolicy=cachePolicy_;
+@synthesize cachesDir=cachesDir_;
 @synthesize username=username_;
 @synthesize password=password_;
 @synthesize authProviders=authProviders_;
@@ -135,6 +136,13 @@
 		return parent_.cachePolicy;
 	}
 	return cachePolicy_;
+}
+
+- (NSString *) cachesDir {
+	if (nil == cachesDir_) {
+		return [RESTClient cachesDir];
+	}
+	return cachesDir_;
 }
 
 - (NSMutableArray *) authProviders {
@@ -577,6 +585,7 @@
 	} else {
 		request = [[RCDownloadRequest alloc] initWithURLRequest:URLRequest];
 	}
+	[(RCDownloadRequest *)request setCachesDir:self.cachesDir];
 	[self configureRequest:request];
 	return request;
 }

@@ -142,8 +142,15 @@
 	// Completion block
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
 	__block RCResponse *localResponse = nil;
+	__block NSURL *downloadedFileURL = nil;
+	__block BOOL fileExistedAtCompletion = NO;
+	__block NSData *resultData = nil;
 	RCCompletionBlock completionBlock = ^(RCResponse *response) {
 		localResponse = response;
+		downloadedFileURL = [localResponse.result valueForKey:kRESTClientProgressInfoKeyTempFileURL];
+		NSFileManager *fm = [[NSFileManager alloc] init];
+		fileExistedAtCompletion = [fm fileExistsAtPath:[downloadedFileURL path]];
+		resultData = [NSData dataWithContentsOfURL:downloadedFileURL];
 		dispatch_semaphore_signal(request_sema);
 	};
 	
@@ -160,7 +167,6 @@
 
 	NSString *filename = [resultObject filename];
 	NSURL *URL =  [resultObject URL];
-	NSURL *downloadedFileURL = [resultObject tempFileURL];
 	
 	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
 	
@@ -168,13 +174,16 @@
 	STAssertNotNil(URL, @"URL should not be nil");	
 	STAssertNotNil(downloadedFileURL, @"Temp file URL should not be nil");
 	
-	NSFileManager *fm = [[NSFileManager alloc] init];
-	BOOL exists = [fm fileExistsAtPath:[downloadedFileURL path]];
-	STAssertTrue(exists, @"Downloaded file should exist on disk: %@",downloadedFileURL);
-	
-	NSData *resultData = [NSData dataWithContentsOfURL:downloadedFileURL];
 
+	STAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",downloadedFileURL);
     STAssertEqualObjects(resultData, imageData, @"Result did not equal image");
+	
+	__block BOOL tempFileWasRemovedAfterCompletion = NO;
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		NSFileManager *fm = [[NSFileManager alloc] init];
+		tempFileWasRemovedAfterCompletion = ![fm fileExistsAtPath:[downloadedFileURL path]];
+	});
+	STAssertTrue(tempFileWasRemovedAfterCompletion, @"Downloaded temp file should be cleaned up after completion: %@",downloadedFileURL);
 }
 
 - (void) shouldNotGetAFixtureMeantForPost {
