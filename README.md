@@ -154,11 +154,15 @@ _Test stuff even before your services are ready_
 ```objective-c 	
 RCResource *posts = [site resource:@"posts"];
 posts.contentType = RESTClientContentTypeJSON;
-posts.fixture = [NSArray arrayWithObjects:postOne,postTwo,nil];
+[posts setFixture:[NSArray arrayWithObjects:postOne,postTwo,nil] forHTTPMethod:kRESTClientHTTPMethodGET];
 [posts getWithCompletionBlock:^(RCResponse *response) {
 	postsController.posts = response.result;
 }];
 // the array from the fixture is turned into data and decoded & postprocessed normally into response.result
+// You can even set your fixtures all in one place, or load them from a plist:
+[RESTClient loadFixturesNamed:@"MyService"];
+[RESTClient useFixtures:YES];
+// now all resources will also check in with RESTClient to see if they have a fixture, yay!
 ```
 
 

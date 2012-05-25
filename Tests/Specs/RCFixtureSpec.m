@@ -39,6 +39,8 @@
     // set up resources that need to be initialized before each example here 
 	
 	self.service = [RCResource withURL:kTestServerHost];
+	[RESTClient setFixtures:nil];
+	[RESTClient useFixtures:NO];
 }
 
 - (void)afterEach {
@@ -57,7 +59,7 @@
 
 - (void) shouldGetAStringFixture {
 	RCResource *resource = [self.service resource:@"anything"];
-	resource.fixture = @"FOO";
+	[resource setFixture:@"FOO" forHTTPMethod:kRESTClientHTTPMethodGET];
 	resource.contentType = RESTClientContentTypeText;
     RCResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
@@ -67,7 +69,7 @@
 - (void) shouldGetADataFixture {
 	RCResource *resource = [self.service resource:@"anything"];
 	NSData *data = [@"FOO" dataUsingEncoding:NSUTF8StringEncoding];
-	resource.fixture = data;
+	[resource setFixture:data forHTTPMethod:kRESTClientHTTPMethodGET];
     RCResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, data, @"Result did not equal data");
@@ -76,7 +78,8 @@
 - (void) shouldGetAnItemFixture {
 	RCResource *resource = [self.service resource:@"anything"];
 	resource.contentType = RESTClientContentTypeJSON;
-	resource.fixture = self.specHelper.item;
+	[resource setFixture:self.specHelper.item forHTTPMethod:kRESTClientHTTPMethodGET];
+
     RCResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
@@ -85,7 +88,8 @@
 - (void) shouldGetAListFixture {
 	RCResource *resource = [self.service resource:@"anything"];
 	resource.contentType = RESTClientContentTypeJSON;
-	resource.fixture = self.specHelper.list;
+	[resource setFixture:self.specHelper.list forHTTPMethod:kRESTClientHTTPMethodGET];
+
     RCResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");	
@@ -95,7 +99,8 @@
 	RCResource *resource = [self.service resource:@"anything"];
 	UIImage *image = [UIImage imageNamed:@"t_hero.png"];
 	NSData *imageData = UIImagePNGRepresentation(image);
-	resource.fixture = image;
+	[resource setFixture:image forHTTPMethod:kRESTClientHTTPMethodGET];
+
     RCResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
@@ -105,7 +110,7 @@
 	RCResource *resource = [self.service resource:@"anything"];
 	UIImage *image = [UIImage imageNamed:@"t_hero.png"];
 	NSData *imageData = UIImagePNGRepresentation(image);
-	resource.fixture = image;
+	[resource setFixture:image forHTTPMethod:kRESTClientHTTPMethodGET];
 
 	
 	// Set up a mock to receive progress blocks
@@ -170,6 +175,52 @@
 	NSData *resultData = [NSData dataWithContentsOfURL:downloadedFileURL];
 
     STAssertEqualObjects(resultData, imageData, @"Result did not equal image");
+}
+
+- (void) shouldNotGetAFixtureMeantForPost {
+	RCResource *resource = [self.service resource:@"index"];
+	[resource setFixture:@"FOO" forHTTPMethod:kRESTClientHTTPMethodPOST];
+	resource.contentType = RESTClientContentTypeText;
+    RCResponse *response = [resource get];
+    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
+}
+
+- (void) shouldUseAGlobalFixture {
+	RCResource *resource = [self.service resource:@"anything"];
+	resource.contentType = RESTClientContentTypeText;
+
+	[RESTClient addFixture:@"FOO" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kRESTClientHTTPMethodGET,[resource.URL absoluteString]]];
+	[RESTClient useFixtures:YES];
+
+	RCResponse *response = [resource get];
+    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+}
+
+- (void) shouldNotUseAGlobalFixtureWhenThereIsALocalFixture {
+	RCResource *resource = [self.service resource:@"index"];
+	resource.contentType = RESTClientContentTypeText;
+	[resource setFixture:@"FOO" forHTTPMethod:kRESTClientHTTPMethodGET];
+
+	[RESTClient addFixture:@"BAR" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kRESTClientHTTPMethodGET,[resource.URL absoluteString]]];
+	[RESTClient useFixtures:YES];
+	
+	RCResponse *response = [resource get];
+    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+}
+
+- (void) shouldNotUseAGlobalFixtureWhenNotUsingFixtures {
+	RCResource *resource = [self.service resource:@"index"];
+	resource.contentType = RESTClientContentTypeText;
+	
+	[RESTClient addFixture:@"FOO" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kRESTClientHTTPMethodGET,[resource.URL absoluteString]]];
+	[RESTClient useFixtures:NO];
+	
+	RCResponse *response = [resource get];
+    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
 }
 
 @end

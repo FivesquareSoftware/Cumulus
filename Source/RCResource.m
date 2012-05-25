@@ -60,6 +60,7 @@
 @property (nonatomic, readonly) NSMutableDictionary *mergedHeaders; ///< All headers from all ancestors and the receiver merged into one dictionary
 @property (nonatomic, readonly) NSMutableArray *mergedAuthProviders; ///< All #authProviders from all ancestors and the receiver merged into one array
 @property (nonatomic, strong) NSMutableSet *requests_; ///< The internal property for directly accessing request objects
+@property (nonatomic, strong) NSMutableDictionary *fixtures;
 
 // Request Builder
 
@@ -73,6 +74,7 @@
 - (void) setHeadersForContentType:(RESTClientContentType)contentType;
 - (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(id)query ;
 - (void) configureRequest:(RCRequest *)request;
+- (NSString *) requestSignatureForHTTPMethod:(NSString *)method;
 
 // Runners
 
@@ -108,7 +110,6 @@
 @synthesize contentType=contentType_;
 @synthesize preflightBlock=preflightBlock_;
 @synthesize postProcessorBlock=postprocessorBlock_;
-@synthesize fixture=fixture_;
 
 @dynamic queryString;
 - (NSString *) queryString {
@@ -184,6 +185,7 @@
 // Private
 
 @synthesize requests_;
+@synthesize fixtures=fixtures_;
 
 
 @dynamic mergedHeaders;
@@ -204,6 +206,13 @@
 	[mergedProviders addObjectsFromArray:authProviders_];
 	[mergedProviders addObjectsFromArray:parent_.mergedAuthProviders];
 	return mergedProviders;
+}
+
+- (NSMutableDictionary *) fixtures {
+	if (fixtures_ == nil) {
+		fixtures_ = [NSMutableDictionary new];
+	}
+	return fixtures_;
 }
 
 
@@ -305,6 +314,26 @@
 - (void) addAuthProvider:(id<RCAuthProvider>)authProvider {
 	[self.authProviders addObject:authProvider];
 }
+
+
+// ========================================================================== //
+
+#pragma mark - Fixtures
+
+
+- (void) setFixture:(id)value forHTTPMethod:(NSString *)method {
+	[self.fixtures setObject:value forKey:[self requestSignatureForHTTPMethod:method]];
+}
+
+- (id) fixtureForHTTPMethod:(NSString *)method {
+	NSString *requestSignature = [self requestSignatureForHTTPMethod:method];
+	id fixture =  [self.fixtures objectForKey:requestSignature];
+	if (fixture == nil && [RESTClient usingFixtures]) {
+		fixture = [[RESTClient fixtures] objectForKey:requestSignature];
+	}
+	return fixture;
+}
+
 
 
 // ========================================================================== //
@@ -521,6 +550,7 @@
 #pragma mark - Request Builders
 
 
+
 - (RCRequest *) requestForHTTPMethod:(NSString *)method {
 	return [self requestForHTTPMethod:method query:nil];
 }
@@ -528,8 +558,9 @@
 - (RCRequest *) requestForHTTPMethod:(NSString *)method query:(id)query {
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:method query:query];
 	RCRequest *request;
-	if (self.fixture) {
-		request = [[RCFixtureRequest alloc] initWithURLRequest:URLRequest fixture:self.fixture];
+	id fixture = nil;
+	if ( (fixture = [self fixtureForHTTPMethod:method]) ) {
+		request = [[RCFixtureRequest alloc] initWithURLRequest:URLRequest fixture:fixture];
 	} else {
 		request = [[RCRequest alloc] initWithURLRequest:URLRequest];
 	}
@@ -540,8 +571,9 @@
 - (RCRequest *) downloadRequestWithQuery:query {
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
 	RCRequest *request;
-	if (self.fixture) {
-		request = [[RCFixtureDownloadRequest alloc] initWithURLRequest:URLRequest fixture:self.fixture];
+	id fixture = nil;
+	if ( (fixture = [self fixtureForHTTPMethod:kRESTClientHTTPMethodGET]) ) {
+		request = [[RCFixtureDownloadRequest alloc] initWithURLRequest:URLRequest fixture:fixture];
 	} else {
 		request = [[RCDownloadRequest alloc] initWithURLRequest:URLRequest];
 	}
@@ -642,6 +674,10 @@
 	request.postProcessorBlock = self.postProcessorBlock;
 	request.cachePolicy = self.cachePolicy;
 	[request.headers addEntriesFromDictionary:self.mergedHeaders];
+}
+
+- (NSString *) requestSignatureForHTTPMethod:(NSString *)method {
+	return [NSString stringWithFormat:@"%@ %@",method,URL_];
 }
 
 

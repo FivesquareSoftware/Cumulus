@@ -101,11 +101,17 @@
 + (NSMutableDictionary *) headers;
 + (void) setHeaders:(NSMutableDictionary *)headers;
 
-/** Loads a set of fake data to return for a request. The data should have URLs as keys and any valid plist data type as a value. */
-+ (void) setFixtures:(NSDictionary *)fixtures;
+/** Returns the current fixture data, which is a dictionary whose keys are request signatures (<Method URL>, e.g."GET http:///wwww.foo.com") and values are any valid payload object type. */
++ (NSMutableDictionary *) fixtures;
 
-/** Loads fixtures from a plist. */
+/** Loads a set of fake data to return for a request. The data should have request signatures (<Method URL>, e.g."GET http:///wwww.foo.com") as keys and any valid payload object type as a value. */
++ (void) setFixtures:(NSMutableDictionary *)fixtures;
+
+/** Loads fixtures from a plist and appends them to the currrent fixtures, overwriting any entries for the same request signature. */
 + (void) loadFixturesNamed:(NSString *)plistName;
+
+/** Will add the supplied fixture to any existing fixtures, overwriting an existing entry for the same request signature. */
++ (void) addFixture:(id)fixture forRequestSignature:(NSString *)requestSignature;
 
 /** Whether or not fixture data will be returned for requests. */
 + (BOOL) usingFixtures;

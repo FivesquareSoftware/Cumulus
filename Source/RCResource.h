@@ -91,6 +91,8 @@
  *		postsController.posts = response.result;
  *  }];
  *
+ *  If #fixture is nil, a resource will check RESTClient#fixtures to see if a global fixture exists for its signature (URL+Method) and use that before determining that there is no fixture for the request. This makes central management of fixtures possible.
+ *
  *  One of the gotchas with fixtures is that there is no Content-type header to rely on from the server when it comes time to decode the fixture data, so it needs to be inferred. If it is obvious from the kind of object that #fixture is, then that value is used. For example:
  *    - NSString - results in text/plain, regardless of the type of data being represented
  *    - UIImage - results in image/jpg, image/png, image/gif, image/tiff, or nothing, depending on the actual image type
@@ -127,9 +129,6 @@
 @property (nonatomic, copy) RCPreflightBlock preflightBlock; ///< Runs before every request for the receiver, which is aborted if this block returns NO
 @property (nonatomic, copy) RCPostProcessorBlock postProcessorBlock; ///< Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
 @property (readonly) NSMutableSet *requests; ///< The array of non-blocking RCRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
-
-/** When this property is set, the receiver will return a fake successful response using the fixture (converted to NSData as needed) as the HTTP response data. This means the fixture will undergo any decoding and/or postprocessing that would have occurred normally if the data were received from the server. */
-@property (nonatomic, strong) id fixture;
 
 
 /** @name Creating Resources
@@ -178,6 +177,19 @@
 
 /** Adds authProvider to the end of the provider list. */
 - (void) addAuthProvider:(id<RCAuthProvider>)authProvider;
+
+/** @} */
+
+
+/** @name Fixtures
+ *  @{
+ */
+
+/** Sets the fixture the receiver will use when issuing a request using the supplied HTTP method. */
+- (void) setFixture:(id)value forHTTPMethod:(NSString *)method;
+
+/** Returns the receiver's stored fixture for the supplied HTTP method if it exists or, if RESTClient#usingFixtures is YES, will attempt to return a global fixture for the request signature. */
+- (id) fixtureForHTTPMethod:(NSString *)method;
 
 /** @} */
 

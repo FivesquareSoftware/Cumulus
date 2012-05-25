@@ -36,7 +36,7 @@
 #import "RESTClient.h"
 
 @interface RESTClient()
-+ (RCResource *) configuredResourceForURL:(id)URL;
++ (RCResource *) configuredResourceForURL:(id)URL method:(NSString *)HTTPMethod;
 @end
 
 
@@ -144,9 +144,18 @@ static NSMutableDictionary *headers_ = nil;
 	}
 }
 
-static NSDictionary *fixtures_ = nil;
+static NSMutableDictionary *fixtures_ = nil;
 
-+ (void) setFixtures:(NSDictionary *)fixtures {
++ (NSMutableDictionary *) fixtures {
+	@synchronized(@"RESTClient.fixtures") {
+		if (fixtures_ == nil) {
+			fixtures_ = [NSMutableDictionary new];
+		}
+	}
+	return fixtures_;
+}
+
++ (void) setFixtures:(NSMutableDictionary *)fixtures {
 	@synchronized(@"RESTClient.fixtures") {
 		if (fixtures_ != fixtures) {
 			fixtures_ = fixtures;
@@ -157,7 +166,11 @@ static NSDictionary *fixtures_ = nil;
 + (void) loadFixturesNamed:(NSString *)plistName {
 	NSString *path = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
 	NSDictionary *fixtures = [NSDictionary dictionaryWithContentsOfFile:path];
-	[self setFixtures:fixtures];
+	[[self fixtures] addEntriesFromDictionary:fixtures];
+}
+
++ (void) addFixture:(id)fixture forRequestSignature:(NSString *)requestSignature {
+	[[self fixtures] setObject:fixture forKey:requestSignature];
 }
 
 static BOOL usingFixtures_ = NO;
@@ -179,17 +192,17 @@ static BOOL usingFixtures_ = NO;
 #pragma mark -GET
 
 + (RCResponse *) get:(id)URL {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
 	return [resource get];
 }
 
 + (void) get:(id)URL withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
 	[resource getWithCompletionBlock:completionBlock];
 }
 
 + (void) get:(id)URL withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
 	[resource getWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
@@ -197,58 +210,58 @@ static BOOL usingFixtures_ = NO;
 #pragma mark -HEAD
 
 + (RCResponse *) head:(id)URL {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodHEAD];
 	return [resource head];
 }
 
 + (void) head:(id)URL withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodHEAD];
 	[resource headWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -DELETE
 
 + (RCResponse *) delete:(id)URL {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodDELETE];
 	return [resource delete];
 }
 
 + (void) delete:(id)URL withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodDELETE];
 	[resource deleteWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -POST
 
 + (RCResponse *) post:(id)URL payload:(id)payload {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPOST];
 	return [resource post:payload];
 }
 
 + (void) post:(id)URL payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPOST];
 	[resource post:payload withCompletionBlock:completionBlock];
 }
 
 + (void) post:(id)URL payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPOST];
 	[resource post:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 #pragma mark -PUT
 
 + (RCResponse *) put:(id)URL payload:(id)payload {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
 	return [resource put:payload];
 }
 
 + (void) put:(id)URL payload:(id)payload withCompletionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
 	[resource put:payload withCompletionBlock:completionBlock];
 }
 
 + (void) put:(id)URL payload:(id)payload withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
 	[resource put:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
@@ -256,12 +269,12 @@ static BOOL usingFixtures_ = NO;
 #pragma mark -Files
 
 + (void) download:(id)URL withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
 	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 + (void) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(RCProgressBlock)progressBlock completionBlock:(RCCompletionBlock)completionBlock {
-	RCResource *resource = [self configuredResourceForURL:URL];
+	RCResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
 	[resource uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
@@ -271,7 +284,7 @@ static BOOL usingFixtures_ = NO;
 
 #pragma mark - Helpers
 
-+ (RCResource *) configuredResourceForURL:(id)URL {
++ (RCResource *) configuredResourceForURL:(id)URL method:(NSString *)method {
 	RCResource *resource = [RCResource withURL:URL];
 
 	resource.timeout = [self timeout];
@@ -280,8 +293,8 @@ static BOOL usingFixtures_ = NO;
 	
 	if (usingFixtures_) {
 		id fixture = nil;
-		if ( (fixture = [fixtures_ objectForKey:[resource.URL absoluteString]]) ) {
-			resource.fixture = fixture;
+		if ( (fixture = [fixtures_ objectForKey:[NSString stringWithFormat:@"%@ %@",method,[resource.URL absoluteString]]]) ) {
+			[resource setFixture:fixture forHTTPMethod:method];
 		}
 	}
 	
