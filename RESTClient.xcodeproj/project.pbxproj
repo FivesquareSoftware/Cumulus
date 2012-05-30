@@ -18,7 +18,7 @@
 		A409B3BC1410597D003495BA /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A409B3BD1410597D003495BA /* RCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* RCConstants.m */; };
 		A409B3CD141A530C003495BA /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4213DB459200F96152 /* libRESTClient.a */; };
-		A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; };
+		A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
 		A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A41410D614B680070026A8C1 /* NSDictionary+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */; };
@@ -56,31 +56,31 @@
 		A43E63CE152A6185006AEBCD /* NSObject+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */; };
 		A43E63CF152A6185006AEBCD /* NSDictionary+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+RESTClient.m */; };
 		A43E63D0152A6185006AEBCD /* NSString+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+RESTClient.m */; };
-		A43E63D2152A6192006AEBCD /* RCTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B2AF14001B14003495BA /* RCTypes.h */; };
-		A43E63D3152A6192006AEBCD /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; };
-		A43E63D4152A6192006AEBCD /* RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD4A13DB459200F96152 /* RESTClient.h */; };
-		A43E63D5152A6192006AEBCD /* RCResource.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5713DB466600F96152 /* RCResource.h */; };
-		A43E63D6152A6192006AEBCD /* RCRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC4F147ECEEE00BE6C0E /* RCRequest.h */; };
-		A43E63D7152A6192006AEBCD /* RCRequest+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A22271148AA893001726E4 /* RCRequest+Protected.h */; };
-		A43E63D8152A6192006AEBCD /* RCDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC4C147ECEEE00BE6C0E /* RCDownloadRequest.h */; };
-		A43E63D9152A6192006AEBCD /* RCUploadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC56147ECF0A00BE6C0E /* RCUploadRequest.h */; };
-		A43E63DA152A6192006AEBCD /* RCResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5F13DB468D00F96152 /* RCResponse.h */; };
-		A43E63DB152A6192006AEBCD /* RCCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3213DB4B8300D55902 /* RCCoder.h */; };
-		A43E63DC152A6192006AEBCD /* RCIdentityCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3D13DB4C9300D55902 /* RCIdentityCoder.h */; };
-		A43E63DD152A6192006AEBCD /* RCTextCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE4113DB4E8900D55902 /* RCTextCoder.h */; };
-		A43E63DE152A6192006AEBCD /* RCJSONCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3913DB4C7F00D55902 /* RCJSONCoder.h */; };
-		A43E63DF152A6192006AEBCD /* RCXMLCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C20858141852F6003412BA /* RCXMLCoder.h */; };
-		A43E63E0152A6192006AEBCD /* RCImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */; };
-		A43E63E1152A6192006AEBCD /* RCAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B33E1408E82D003495BA /* RCAuthProvider.h */; };
-		A43E63E2152A6192006AEBCD /* RCBasicAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3401408E890003495BA /* RCBasicAuthProvider.h */; };
-		A43E63E3152A6192006AEBCD /* RCServerTrustAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092784149835FC00C42E8B /* RCServerTrustAuthProvider.h */; };
-		A43E63E4152A6192006AEBCD /* RCClientCertificateAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A468A772149FA73900612DA9 /* RCClientCertificateAuthProvider.h */; };
-		A43E63E5152A6192006AEBCD /* RCOAuth2AuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092663149725F300C42E8B /* RCOAuth2AuthProvider.h */; };
-		A43E63E6152A6192006AEBCD /* RCOAuthToken.h in Headers */ = {isa = PBXBuildFile; fileRef = A4B6080314A0224B003C43AE /* RCOAuthToken.h */; };
-		A43E63E7152A6192006AEBCD /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; };
-		A43E63E8152A6192006AEBCD /* NSObject+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */; };
-		A43E63E9152A6192006AEBCD /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; };
-		A43E63EA152A6192006AEBCD /* NSString+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */; };
+		A43E63D2152A6192006AEBCD /* RCTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B2AF14001B14003495BA /* RCTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63D3152A6192006AEBCD /* RCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* RCConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63D4152A6192006AEBCD /* RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD4A13DB459200F96152 /* RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63D5152A6192006AEBCD /* RCResource.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5713DB466600F96152 /* RCResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63D6152A6192006AEBCD /* RCRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC4F147ECEEE00BE6C0E /* RCRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63D7152A6192006AEBCD /* RCRequest+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A22271148AA893001726E4 /* RCRequest+Protected.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63D8152A6192006AEBCD /* RCDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC4C147ECEEE00BE6C0E /* RCDownloadRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63D9152A6192006AEBCD /* RCUploadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A8CC56147ECF0A00BE6C0E /* RCUploadRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63DA152A6192006AEBCD /* RCResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5F13DB468D00F96152 /* RCResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63DB152A6192006AEBCD /* RCCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3213DB4B8300D55902 /* RCCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63DC152A6192006AEBCD /* RCIdentityCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3D13DB4C9300D55902 /* RCIdentityCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63DD152A6192006AEBCD /* RCTextCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE4113DB4E8900D55902 /* RCTextCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63DE152A6192006AEBCD /* RCJSONCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3913DB4C7F00D55902 /* RCJSONCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63DF152A6192006AEBCD /* RCXMLCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C20858141852F6003412BA /* RCXMLCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E0152A6192006AEBCD /* RCImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E1152A6192006AEBCD /* RCAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B33E1408E82D003495BA /* RCAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E2152A6192006AEBCD /* RCBasicAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3401408E890003495BA /* RCBasicAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E3152A6192006AEBCD /* RCServerTrustAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092784149835FC00C42E8B /* RCServerTrustAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E4152A6192006AEBCD /* RCClientCertificateAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A468A772149FA73900612DA9 /* RCClientCertificateAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E5152A6192006AEBCD /* RCOAuth2AuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092663149725F300C42E8B /* RCOAuth2AuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E6152A6192006AEBCD /* RCOAuthToken.h in Headers */ = {isa = PBXBuildFile; fileRef = A4B6080314A0224B003C43AE /* RCOAuthToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E7152A6192006AEBCD /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E8152A6192006AEBCD /* NSObject+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63E9152A6192006AEBCD /* NSDictionary+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43E63EA152A6192006AEBCD /* NSString+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A43F86AD144AAC5D00C69C3D /* RCImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A43F86AB144AAC5D00C69C3D /* RCImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A43F86AE144AAC5D00C69C3D /* RCImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86AC144AAC5D00C69C3D /* RCImageCoder.m */; };
 		A443AE3413DB4B8300D55902 /* RCCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE3213DB4B8300D55902 /* RCCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -117,8 +117,8 @@
 		A4C2085A141852F6003412BA /* RCXMLCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C20858141852F6003412BA /* RCXMLCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4C2085B141852F6003412BA /* RCXMLCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C20859141852F6003412BA /* RCXMLCoder.m */; };
 		A4C9D1D41482DE57004E9B72 /* Item.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4C9D1D31482DE57004E9B72 /* Item.plist */; };
-		A4D17EB1155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */; };
-		A4D17EB2155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */; };
+		A4D17EB1155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4D17EB2155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4D17EB3155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */; };
 		A4D17EB4155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */; };
 		A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1214199082005544D6 /* SpecHelper.m */; };
@@ -140,16 +140,16 @@
 		A4DBCFBA157015FB00ACF3D0 /* RCStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* RCStaticMethodsSpec.m */; };
 		A4DBCFBB157015FB00ACF3D0 /* RCBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* RCBenchmarksSpec.m */; };
 		A4DBCFBC157015FB00ACF3D0 /* RCRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* RCRequestSpec.m */; };
-		A4EFF1721551F9D100868358 /* RCProgressInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF1701551F9D100868358 /* RCProgressInfo.h */; };
-		A4EFF1731551F9D100868358 /* RCProgressInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF1701551F9D100868358 /* RCProgressInfo.h */; };
+		A4EFF1721551F9D100868358 /* RCProgressInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF1701551F9D100868358 /* RCProgressInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4EFF1731551F9D100868358 /* RCProgressInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF1701551F9D100868358 /* RCProgressInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4EFF1741551F9D100868358 /* RCProgressInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF1711551F9D100868358 /* RCProgressInfo.m */; };
 		A4EFF1751551F9D100868358 /* RCProgressInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF1711551F9D100868358 /* RCProgressInfo.m */; };
-		A4EFF20B155334AE00868358 /* RCFixtureRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF209155334AE00868358 /* RCFixtureRequest.h */; };
-		A4EFF20C155334AE00868358 /* RCFixtureRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF209155334AE00868358 /* RCFixtureRequest.h */; };
+		A4EFF20B155334AE00868358 /* RCFixtureRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF209155334AE00868358 /* RCFixtureRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4EFF20C155334AE00868358 /* RCFixtureRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF209155334AE00868358 /* RCFixtureRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4EFF20D155334AE00868358 /* RCFixtureRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF20A155334AE00868358 /* RCFixtureRequest.m */; };
 		A4EFF20E155334AE00868358 /* RCFixtureRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF20A155334AE00868358 /* RCFixtureRequest.m */; };
-		A4EFF211155334D200868358 /* RCFixtureHTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF20F155334D200868358 /* RCFixtureHTTPResponse.h */; };
-		A4EFF212155334D200868358 /* RCFixtureHTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF20F155334D200868358 /* RCFixtureHTTPResponse.h */; };
+		A4EFF211155334D200868358 /* RCFixtureHTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF20F155334D200868358 /* RCFixtureHTTPResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4EFF212155334D200868358 /* RCFixtureHTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF20F155334D200868358 /* RCFixtureHTTPResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4EFF213155334D200868358 /* RCFixtureHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF210155334D200868358 /* RCFixtureHTTPResponse.m */; };
 		A4EFF214155334D200868358 /* RCFixtureHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF210155334D200868358 /* RCFixtureHTTPResponse.m */; };
 /* End PBXBuildFile section */
@@ -719,13 +719,13 @@
 				A4B6080514A0224B003C43AE /* RCOAuthToken.h in Headers */,
 				A49D484314B4BD8B0045D66F /* NSObject+RESTClient.h in Headers */,
 				A41410D514B680070026A8C1 /* NSDictionary+RESTClient.h in Headers */,
-				A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */,
 				A41C901114F2ED4800E16A9E /* NSString+RESTClient.h in Headers */,
-				A456515C1523D454001302A7 /* RESTClient.h in Headers */,
+				A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */,
 				A4EFF1721551F9D100868358 /* RCProgressInfo.h in Headers */,
 				A4EFF20B155334AE00868358 /* RCFixtureRequest.h in Headers */,
 				A4EFF211155334D200868358 /* RCFixtureHTTPResponse.h in Headers */,
 				A4D17EB1155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */,
+				A456515C1523D454001302A7 /* RESTClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1017,6 +1017,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1034,6 +1035,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1050,7 +1052,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RESTClient;
-				SKIP_INSTALL = YES;
+				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
 			};
 			name = Debug;
 		};
@@ -1066,7 +1068,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RESTClient;
-				SKIP_INSTALL = YES;
+				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
 			};
 			name = Release;
 		};
