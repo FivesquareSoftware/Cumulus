@@ -36,6 +36,7 @@
 #import "RCResponse.h"
 
 #import "RCRequest.h"
+#import "RCConstants.h"
 
 @implementation RCResponse
 
@@ -49,16 +50,7 @@
 @synthesize status=status_;
 @synthesize error = error_;
 
-- (NSInteger) status {
-	if(status_ == NSIntegerMax) {
-		if(error_.code == NSURLErrorUserCancelledAuthentication) {
-			status_ = 401;
-		} else {
-			status_ = [request_.URLResponse statusCode];
-		}
-	}
-	return status_;
-}
+
 
 @dynamic headers;
 - (NSDictionary *) headers {
@@ -76,6 +68,7 @@
 								  [NSString stringWithFormat:@"Received %u HTTP Status code",status_], NSLocalizedDescriptionKey
 								  , request_.responseBody, NSLocalizedFailureReasonErrorKey
 								  , [request_.URLResponse URL], NSURLErrorFailingURLErrorKey
+								  , [NSNumber numberWithInt:status_], kRESTCLientHTTPStatusCodeErrorKey
 								  , nil];
 			error_ = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:info];
 		}
@@ -107,7 +100,13 @@
     self = [super init];
     if (self) {
         request_ = request;
-        status_ = NSIntegerMax;
+		// If user canceled auth, we need to help a bit and set the right status code
+		NSError *error = request.error;
+		if(error.code == NSURLErrorUserCancelledAuthentication) {
+			status_ = 401;
+		} else {
+			status_ = [request.URLResponse statusCode];
+		}
     }
     return self;
 }
@@ -308,11 +307,11 @@
 #pragma mark -  -100's
 
 - (BOOL) HTTPContinue {
-	return self.status == 100;
+	return self.status == kHTTPStatusContinue;
 }
 
 - (BOOL) HTTPSwitchingProtocols {
-	return self.status == 101;
+	return self.status == kHTTPStatusSwitchingProtocols;
 }
 
 
@@ -320,31 +319,31 @@
 #pragma mark -  -200's
 
 - (BOOL) HTTPOk {
-	return self.status == 200;
+	return self.status == kHTTPStatusOk;
 }
 
 - (BOOL) HTTPCreated {
-	return self.status == 201;
+	return self.status == kHTTPStatusCreated;
 }
 
 - (BOOL) HTTPAccepted {
-	return self.status == 202;
+	return self.status == kHTTPStatusAccepted;
 }
 
 - (BOOL) HTTPNonAuthoritative {
-	return self.status == 203;
+	return self.status == kHTTPStatusNonAuthoritative;
 }
 
 - (BOOL) HTTPNoContent {
-	return self.status == 204;
+	return self.status == kHTTPStatusNoContent;
 }
 
 - (BOOL) HTTPResetContent {
-	return self.status == 205;
+	return self.status == kHTTPStatusResetContent;
 }
 
 - (BOOL) HTTPPartialContent {
-	return self.status == 206;
+	return self.status == kHTTPStatusPartialContent;
 }
 
 
@@ -352,149 +351,149 @@
 
 
 - (BOOL) HTTPMultipleChoices {
-	return self.status == 300;
+	return self.status == kHTTPStatusMultipleChoices;
 }
 
 - (BOOL) HTTPMovedPermanently {
-	return self.status == 301;
+	return self.status == kHTTPStatusMovedPermanently;
 }
 
 - (BOOL) HTTPFound {
-	return self.status == 302;
+	return self.status == kHTTPStatusFound;
 }
 
 - (BOOL) HTTPSeeOther {
-	return self.status == 303;
+	return self.status == kHTTPStatusSeeOther;
 }
 
 - (BOOL) HTTPNotModified {
-	return self.status == 304;
+	return self.status == kHTTPStatusNotModified;
 }
 
 - (BOOL) HTTPUseProxy {
-	return self.status == 305;
+	return self.status == kHTTPStatusUseProxy;
 }
 
 - (BOOL) HTTPSwitchProxy {
-	return self.status == 306;
+	return self.status == kHTTPStatusSwitchProxy;
 }
 
 - (BOOL) HTTPTemporaryRedirect {
-	return self.status == 307;
+	return self.status == kHTTPStatusTemporaryRedirect;
 }
 
 - (BOOL) HTTPResumeIncomplete {
-	return self.status == 308;
+	return self.status == kHTTPStatusResumeIncomplete;
 }
 
 
 #pragma mark -  -400's
 
 - (BOOL) HTTPBadRequest {
-	return self.status == 400;
+	return self.status == kHTTPStatusBadRequest;
 }
 
 - (BOOL) HTTPUnauthorized {
-	return self.status == 401;
+	return self.status == kHTTPStatusUnauthorized;
 }
 
 - (BOOL) HTTPPaymentRequired {
-	return self.status == 402;
+	return self.status == kHTTPStatusPaymentRequired;
 }
 
 - (BOOL) HTTPForbidden {
-	return self.status == 403;
+	return self.status == kHTTPStatusForbidden;
 }
 
 - (BOOL) HTTPNotFound {
-	return self.status == 404;
+	return self.status == kHTTPStatusNotFound;
 }
 
 - (BOOL) HTTPMethodNotAllowed {
-	return self.status == 405;
+	return self.status == kHTTPStatusMethodNotAllowed;
 }
 
 - (BOOL) HTTPNotAcceptable {
-	return self.status == 406;
+	return self.status == kHTTPStatusNotAcceptable;
 }
 
 - (BOOL) HTTPProxyAuthenticationRequired {
-	return self.status == 407;
+	return self.status == kHTTPStatusProxyAuthenticationRequired;
 }
 
 - (BOOL) HTTPRequestTimeout {
-	return self.status == 408;
+	return self.status == kHTTPStatusRequestTimeout;
 }
 
 - (BOOL) HTTPConflict {
-	return self.status == 409;
+	return self.status == kHTTPStatusConflict;
 }
 
 - (BOOL) HTTPGone {
-	return self.status == 410;
+	return self.status == kHTTPStatusGone;
 }
 
 - (BOOL) HTTPLengthRequired {
-	return self.status == 411;
+	return self.status == kHTTPStatusLengthRequired;
 }
 
 - (BOOL) HTTPPreconditionFailed {
-	return self.status == 412;
+	return self.status == kHTTPStatusPreconditionFailed;
 }
 
 - (BOOL) HTTPRequestEntityTooLarge {
-	return self.status == 413;
+	return self.status == kHTTPStatusRequestEntityTooLarge;
 }
 
 - (BOOL) HTTPRequestURITooLong {
-	return self.status == 414;
+	return self.status == kHTTPStatusRequestURITooLong;
 }
 
 - (BOOL) HTTPUnsupportedMediaType {
-	return self.status == 415;
+	return self.status == kHTTPStatusUnsupportedMediaType;
 }
 
 - (BOOL) HTTPRequestRangeNotSatisfied {
-	return self.status == 416;
+	return self.status == kHTTPStatusRequestRangeNotSatisfied;
 }
 
 - (BOOL) HTTPExpectationFailed {
-	return self.status == 417;
+	return self.status == kHTTPStatusExpectationFailed;
 }
 
 - (BOOL) HTTPUnprocessableEntity {
-	return self.status == 422;
+	return self.status == kHTTPStatusUnprocessableEntity;
 }
 
 
 #pragma mark -  -500's
 
 - (BOOL) HTTPInternalServerError {
-	return self.status == 500;
+	return self.status == kHTTPStatusInternalServerError;
 }
 
 - (BOOL) HTTPNotImplemented {
-	return self.status == 501;
+	return self.status == kHTTPStatusNotImplemented;
 }
 
 
 - (BOOL) HTTPBadGateway {
-	return self.status == 502;
+	return self.status == kHTTPStatusBadGateway;
 }
 
 
 - (BOOL) HTTPServiceUnavailable {
-	return self.status == 503;
+	return self.status == kHTTPStatusServiceUnavailable;
 }
 
 
 - (BOOL) HTTPGatewayTimeout {
-	return self.status == 504;
+	return self.status == kHTTPStatusGatewayTimeout;
 }
 
 
 - (BOOL) HTTPVersionNotSupported {
-	return self.status == 505;
+	return self.status == kHTTPStatusVersionNotSupported;
 }
 
 
@@ -505,23 +504,23 @@
 
 
 - (BOOL) HTTPInformational {
-	return self.status >= 100 && self.status < 200;
+	return self.status >= kHTTPStatusContinue && self.status < kHTTPStatusOk;
 }
 
 - (BOOL) HTTPSuccessful {
-	return self.status >= 200 && self.status < 300;
+	return self.status >= kHTTPStatusOk && self.status < kHTTPStatusMultipleChoices;
 }
 
 - (BOOL) HTTPRedirect {
-	return self.status >= 300 && self.status < 400;
+	return self.status >= kHTTPStatusMultipleChoices && self.status < kHTTPStatusBadRequest;
 }
 
 - (BOOL) HTTPClientErrror {
-	return self.status >= 400 && self.status < 500;
+	return self.status >= kHTTPStatusBadRequest && self.status < kHTTPStatusInternalServerError;
 }
 
 - (BOOL) HTTPServerError {
-	return self.status >= 500 && self.status < 600;
+	return self.status >= kHTTPStatusInternalServerError && self.status < 600;
 }
 
 

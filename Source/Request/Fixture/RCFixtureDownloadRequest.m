@@ -80,9 +80,6 @@
 		self.timeoutTimer = timeoutTimer;
 	}	
 	
-//	[self.data appendData:self.fixtureData];
-	
-	
 	id fakeResponse = [[RCFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:expectedContentType_ expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
 	[fakeResponse setStatusCode:200];
 	if (expectedContentType_) {
@@ -90,8 +87,54 @@
 	}
 	self.URLResponse = fakeResponse;
 	
-	self.expectedContentLength = [self.fixtureData length];
 
+
+	NSError *writeError= nil;
+	NSFileManager *fm = [[NSFileManager alloc] init];
+	
+	// If  fixture is a URL we're just going to copy the file over, not load it into memory, to more closely mimic how a real download request works
+
+	if ([self.fixture isKindOfClass:[NSURL class]] && [self.fixture isFileURL]) {
+		// set expected length from file
+		// set type from file
+		//copy file over from URL
+		NSURL *fixtureURL = self.fixture;
+		NSString *fixturePath = [fixtureURL path];
+		
+		// Get attributes, if we can't assume we need to bail
+		NSDictionary *fixtureAttributes = [fm attributesOfItemAtPath:fixturePath error:&writeError];
+		if (writeError) {
+			RCLog(@"Could not read attributes of fixture at URL: %@ %@ (%@)", fixtureURL, [writeError localizedDescription],[writeError userInfo]);
+			self.error = writeError;
+			[self handleConnectionFinished];
+			return;
+		}
+		
+		NSString *MIMEType = [self mimeTypeForFileAtPath:fixturePath];
+		expectedContentType_ = MIMEType;
+		
+		self.expectedContentLength = [fixtureAttributes fileSize];
+		
+		if (NO == [fm copyItemAtURL:fixtureURL toURL:self.downloadedFileTempURL error:&writeError]) {
+			RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
+			self.error = writeError;
+			[self handleConnectionFinished];
+			return;
+		}
+	}
+	else {
+		self.expectedContentLength = [self.fixtureData length];
+		
+		if (NO == [fm fileExistsAtPath:[self.downloadedFileTempURL path]]) {
+			if (NO == [self.fixtureData writeToURL:self.downloadedFileTempURL options:NSDataWritingAtomic error:&writeError]) {
+				RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
+				self.error = writeError;
+				[self handleConnectionFinished];
+				return;
+			}
+		}
+	}
+	
 	// Send fake progress updates
 	for (int i = 1; i < 49; i ++) {
 		[NSThread sleepForTimeInterval:.1];
@@ -99,16 +142,7 @@
 		[self handleConnectionDidReceiveData];
 	}
 
-	NSError *writeError= nil;
-	NSFileManager *fm = [[NSFileManager alloc] init];
-	if (NO == [fm fileExistsAtPath:[self.downloadedFileTempURL path]]) {
-		if (NO == [self.fixtureData writeToURL:self.downloadedFileTempURL options:NSDataWritingAtomic error:&writeError]) {
-			RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
-			self.error = writeError;
-			[self handleConnectionFinished];
-			return;
-		}
-	}
+	
 
 	self.receivedContentLength = self.expectedContentLength;
 	[self handleConnectionDidReceiveData];

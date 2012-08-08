@@ -493,6 +493,18 @@ static NSUInteger requestCount = 0;
 }
 
 
+- (NSString *) mimeTypeForFileAtPath:(NSString *)filePath {
+	CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[filePath pathExtension], NULL);
+    NSString *MIMEType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+	
+    if (nil == MIMEType) {
+        MIMEType = @"text/plain";
+    }
+	return MIMEType;
+}
+
+
 // ========================================================================== //
 
 #pragma mark - NSURLConnectionDelegate
@@ -575,7 +587,6 @@ static NSUInteger requestCount = 0;
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[self handleConnectionFinished];
 }
-
 
 
 

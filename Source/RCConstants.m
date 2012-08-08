@@ -36,6 +36,7 @@
 #import "RCConstants.h"
 
 NSString *kRESTClientErrorDomain = @"RESTClientErrorDomain";
+NSString *kRESTCLientHTTPStatusCodeErrorKey = @"Failing HTTP Status Code";
 
 NSString *kRESTClientHTTPMethodGET = @"GET";
 NSString *kRESTClientHTTPMethodPOST = @"POST";

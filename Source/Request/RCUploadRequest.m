@@ -70,14 +70,7 @@
 	[URLRequest setValue:[[NSNumber numberWithUnsignedLongLong:[attributes fileSize]] stringValue] forHTTPHeaderField:@"Content-Length"];
 	
 	// Get the mime-type from UTI
-	
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[[self.fileToUploadURL path] pathExtension], NULL);
-    NSString *MIMEType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
-    CFRelease(UTI);
-
-    if (nil == MIMEType) {
-        MIMEType = @"text/plain";
-    }
+	NSString *MIMEType = [self mimeTypeForFileAtPath:[self.fileToUploadURL path]];
 	[URLRequest setValue:MIMEType forHTTPHeaderField:kRESTClientHTTPHeaderContentType];
 }
 

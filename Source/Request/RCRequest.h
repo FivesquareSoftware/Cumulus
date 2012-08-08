@@ -190,4 +190,13 @@
 /** @} */
 
 
+/** @name Request Helpers
+ *  @{
+ */
+
+- (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
+
+/** @} */
+
+
 @end

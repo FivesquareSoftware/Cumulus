@@ -70,7 +70,13 @@
 
 
 - (void) shouldCreateAnErrorForHTTPErrorStatusCodes {
-	STAssertTrue(NO, @"Unimplements");
+	RCResource *resource = [self.endpoint resource:@"badrequest"];
+	RCResponse *response = [resource get];
+	
+	NSError *error = response.error;
+	STAssertNotNil(error, @"Error should not be nil");
+	NSNumber *errorStatusCode = [[error userInfo] objectForKey:kRESTCLientHTTPStatusCodeErrorKey];
+	STAssertEqualObjects([NSNumber numberWithInt:kHTTPStatusBadRequest], errorStatusCode, @"Status code in error should have been %d",kHTTPStatusBadRequest);
 }
 
 - (void) shouldBeOk {

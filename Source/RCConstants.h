@@ -47,6 +47,7 @@
 
 
 extern NSString *kRESTClientErrorDomain;
+extern NSString *kRESTCLientHTTPStatusCodeErrorKey;
 
 enum  {
 	kRESTClientErrorCodeErrorProcessingResponse = 1000
@@ -70,3 +71,54 @@ extern NSString *kRESTClientProgressInfoKeyProgress;
 extern NSString *kRESTClientCachesDirectoryName;
 
 
+// HTTP Status Codes (so we don't make silly mistakes :)
+
+
+#define kHTTPStatusContinue 100
+#define kHTTPStatusSwitchingProtocols 101
+
+
+#define kHTTPStatusOk 200
+#define kHTTPStatusCreated 201
+#define kHTTPStatusAccepted 202
+#define kHTTPStatusNonAuthoritative 203
+#define kHTTPStatusNoContent 204
+#define kHTTPStatusResetContent 205
+#define kHTTPStatusPartialContent 206
+
+#define kHTTPStatusMultipleChoices 300
+#define kHTTPStatusMovedPermanently 301
+#define kHTTPStatusFound 302
+#define kHTTPStatusSeeOther 303
+#define kHTTPStatusNotModified 304
+#define kHTTPStatusUseProxy 305
+#define kHTTPStatusSwitchProxy 306
+#define kHTTPStatusTemporaryRedirect 307
+#define kHTTPStatusResumeIncomplete 308
+
+#define kHTTPStatusBadRequest 400
+#define kHTTPStatusUnauthorized 401
+#define kHTTPStatusPaymentRequired 402
+#define kHTTPStatusForbidden 403
+#define kHTTPStatusNotFound 404
+#define kHTTPStatusMethodNotAllowed 405
+#define kHTTPStatusNotAcceptable 406
+#define kHTTPStatusProxyAuthenticationRequired 407
+#define kHTTPStatusRequestTimeout 408
+#define kHTTPStatusConflict 409
+#define kHTTPStatusGone 410
+#define kHTTPStatusLengthRequired 411
+#define kHTTPStatusPreconditionFailed 412
+#define kHTTPStatusRequestEntityTooLarge 413
+#define kHTTPStatusRequestURITooLong 414
+#define kHTTPStatusUnsupportedMediaType 415
+#define kHTTPStatusRequestRangeNotSatisfied 416
+#define kHTTPStatusExpectationFailed 417
+#define kHTTPStatusUnprocessableEntity 422
+
+#define kHTTPStatusInternalServerError 500
+#define kHTTPStatusNotImplemented 501
+#define kHTTPStatusBadGateway 502
+#define kHTTPStatusServiceUnavailable 503
+#define kHTTPStatusGatewayTimeout 504
+#define kHTTPStatusVersionNotSupported 505
