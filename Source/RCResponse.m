@@ -47,10 +47,11 @@
 
 @synthesize request=request_;
 @synthesize status=status_;
+@synthesize error = error_;
 
 - (NSInteger) status {
 	if(status_ == NSIntegerMax) {
-		if([self ErrorUserCancelledAuthentication]) {
+		if(error_.code == NSURLErrorUserCancelledAuthentication) {
 			status_ = 401;
 		} else {
 			status_ = [request_.URLResponse statusCode];
@@ -69,7 +70,20 @@
 } 
 
 - (NSError *) error {
-	return request_.error;
+	if (nil == error_) {
+		if (NO == [self HTTPSuccessful] && nil == request_.error) {
+			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+								  [NSString stringWithFormat:@"Received %u HTTP Status code",status_], NSLocalizedDescriptionKey
+								  , request_.responseBody, NSLocalizedFailureReasonErrorKey
+								  , [request_.URLResponse URL], NSURLErrorFailingURLErrorKey
+								  , nil];
+			error_ = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:info];
+		}
+		else {
+			error_ = request_.error;
+		}
+	}
+	return error_;
 }
 
 - (id) result {

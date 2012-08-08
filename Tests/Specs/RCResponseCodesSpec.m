@@ -69,6 +69,10 @@
 //}
 
 
+- (void) shouldCreateAnErrorForHTTPErrorStatusCodes {
+	STAssertTrue(NO, @"Unimplements");
+}
+
 - (void) shouldBeOk {
 	RCResource *resource = [self.endpoint resource:@"ok"];
 	RCResponse *response = [resource get];
