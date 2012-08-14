@@ -38,12 +38,14 @@
 @implementation RCImageCoder
 
 + (void) load {
-	NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"image" options:0 error:NULL];
+	@autoreleasepool {
+		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"image" options:0 error:NULL];
 #if TARGET_OS_IPHONE
-	[RCCoder registerCoder:self objectType:[UIImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+		[RCCoder registerCoder:self objectType:[UIImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression]];
 #else
-	[RCCoder registerCoder:self objectType:[NSImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+		[RCCoder registerCoder:self objectType:[NSImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression]];
 #endif
+	}
 }
 
 - (NSData *) encodeObject:(id)object {

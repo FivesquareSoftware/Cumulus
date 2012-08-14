@@ -38,7 +38,9 @@
 @implementation RCIdentityCoder
 
 + (void) load {
-	[RCCoder registerCoder:self objectType:[NSData class] mimeTypes:nil];
+	@autoreleasepool {
+		[RCCoder registerCoder:self objectType:[NSData class] mimeTypes:nil];
+	}
 }
 
 
