@@ -322,6 +322,10 @@
 	}
 }
 
+- (id) valueForHeaderField:(NSString *)key {
+	return [self.headers objectForKey:key];
+}
+
 - (void) addAuthProvider:(id<RCAuthProvider>)authProvider {
 	[self.authProviders addObject:authProvider];
 }

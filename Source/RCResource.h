@@ -108,7 +108,7 @@
 @property (nonatomic, readonly, strong) RCResource *parent;
 @property (nonatomic, readonly, strong) NSString *relativePath;
 @property (nonatomic, readonly, strong) NSURL *URL;
-@property (nonatomic, readonly) NSString *queryString;
+@property (nonatomic, readonly, strong) NSString *queryString;
 
 /** Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. */
 @property (nonatomic, strong) NSMutableDictionary *headers;
@@ -170,8 +170,12 @@
  *  @{
  */
 
-/** Convenience method for setting a single header. If @param value is nil, will remove the header from the receiver. */
+/** Convenience method for setting a single header.
+ * @param value - if nil, will remove the header from the receiver, if not a string, will have #description called on it
+ */
 - (void) setValue:(id)value forHeaderField:(NSString *)key;
+/** Convenience method for returning the value of a single header. */
+- (id) valueForHeaderField:(NSString *)key;
 
 /** Adds authProvider to the end of the provider list. */
 - (void) addAuthProvider:(id<RCAuthProvider>)authProvider;
