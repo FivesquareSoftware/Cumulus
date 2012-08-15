@@ -313,6 +313,9 @@
 
 - (void) setValue:(id)value forHeaderField:(NSString *)key {
 	if (value) {
+		if (NO == [value isKindOfClass:[NSString class]]) {
+			value = [value description];
+		}
 		[self.headers setObject:value forKey:key];
 	} else {
 		[self.headers removeObjectForKey:key];
