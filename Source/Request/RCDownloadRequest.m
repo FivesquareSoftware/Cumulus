@@ -51,12 +51,12 @@
 
 // Public
 
-@synthesize cachesDir=cachesDir_;
+@synthesize cachesDir=_cachesDir;
 
 // Private
 
-@synthesize downloadedFileTempURL=downloadedFileTempURL_;
-@synthesize downloadedFilename=downloadedFilename_;
+@synthesize downloadedFileTempURL=_downloadedFileTempURL;
+@synthesize downloadedFilename=_downloadedFilename;
 
 
 // ========================================================================== //

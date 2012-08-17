@@ -10,6 +10,6 @@
 
 @implementation RCProgressInfo
 
-@synthesize URL=URL_, tempFileURL=tempFileURL_, filename=filename_, progress=progress_;
+@synthesize URL=_URL, tempFileURL=_tempFileURL, filename=_filename, progress=_progress;
 
 @end

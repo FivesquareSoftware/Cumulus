@@ -46,41 +46,41 @@
 
 
 
-@synthesize request=request_;
-@synthesize status=status_;
-@synthesize error = error_;
+@synthesize request=_request;
+@synthesize status=_status;
+@synthesize error = _error;
 
 
 
 @dynamic headers;
 - (NSDictionary *) headers {
-	return [request_.URLResponse allHeaderFields];
+	return [_request.URLResponse allHeaderFields];
 }
 
 - (NSString *) body {
-	return request_.responseBody;
+	return _request.responseBody;
 } 
 
 - (NSError *) error {
-	if (nil == error_) {
-		if (NO == [self HTTPSuccessful] && nil == request_.error) {
+	if (nil == _error) {
+		if (NO == [self HTTPSuccessful] && nil == _request.error) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSString stringWithFormat:@"Received %u HTTP Status code",status_], NSLocalizedDescriptionKey
-								  , request_.responseBody, NSLocalizedFailureReasonErrorKey
-								  , [request_.URLResponse URL], NSURLErrorFailingURLErrorKey
-								  , [NSNumber numberWithInt:status_], kRESTCLientHTTPStatusCodeErrorKey
+								  [NSString stringWithFormat:@"Received %u HTTP Status code",_status], NSLocalizedDescriptionKey
+								  , _request.responseBody, NSLocalizedFailureReasonErrorKey
+								  , [_request.URLResponse URL], NSURLErrorFailingURLErrorKey
+								  , [NSNumber numberWithInt:_status], kRESTCLientHTTPStatusCodeErrorKey
 								  , nil];
-			error_ = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:info];
+			_error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:info];
 		}
 		else {
-			error_ = request_.error;
+			_error = _request.error;
 		}
 	}
-	return error_;
+	return _error;
 }
 
 - (id) result {
-	return request_.result;
+	return _request.result;
 }
 
 @dynamic success;
@@ -99,13 +99,13 @@
 - (id)initWithRequest:(RCRequest *)request {
     self = [super init];
     if (self) {
-        request_ = request;
+        _request = request;
 		// If user canceled auth, we need to help a bit and set the right status code
 		NSError *error = request.error;
 		if(error.code == NSURLErrorUserCancelledAuthentication) {
-			status_ = 401;
+			_status = 401;
 		} else {
-			status_ = [request.URLResponse statusCode];
+			_status = [request.URLResponse statusCode];
 		}
     }
     return self;
@@ -114,7 +114,7 @@
 - (NSString *) description {
 	return [NSString stringWithFormat:@"%@ (request = %@, status = %d, response.headers = %@, response.body = %@, result = %@, error = %@)"
 			,[super description]
-			, [request_ description]
+			, [_request description]
 			, self.status
 			, [self.headers description]
 			, self.body

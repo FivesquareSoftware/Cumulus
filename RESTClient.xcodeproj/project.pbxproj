@@ -166,12 +166,12 @@
 		A4092663149725F300C42E8B /* RCOAuth2AuthProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCOAuth2AuthProvider.h; sourceTree = "<group>"; };
 		A4092664149725F300C42E8B /* RCOAuth2AuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCOAuth2AuthProvider.m; sourceTree = "<group>"; };
 		A4092784149835FC00C42E8B /* RCServerTrustAuthProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCServerTrustAuthProvider.h; sourceTree = "<group>"; };
-		A4092785149835FC00C42E8B /* RCServerTrustAuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCServerTrustAuthProvider.m; sourceTree = "<group>"; };
+		A4092785149835FC00C42E8B /* RCServerTrustAuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCServerTrustAuthProvider.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A409B2AF14001B14003495BA /* RCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTypes.h; sourceTree = "<group>"; };
 		A409B2BF14002529003495BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A409B33E1408E82D003495BA /* RCAuthProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAuthProvider.h; sourceTree = "<group>"; };
 		A409B3401408E890003495BA /* RCBasicAuthProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCBasicAuthProvider.h; sourceTree = "<group>"; };
-		A409B3411408E890003495BA /* RCBasicAuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCBasicAuthProvider.m; sourceTree = "<group>"; };
+		A409B3411408E890003495BA /* RCBasicAuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCBasicAuthProvider.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A409B3991408F193003495BA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A409B3BA1410597C003495BA /* RCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConstants.h; sourceTree = "<group>"; };
 		A409B3BB1410597D003495BA /* RCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConstants.m; sourceTree = "<group>"; };
@@ -235,7 +235,7 @@
 		A46269F514199082005544D6 /* object.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = object.rb; sourceTree = "<group>"; };
 		A46269F614199082005544D6 /* proxy_array.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = proxy_array.rb; sourceTree = "<group>"; };
 		A46269F714199082005544D6 /* helpers.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = helpers.rb; sourceTree = "<group>"; };
-		A46269F914199082005544D6 /* json_input.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = json_input.rb; sourceTree = "<group>"; };
+		A46269F914199082005544D6 /* json_input.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; lineEnding = 0; path = json_input.rb; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A46269FA14199082005544D6 /* json_output.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = json_output.rb; sourceTree = "<group>"; };
 		A46269FB14199082005544D6 /* main.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = main.rb; sourceTree = "<group>"; };
 		A46269FC14199082005544D6 /* requires.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = requires.rb; sourceTree = "<group>"; };
@@ -267,7 +267,7 @@
 		A4A22276148AB772001726E4 /* hs-2006-01-c-full_tif.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hs-2006-01-c-full_tif.png"; sourceTree = "<group>"; };
 		A4A30C69141AECFF002221BE /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		A4A8CC4C147ECEEE00BE6C0E /* RCDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCDownloadRequest.h; sourceTree = "<group>"; };
-		A4A8CC4D147ECEEE00BE6C0E /* RCDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCDownloadRequest.m; sourceTree = "<group>"; };
+		A4A8CC4D147ECEEE00BE6C0E /* RCDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCDownloadRequest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A4A8CC4F147ECEEE00BE6C0E /* RCRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCRequest.h; sourceTree = "<group>"; };
 		A4A8CC50147ECEEE00BE6C0E /* RCRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCRequest.m; sourceTree = "<group>"; };
 		A4A8CC56147ECF0A00BE6C0E /* RCUploadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUploadRequest.h; sourceTree = "<group>"; };
@@ -304,7 +304,7 @@
 		A4D17DF215533E880063B061 /* RCFixtureSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFixtureSpec.h; sourceTree = "<group>"; };
 		A4D17DF315533E880063B061 /* RCFixtureSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFixtureSpec.m; sourceTree = "<group>"; };
 		A4D17EAF155481E20063B061 /* RCFixtureDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFixtureDownloadRequest.h; sourceTree = "<group>"; };
-		A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFixtureDownloadRequest.m; sourceTree = "<group>"; };
+		A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCFixtureDownloadRequest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A4D26F61149274530005DFE3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		A4D40019141BBA8500E58873 /* run.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run.sh; sourceTree = "<group>"; };
 		A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -315,7 +315,7 @@
 		A4EFF209155334AE00868358 /* RCFixtureRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFixtureRequest.h; sourceTree = "<group>"; };
 		A4EFF20A155334AE00868358 /* RCFixtureRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFixtureRequest.m; sourceTree = "<group>"; };
 		A4EFF20F155334D200868358 /* RCFixtureHTTPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFixtureHTTPResponse.h; sourceTree = "<group>"; };
-		A4EFF210155334D200868358 /* RCFixtureHTTPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFixtureHTTPResponse.m; sourceTree = "<group>"; };
+		A4EFF210155334D200868358 /* RCFixtureHTTPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCFixtureHTTPResponse.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

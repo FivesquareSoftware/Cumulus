@@ -47,8 +47,8 @@
 #pragma mark - Properties
 
 
-@synthesize insecure=insecure_;
-@synthesize certificates=certificates_;
+@synthesize insecure=_insecure;
+@synthesize certificates=_certificates;
 
 
 // ========================================================================== //
@@ -59,7 +59,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        certificates_ = [NSMutableArray new];
+        _certificates = [NSMutableArray new];
     }
     return self;
 }

@@ -47,9 +47,9 @@
 
 @implementation RCOAuth2AuthProvider
 
-@synthesize authorizationURL=authorizationURL_;
-@synthesize tokenService=tokenService_;
-@synthesize token=token_;
+@synthesize authorizationURL=_authorizationURL;
+@synthesize tokenService=_tokenService;
+@synthesize token=_token;
 
 + (id) withAuthorizationURL:(NSURL *)authorizationURL tokenService:(RCResource *)tokenService {
     RCOAuth2AuthProvider *provider = [self new];

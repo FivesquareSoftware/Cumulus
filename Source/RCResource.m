@@ -59,7 +59,7 @@
 
 @property (nonatomic, readonly) NSMutableDictionary *mergedHeaders; ///< All headers from all ancestors and the receiver merged into one dictionary
 @property (nonatomic, readonly) NSMutableArray *mergedAuthProviders; ///< All #authProviders from all ancestors and the receiver merged into one array
-@property (nonatomic, strong) NSMutableSet *requests_; ///< The internal property for directly accessing request objects
+@property (nonatomic, strong) NSMutableSet *_requests; ///< The internal property for directly accessing request objects
 @property (nonatomic, strong) NSMutableDictionary *fixtures;
 
 // Request Builder
@@ -98,19 +98,19 @@
 
 // Public
 
-@synthesize parent=parent_;
-@synthesize relativePath=relativePath_;
-@synthesize URL=URL_;
-@synthesize headers=headers_;
-@synthesize timeout=timeout_;
-@synthesize cachePolicy=cachePolicy_;
-@synthesize cachesDir=cachesDir_;
-@synthesize username=username_;
-@synthesize password=password_;
-@synthesize authProviders=authProviders_;
-@synthesize contentType=contentType_;
-@synthesize preflightBlock=preflightBlock_;
-@synthesize postProcessorBlock=postprocessorBlock_;
+@synthesize parent=_parent;
+@synthesize relativePath=_relativePath;
+@synthesize URL=_URL;
+@synthesize headers=_headers;
+@synthesize timeout=_timeout;
+@synthesize cachePolicy=_cachePolicy;
+@synthesize cachesDir=_cachesDir;
+@synthesize username=_username;
+@synthesize password=_password;
+@synthesize authProviders=_authProviders;
+@synthesize contentType=_contentType;
+@synthesize preflightBlock=_preflightBlock;
+@synthesize postProcessorBlock=_postprocessorBlock;
 
 @dynamic queryString;
 - (NSString *) queryString {
@@ -118,72 +118,72 @@
 }
 
 - (NSMutableDictionary *) headers {
-    if (nil == headers_) {
-        headers_ = [NSMutableDictionary dictionary];
+    if (nil == _headers) {
+        _headers = [NSMutableDictionary dictionary];
     }
-    return headers_;
+    return _headers;
 }
 
 - (NSTimeInterval) timeout {
-	if (timeout_ == 0 && parent_.timeout > 0) {
-		return parent_.timeout;
+	if (_timeout == 0 && _parent.timeout > 0) {
+		return _parent.timeout;
 	}
-	return timeout_;
+	return _timeout;
 }
 
 - (NSURLRequestCachePolicy) cachePolicy {
-	if (cachePolicy_ == NSURLRequestUseProtocolCachePolicy && parent_.cachePolicy != NSURLRequestUseProtocolCachePolicy) {
-		return parent_.cachePolicy;
+	if (_cachePolicy == NSURLRequestUseProtocolCachePolicy && _parent.cachePolicy != NSURLRequestUseProtocolCachePolicy) {
+		return _parent.cachePolicy;
 	}
-	return cachePolicy_;
+	return _cachePolicy;
 }
 
 - (NSString *) cachesDir {
-	if (nil == cachesDir_) {
+	if (nil == _cachesDir) {
 		return [RESTClient cachesDir];
 	}
-	return cachesDir_;
+	return _cachesDir;
 }
 
 - (NSMutableArray *) authProviders {
-	if (nil == authProviders_) {
-		authProviders_ = [NSMutableArray new];
+	if (nil == _authProviders) {
+		_authProviders = [NSMutableArray new];
 	}
-	return authProviders_;
+	return _authProviders;
 }
 
 - (RESTClientContentType) contentType {
-	if (contentType_ == RESTClientContentTypeNone && parent_.contentType > RESTClientContentTypeNone) {
-		return parent_.contentType;
+	if (_contentType == RESTClientContentTypeNone && _parent.contentType > RESTClientContentTypeNone) {
+		return _parent.contentType;
 	}
-	return contentType_;
+	return _contentType;
 }
 
 - (void) setContentType:(RESTClientContentType)contentType {
-    if (contentType_ != contentType) {
-        contentType_ = contentType;  
-        [self setHeadersForContentType:contentType_];
+    if (_contentType != contentType) {
+        _contentType = contentType;  
+        [self setHeadersForContentType:_contentType];
     }
 }
 
 - (RCPreflightBlock) preflightBlock {
-	if (nil == preflightBlock_ && parent_.preflightBlock != nil) {
-		return parent_.preflightBlock;
+	if (nil == _preflightBlock && _parent.preflightBlock != nil) {
+		return _parent.preflightBlock;
 	}
-	return preflightBlock_;
+	return _preflightBlock;
 }
 
 - (RCPostProcessorBlock) postProcessorBlock {
-	if (nil == postprocessorBlock_ && parent_.postProcessorBlock != nil) {
-		return parent_.postProcessorBlock;
+	if (nil == _postprocessorBlock && _parent.postProcessorBlock != nil) {
+		return _parent.postProcessorBlock;
 	}
-	return postprocessorBlock_;
+	return _postprocessorBlock;
 }
 
 @dynamic requests;
 - (NSMutableSet *) requests {
 	dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
-	NSMutableSet *requests = [NSMutableSet setWithSet:self.requests_];
+	NSMutableSet *requests = [NSMutableSet setWithSet:self._requests];
 	dispatch_semaphore_signal(requests_semaphore_);
 	return requests;
 }
@@ -192,15 +192,15 @@
 
 // Private
 
-@synthesize requests_;
-@synthesize fixtures=fixtures_;
+@synthesize _requests;
+@synthesize fixtures=_fixtures;
 
 
 @dynamic mergedHeaders;
 - (NSMutableDictionary *) mergedHeaders {
 	NSMutableDictionary *mergedHeaders = [NSMutableDictionary dictionary];	
-	[mergedHeaders addEntriesFromDictionary:parent_.mergedHeaders];
-	[mergedHeaders addEntriesFromDictionary:headers_];
+	[mergedHeaders addEntriesFromDictionary:_parent.mergedHeaders];
+	[mergedHeaders addEntriesFromDictionary:_headers];
 	return mergedHeaders;
 }
 
@@ -208,19 +208,19 @@
 @dynamic mergedAuthProviders;
 - (NSMutableArray *) mergedAuthProviders {
 	NSMutableArray *mergedProviders = [NSMutableArray array];
-	if (self.authProviders.count == 0 && username_.length && password_.length) {
-		[self addAuthProvider:[RCBasicAuthProvider withUsername:username_ password:password_]];
+	if (self.authProviders.count == 0 && _username.length && _password.length) {
+		[self addAuthProvider:[RCBasicAuthProvider withUsername:_username password:_password]];
 	}
-	[mergedProviders addObjectsFromArray:authProviders_];
-	[mergedProviders addObjectsFromArray:parent_.mergedAuthProviders];
+	[mergedProviders addObjectsFromArray:_authProviders];
+	[mergedProviders addObjectsFromArray:_parent.mergedAuthProviders];
 	return mergedProviders;
 }
 
 - (NSMutableDictionary *) fixtures {
-	if (fixtures_ == nil) {
-		fixtures_ = [NSMutableDictionary new];
+	if (_fixtures == nil) {
+		_fixtures = [NSMutableDictionary new];
 	}
-	return fixtures_;
+	return _fixtures;
 }
 
 
@@ -244,12 +244,12 @@
 		} else {
 			self.URL = URL;
 		}
-		if (URL_ == nil) {
+		if (_URL == nil) {
 			self = nil;
 			return self;
 		}
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
-		requests_ = [NSMutableSet new];
+		_requests = [NSMutableSet new];
 		
 		requests_semaphore_ = dispatch_semaphore_create(1);
 	}
@@ -268,7 +268,7 @@
 
 
 - (RCResource *) resource:(id)relativePathObject {
-	NSAssert(URL_ != nil,@"Cannot construct a resource without a base URL!");
+	NSAssert(_URL != nil,@"Cannot construct a resource without a base URL!");
 	
 	NSString *relativePath;
 	if ([relativePath isKindOfClass:[NSString class]]) {
@@ -283,7 +283,7 @@
 	
 	NSString *queryString = [relativePath queryString:&relativePath];
 	
-	NSURL *resourceURL = [URL_ URLByAppendingPathComponent:relativePath];
+	NSURL *resourceURL = [_URL URLByAppendingPathComponent:relativePath];
 	resourceURL = [resourceURL standardizedURL];
 	
 	if (queryString.length) {
@@ -365,10 +365,10 @@
 	dispatch_async(request_queue, ^{
 		dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
 
-		for (RCRequest *request in self.requests_) {			
+		for (RCRequest *request in self._requests) {			
 			[request cancel];
 		}
-		[self.requests_ removeAllObjects];
+		[self._requests removeAllObjects];
 
 		dispatch_semaphore_signal(requests_semaphore_);
 
@@ -693,7 +693,7 @@
 }
 
 - (NSString *) requestSignatureForHTTPMethod:(NSString *)method {
-	return [NSString stringWithFormat:@"%@ %@",method,URL_];
+	return [NSString stringWithFormat:@"%@ %@",method,_URL];
 }
 
 
@@ -769,13 +769,13 @@
 
 - (void) addRequest:(RCRequest *)request {
 	dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
-	[self.requests_ addObject:request];
+	[self._requests addObject:request];
 	dispatch_semaphore_signal(requests_semaphore_);
 }
 
 - (void) removeRequest:(RCRequest *)request {
 	dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
-	[self.requests_ removeObject:request];
+	[self._requests removeObject:request];
 	dispatch_semaphore_signal(requests_semaphore_);
 }
 

@@ -37,10 +37,10 @@
 
 @implementation RCOAuthToken
 
-@synthesize accessToken=accessToken_;
-@synthesize refreshToken=refreshToken_;
-@synthesize accessExpires=accessExpires_;
-@synthesize scope=scope_;
+@synthesize accessToken=_accessToken;
+@synthesize refreshToken=_refreshToken;
+@synthesize accessExpires=_accessExpires;
+@synthesize scope=_scope;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
 	[aCoder encodeObject:self.accessToken forKey:@"accessToken"];
@@ -59,7 +59,7 @@
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ (accessToken: %@, refreshToken: %@, accessExpires: %@, scope: %@)",[super description],accessToken_,refreshToken_,accessExpires_,scope_];
+	return [NSString stringWithFormat:@"%@ (accessToken: %@, refreshToken: %@, accessExpires: %@, scope: %@)",[super description],_accessToken,_refreshToken,_accessExpires,_scope];
 }
 
 @end
