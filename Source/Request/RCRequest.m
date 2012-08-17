@@ -38,7 +38,8 @@
 
 #import "RESTClient.h"
 
-@interface RCRequest() 
+@interface RCRequest()
+
 
 // Private Methods
 
@@ -88,8 +89,6 @@ static NSUInteger requestCount = 0;
 
 #pragma mark - Properties
 
-
-// Private
 
 
 // Public
@@ -150,6 +149,11 @@ static NSUInteger requestCount = 0;
 @synthesize connection=_connection;
 @synthesize originalURLRequest=_originalURLRequest;
 @synthesize timeoutTimer=_timeoutTimer;
+
+@dynamic fileExtension;
+- (NSString *) fileExtension {
+	return [self.URLRequest.URL pathExtension];
+}
 
 @dynamic canStart;
 - (BOOL) canStart {
@@ -212,8 +216,12 @@ static NSUInteger requestCount = 0;
 - (id<RCCoder>) payloadEncoder {
 	NSString *contentType = @"Not set";
     if (_payloadEncoder == nil) {
-		// First, check for obvious conversions of payload by class
+		// First, check for obvious conversions of payload by class and file extension
 		_payloadEncoder = [RCCoder coderForObject:_payload];
+		
+		if (_payloadEncoder == nil) {
+			_payloadEncoder = [RCCoder coderForFileExtension:self.fileExtension];
+		}
 		
 		contentType = [_URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderContentType];
 
@@ -224,7 +232,7 @@ static NSUInteger requestCount = 0;
         }
         
     }
-	NSAssert2(_payloadEncoder != nil,  @"Unable to convert payload to HTTPBody using payload.class: %@, Content-Type: %@. Make sure you are using a compatible object type or have set an appropriate Content-Type.", NSStringFromClass([_payload class]), contentType);
+	NSAssert2(_payloadEncoder != nil,  @"Unable to convert payload to HTTPBody using payload.class: %@, Content-Type: %@. Make sure you are using a compatible object type or file extension, or have set an appropriate Content-Type.", NSStringFromClass([_payload class]), contentType);
     return _payloadEncoder;
 }
 
@@ -236,10 +244,16 @@ static NSUInteger requestCount = 0;
         }
         if (_responseDecoder == nil) { 
             // If we didn't get a decoder from content type, we will try and build a decoder based on what we were expecting
-            NSString *accepts = [_URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
-            if (accepts && accepts.length > 0) {
-                _responseDecoder = [RCCoder coderForMimeType:accepts];
-            }
+			
+			_responseDecoder = [RCCoder coderForFileExtension:self.fileExtension];
+			
+			if (_responseDecoder == nil) {
+				NSString *accepts = [_URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
+				if (accepts && accepts.length > 0) {
+					_responseDecoder = [RCCoder coderForMimeType:accepts];
+				}
+			}
+			
         }
         if (_responseDecoder == nil) { // We will essentially just pass set the NSData as the result and downstream users will have to figure out what to do with it
             _responseDecoder = [RCIdentityCoder new];

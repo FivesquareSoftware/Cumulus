@@ -39,7 +39,7 @@
 
 + (void) load {
 	@autoreleasepool {
-		[RCCoder registerCoder:self objectType:[NSData class] mimeTypes:nil];
+		[RCCoder registerCoder:self objectType:[NSData class] mimeTypes:nil fileExtensions:nil];
 	}
 }
 

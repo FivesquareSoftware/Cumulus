@@ -41,9 +41,9 @@
 	@autoreleasepool {
 		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"image" options:0 error:NULL];
 #if TARGET_OS_IPHONE
-		[RCCoder registerCoder:self objectType:[UIImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+		[RCCoder registerCoder:self objectType:[UIImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression] fileExtensions:[NSArray arrayWithObject:@"png"]];
 #else
-		[RCCoder registerCoder:self objectType:[NSImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+		[RCCoder registerCoder:self objectType:[NSImage class] mimeTypes:[NSArray arrayWithObject:mimeExpression] fileExtensions:[NSArray arrayWithObject:@"png"]];
 #endif
 	}
 }
@@ -52,6 +52,7 @@
 #if TARGET_OS_IPHONE
 	if ([object isKindOfClass:[UIImage class]]) {
 		return UIImagePNGRepresentation(object);
+		//TODO: encode the data to the correct kind of image based on data
 	}
 #else
 	//TODO: handle NSImage

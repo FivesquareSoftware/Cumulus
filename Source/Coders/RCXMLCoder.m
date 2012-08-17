@@ -42,7 +42,8 @@
 + (void) load {
 	@autoreleasepool {
 		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"xml" options:0 error:NULL];
-		[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+		NSArray *fileExtensions = [NSArray arrayWithObjects:@"xml", @"plist", nil];
+		[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression] fileExtensions:fileExtensions];
 	}
 }
 

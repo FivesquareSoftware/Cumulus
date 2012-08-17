@@ -42,7 +42,7 @@
 + (void) load {
 	@autoreleasepool {
 		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"json" options:0 error:NULL];
-		[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+		[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression] fileExtensions:[NSArray arrayWithObject:@"json"]];
 	}
 }
 

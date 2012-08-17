@@ -1,10 +1,18 @@
 include FileUtils
 
-put '/test/encoding' do
+put '/test/encoding.?:format?' do
 	ok()
 end
 
 get '/test/decoding/:format/content-type' do |format|
+	test_encoding_content_type(format)
+end
+
+get '/test/decoding/content-type.:format' do |format|
+	test_encoding_content_type(format)
+end
+
+def test_encoding_content_type(format)
 	bad_request('No format') and return unless format
 	if /json/ =~ format
 		respond(200, { :message => 'Hello World!' }, :json, 'application/json')
@@ -19,10 +27,18 @@ get '/test/decoding/:format/content-type' do |format|
 		send_file('resources/t_hero.png', :filename => 'hero.png')
 	else
 		bad_request('Unknown Format')
-	end	
+	end
 end
 
 get '/test/decoding/:format/wrong-content-type' do |format|
+	test_encoding_wrong_content_type(format)
+end
+
+get '/test/decoding/wrong-content-type.:format' do |format|
+	test_encoding_wrong_content_type(format)
+end
+
+def test_encoding_wrong_content_type(format)
 	bad_request('No format') and return unless format
 	if /json/ =~ format
 		respond(200, { :message => 'Hello World!' }, :json, 'magic/teapot')
@@ -33,11 +49,11 @@ get '/test/decoding/:format/wrong-content-type' do |format|
 	elsif /text/ =~ format
 		respond(200, 'Hello World!', :text, 'magic/teapot')
 	elsif /image/ =~ format
-	  content_type('magic/teapot')
+		content_type('magic/teapot')
 		send_file('resources/t_hero.png', :filename => 'hero.png')
 	else
 		bad_request('Unknown Format')
-	end	
+	end
 end
 
 

@@ -191,5 +191,28 @@ static NSString *kHelloWorld = @"Hello World!";
 }
 
 
+// Request-based coding
+
+
+
+- (void)shouldEncodeBasedOnFileExtension {
+	NSDictionary *payload = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
+	RCResource *resource = [self.service resource:@"test/encoding.json"];
+//	resource.contentType = RESTClientContentTypeJSON;
+	RCResponse *response = [resource put:payload];
+	STAssertTrue([response.request.payloadEncoder isKindOfClass:[RCJSONCoder class]], @"Payload encoder should have been a JSON coder: %@", response.request.payloadEncoder);
+	NSDictionary *bodyDictionary = [NSJSONSerialization JSONObjectWithData:response.request.URLRequest.HTTPBody options:NSJSONReadingAllowFragments error:NULL];
+	STAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
+}
+
+- (void)shouldDecodeBasedOnFileExtensionWhenServerSendsWrongContentType {
+	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
+	RCResource *resource = [self.service resource:@"test/decoding/wrong-content-type.json"];
+	RCResponse *response = [resource get];
+	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue([response.request.responseDecoder isKindOfClass:[RCJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
+	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
+}
+
 
 @end

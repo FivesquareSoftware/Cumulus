@@ -51,6 +51,7 @@
 
 // Private properties
 
+@property (nonatomic, readonly) NSString *fileExtension;
 @property BOOL connectionFinished;
 @property (readwrite, strong) NSURLConnection *connection;
 @property (nonatomic, strong) NSURLRequest *originalURLRequest;
