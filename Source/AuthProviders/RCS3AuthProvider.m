@@ -1,9 +1,9 @@
 //
-//  RCClientCertificateAuthProvider.h
+//  RCS3AuthProvider.m
 //  RESTClient
 //
-//  Created by John Clayton on 12/19/11.
-//  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
+//  Created by John Clayton on 8/16/12.
+//  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
@@ -33,11 +33,32 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "RCS3AuthProvider.h"
 
-#import <Foundation/Foundation.h>
+@implementation RCS3AuthProvider
 
-#import "RCAuthProvider.h"
 
-@interface RCClientCertificateAuthProvider : NSObject <RCAuthProvider>
+// ========================================================================== //
+
+#pragma mark - RCAuthProvider
+
+- (NSString *) providedAuthenticationMethod {
+	return nil; // I dunno, basic?
+}
+
+- (void) authorizeRequest:(NSMutableURLRequest *)URLRequest {
+//	NSDate *now = [NSDate date];
+//	NSComparisonResult comparisonResult = [self.token.accessExpires compare:now];
+//	if (self.token.accessExpires &&  comparisonResult != NSOrderedDescending) {
+//		[self refreshAccessToken];
+//	}
+//	[self addAuthHeader:URLRequest];
+}
+
+- (NSURLCredential *) credentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+	return nil;
+	// wondering, could we build a credential that would properly set the Authorization header?
+}
+
 
 @end

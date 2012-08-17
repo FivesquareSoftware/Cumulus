@@ -1,9 +1,9 @@
 //
-//  RCClientCertificateAuthProvider.h
+//  RCS3AuthProvider.h
 //  RESTClient
 //
-//  Created by John Clayton on 12/19/11.
-//  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
+//  Created by John Clayton on 8/16/12.
+//  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
@@ -33,11 +33,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-#import <Foundation/Foundation.h>
-
 #import "RCAuthProvider.h"
 
-@interface RCClientCertificateAuthProvider : NSObject <RCAuthProvider>
+#import "RCTypes.h"
+
+@interface RCS3AuthProvider : NSObject<RCAuthProvider>
 
 @end

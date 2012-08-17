@@ -130,6 +130,14 @@
 		A4A8CC64147EDFA200BE6C0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A8CC5D147ED3FF00BE6C0E /* MobileCoreServices.framework */; };
 		A4B6080514A0224B003C43AE /* RCOAuthToken.h in Headers */ = {isa = PBXBuildFile; fileRef = A4B6080314A0224B003C43AE /* RCOAuthToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4B6080614A0224B003C43AE /* RCOAuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B6080414A0224B003C43AE /* RCOAuthToken.m */; };
+		A4BA020115DDC72F00042F1C /* RCS3AuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4BA01FF15DDC72F00042F1C /* RCS3AuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4BA020215DDC72F00042F1C /* RCS3AuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4BA01FF15DDC72F00042F1C /* RCS3AuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4BA020315DDC72F00042F1C /* RCS3AuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BA020015DDC72F00042F1C /* RCS3AuthProvider.m */; };
+		A4BA020415DDC72F00042F1C /* RCS3AuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BA020015DDC72F00042F1C /* RCS3AuthProvider.m */; };
+		A4BA021215DDC94200042F1C /* RCAmazonCredentials.h in Headers */ = {isa = PBXBuildFile; fileRef = A4BA021015DDC94200042F1C /* RCAmazonCredentials.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4BA021315DDC94200042F1C /* RCAmazonCredentials.h in Headers */ = {isa = PBXBuildFile; fileRef = A4BA021015DDC94200042F1C /* RCAmazonCredentials.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4BA021415DDC94200042F1C /* RCAmazonCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BA021115DDC94200042F1C /* RCAmazonCredentials.m */; };
+		A4BA021515DDC94200042F1C /* RCAmazonCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BA021115DDC94200042F1C /* RCAmazonCredentials.m */; };
 		A4C2085A141852F6003412BA /* RCXMLCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C20858141852F6003412BA /* RCXMLCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4C2085B141852F6003412BA /* RCXMLCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C20859141852F6003412BA /* RCXMLCoder.m */; };
 		A4C9D1D41482DE57004E9B72 /* Item.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4C9D1D31482DE57004E9B72 /* Item.plist */; };
@@ -271,6 +279,10 @@
 		A4B2EFFB14217FDF000E8860 /* RCGetSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCGetSpec.m; sourceTree = "<group>"; };
 		A4B6080314A0224B003C43AE /* RCOAuthToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCOAuthToken.h; sourceTree = "<group>"; };
 		A4B6080414A0224B003C43AE /* RCOAuthToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCOAuthToken.m; sourceTree = "<group>"; };
+		A4BA01FF15DDC72F00042F1C /* RCS3AuthProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCS3AuthProvider.h; sourceTree = "<group>"; };
+		A4BA020015DDC72F00042F1C /* RCS3AuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCS3AuthProvider.m; sourceTree = "<group>"; };
+		A4BA021015DDC94200042F1C /* RCAmazonCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAmazonCredentials.h; sourceTree = "<group>"; };
+		A4BA021115DDC94200042F1C /* RCAmazonCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCAmazonCredentials.m; sourceTree = "<group>"; };
 		A4C20858141852F6003412BA /* RCXMLCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCXMLCoder.h; sourceTree = "<group>"; };
 		A4C20859141852F6003412BA /* RCXMLCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCXMLCoder.m; sourceTree = "<group>"; };
 		A4C9D1D31482DE57004E9B72 /* Item.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Item.plist; sourceTree = "<group>"; };
@@ -352,6 +364,7 @@
 				A468A772149FA73900612DA9 /* RCClientCertificateAuthProvider.h */,
 				A468A773149FA73900612DA9 /* RCClientCertificateAuthProvider.m */,
 				A4B6080814A02250003C43AE /* OAuth2 */,
+				A4BA020615DDC73D00042F1C /* S3 */,
 			);
 			path = AuthProviders;
 			sourceTree = "<group>";
@@ -677,6 +690,17 @@
 			name = OAuth2;
 			sourceTree = "<group>";
 		};
+		A4BA020615DDC73D00042F1C /* S3 */ = {
+			isa = PBXGroup;
+			children = (
+				A4BA01FF15DDC72F00042F1C /* RCS3AuthProvider.h */,
+				A4BA020015DDC72F00042F1C /* RCS3AuthProvider.m */,
+				A4BA021015DDC94200042F1C /* RCAmazonCredentials.h */,
+				A4BA021115DDC94200042F1C /* RCAmazonCredentials.m */,
+			);
+			name = S3;
+			sourceTree = "<group>";
+		};
 		A4EFF208155334AE00868358 /* Fixture */ = {
 			isa = PBXGroup;
 			children = (
@@ -726,6 +750,8 @@
 				A4EFF211155334D200868358 /* RCFixtureHTTPResponse.h in Headers */,
 				A4D17EB1155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */,
 				A456515C1523D454001302A7 /* RESTClient.h in Headers */,
+				A4BA020115DDC72F00042F1C /* RCS3AuthProvider.h in Headers */,
+				A4BA021215DDC94200042F1C /* RCAmazonCredentials.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +788,8 @@
 				A4EFF20C155334AE00868358 /* RCFixtureRequest.h in Headers */,
 				A4EFF212155334D200868358 /* RCFixtureHTTPResponse.h in Headers */,
 				A4D17EB2155481E20063B061 /* RCFixtureDownloadRequest.h in Headers */,
+				A4BA020215DDC72F00042F1C /* RCS3AuthProvider.h in Headers */,
+				A4BA021315DDC94200042F1C /* RCAmazonCredentials.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -918,6 +946,8 @@
 				A4EFF20D155334AE00868358 /* RCFixtureRequest.m in Sources */,
 				A4EFF213155334D200868358 /* RCFixtureHTTPResponse.m in Sources */,
 				A4D17EB3155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */,
+				A4BA020315DDC72F00042F1C /* RCS3AuthProvider.m in Sources */,
+				A4BA021415DDC94200042F1C /* RCAmazonCredentials.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -951,6 +981,8 @@
 				A4EFF20E155334AE00868358 /* RCFixtureRequest.m in Sources */,
 				A4EFF214155334D200868358 /* RCFixtureHTTPResponse.m in Sources */,
 				A4D17EB4155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */,
+				A4BA020415DDC72F00042F1C /* RCS3AuthProvider.m in Sources */,
+				A4BA021515DDC94200042F1C /* RCAmazonCredentials.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
