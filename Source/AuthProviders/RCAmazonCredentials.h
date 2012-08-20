@@ -8,11 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RCAmazonCredentials : NSObject <NSCoding>
+
+@protocol RCAmazonCredentials <NSObject>
 
 @property (nonatomic, strong) NSString *accessKey;
 @property (nonatomic, strong) NSString *secretKey;
 @property (nonatomic, strong) NSString *securityToken;
 @property (nonatomic, strong) NSDate *expirationDate;
+
+@property (nonatomic, readonly) BOOL expired;
+@property (nonatomic, readonly) BOOL valid;
+
+@end
+
+@interface RCAmazonCredentials : NSObject <RCAmazonCredentials, NSCoding>
 
 @end
