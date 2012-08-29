@@ -37,6 +37,17 @@
 
 #import "RCTypes.h"
 
+@protocol RCAmazonCredentials;
+
+/** Lots of the auth code was adapted from what Amazon are doing in their AmazonS3Client, available in their SDK. */
 @interface RCS3AuthProvider : NSObject<RCAuthProvider>
+
+/** Any object that implements <RCAmazonCredentials> can satisfy this role. If the credentials are present and valid they will be used, otherwise if a provider is supplied, new ones will be requested. */
+@property (nonatomic, strong) id<RCAmazonCredentials> credentials;
+
+/** A resource that knows how to fetch new credentials. It must have a postProcessor block that knows how to transform response#result to an RCAmazonCredentials object. */
+@property (nonatomic, strong) RCResource *credentialsProvider;
+
+
 
 @end
