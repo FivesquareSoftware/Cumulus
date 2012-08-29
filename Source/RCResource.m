@@ -35,18 +35,18 @@
 
 #import "RCResource.h"
 
-#import "RCConstants.h"
-#import "RCRequest.h"
-#import "RCFixtureRequest.h"
-#import "RCFixtureDownloadRequest.h"
 #import "RESTClient.h"
 
+#import "RCFixtureRequest.h"
+#import "RCFixtureDownloadRequest.h"
+
+#import "RCResourceGroup+Protected.h"
 #import "NSDictionary+RESTClient.h"
 #import "NSString+RESTClient.h"
 
 
 @interface RCResource() {
-	dispatch_semaphore_t requests_semaphore_;
+	dispatch_semaphore_t _requests_semaphore;
 }
 
 // Readwrite Versions of Public Properties
@@ -111,6 +111,7 @@
 @synthesize contentType=_contentType;
 @synthesize preflightBlock=_preflightBlock;
 @synthesize postProcessorBlock=_postprocessorBlock;
+@synthesize resourceGroup = _resourceGroup;
 
 @dynamic queryString;
 - (NSString *) queryString {
@@ -182,12 +183,18 @@
 
 @dynamic requests;
 - (NSMutableSet *) requests {
-	dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	NSMutableSet *requests = [NSMutableSet setWithSet:self._requests];
-	dispatch_semaphore_signal(requests_semaphore_);
+	dispatch_semaphore_signal(_requests_semaphore);
 	return requests;
 }
 
+- (void) setResourceGroup:(RCResourceGroup *)resourceGroup {
+	if (_resourceGroup != resourceGroup) {
+		_resourceGroup = resourceGroup;
+		[_resourceGroup addResource:self];
+	}
+}
 
 
 // Private
@@ -229,7 +236,7 @@
 #pragma mark - Object
 
 - (void)dealloc {
-	dispatch_release(requests_semaphore_);
+	dispatch_release(_requests_semaphore);
 }
 
 + (id) withURL:(id)URL {
@@ -251,7 +258,7 @@
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
 		_requests = [NSMutableSet new];
 		
-		requests_semaphore_ = dispatch_semaphore_create(1);
+		_requests_semaphore = dispatch_semaphore_create(1);
 	}
 	return self;
 }
@@ -363,14 +370,14 @@
 	dispatch_queue_t request_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
 	dispatch_async(request_queue, ^{
-		dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
+		dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 
 		for (RCRequest *request in self._requests) {			
 			[request cancel];
 		}
 		[self._requests removeAllObjects];
 
-		dispatch_semaphore_signal(requests_semaphore_);
+		dispatch_semaphore_signal(_requests_semaphore);
 
 		if (block) {
 			dispatch_async(dispatch_get_main_queue(), block);
@@ -768,15 +775,23 @@
 }
 
 - (void) addRequest:(RCRequest *)request {
-	dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self._requests addObject:request];
-	dispatch_semaphore_signal(requests_semaphore_);
+	if (_resourceGroup) {
+		RCLog(@"addRequest ->");
+		[_resourceGroup enter];
+	}
+	dispatch_semaphore_signal(_requests_semaphore);
 }
 
 - (void) removeRequest:(RCRequest *)request {
-	dispatch_semaphore_wait(requests_semaphore_, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self._requests removeObject:request];
-	dispatch_semaphore_signal(requests_semaphore_);
+	if (_resourceGroup) {
+		RCLog(@"removeRequest  ->");
+		[_resourceGroup leave];
+	}
+	dispatch_semaphore_signal(_requests_semaphore);
 }
 
 

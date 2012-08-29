@@ -40,6 +40,7 @@
 
 
 @class RCResponse;
+@class RCResourceGroup;
 
 /**
  * @mainpage
@@ -128,6 +129,7 @@
 @property (nonatomic, copy) RCPostProcessorBlock postProcessorBlock; ///< Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
 @property (readonly) NSMutableSet *requests; ///< The array of non-blocking RCRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
 
+@property (nonatomic, weak) RCResourceGroup *resourceGroup;
 
 /** @name Creating Resources
  *  @{
