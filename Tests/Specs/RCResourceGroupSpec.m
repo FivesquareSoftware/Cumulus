@@ -48,6 +48,22 @@
 
 #pragma mark - Specs
 
+
+- (void) shouldAddResourceBySettingGroup {
+	RCResource *index = [self.service resource:@"index"];
+	RCResourceGroup *group = [RCResourceGroup withCompletionBlock:nil];
+//	[group addResource:index];
+	index.resourceGroup = group;
+	STAssertEqualObjects([NSSet setWithObject:index], [group resources], @"Setting a resource's group should add it to group");
+}
+
+- (void) shouldAddResource {
+	RCResource *index = [self.service resource:@"index"];
+	RCResourceGroup *group = [RCResourceGroup withCompletionBlock:nil];
+	[group addResource:index];
+	STAssertEqualObjects([NSSet setWithObject:index], [group resources], @"Adding a resource should add it to group resources");
+}
+
 - (void)shouldRunCompletionBlockWhenGroupResourcesComplete {
 	
 	dispatch_semaphore_t group_sema = dispatch_semaphore_create(1);

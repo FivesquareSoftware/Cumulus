@@ -56,7 +56,9 @@
 
 + (id) withCompletionBlock:(void(^)())completionBlock {
 	RCResourceGroup *group = [self new];
-	[group addCompletionBlock:completionBlock];
+	if (completionBlock) {
+		[group addCompletionBlock:completionBlock];
+	}
 	return group;
 }
 
@@ -66,6 +68,7 @@
 		_dispatchQueue = dispatch_queue_create("com.fivesquaresoftware.RESTClient.RCResourceGroup", DISPATCH_QUEUE_SERIAL);
 		_dispatchGroup = dispatch_group_create();
 		_completionBlocksInternal = [NSMutableSet new];
+		_resourcesInternal = [NSMutableSet new];
 		_clearsBlocksOnCompletion = YES;
     }
     return self;
@@ -84,6 +87,7 @@
 
 - (void) addResource:(RCResource *)resource {
 	resource.resourceGroup = self;
+	[_resourcesInternal addObject:resource];
 }
 
 - (void) addCompletionBlock:(void(^)())completionBlock {
