@@ -37,6 +37,8 @@
 
 #import "RCTypes.h"
 
+@class RCResource;
+
 @protocol RCAmazonCredentials;
 
 /** Lots of the auth code was adapted from what Amazon are doing in their AmazonS3Client, available in their SDK. */

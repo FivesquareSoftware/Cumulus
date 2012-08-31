@@ -49,3 +49,4 @@
 #import "RCServerTrustAuthProvider.h"
 #import "RCClientCertificateAuthProvider.h"
 #import "RCOAuth2AuthProvider.h"
+#import "RCS3AuthProvider.h"

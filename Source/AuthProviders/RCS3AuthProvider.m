@@ -68,7 +68,7 @@
 	if (nil == _amazonDateFormatter) {
 		_amazonDateFormatter = [[NSDateFormatter alloc] init];
 		[_amazonDateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
-		[_amazonDateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss z"];
+		[_amazonDateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z"];
 		[_amazonDateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
 	}
 	return _amazonDateFormatter;
@@ -148,9 +148,10 @@
 	}
 	
 	// add @"x-amz-security-token" header if we have one
+    NSString *securityToken = [NSString stringWithFormat:@"x-amz-security-token:%@", self.credentials.securityToken];
 	
 	// build canonical string
-	NSString *stringToSign = [NSString stringWithFormat:@"%@\n\n%@\n%@\n%@",[URLRequest HTTPMethod], contentType, amazonDate, [URLRequest canonicalName]];
+	NSString *stringToSign = [NSString stringWithFormat:@"%@\n\n%@\n%@\n%@\n%@",[URLRequest HTTPMethod], contentType, amazonDate, securityToken, [URLRequest canonicalName]];
 
 	// sign it
 	
@@ -160,6 +161,8 @@
 	if (signature && signature.length) {
 		NSString *authHeader = [NSString stringWithFormat:@"AWS %@:%@", self.credentials.accessKey, signature];
         [URLRequest setValue:authHeader forHTTPHeaderField:kRESTClientHTTPHeaderAuthorization];
+        [URLRequest setValue:self.credentials.securityToken forHTTPHeaderField:@"x-amz-security-token"];
+        [URLRequest setValue:amazonDate forHTTPHeaderField:@"Date"];
 	}
 	
 }
