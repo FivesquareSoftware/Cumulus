@@ -27,6 +27,9 @@
 // Modified by John Clayton 2012/05/11
 // Added a method that allows encoding from the NSData interface that has no line breaks
 
+// Modified by John Clayton 2012/10/04
+// Prefixed methods with 'rc_' to avoid collisions with others using the same method names in an external category
+
 #import <Foundation/Foundation.h>
 
 void *NewBase64Decode(
@@ -42,8 +45,8 @@ char *NewBase64Encode(
 
 @interface NSData (Base64)
 
-+ (NSData *)dataFromBase64String:(NSString *)aString;
-- (NSString *)base64EncodedString;
-- (NSString *)base64EncodedStringWithLineBreaks:(BOOL)shouldBreakAtLines;
++ (NSData *)rc_dataFromBase64String:(NSString *)aString;
+- (NSString *)rc_base64EncodedString;
+- (NSString *)rc_base64EncodedStringWithLineBreaks:(BOOL)shouldBreakAtLines;
 
 @end
