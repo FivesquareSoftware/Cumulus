@@ -51,8 +51,8 @@
 
 
 
-@synthesize username=username_;
-@synthesize password=password_;
+@synthesize username=_username;
+@synthesize password=_password;
 
 
 // ========================================================================== //
@@ -111,7 +111,7 @@
 	   && self.password && [self.password length] > 0) {
 		NSString *string = [NSString stringWithFormat:@"%@:%@",self.username,self.password];
 		NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
-		NSString *base64String = [stringData base64EncodedStringWithLineBreaks:NO];
+		NSString *base64String = [stringData rc_base64EncodedStringWithLineBreaks:NO];
 		encoded = [NSString stringWithFormat:@"Basic %@",base64String];
 	}
 	return encoded;

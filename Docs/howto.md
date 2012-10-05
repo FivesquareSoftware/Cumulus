@@ -366,7 +366,9 @@ MyXMLCoder.m:
 
 ```objective-c 
 + (void) load {
-	[RCCoder registerCoder:self objectType:[CXMLDocument class] mimeTypes:nil];
+	@autoreleasepool {
+		[RCCoder registerCoder:self objectType:[CXMLDocument class] mimeTypes:nil];
+	}
 }
 
 - (NSData *) encodeObject:(id)payload {	

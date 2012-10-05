@@ -20,25 +20,25 @@
 
 // Public
 
-@synthesize cachesDir=cachesDir_;
+@synthesize cachesDir=_cachesDir;
 
 // Private
 
-@synthesize expectedContentType=expectedContentType_;
-@synthesize downloadedFileTempURL=downloadedFileTempURL_;
+@synthesize expectedContentType=_expectedContentType;
+@synthesize downloadedFileTempURL=_downloadedFileTempURL;
 
 
 - (NSURL *) downloadedFileTempURL {
-	if (downloadedFileTempURL_ == nil) {
+	if (_downloadedFileTempURL == nil) {
 		CFUUIDRef UUID = CFUUIDCreate(NULL);
 		NSString *tempFilename = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, UUID);
 		CFRelease(UUID);
 		
 		NSString *filePath = [self.cachesDir stringByAppendingPathComponent:tempFilename];
 		
-		downloadedFileTempURL_ = [NSURL fileURLWithPath:filePath];
+		_downloadedFileTempURL = [NSURL fileURLWithPath:filePath];
 	}
-	return downloadedFileTempURL_;
+	return _downloadedFileTempURL;
 }
 
 
@@ -80,10 +80,10 @@
 		self.timeoutTimer = timeoutTimer;
 	}	
 	
-	id fakeResponse = [[RCFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:expectedContentType_ expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
+	id fakeResponse = [[RCFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:_expectedContentType expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
 	[fakeResponse setStatusCode:200];
-	if (expectedContentType_) {
-		[fakeResponse setAllHeaderFields:[NSDictionary dictionaryWithObject:expectedContentType_ forKey:kRESTClientHTTPHeaderContentType]];
+	if (_expectedContentType) {
+		[fakeResponse setAllHeaderFields:[NSDictionary dictionaryWithObject:_expectedContentType forKey:kRESTClientHTTPHeaderContentType]];
 	}
 	self.URLResponse = fakeResponse;
 	
@@ -111,7 +111,7 @@
 		}
 		
 		NSString *MIMEType = [self mimeTypeForFileAtPath:fixturePath];
-		expectedContentType_ = MIMEType;
+		_expectedContentType = MIMEType;
 		
 		self.expectedContentLength = [fixtureAttributes fileSize];
 		

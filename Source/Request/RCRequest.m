@@ -38,7 +38,8 @@
 
 #import "RESTClient.h"
 
-@interface RCRequest() 
+@interface RCRequest()
+
 
 // Private Methods
 
@@ -89,8 +90,6 @@ static NSUInteger requestCount = 0;
 #pragma mark - Properties
 
 
-// Private
-
 
 // Public
 
@@ -98,58 +97,63 @@ static NSUInteger requestCount = 0;
 #pragma mark - -Request State
 
 
-@synthesize started=started_;
-@synthesize finished=finished_;
-@synthesize canceled=canceled_;
+@synthesize started=_started;
+@synthesize finished=_finished;
+@synthesize canceled=_canceled;
 
 #pragma mark - -Lifecycle
 
 
-@synthesize didSendDataBlock=didSendDataBlock_;
-@synthesize didReceiveDataBlock=didReceiveDataBlock_;
-@synthesize postProcessorBlock=resultProcessor_;
-@synthesize abortBlock=abortBlock_;
-@synthesize completionBlock=completionBlock_;
+@synthesize didSendDataBlock=_didSendDataBlock;
+@synthesize didReceiveDataBlock=_didReceiveDataBlock;
+@synthesize postProcessorBlock=_resultProcessor;
+@synthesize abortBlock=_abortBlock;
+@synthesize completionBlock=_completionBlock;
 
 
 #pragma mark - -Content Encoding/Decoding
 
-@synthesize payloadEncoder=payloadEncoder_;
-@synthesize responseDecoder=responseDecoder_;
+@synthesize payloadEncoder=_payloadEncoder;
+@synthesize responseDecoder=_responseDecoder;
 
 
 #pragma mark - -Configuration
 
 
-@synthesize headers=headers_;
-@synthesize timeout=timeout_;
-@synthesize cachePolicy=cachePolicy_;
-@synthesize authProviders=authProviders_;
-@synthesize maxAuthRetries=maxAuthRequests_;
-@synthesize payload=payload_;
+@synthesize headers=_headers;
+@synthesize timeout=_timeout;
+@synthesize cachePolicy=_cachePolicy;
+@synthesize authProviders=_authProviders;
+@synthesize maxAuthRetries=_maxAuthRequests;
+@synthesize payload=_payload;
 
 
 #pragma mark - -Execution Context
 
 
-@synthesize URLRequest=URLRequest_;
-@synthesize URLResponse=URLResponse_;
-@synthesize bodyContentLength=bodyContentLength_;
-@synthesize sentContentLength=sentContentLength_;
-@synthesize expectedContentLength=expectedContentLength_;
-@synthesize receivedContentLength=receivedContentLength_;
-@synthesize data=data_;
-@synthesize result=result_;
-@synthesize responseBody=responseBody_;
-@synthesize error=error_;
+@synthesize URLRequest=_URLRequest;
+@synthesize URLResponse=_URLResponse;
+@synthesize bodyContentLength=_bodyContentLength;
+@synthesize sentContentLength=_sentContentLength;
+@synthesize expectedContentLength=_expectedContentLength;
+@synthesize receivedContentLength=_receivedContentLength;
+@synthesize data=_data;
+@synthesize result=_result;
+@synthesize responseBody=_responseBody;
+@synthesize error=_error;
 
 
 // Private
 
-@synthesize connectionFinished=connectionFinished_;
-@synthesize connection=connection_;
-@synthesize originalURLRequest=originalURLRequest_;
-@synthesize timeoutTimer=timeoutTimer_;
+@synthesize connectionFinished=_connectionFinished;
+@synthesize connection=_connection;
+@synthesize originalURLRequest=_originalURLRequest;
+@synthesize timeoutTimer=_timeoutTimer;
+
+@dynamic fileExtension;
+- (NSString *) fileExtension {
+	return [self.URLRequest.URL pathExtension];
+}
 
 @dynamic canStart;
 - (BOOL) canStart {
@@ -171,18 +175,18 @@ static NSUInteger requestCount = 0;
 // Overrides
 
 - (NSURLRequest *) URLRequest {
-	if (URLRequest_ == nil) {
-		URLRequest_ = [originalURLRequest_ mutableCopy];
-		[self configureURLRequest:URLRequest_];
+	if (_URLRequest == nil) {
+		_URLRequest = [_originalURLRequest mutableCopy];
+		[self configureURLRequest:_URLRequest];
 	}
-	return URLRequest_;
+	return _URLRequest;
 }
 
 - (NSMutableDictionary *) headers {
-	if (headers_ == nil) {
-		headers_ = [NSMutableDictionary new];
+	if (_headers == nil) {
+		_headers = [NSMutableDictionary new];
 	}
-	return headers_;
+	return _headers;
 }
 
 @dynamic acceptHeader;
@@ -196,56 +200,66 @@ static NSUInteger requestCount = 0;
 }
 
 - (NSMutableArray *) authProviders {
-	if (nil == authProviders_) {
-		authProviders_ = [NSMutableArray new];
+	if (nil == _authProviders) {
+		_authProviders = [NSMutableArray new];
 	}
-	return authProviders_;
+	return _authProviders;
 }
 
 - (NSMutableData *) data {
-    if (data_ == nil) {
-        data_ = [NSMutableData new];
+    if (_data == nil) {
+        _data = [NSMutableData new];
     }
-    return data_;
+    return _data;
 }
 
 - (id<RCCoder>) payloadEncoder {
 	NSString *contentType = @"Not set";
-    if (payloadEncoder_ == nil) {
-		// First, check for obvious conversions of payload by class
-		payloadEncoder_ = [RCCoder coderForObject:payload_];
+    if (_payloadEncoder == nil) {
+		// First, check for obvious conversions of payload by class and file extension
+		_payloadEncoder = [RCCoder coderForObject:_payload];
 		
-		contentType = [URLRequest_ valueForHTTPHeaderField:kRESTClientHTTPHeaderContentType];
+		if (_payloadEncoder == nil) {
+			_payloadEncoder = [RCCoder coderForFileExtension:self.fileExtension];
+		}
+		
+		contentType = [_URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderContentType];
 
-        if (nil == payloadEncoder_) { // we have an non-literal object type, figure out encoding based on content type
+        if (nil == _payloadEncoder) { // we have an non-literal object type, figure out encoding based on content type
             if (contentType && contentType.length > 0) {
-                payloadEncoder_ = [RCCoder coderForMimeType:contentType];
+                _payloadEncoder = [RCCoder coderForMimeType:contentType];
             }
         }
         
     }
-	NSAssert2(payloadEncoder_ != nil,  @"Unable to convert payload to HTTPBody using payload.class: %@, Content-Type: %@. Make sure you are using a compatible object type or have set an appropriate Content-Type.", NSStringFromClass([payload_ class]), contentType);
-    return payloadEncoder_;
+	NSAssert2(_payloadEncoder != nil,  @"Unable to convert payload to HTTPBody using payload.class: %@, Content-Type: %@. Make sure you are using a compatible object type or file extension, or have set an appropriate Content-Type.", NSStringFromClass([_payload class]), contentType);
+    return _payloadEncoder;
 }
 
 - (id<RCCoder>) responseDecoder {
-    if (responseDecoder_ == nil) {
-        NSString *contentType = [[URLResponse_ allHeaderFields] valueForKey:kRESTClientHTTPHeaderContentType];
+    if (_responseDecoder == nil) {
+        NSString *contentType = [[_URLResponse allHeaderFields] valueForKey:kRESTClientHTTPHeaderContentType];
         if (contentType.length > 0) { // First, let's try content type, because the server is telling us what it sent
-            responseDecoder_ = [RCCoder coderForMimeType:contentType];
+            _responseDecoder = [RCCoder coderForMimeType:contentType];
         }
-        if (responseDecoder_ == nil) { 
+        if (_responseDecoder == nil) { 
             // If we didn't get a decoder from content type, we will try and build a decoder based on what we were expecting
-            NSString *accepts = [URLRequest_ valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
-            if (accepts && accepts.length > 0) {
-                responseDecoder_ = [RCCoder coderForMimeType:accepts];
-            }
+			
+			_responseDecoder = [RCCoder coderForFileExtension:self.fileExtension];
+			
+			if (_responseDecoder == nil) {
+				NSString *accepts = [_URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
+				if (accepts && accepts.length > 0) {
+					_responseDecoder = [RCCoder coderForMimeType:accepts];
+				}
+			}
+			
         }
-        if (responseDecoder_ == nil) { // We will essentially just pass set the NSData as the result and downstream users will have to figure out what to do with it
-            responseDecoder_ = [RCIdentityCoder new];
+        if (_responseDecoder == nil) { // We will essentially just pass set the NSData as the result and downstream users will have to figure out what to do with it
+            _responseDecoder = [RCIdentityCoder new];
         }
     }
-    return responseDecoder_;
+    return _responseDecoder;
 }
 
 
@@ -280,7 +294,7 @@ static NSUInteger requestCount = 0;
 //}
 
 - (NSString *) description {
-	NSURLRequest *request = nil == URLRequest_ ? originalURLRequest_ : URLRequest_;
+	NSURLRequest *request = nil == _URLRequest ? _originalURLRequest : _URLRequest;
 	return [NSString stringWithFormat:@"%@ : %@ %@",[super description],[request HTTPMethod],[request description]];
 }
 

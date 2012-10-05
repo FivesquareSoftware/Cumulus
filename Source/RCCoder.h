@@ -47,15 +47,17 @@
 
 + (NSMutableDictionary *) codersByObject;
 + (NSMutableDictionary *) codersByMimeType;
++ (NSMutableDictionary *) codersByFileExtension;
 
 /**
  * Register a coder class to handle a particular object type (like NSString) or a collection of mime-types (like text/plain).
  * @param mimeTypes - an Array of either NSString or NSRegularExpression objects to match against header values. Strings must match exactly.
  */
-+ (void) registerCoder:(Class)coder objectType:(Class)type mimeTypes:(NSArray *)mimeTypes;
++ (void) registerCoder:(Class)coder objectType:(Class)type mimeTypes:(NSArray *)mimeTypes fileExtensions:(NSArray *)fileExtensions;
 
 + (id<RCCoder>) coderForObject:(id)obj;
 + (id<RCCoder>) coderForMimeType:(NSString *)mimeType;
++ (id<RCCoder>) coderForFileExtension:(NSString *)fileExtension;
 
 @end
 

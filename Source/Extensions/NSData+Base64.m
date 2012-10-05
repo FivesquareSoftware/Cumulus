@@ -76,7 +76,7 @@ static unsigned char base64DecodeLookup[256] =
 // returns the decoded buffer. Must be free'd by caller. Length is given by
 //	outputLength.
 //
-void *NewBase64Decode(
+void *RCNewBase64Decode(
 	const char *inputBuffer,
 	size_t length,
 	size_t *outputLength)
@@ -151,7 +151,7 @@ void *NewBase64Decode(
 // returns the encoded buffer. Must be free'd by caller. Length is given by
 //	outputLength.
 //
-char *NewBase64Encode(
+char *RCNewBase64Encode(
 	const void *buffer,
 	size_t length,
 	bool separateLines,
@@ -275,11 +275,11 @@ char *NewBase64Encode(
 //
 // returns the autoreleased NSData representation of the base64 string
 //
-+ (NSData *)dataFromBase64String:(NSString *)aString
++ (NSData *)rc_dataFromBase64String:(NSString *)aString
 {
 	NSData *data = [aString dataUsingEncoding:NSASCIIStringEncoding];
 	size_t outputLength;
-	void *outputBuffer = NewBase64Decode([data bytes], [data length], &outputLength);
+	void *outputBuffer = RCNewBase64Decode([data bytes], [data length], &outputLength);
 	NSData *result = [NSData dataWithBytes:outputBuffer length:outputLength];
 	free(outputBuffer);
 	return result;
@@ -294,14 +294,14 @@ char *NewBase64Encode(
 // returns an autoreleased NSString being the base 64 representation of the
 //	receiver.
 //
-- (NSString *)base64EncodedString
+- (NSString *)rc_base64EncodedString
 {
-	return [self base64EncodedStringWithLineBreaks:YES];
+	return [self rc_base64EncodedStringWithLineBreaks:YES];
 }
 
-- (NSString *)base64EncodedStringWithLineBreaks:(BOOL)shouldBreakAtLines {
+- (NSString *)rc_base64EncodedStringWithLineBreaks:(BOOL)shouldBreakAtLines {
 	size_t outputLength = 0;
-	char *outputBuffer = NewBase64Encode([self bytes], [self length], shouldBreakAtLines, &outputLength);
+	char *outputBuffer = RCNewBase64Encode([self bytes], [self length], shouldBreakAtLines, &outputLength);
 	
 	NSString *result =
 	[[NSString alloc] initWithBytes:outputBuffer length:outputLength encoding:NSASCIIStringEncoding];

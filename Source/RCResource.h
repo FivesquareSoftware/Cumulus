@@ -40,6 +40,7 @@
 
 
 @class RCResponse;
+@class RCResourceGroup;
 
 /**
  * @mainpage
@@ -108,7 +109,7 @@
 @property (nonatomic, readonly, strong) RCResource *parent;
 @property (nonatomic, readonly, strong) NSString *relativePath;
 @property (nonatomic, readonly, strong) NSURL *URL;
-@property (nonatomic, readonly) NSString *queryString;
+@property (nonatomic, readonly, strong) NSString *queryString;
 
 /** Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. */
 @property (nonatomic, strong) NSMutableDictionary *headers;
@@ -128,6 +129,7 @@
 @property (nonatomic, copy) RCPostProcessorBlock postProcessorBlock; ///< Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
 @property (readonly) NSMutableSet *requests; ///< The array of non-blocking RCRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
 
+@property (nonatomic, weak) RCResourceGroup *resourceGroup;
 
 /** @name Creating Resources
  *  @{
@@ -170,8 +172,12 @@
  *  @{
  */
 
-/** Convenience method for setting a single header. If @param value is nil, will remove the header from the receiver. */
+/** Convenience method for setting a single header.
+ * @param value - if nil, will remove the header from the receiver, if not a string, will have #description called on it
+ */
 - (void) setValue:(id)value forHeaderField:(NSString *)key;
+/** Convenience method for returning the value of a single header. */
+- (id) valueForHeaderField:(NSString *)key;
 
 /** Adds authProvider to the end of the provider list. */
 - (void) addAuthProvider:(id<RCAuthProvider>)authProvider;

@@ -58,13 +58,25 @@
 	return codersByMimeType;
 }
 
++ (NSMutableDictionary *) codersByFileExtension {
+	static NSMutableDictionary *codersByFileExtension = nil;
+	@synchronized(@"RCCoder.codersByFileExtension") {
+		if (nil == codersByFileExtension) {
+			codersByFileExtension = [NSMutableDictionary dictionary];
+		}
+	}
+	return codersByFileExtension;
+}
 
-+ (void) registerCoder:(Class)coder objectType:(Class)type mimeTypes:(NSArray *)mimeTypes {
++ (void) registerCoder:(Class)coder objectType:(Class)type mimeTypes:(NSArray *)mimeTypes fileExtensions:(NSArray *)fileExtensions {
 	if (type) {
 		[[self codersByObject] setObject:coder forKey:type];
 	}
 	for (NSString *mimeType in mimeTypes) {
 		[[self codersByMimeType] setObject:coder forKey:mimeType];
+	}
+	for (NSString *fileExtension in fileExtensions) {
+		[[self codersByFileExtension] setObject:coder forKey:fileExtension];
 	}
 }
 
@@ -95,6 +107,28 @@
 		} 
 		else if ([matcher isKindOfClass:[NSString class]]) {
 			if ([matcher isEqualToString:mimeType]) {
+				coder = [coderClass new];
+				break;
+			}
+			
+		}
+	}
+	return coder;
+}
+
++ (id<RCCoder>) coderForFileExtension:(NSString *)fileExtension {
+	id<RCCoder> coder = nil;
+	for (id matcher in [self codersByFileExtension]) {
+		Class coderClass = [[self codersByFileExtension] objectForKey:matcher];
+		
+		if ([matcher isKindOfClass:[NSRegularExpression class]]) {
+			if ([matcher numberOfMatchesInString:fileExtension options:0 range:NSMakeRange(0, fileExtension.length)] > 0) {
+				coder = [coderClass new];
+				break;
+			}
+		}
+		else if ([matcher isKindOfClass:[NSString class]]) {
+			if ([matcher isEqualToString:fileExtension]) {
 				coder = [coderClass new];
 				break;
 			}

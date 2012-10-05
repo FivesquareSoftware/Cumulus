@@ -41,7 +41,7 @@
 
 @implementation RCUploadRequest
 
-@synthesize fileToUploadURL=fileToUploadURL_;
+@synthesize fileToUploadURL=_fileToUploadURL;
 
 - (void) configureURLRequest:(NSMutableURLRequest *)URLRequest {
 	[super configureURLRequest:URLRequest];

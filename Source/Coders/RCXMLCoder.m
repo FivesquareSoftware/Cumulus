@@ -40,8 +40,11 @@
 @implementation RCXMLCoder
 
 + (void) load {
-	NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"xml" options:0 error:NULL];
-	[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+	@autoreleasepool {
+		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"xml" options:0 error:NULL];
+		NSArray *fileExtensions = [NSArray arrayWithObjects:@"xml", @"plist", nil];
+		[RCCoder registerCoder:self objectType:nil mimeTypes:[NSArray arrayWithObject:mimeExpression] fileExtensions:fileExtensions];
+	}
 }
 
 - (NSData *) encodeObject:(id)payload {	

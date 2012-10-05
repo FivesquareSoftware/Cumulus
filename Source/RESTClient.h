@@ -67,6 +67,7 @@
 #import "RCTypes.h"
 #import "RCConstants.h"
 
+#import "RCResourceGroup.h"
 #import "RCResource.h"
 #import "RCRequest.h"
 #import "RCDownloadRequest.h"

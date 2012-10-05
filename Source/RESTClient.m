@@ -97,68 +97,68 @@
 }
 
 
-static NSTimeInterval timeout_ = 0;
+static NSTimeInterval _timeout = 0;
 
 + (NSTimeInterval) timeout {
-	return timeout_;
+	return _timeout;
 }
 
 + (void) setTimeout:(NSTimeInterval)timeout {
 	@synchronized(@"RESTClient.timeout") {
-		if (timeout_ != timeout) {
-			timeout_ = timeout;
+		if (_timeout != timeout) {
+			_timeout = timeout;
 		}
 	}
 }
 
-static NSMutableArray *authProviders_ = nil;
+static NSMutableArray *_authProviders = nil;
 
 + (NSMutableArray *)authProviders {
-	return authProviders_;
+	return _authProviders;
 }
 
 + (void) setAuthProviders:(NSMutableArray *)authProviders {
 	@synchronized(@"RESTClient.authProviders") {
-		if (authProviders_ != authProviders) {
-			authProviders_ = authProviders;
+		if (_authProviders != authProviders) {
+			_authProviders = authProviders;
 		}
 	}
 }
 
-static NSMutableDictionary *headers_ = nil;
+static NSMutableDictionary *_headers = nil;
 
 + (NSMutableDictionary *) headers {
 	@synchronized(@"RESTClient.headers") {
-		if (nil == headers_) {
-			headers_ = [NSMutableDictionary new];
+		if (nil == _headers) {
+			_headers = [NSMutableDictionary new];
 		}
 	}
-	return headers_;
+	return _headers;
 }
 
 + (void) setHeaders:(NSMutableDictionary *)headers {
 	@synchronized(@"RESTClient.headers") {
-		if (headers_ != headers) {
-			headers_ = headers;
+		if (_headers != headers) {
+			_headers = headers;
 		}
 	}
 }
 
-static NSMutableDictionary *fixtures_ = nil;
+static NSMutableDictionary *_fixtures = nil;
 
 + (NSMutableDictionary *) fixtures {
 	@synchronized(@"RESTClient.fixtures") {
-		if (fixtures_ == nil) {
-			fixtures_ = [NSMutableDictionary new];
+		if (_fixtures == nil) {
+			_fixtures = [NSMutableDictionary new];
 		}
 	}
-	return fixtures_;
+	return _fixtures;
 }
 
 + (void) setFixtures:(NSMutableDictionary *)fixtures {
 	@synchronized(@"RESTClient.fixtures") {
-		if (fixtures_ != fixtures) {
-			fixtures_ = fixtures;
+		if (_fixtures != fixtures) {
+			_fixtures = fixtures;
 		}
 	}
 }
@@ -173,14 +173,14 @@ static NSMutableDictionary *fixtures_ = nil;
 	[[self fixtures] setObject:fixture forKey:requestSignature];
 }
 
-static BOOL usingFixtures_ = NO;
+static BOOL _usingFixtures = NO;
 
 + (BOOL) usingFixtures {
-	return usingFixtures_;
+	return _usingFixtures;
 }
 
 + (void) useFixtures:(BOOL)useFixtures {
-	usingFixtures_ = useFixtures;
+	_usingFixtures = useFixtures;
 }
 
 
@@ -291,9 +291,9 @@ static BOOL usingFixtures_ = NO;
 	resource.headers = [self headers];
 	resource.authProviders = [self authProviders];
 	
-	if (usingFixtures_) {
+	if (_usingFixtures) {
 		id fixture = nil;
-		if ( (fixture = [fixtures_ objectForKey:[NSString stringWithFormat:@"%@ %@",method,[resource.URL absoluteString]]]) ) {
+		if ( (fixture = [_fixtures objectForKey:[NSString stringWithFormat:@"%@ %@",method,[resource.URL absoluteString]]]) ) {
 			[resource setFixture:fixture forHTTPMethod:method];
 		}
 	}

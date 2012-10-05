@@ -38,8 +38,11 @@
 @implementation RCTextCoder
 
 + (void) load {
-	NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"text" options:0 error:NULL];
-	[RCCoder registerCoder:self objectType:[NSString class] mimeTypes:[NSArray arrayWithObject:mimeExpression]];
+	@autoreleasepool {
+		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"text" options:0 error:NULL];
+		NSArray *fileExtensions = [NSArray arrayWithObjects:@"txt", @"html", nil];
+		[RCCoder registerCoder:self objectType:[NSString class] mimeTypes:[NSArray arrayWithObject:mimeExpression] fileExtensions:fileExtensions];
+	}
 }
 
 - (NSData *) encodeObject:(id)object {

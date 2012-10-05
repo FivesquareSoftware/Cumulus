@@ -14,41 +14,41 @@ NSString *kTestServerHostSSL = RESTClientTestServerSSL;
 
 @implementation SpecHelper
 
-@synthesize item=item_;
-@synthesize list=list_;
-@synthesize largeList=largeList_;
-@synthesize complicatedList=complicatedList_;
+@synthesize item=_item;
+@synthesize list=_list;
+@synthesize largeList=_largeList;
+@synthesize complicatedList=_complicatedList;
 
 - (NSDictionary *) item {
-	if (nil == item_) {
+	if (nil == _item) {
 		NSString *itemPath = [[NSBundle mainBundle] pathForResource:@"Item" ofType:@"plist"];
-		item_ = [NSDictionary dictionaryWithContentsOfFile:itemPath];
+		_item = [NSDictionary dictionaryWithContentsOfFile:itemPath];
 	}
-	return item_;
+	return _item;
 }
 
 - (NSArray *) list {
-	if (nil == list_) {
-		list_ = [NSMutableArray array];
+	if (nil == _list) {
+		_list = [NSMutableArray array];
 		for (int i = 0; i < 5; i++) {
-			[(NSMutableArray *)list_ addObject:self.item];
+			[(NSMutableArray *)_list addObject:self.item];
 		}
 	}
-	return list_;
+	return _list;
 }
 
 - (NSArray *) largeList {
-	if (nil == largeList_) {
-		largeList_ = [NSMutableArray arrayWithCapacity:10000];
+	if (nil == _largeList) {
+		_largeList = [NSMutableArray arrayWithCapacity:10000];
 		for (int i = 0; i < 10000; i++) {
-			[(NSMutableArray *)largeList_ addObject:self.item];
+			[(NSMutableArray *)_largeList addObject:self.item];
 		 }
 	}
-	return largeList_;
+	return _largeList;
 }
 
 - (NSArray *) complicatedList {	
-	if (nil == complicatedList_) {
+	if (nil == _complicatedList) {
 		
 		NSMutableDictionary *deepItem = [NSMutableDictionary dictionaryWithDictionary:self.item];
 		NSMutableDictionary *nestOne = [NSMutableDictionary dictionaryWithDictionary:self.item];
@@ -61,12 +61,12 @@ NSString *kTestServerHostSSL = RESTClientTestServerSSL;
 		[nestOne setObject:nestTwo forKey:@"object"];
 		[deepItem setObject:nestOne forKey:@"object"];
 		
-		complicatedList_ = [NSMutableArray arrayWithCapacity:100];
+		_complicatedList = [NSMutableArray arrayWithCapacity:100];
 		for (int i = 0; i < 100; i++) {
-			[(NSMutableArray *)complicatedList_ addObject:deepItem];
+			[(NSMutableArray *)_complicatedList addObject:deepItem];
 		}
 	}
-	return complicatedList_;
+	return _complicatedList;
 }
 
 - (void) cleanCaches {
