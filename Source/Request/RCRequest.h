@@ -38,7 +38,7 @@
 #import "RCTypes.h"
 #import "RCAuthProvider.h"
 #import "RCCoder.h"
-
+#import "RCProgressInfo.h"
 
 
 @class RCResponse;
@@ -150,6 +150,10 @@
 @property long long receivedContentLength;
 /** Stores any data returned in the body of the response. */
 @property (readonly, strong) NSMutableData *data;
+/** @returns a progress info object representing the current progress of receiving all the expected data. */
+@property (readonly) RCProgressInfo *progressReceivedInfo;
+/** @returns a progress info object representing the current progress of sending all of the local data. */
+@property (readonly) RCProgressInfo *progressSentInfo;
 /** The results of processing any response data with and instance of <RCCoder> and/or post-processing blocks are stored here. */
 @property (readonly, strong) id result;
 /** If the response data can be represented as a string, this property reflects the value. */

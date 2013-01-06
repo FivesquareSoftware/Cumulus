@@ -98,25 +98,26 @@
 		A4626A4D14199082005544D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1414199082005544D6 /* main.m */; };
 		A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4626A931419993E005544D6 /* libOCSpec.a */; };
 		A4675C7215F2519F0066644C /* RCResponseCodesSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* RCResponseCodesSpec.m */; };
-		A4675C7315F2519F0066644C /* RCCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* RCCodingSpec.m */; };
-		A4675C7415F2519F0066644C /* RCResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* RCResourceConfigSpec.m */; };
-		A4675C7515F2519F0066644C /* RCResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* RCResourceNestingSpec.m */; };
-		A4675C7615F2519F0066644C /* RCResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* RCResourceControlSpec.m */; };
-		A4675C7715F2519F0066644C /* RCAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* RCAuthSpec.m */; };
-		A4675C7815F2519F0066644C /* RCGetSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* RCGetSpec.m */; };
-		A4675C7915F2519F0066644C /* RCHeadSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23E81483F4FC0045CA21 /* RCHeadSpec.m */; };
-		A4675C7A15F2519F0066644C /* RCDeleteSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23EA1483F50A0045CA21 /* RCDeleteSpec.m */; };
-		A4675C7B15F2519F0066644C /* RCPostSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EEBA1A14242D6100376DAC /* RCPostSpec.m */; };
-		A4675C7C15F2519F0066644C /* RCPutSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120B1441096A0008A235 /* RCPutSpec.m */; };
-		A4675C7D15F2519F0066644C /* RCQueryStringSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* RCQueryStringSpec.m */; };
-		A4675C7E15F2519F0066644C /* RCResourceBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* RCResourceBlocksSpec.m */; };
-		A4675C7F15F2519F0066644C /* RCFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* RCFileHandlingSpec.m */; };
-		A4675C8015F2519F0066644C /* RCStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* RCStaticMethodsSpec.m */; };
-		A4675C8115F2519F0066644C /* RCBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* RCBenchmarksSpec.m */; };
-		A4675C8215F2519F0066644C /* RCRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* RCRequestSpec.m */; };
-		A4675C8315F2519F0066644C /* RCFixtureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17DF315533E880063B061 /* RCFixtureSpec.m */; };
 		A468A774149FA73900612DA9 /* RCClientCertificateAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A468A772149FA73900612DA9 /* RCClientCertificateAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A468A775149FA73900612DA9 /* RCClientCertificateAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A468A773149FA73900612DA9 /* RCClientCertificateAuthProvider.m */; };
+		A4914232169A12B000C63413 /* RCCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* RCCodingSpec.m */; };
+		A4914233169A12B000C63413 /* RCResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* RCResourceConfigSpec.m */; };
+		A4914234169A12B000C63413 /* RCResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* RCResourceNestingSpec.m */; };
+		A4914235169A12B000C63413 /* RCResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* RCResourceControlSpec.m */; };
+		A4914236169A12B000C63413 /* RCAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* RCAuthSpec.m */; };
+		A4914237169A12B000C63413 /* RCGetSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* RCGetSpec.m */; };
+		A4914238169A12B000C63413 /* RCHeadSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23E81483F4FC0045CA21 /* RCHeadSpec.m */; };
+		A4914239169A12B000C63413 /* RCDeleteSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23EA1483F50A0045CA21 /* RCDeleteSpec.m */; };
+		A491423A169A12B000C63413 /* RCPostSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EEBA1A14242D6100376DAC /* RCPostSpec.m */; };
+		A491423B169A12B000C63413 /* RCPutSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120B1441096A0008A235 /* RCPutSpec.m */; };
+		A491423C169A12B000C63413 /* RCQueryStringSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* RCQueryStringSpec.m */; };
+		A491423D169A12B000C63413 /* RCResourceBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* RCResourceBlocksSpec.m */; };
+		A491423E169A12B000C63413 /* RCFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* RCFileHandlingSpec.m */; };
+		A491423F169A12B000C63413 /* RCStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* RCStaticMethodsSpec.m */; };
+		A4914240169A12B000C63413 /* RCBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* RCBenchmarksSpec.m */; };
+		A4914241169A12B000C63413 /* RCRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* RCRequestSpec.m */; };
+		A4914242169A12B000C63413 /* RCFixtureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17DF315533E880063B061 /* RCFixtureSpec.m */; };
+		A4914243169A12B000C63413 /* RCResourceGroupSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124415ED5D9100513F73 /* RCResourceGroupSpec.m */; };
 		A49D484314B4BD8B0045D66F /* NSObject+RESTClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A49D484114B4BD8B0045D66F /* NSObject+RESTClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A49D484414B4BD8B0045D66F /* NSObject+RESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A49D484214B4BD8B0045D66F /* NSObject+RESTClient.m */; };
 		A4A22272148AA893001726E4 /* RCRequest+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A22271148AA893001726E4 /* RCRequest+Protected.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -148,7 +149,6 @@
 		A4D17EB4155481E20063B061 /* RCFixtureDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17EB0155481E20063B061 /* RCFixtureDownloadRequest.m */; };
 		A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1214199082005544D6 /* SpecHelper.m */; };
 		A4D4FFC7141A5A4E00E58873 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */; };
-		A4EB124515ED5D9100513F73 /* RCResourceGroupSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124415ED5D9100513F73 /* RCResourceGroupSpec.m */; };
 		A4EB124915ED5E1100513F73 /* RCResourceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EB124715ED5E1100513F73 /* RCResourceGroup.h */; };
 		A4EB124A15ED5E1100513F73 /* RCResourceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EB124715ED5E1100513F73 /* RCResourceGroup.h */; };
 		A4EB124B15ED5E1100513F73 /* RCResourceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124815ED5E1100513F73 /* RCResourceGroup.m */; };
@@ -207,8 +207,6 @@
 		A416122914411A800008A235 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A41C900F14F2ED4800E16A9E /* NSString+RESTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RESTClient.h"; sourceTree = "<group>"; };
 		A41C901014F2ED4800E16A9E /* NSString+RESTClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RESTClient.m"; sourceTree = "<group>"; };
-		A4223E3614A3AE8F00CBC9C0 /* faq.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = faq.md; sourceTree = "<group>"; };
-		A4223E3714A3AEA600CBC9C0 /* howto.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = howto.md; sourceTree = "<group>"; };
 		A432B470149D11D8006582DB /* RCResource+Specs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCResource+Specs.h"; sourceTree = "<group>"; };
 		A43E639E152A47E6006AEBCD /* RESTClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RESTClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A43E639F152A47E6006AEBCD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -328,6 +326,8 @@
 		A4EFF20A155334AE00868358 /* RCFixtureRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFixtureRequest.m; sourceTree = "<group>"; };
 		A4EFF20F155334D200868358 /* RCFixtureHTTPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFixtureHTTPResponse.h; sourceTree = "<group>"; };
 		A4EFF210155334D200868358 /* RCFixtureHTTPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RCFixtureHTTPResponse.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		A4F536B41624A15F000B7B78 /* appledoc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = appledoc; sourceTree = "<group>"; };
+		A4F536B61624A187000B7B78 /* gendocs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = gendocs.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,7 +388,7 @@
 				A4D26F61149274530005DFE3 /* README.md */,
 				A414FD4713DB459200F96152 /* Source */,
 				A46269B614199082005544D6 /* Tests */,
-				A4223E3414A3AE7200CBC9C0 /* Docs */,
+				A4F536B21624A15F000B7B78 /* Tools */,
 				A43E63B3152A60FA006AEBCD /* Resources */,
 				A414FD4813DB459200F96152 /* Supporting Files */,
 				A414FD4413DB459200F96152 /* Frameworks */,
@@ -451,15 +451,6 @@
 			);
 			name = "Supporting Files";
 			path = Source;
-			sourceTree = "<group>";
-		};
-		A4223E3414A3AE7200CBC9C0 /* Docs */ = {
-			isa = PBXGroup;
-			children = (
-				A4223E3614A3AE8F00CBC9C0 /* faq.md */,
-				A4223E3714A3AEA600CBC9C0 /* howto.md */,
-			);
-			path = Docs;
 			sourceTree = "<group>";
 		};
 		A43E63A1152A47E6006AEBCD /* Other Frameworks */ = {
@@ -731,6 +722,23 @@
 			path = Fixture;
 			sourceTree = "<group>";
 		};
+		A4F536B21624A15F000B7B78 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				A4F536B31624A15F000B7B78 /* bin */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		A4F536B31624A15F000B7B78 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				A4F536B41624A15F000B7B78 /* appledoc */,
+				A4F536B61624A187000B7B78 /* gendocs.sh */,
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -824,6 +832,7 @@
 				A414FD3E13DB459200F96152 /* Sources */,
 				A414FD3F13DB459200F96152 /* Frameworks */,
 				A414FD4013DB459200F96152 /* Headers */,
+				A4B50B491624A2480067E9DF /* Generate docs */,
 			);
 			buildRules = (
 			);
@@ -842,6 +851,7 @@
 				A43E639A152A47E6006AEBCD /* Frameworks */,
 				A43E639B152A47E6006AEBCD /* Headers */,
 				A43E639C152A47E6006AEBCD /* Resources */,
+				A4B50B4A1624A3F90067E9DF /* Generate docs */,
 			);
 			buildRules = (
 			);
@@ -920,6 +930,38 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A4B50B491624A2480067E9DF /* Generate docs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Source",
+			);
+			name = "Generate docs";
+			outputPaths = (
+				"\"${SRCROOT}/Docs/API/com.fivesquaresoftware.RESTClient.docset\"",
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Tools/bin/gendocs.sh\"";
+		};
+		A4B50B4A1624A3F90067E9DF /* Generate docs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+				"\"$(SRCROOT)/Source\"",
+			);
+			name = "Generate docs";
+			outputPaths = (
+				"\"${SRCROOT}/Docs/API/com.fivesquaresoftware.RESTClient.docset\"",
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Tools/bin/gendocs.sh\"";
+		};
 		A4D4FFCF141BB50200E58873 /* Restart Server */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1015,25 +1057,25 @@
 			files = (
 				A4626A4D14199082005544D6 /* main.m in Sources */,
 				A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */,
-				A4EB124515ED5D9100513F73 /* RCResourceGroupSpec.m in Sources */,
 				A4675C7215F2519F0066644C /* RCResponseCodesSpec.m in Sources */,
-				A4675C7315F2519F0066644C /* RCCodingSpec.m in Sources */,
-				A4675C7415F2519F0066644C /* RCResourceConfigSpec.m in Sources */,
-				A4675C7515F2519F0066644C /* RCResourceNestingSpec.m in Sources */,
-				A4675C7615F2519F0066644C /* RCResourceControlSpec.m in Sources */,
-				A4675C7715F2519F0066644C /* RCAuthSpec.m in Sources */,
-				A4675C7815F2519F0066644C /* RCGetSpec.m in Sources */,
-				A4675C7915F2519F0066644C /* RCHeadSpec.m in Sources */,
-				A4675C7A15F2519F0066644C /* RCDeleteSpec.m in Sources */,
-				A4675C7B15F2519F0066644C /* RCPostSpec.m in Sources */,
-				A4675C7C15F2519F0066644C /* RCPutSpec.m in Sources */,
-				A4675C7D15F2519F0066644C /* RCQueryStringSpec.m in Sources */,
-				A4675C7E15F2519F0066644C /* RCResourceBlocksSpec.m in Sources */,
-				A4675C7F15F2519F0066644C /* RCFileHandlingSpec.m in Sources */,
-				A4675C8015F2519F0066644C /* RCStaticMethodsSpec.m in Sources */,
-				A4675C8115F2519F0066644C /* RCBenchmarksSpec.m in Sources */,
-				A4675C8215F2519F0066644C /* RCRequestSpec.m in Sources */,
-				A4675C8315F2519F0066644C /* RCFixtureSpec.m in Sources */,
+				A4914232169A12B000C63413 /* RCCodingSpec.m in Sources */,
+				A4914233169A12B000C63413 /* RCResourceConfigSpec.m in Sources */,
+				A4914234169A12B000C63413 /* RCResourceNestingSpec.m in Sources */,
+				A4914235169A12B000C63413 /* RCResourceControlSpec.m in Sources */,
+				A4914236169A12B000C63413 /* RCAuthSpec.m in Sources */,
+				A4914237169A12B000C63413 /* RCGetSpec.m in Sources */,
+				A4914238169A12B000C63413 /* RCHeadSpec.m in Sources */,
+				A4914239169A12B000C63413 /* RCDeleteSpec.m in Sources */,
+				A491423A169A12B000C63413 /* RCPostSpec.m in Sources */,
+				A491423B169A12B000C63413 /* RCPutSpec.m in Sources */,
+				A491423C169A12B000C63413 /* RCQueryStringSpec.m in Sources */,
+				A491423D169A12B000C63413 /* RCResourceBlocksSpec.m in Sources */,
+				A491423E169A12B000C63413 /* RCFileHandlingSpec.m in Sources */,
+				A491423F169A12B000C63413 /* RCStaticMethodsSpec.m in Sources */,
+				A4914240169A12B000C63413 /* RCBenchmarksSpec.m in Sources */,
+				A4914241169A12B000C63413 /* RCRequestSpec.m in Sources */,
+				A4914242169A12B000C63413 /* RCFixtureSpec.m in Sources */,
+				A4914243169A12B000C63413 /* RCResourceGroupSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

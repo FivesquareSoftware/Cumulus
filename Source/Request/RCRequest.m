@@ -143,6 +143,37 @@ static NSUInteger requestCount = 0;
 @synthesize error=_error;
 
 
+@dynamic progressReceivedInfo;
+- (RCProgressInfo *) progressReceivedInfo {
+	RCProgressInfo *progressReceivedInfo = [RCProgressInfo new];
+	progressReceivedInfo.URL = [self.URLRequest URL];
+	float progress = 0;
+	if (self.expectedContentLength > 0) {
+		progress = (float)self.receivedContentLength / (float)self.expectedContentLength;
+		progressReceivedInfo.progress = [NSNumber numberWithFloat:progress];
+	}
+	else {
+		progressReceivedInfo.progress = @(0);
+	}
+	return progressReceivedInfo;
+}
+
+@dynamic progressSentInfo;
+- (RCProgressInfo *) progressSentInfo {
+	RCProgressInfo *progressSentInfo = [RCProgressInfo new];
+	progressSentInfo.URL = [self.URLRequest URL];
+	float progress = 0;
+	if (self.bodyContentLength > 0) {
+		progress = self.sentContentLength / self.bodyContentLength;
+		progressSentInfo.progress = [NSNumber numberWithFloat:progress];
+	}
+	else {
+		progressSentInfo.progress = @(0);
+	}
+	return progressSentInfo;
+}
+
+
 // Private
 
 @synthesize connectionFinished=_connectionFinished;
@@ -436,14 +467,8 @@ static NSUInteger requestCount = 0;
 
 
 - (void) handleConnectionDidReceiveData {
-	float progress = 0;
-	if (self.expectedContentLength > 0) {
-		progress = (float)self.receivedContentLength / (float)self.expectedContentLength;
-	}
 	if (self.didReceiveDataBlock) {
-		RCProgressInfo *progressInfo = [RCProgressInfo new];
-		progressInfo.progress = [NSNumber numberWithFloat:progress];
-		progressInfo.URL = [self.URLRequest URL];
+		RCProgressInfo *progressInfo = self.progressReceivedInfo;
 
 		dispatch_async(dispatch_get_main_queue(), ^{
 			self.didReceiveDataBlock(progressInfo);
@@ -452,15 +477,8 @@ static NSUInteger requestCount = 0;
 }
 
 - (void) handleConnectionDidSendData {
-	float progress = 0;
-	if (self.bodyContentLength > 0) {
-		progress = self.sentContentLength / self.bodyContentLength;
-	}
-	
 	if (self.didSendDataBlock) {				
-		RCProgressInfo *progressInfo = [RCProgressInfo new];
-		progressInfo.progress = [NSNumber numberWithFloat:progress];
-		progressInfo.URL = [self.URLRequest URL];
+		RCProgressInfo *progressInfo = self.progressSentInfo;
 
 		dispatch_async(dispatch_get_main_queue(), ^{
 			self.didSendDataBlock(progressInfo);

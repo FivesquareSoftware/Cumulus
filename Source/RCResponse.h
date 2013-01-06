@@ -104,6 +104,8 @@
 
 /** Specific HTTP response codes */
 
+- (BOOL) HTTPCanceled; // 0
+
 - (BOOL) HTTPContinue; // 100
 - (BOOL) HTTPSwitchingProtocols; // 101
 

@@ -79,6 +79,41 @@
 	STAssertEqualObjects([NSNumber numberWithInt:kHTTPStatusBadRequest], errorStatusCode, @"Status code in error should have been %d",kHTTPStatusBadRequest);
 }
 
+- (void) shouldNotCreateAnErrorForCanceledRequest {
+	RCResource *resource = [self.service resource:@"slow"];
+	__block RCResponse *localResponse = nil;
+    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+    [resource getWithCompletionBlock:^(RCResponse *response) {
+        localResponse = response;
+		dispatch_semaphore_signal(cancel_sema);
+    }];
+    [resource cancelRequests];
+	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_signal(cancel_sema);
+	dispatch_release(cancel_sema);
+	
+	NSError *error = localResponse.error;
+    STAssertNil(error, @"Status code error should have been nil");
+}
+
+- (void) shouldBeCanceled {
+	RCResource *resource = [self.service resource:@"slow"];
+	__block RCResponse *localResponse = nil;
+    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+    [resource getWithCompletionBlock:^(RCResponse *response) {
+        localResponse = response;
+		dispatch_semaphore_signal(cancel_sema);
+    }];
+    [resource cancelRequests];
+	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_signal(cancel_sema);
+	dispatch_release(cancel_sema);
+
+    
+	STAssertTrue([localResponse HTTPCanceled], @"Response#HTTPCanceled should be true: %@",localResponse);
+}
 - (void) shouldBeOk {
 	RCResource *resource = [self.endpoint resource:@"ok"];
 	RCResponse *response = [resource get];

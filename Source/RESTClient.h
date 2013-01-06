@@ -72,7 +72,6 @@
 #import "RCRequest.h"
 #import "RCDownloadRequest.h"
 #import "RCUploadRequest.h"
-#import "RCProgressInfo.h"
 #import "RCResponse.h"
 #import "RCCoder.h"
 
