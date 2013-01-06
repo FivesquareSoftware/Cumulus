@@ -73,6 +73,8 @@ extern NSString *kRESTClientCachesDirectoryName;
 
 // HTTP Status Codes (so we don't make silly mistakes :)
 
+#define kHTTPStatusCanceled 0
+
 
 #define kHTTPStatusContinue 100
 #define kHTTPStatusSwitchingProtocols 101

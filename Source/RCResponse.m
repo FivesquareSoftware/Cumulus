@@ -63,7 +63,7 @@
 
 - (NSError *) error {
 	if (nil == _error) {
-		if (NO == [self HTTPSuccessful] && nil == _request.error) {
+		if (NO == _request.wasCanceled && NO == [self HTTPSuccessful] && nil == _request.error) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
 								  [NSString stringWithFormat:@"Received %u HTTP Status code",_status], NSLocalizedDescriptionKey
 								  , _request.responseBody, NSLocalizedFailureReasonErrorKey
@@ -104,7 +104,8 @@
 		NSError *error = request.error;
 		if(error.code == NSURLErrorUserCancelledAuthentication) {
 			_status = 401;
-		} else {
+		}
+        else {
 			_status = [request.URLResponse statusCode];
 		}
     }
@@ -302,6 +303,10 @@
 // ========================================================================== //
 
 #pragma mark - Status Codes
+
+- (BOOL) HTTPCanceled {
+    return self.status == kHTTPStatusCanceled;
+}
 
 
 #pragma mark -  -100's
