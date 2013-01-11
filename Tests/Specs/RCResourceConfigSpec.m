@@ -139,6 +139,13 @@
 	STAssertEqualObjects([fullURL absoluteString], [childWithQueryString.URL absoluteString], @"Should properly append a query string");
 }
 
+- (void) shouldReturnQueryStringAsADictionary {
+	RCResource *resource = [self.service resource:@"resource"];
+	RCResource *childWithQueryString = [resource resource:@"child?foo=bar"];
+
+    STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
 - (void) shouldConvertNonStringHeaderFieldValuesToStrings {
 	RCResource *resource = [self.service resource:@"abc123"];
 	[resource setValue:[NSNumber numberWithInt:42] forHeaderField:@"Foo"];

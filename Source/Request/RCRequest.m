@@ -293,7 +293,23 @@ static NSUInteger requestCount = 0;
     return _responseDecoder;
 }
 
-
+@dynamic queryDictionary;
+- (NSDictionary *) queryDictionary {
+    NSMutableDictionary *queryDictionary = [NSMutableDictionary new];
+    NSString *queryString = [[self.URLRequest URL] query];
+    if (queryString) {
+        NSArray *paramPairs = [queryString componentsSeparatedByString:@"&"];
+        [paramPairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
+            NSArray *params = [pair componentsSeparatedByString:@"="];
+            if (params.count == 2) {
+                id key = params[0];
+                id value = params[1];
+                [queryDictionary setObject:value forKey:key];
+            }
+        }];
+    }
+    return queryDictionary;
+}
 
 
 // ========================================================================== //

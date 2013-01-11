@@ -131,7 +131,7 @@
 @property (nonatomic) NSInteger maxAuthRetries; ///< Auth challenges will be canceled if they exceed this value. Defaults to 1.
 
 @property (nonatomic, strong) id payload; ///< If this is set, #payloadEncoder is used to turn the payload into data for the HTTPBody.
-
+@property (nonatomic, readonly) NSDictionary *queryDictionary; ///< @returns the query string as a dictionary if there is one
 
 /** @} */
 
