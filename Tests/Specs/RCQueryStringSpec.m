@@ -102,6 +102,15 @@
 	STAssertEqualObjects(@"key=value&foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
+- (void) shouldReturnQueryStringAsADictionary {
+    RCResource *resource = [self.service resource:@"test/query"];
+	NSDictionary *query = @{ @"foo" : @"bar" };
+	RCResponse *response = [resource getWithQuery:query];
+
+	NSDictionary *requestQueryDictionary = [response.request queryDictionary];
+    STAssertTrue([query isEqualToDictionary:requestQueryDictionary], @"Request query dictionary should equal sent dictionary");
+}
+
 - (void) shouldGetWithQueryAndBlocks {
 	RCResource *resource = [self.service resource:@"test/query"];
 	NSDictionary *query = [NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"];
@@ -272,6 +281,7 @@
 	NSString *queryString = [[localResponse.request.URLRequest URL] query];
 	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
+
 
 
 @end

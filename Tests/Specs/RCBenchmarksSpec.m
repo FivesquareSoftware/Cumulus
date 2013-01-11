@@ -39,8 +39,11 @@
     // set up resources common to all examples here
 	self.service = [RCResource withURL:kTestServerHost];
 	self.benchmarks = [self.service resource:@"test/benchmarks"];
+//    NSLog(@"item: %@",self.specHelper.item);
 	self.largeList = self.specHelper.largeList;
+//    NSLog(@"largeList: %@",self.largeList);
 	self.complicatedList = self.specHelper.complicatedList;
+//    NSLog(@"complicatedList: %@",self.complicatedList);
 	[self warmUpServer];
 }
 
@@ -278,8 +281,8 @@
 - (void)shouldPostOneLargeResource {
 	self.benchmarks.contentType = RESTClientContentTypeJSON;
 	RCResource *largeResource = [self.benchmarks resource:@"large-resource.json"];
-	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.largeList forKey:@"list"];  // our service likes hashes not arrays as the payload
-
+//	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.largeList forKey:@"list"];  // our service likes hashes not arrays as the payload
+    NSDictionary  *payload = @{@"list" : self.largeList};
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 
 	RCResponse *localResponse = [largeResource post:payload];
@@ -297,7 +300,8 @@
 - (void)shouldPostABunchOfComplicatedResources {
 	self.benchmarks.contentType = RESTClientContentTypeJSON;
 	RCResource *complicatedResource = [self.benchmarks resource:@"complicated-resource.json"];
-	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.complicatedList forKey:@"list"];  // our service likes hashes not arrays as the payload
+//	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.complicatedList forKey:@"list"];  // our service likes hashes not arrays as the payload
+    NSDictionary *payload = @{@"list" : self.complicatedList};
 	__block BOOL success = YES;
 
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();

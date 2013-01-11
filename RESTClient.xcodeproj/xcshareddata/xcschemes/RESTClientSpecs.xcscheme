@@ -64,12 +64,22 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "MallocStackLoggingNoCompact"
+            value = "YES"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "RESTClientLoggingOn"
             value = "YES"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
+         <AdditionalOption
+            key = "MallocStackLogging"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
