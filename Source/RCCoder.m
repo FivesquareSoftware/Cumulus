@@ -70,7 +70,7 @@
 
 + (void) registerCoder:(Class)coder objectType:(Class)type mimeTypes:(NSArray *)mimeTypes fileExtensions:(NSArray *)fileExtensions {
 	if (type) {
-		[[self codersByObject] setObject:coder forKey:type];
+		[[self codersByObject] setObject:coder forKey:NSStringFromClass(type)];
 	}
 	for (NSString *mimeType in mimeTypes) {
 		[[self codersByMimeType] setObject:coder forKey:mimeType];
@@ -83,7 +83,8 @@
 
 + (id<RCCoder>) coderForObject:(id)obj {
 	id<RCCoder> coder = nil;
-	for (Class objectClass in [self codersByObject]) {
+	for (NSString *objectClassName in [self codersByObject]) {
+		Class objectClass = NSClassFromString(objectClassName);
 		if ([obj isKindOfClass:objectClass]) {
 			Class coderClass = [[self codersByObject] objectForKey:objectClass];
 			coder = [coderClass new];

@@ -125,7 +125,7 @@
 @property (nonatomic, readonly, strong) NSMutableDictionary *headers;
 @property (nonatomic, readonly) NSString *acceptHeader; ///< Convenience that returns the Accept header from headers if there is one
 @property (nonatomic, readonly) NSString *contentTypeHeader; ///< Convenience that returns the Content-Type header from headers if there is one
-@property (nonatomic) NSTimeInterval timeout; ///< If this is non-zero and a response is not received by the time this interval has elapsed, the request is canceled.
+@property (nonatomic) NSTimeInterval timeout; ///< If this is non-zero and a response is not received by the time this interval has elapsed, the request is canceled. The underlying URL request also has this value set, which means that (except in the case of POST request which the system overrides) the request will quit if it has been idle for this length of time.
 @property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< @see NSURLRequest#cachePolicy
 @property (nonatomic, readonly, strong) NSMutableArray *authProviders; ///< Given the chance to authorize a request and respond to auth challenges, in order
 @property (nonatomic) NSInteger maxAuthRetries; ///< Auth challenges will be canceled if they exceed this value. Defaults to 1.

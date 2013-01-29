@@ -745,9 +745,10 @@
 }
 
 - (void) runRequest:(RCRequest *)request withCompletionBlock:(RCCompletionBlock)completionBlock abortBlock:(RCAbortBlock)abortBlock {
-	if (self.preflightBlock) {
+	RCPreflightBlock preflightBlock = self.preflightBlock;
+	if (preflightBlock) {
 		dispatch_async(dispatch_get_main_queue(), ^{
-			BOOL success = self.preflightBlock(request);
+			BOOL success = preflightBlock(request);
 			if(success) {
 				[self dispatchRequest:request withCompletionBlock:completionBlock];
 			} else {
