@@ -99,16 +99,17 @@
 
 - (void) shouldBeCanceled {
 	RCResource *resource = [self.service resource:@"slow"];
+	resource.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
 	__block RCResponse *localResponse = nil;
-    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(1);
-	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
+//	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
     [resource getWithCompletionBlock:^(RCResponse *response) {
         localResponse = response;
 		dispatch_semaphore_signal(cancel_sema);
     }];
     [resource cancelRequests];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(cancel_sema);
+//	dispatch_semaphore_signal(cancel_sema);
 	dispatch_release(cancel_sema);
 
     

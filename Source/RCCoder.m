@@ -86,7 +86,7 @@
 	for (NSString *objectClassName in [self codersByObject]) {
 		Class objectClass = NSClassFromString(objectClassName);
 		if ([obj isKindOfClass:objectClass]) {
-			Class coderClass = [[self codersByObject] objectForKey:objectClass];
+			Class coderClass = [[self codersByObject] objectForKey:objectClassName];
 			coder = [coderClass new];
 			break;
 		}
