@@ -115,7 +115,7 @@
 @property (nonatomic, strong) NSMutableDictionary *headers;
 
 
-@property (nonatomic) NSTimeInterval timeout; ///< If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses
+@property (nonatomic) NSTimeInterval timeout; ///< If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses. The underlying URL request also has this value set for #timeoutInterval, which means that (except in the case of POST requests for which the system overrides #timeoutInterval) the request will quit if it has been idle for this length of time.
 @property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< The cache policy to pass on to request. By default uses the default for NSURLRequest.
 @property (nonatomic, strong) NSString *cachesDir; ///< The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located. This directory is created on demand as needed. Defaults to RESTClient#cachesDir.
 @property (nonatomic, strong) NSString *username; ///< If #authProviders is nil and #username and #password are not empty, an RCBasicAuthProvider is created on demand and added to #authProviders

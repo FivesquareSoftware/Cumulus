@@ -521,6 +521,10 @@ static NSUInteger requestCount = 0;
 	if (self.payload) {
 		URLRequest.HTTPBody = [self.payloadEncoder encodeObject:self.payload];
 	}
+	
+	if (self.timeout > 0) {
+		URLRequest.timeoutInterval = self.timeout;
+	}
 }
 
 - (void) processResponse:(RCResponse *)response {
