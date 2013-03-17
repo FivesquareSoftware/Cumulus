@@ -16,7 +16,7 @@
 	#import <MapKit/MapKit.h>
 	#import <QuartzCore/QuartzCore.h>
 
-	#import "RESTClient.h"
+	#import "Cumulus.h"
 	#import "NSObject+Demo.h"
 	#import "NSManagedObjectContext+Demo.h"
 	#import "NSManagedObject+Demo.h"

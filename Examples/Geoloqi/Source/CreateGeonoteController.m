@@ -1,6 +1,6 @@
 //
 //  CreateGeonoteController.m
-//  RESTClientDemo
+//  Geoloqi
 //
 //  Created by John Clayton on 12/20/11.
 //  Copyright (c) 2011 Me. All rights reserved.
@@ -9,10 +9,10 @@
 #import "CreateGeonoteController.h"
 
 
-#import "RESTClient.h"
+#import "Cumulus.h"
 
 @interface CreateGeonoteController()
-@property (nonatomic, strong) RCResource *geonoteResource;
+@property (nonatomic, strong) CMResource *geonoteResource;
 @property (nonatomic, strong) CLLocation *lastLocation;
 @end
 
@@ -31,7 +31,7 @@
 	return nil;
 }
 
-- (RCResource *) geonoteResource {
+- (CMResource *) geonoteResource {
 	if (nil == geonoteResource_) {
 		geonoteResource_  = [self.appDelegate.service resource:@"geonote/create"];
 		geonoteResource_.timeout = 15;
@@ -147,7 +147,7 @@
 							  , nil];
 		
 		[SVProgressHUD showWithStatus:@"Creating.." networkIndicator:NO];
-		[self.geonoteResource post:note withCompletionBlock:^(RCResponse *response) {
+		[self.geonoteResource post:note withCompletionBlock:^(CMResponse *response) {
 			if (response.success) {
 				[SVProgressHUD dismissWithSuccess:@"Success!"];
 				[self.navigationController popViewControllerAnimated:YES];

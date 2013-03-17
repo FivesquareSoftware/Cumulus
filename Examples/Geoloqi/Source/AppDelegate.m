@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  RESTClientExample
+//  Geoloqi
 //
 //  Created by John Clayton on 12/9/11.
 //  Copyright (c) 2011 Me. All rights reserved.
@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 
 
-#import "RESTClient.h"
+#import "Cumulus.h"
 
 @interface AppDelegate()
 - (NSURL *)applicationDocumentsDirectory;
@@ -47,7 +47,7 @@
 
 @dynamic loggedIn;
 - (BOOL) isLoggedIn {
-	return ((RCOAuth2AuthProvider *)[self.service.authProviders lastObject]).token.accessToken.length > 0;
+	return ((CMOAuth2AuthProvider *)[self.service.authProviders lastObject]).token.accessToken.length > 0;
 }
 
 
@@ -63,12 +63,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-	self.service = [RCResource withURL:@"https://api.geoloqi.com/1"];
-	service_.contentType = RESTClientContentTypeJSON;
+	self.service = [CMResource withURL:@"https://api.geoloqi.com/1"];
+	service_.contentType = CMContentTypeJSON;
 
 	// set up a preflight block to make sure we are logging in	
 	__weak AppDelegate *self_ = self;
-	RCPreflightBlock preflight = ^(RCRequest *request) {
+	CMPreflightBlock preflight = ^(CMRequest *request) {
 		NSLog(@"Preflighting request: %@, headers: %@",request, request.headers);
 		if (NO == self_.isLoggedIn) {
 			[SVProgressHUD dismissWithError:@"Not logged in"];
@@ -80,8 +80,8 @@
 	
 	NSURL *authorizationURL = [self.service.URL URLByAppendingPathComponent:@"oauth/authorize"];
 
-	RCResource *tokenService = [RCResource withURL:@"https://api.geoloqi.com/1/oauth/token"];
-	tokenService.contentType = RESTClientContentTypeJSON;
+	CMResource *tokenService = [CMResource withURL:@"https://api.geoloqi.com/1/oauth/token"];
+	tokenService.contentType = CMContentTypeJSON;
 //	tokenService.username =  @"59f5e7440a1fc56e9cc096c802ce8649";
 //	tokenService.password = @"f6d8f9485b66bc332ec3c084ba76f0fd";
 
@@ -89,7 +89,7 @@
 	tokenService.password = @"3c240df657788402367d2364642d86af";
 
 	
-	RCOAuth2AuthProvider *provider = [RCOAuth2AuthProvider withAuthorizationURL:authorizationURL tokenService:tokenService];
+	CMOAuth2AuthProvider *provider = [CMOAuth2AuthProvider withAuthorizationURL:authorizationURL tokenService:tokenService];
 	provider.token = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] dataForKey:@"authToken"]]; 
 
 	[service_ addAuthProvider:provider];
@@ -136,7 +136,7 @@
     {
         return managedObjectModel_;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RESTClientDemo" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"GeoloqiDemo" withExtension:@"momd"];
     managedObjectModel_ = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return managedObjectModel_;
 }
@@ -152,7 +152,7 @@
         return persistentStoreCoordinator_;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"RESTClientDemo.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Geoloqi.sqlite"];
     
     NSError *error = nil;
     persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];

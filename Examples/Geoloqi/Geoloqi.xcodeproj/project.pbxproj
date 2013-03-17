@@ -35,13 +35,13 @@
 		A4CDC3BC155DCA7C00A6299D /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC3A0155DCA7C00A6299D /* Place.m */; };
 		A4CDC3BD155DCA7C00A6299D /* PointView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC3A2155DCA7C00A6299D /* PointView.m */; };
 		A4CDC3BE155DCA7C00A6299D /* RecentLocationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CDC3A4155DCA7C00A6299D /* RecentLocationsController.m */; };
-		A4CDC3C0155DCAEE00A6299D /* libRESTClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3BF155DCAEE00A6299D /* libRESTClient.a */; };
 		A4CDC3C2155DCB7000A6299D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C1155DCB7000A6299D /* QuartzCore.framework */; };
 		A4CDC3C6155DCBB300A6299D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C3155DCBB300A6299D /* CoreLocation.framework */; };
 		A4CDC3C7155DCBB300A6299D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C4155DCBB300A6299D /* MobileCoreServices.framework */; };
 		A4CDC3C8155DCBB300A6299D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C5155DCBB300A6299D /* Security.framework */; };
 		A4CDC3CA155DCD1500A6299D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC3C9155DCD1500A6299D /* MapKit.framework */; };
 		A4CDC3CD155DCD3100A6299D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A4CDC3CB155DCD3100A6299D /* InfoPlist.strings */; };
+		A4FB355C16F6795700FA8B62 /* libCumulus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4FB355B16F6795700FA8B62 /* libCumulus.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,13 +98,13 @@
 		A4CDC3A2155DCA7C00A6299D /* PointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointView.m; sourceTree = "<group>"; };
 		A4CDC3A3155DCA7C00A6299D /* RecentLocationsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentLocationsController.h; sourceTree = "<group>"; };
 		A4CDC3A4155DCA7C00A6299D /* RecentLocationsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentLocationsController.m; sourceTree = "<group>"; };
-		A4CDC3BF155DCAEE00A6299D /* libRESTClient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRESTClient.a; path = libRESTClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4CDC3C1155DCB7000A6299D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A4CDC3C3155DCBB300A6299D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		A4CDC3C4155DCBB300A6299D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		A4CDC3C5155DCBB300A6299D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A4CDC3C9155DCD1500A6299D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A4CDC3CC155DCD3100A6299D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Source/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		A4FB355B16F6795700FA8B62 /* libCumulus.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libCumulus.a; path = "../../build/Release-iphoneos/libCumulus.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,12 +112,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4FB355C16F6795700FA8B62 /* libCumulus.a in Frameworks */,
 				A4CDC3CA155DCD1500A6299D /* MapKit.framework in Frameworks */,
 				A4CDC3C6155DCBB300A6299D /* CoreLocation.framework in Frameworks */,
 				A4CDC3C7155DCBB300A6299D /* MobileCoreServices.framework in Frameworks */,
 				A4CDC3C8155DCBB300A6299D /* Security.framework in Frameworks */,
 				A4CDC3C2155DCB7000A6299D /* QuartzCore.framework in Frameworks */,
-				A4CDC3C0155DCAEE00A6299D /* libRESTClient.a in Frameworks */,
 				A4CDC34A155DC9C000A6299D /* UIKit.framework in Frameworks */,
 				A4CDC34C155DC9C000A6299D /* Foundation.framework in Frameworks */,
 				A4CDC34E155DC9C000A6299D /* CoreGraphics.framework in Frameworks */,
@@ -218,7 +218,7 @@
 		A4CDC3CE155DD15C00A6299D /* Workspace */ = {
 			isa = PBXGroup;
 			children = (
-				A4CDC3BF155DCAEE00A6299D /* libRESTClient.a */,
+				A4FB355B16F6795700FA8B62 /* libCumulus.a */,
 			);
 			name = Workspace;
 			sourceTree = "<group>";

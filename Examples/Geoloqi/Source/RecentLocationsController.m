@@ -1,6 +1,6 @@
 //
 //  RecentLocationsController.m
-//  RESTClientDemo
+//  Geoloqi
 //
 //  Created by John Clayton on 12/10/11.
 //  Copyright (c) 2011 Me. All rights reserved.
@@ -12,7 +12,7 @@
 #import "PointView.h"
 
 @interface RecentLocationsController()
-@property (strong, nonatomic) RCResource *locationsResource;
+@property (strong, nonatomic) CMResource *locationsResource;
 - (void) refreshFromRemoteResource;
 @end
 
@@ -25,14 +25,14 @@
 
 @synthesize locationsResource=locationsResource_;
 
-- (RCResource *) locationsResource {
+- (CMResource *) locationsResource {
 	if (nil == locationsResource_) {
 		locationsResource_ = [self.appDelegate.service resource:@"location/history?count=100"];
 		
 		// Set up a post processing block to map to core data
 		
 		NSManagedObjectContext *childContext = [self.managedObjectContext newChildContext];
-		RCPostProcessorBlock postProcessor = ^(RCResponse *response, id result) {
+		CMPostProcessorBlock postProcessor = ^(CMResponse *response, id result) {
 			
 			if (NO == response.success) {
 				return result;
@@ -62,7 +62,7 @@
 			if (NO == [childContext saveChild:&saveError]) {
 				NSLog(@"Could not save locations: %@ (%@)",[saveError localizedDescription], [saveError userInfo]);
 			}
-			return localLocations;
+			return (id)localLocations;
 		};
 		locationsResource_.postProcessorBlock = postProcessor;		
 	}
@@ -140,7 +140,7 @@
 
 - (void) refreshFromRemoteResource {
 	[SVProgressHUD showWithStatus:@"Updating.." networkIndicator:NO];
-	[self.locationsResource getWithCompletionBlock:^(RCResponse *response) {
+	[self.locationsResource getWithCompletionBlock:^(CMResponse *response) {
 		if (response.success) {
 			[SVProgressHUD dismiss];
 		} else {

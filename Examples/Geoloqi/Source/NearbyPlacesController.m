@@ -1,6 +1,6 @@
 //
 //  NearbyPlacesController.m
-//  RESTClientDemo
+//  Geoloqi
 //
 //  Created by John Clayton on 12/10/11.
 //  Copyright (c) 2011 Me. All rights reserved.
@@ -11,7 +11,7 @@
 #import "Place.h"
 
 @interface NearbyPlacesController()
-@property (strong, nonatomic) RCResource *placesResource;
+@property (strong, nonatomic) CMResource *placesResource;
 - (void) refreshFromRemoteResource;
 @end
 
@@ -24,14 +24,14 @@
 
 @synthesize placesResource=placesResource_;
 
-- (RCResource *) placesResource {
+- (CMResource *) placesResource {
 	if (nil == placesResource_) {
 		placesResource_ = [self.appDelegate.service resource:@"place"];
 		
 		// Set up a post processing block to map to core data
 		
 		NSManagedObjectContext *childContext = [self.managedObjectContext newChildContext];
-		RCPostProcessorBlock postProcessor = ^(RCResponse *response, id result) {
+		CMPostProcessorBlock postProcessor = ^(CMResponse *response, id result) {
 			
 			if (NO == response.success) {
 				return result;
@@ -61,7 +61,7 @@
 			if (NO == [childContext saveChild:&saveError]) {
 				NSLog(@"Could not save places: %@ (%@)",[saveError localizedDescription], [saveError userInfo]);
 			}
-			return localPlaces;
+			return (id)localPlaces;
 		};
 		placesResource_.postProcessorBlock = postProcessor;
 		
@@ -69,7 +69,7 @@
 		// set up a preflight block to make sure we are logging in
 		
 		__weak AppDelegate *appDelegate = self.appDelegate;
-		RCPreflightBlock preflight = ^(RCRequest *request) {
+		CMPreflightBlock preflight = ^(CMRequest *request) {
 			NSLog(@"Preflighting request: %@, headers: %@",request, request.headers);
 			if (NO == appDelegate.isLoggedIn) {
 				[SVProgressHUD dismissWithError:@"Not logged in"];
@@ -163,10 +163,10 @@
 - (void) refreshFromRemoteResource {
 	CLLocation *location = self.appDelegate.locationManager.location;
 	// https://api.geoloqi.com/1/place/nearby?layer_id=10B&latitude=45.5246&longitude=-122.6843
-	RCResource *nearbyPlacesResource = [self.placesResource resourceWithFormat:@"nearby?layer_id=1Wn&latitude=%f&longitude=%f",location.coordinate.latitude,location.coordinate.longitude];
+	CMResource *nearbyPlacesResource = [self.placesResource resourceWithFormat:@"nearby?layer_id=1Wn&latitude=%f&longitude=%f",location.coordinate.latitude,location.coordinate.longitude];
 
 	[SVProgressHUD showWithStatus:@"Fetching.." networkIndicator:NO];
-	[nearbyPlacesResource getWithCompletionBlock:^(RCResponse *response) {
+	[nearbyPlacesResource getWithCompletionBlock:^(CMResponse *response) {
 		if (response.success) {
 			[SVProgressHUD dismiss];
 		} else {

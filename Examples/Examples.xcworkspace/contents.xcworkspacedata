@@ -5,6 +5,6 @@
       location = "group:Geoloqi/Geoloqi.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../RESTClient.xcodeproj">
+      location = "group:../Cumulus.xcodeproj">
    </FileRef>
 </Workspace>

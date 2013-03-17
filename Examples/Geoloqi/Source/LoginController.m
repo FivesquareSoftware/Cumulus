@@ -1,6 +1,6 @@
 //
 //  LoginController.m
-//  RESTClientExample
+//  Geoloqi
 //
 //  Created by John Clayton on 12/10/11.
 //  Copyright (c) 2011 Me. All rights reserved.
@@ -81,9 +81,9 @@
 
 - (IBAction)loginAction:(id)sender {
 	if (self.usernameTextField.text.length && self.passwordTextField.text.length) {
-		RCOAuth2AuthProvider *authProvider = [self.appDelegate.service.authProviders lastObject];
+		CMOAuth2AuthProvider *authProvider = [self.appDelegate.service.authProviders lastObject];
 		[SVProgressHUD showWithStatus:@"Logging in.." maskType:SVProgressHUDMaskTypeClear networkIndicator:NO];		
-		[authProvider requestAccessTokenWithUsername:self.usernameTextField.text password:self.passwordTextField.text completionBlock:^(RCResponse *response) {
+		[authProvider requestAccessTokenWithUsername:self.usernameTextField.text password:self.passwordTextField.text completionBlock:^(CMResponse *response) {
 			if (response.success) {		
 				if (self.appDelegate.isLoggedIn) {
 					// You might want to store this in the keychain in your app ...

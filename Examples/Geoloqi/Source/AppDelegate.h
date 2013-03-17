@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  RESTClientExample
+//  Geoloqi
 //
 //  Created by John Clayton on 12/9/11.
 //  Copyright (c) 2011 Me. All rights reserved.
@@ -18,7 +18,7 @@
 
 @property (readonly, strong, nonatomic) CLLocationManager *locationManager;
 
-@property (strong, nonatomic) RCResource *service;
+@property (strong, nonatomic) CMResource *service;
 @property (readonly, getter = isLoggedIn) BOOL loggedIn;
 
 

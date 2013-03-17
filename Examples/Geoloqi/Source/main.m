@@ -1,6 +1,6 @@
 //
 //  main.m
-//  RESTClientExample
+//  Geoloqi
 //
 //  Created by John Clayton on 12/9/11.
 //  Copyright (c) 2011 Me. All rights reserved.

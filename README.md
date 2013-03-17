@@ -173,9 +173,7 @@ Cumulus does even more, like direct from disk uploads, OAuth2 authentication, au
 ## Contributors
 
 John Clayton <Cumulus@fivesquaresoftware.com>  
-James Cicenia <james@jimijon.com>  
-Kurt Arnlund <kurt@IngeniousArtsAndTechnologies.com>  
 
-Patches are welcome, pull requests are encouraged.
+Patches are welcome, pull requests make us all excited.
 
 
