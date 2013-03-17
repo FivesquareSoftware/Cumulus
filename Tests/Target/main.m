@@ -1,6 +1,6 @@
 //
 //  main.m
-//  RESTClientSpecs
+//  CumulusSpecs
 //
 //  Created by John Clayton on 9/8/11.
 //  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.

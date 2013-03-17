@@ -9,8 +9,8 @@
 
 #import "SpecHelper.h"
 
-NSString *kTestServerHost = RESTClientTestServer;
-NSString *kTestServerHostSSL = RESTClientTestServerSSL;
+NSString *kTestServerHost = CumulusTestServer;
+NSString *kTestServerHostSSL = CumulusTestServerSSL;
 
 @implementation SpecHelper
 
@@ -71,9 +71,9 @@ NSString *kTestServerHostSSL = RESTClientTestServerSSL;
 
 - (void) cleanCaches {
 	NSFileManager *fm = [NSFileManager new];
-	NSArray *cacheFiles = [fm contentsOfDirectoryAtPath:[RESTClient cachesDir] error:NULL];
+	NSArray *cacheFiles = [fm contentsOfDirectoryAtPath:[Cumulus cachesDir] error:NULL];
 	for (NSString *file in cacheFiles) {
-		NSString *filePath = [[RESTClient cachesDir] stringByAppendingPathComponent:file];
+		NSString *filePath = [[Cumulus cachesDir] stringByAppendingPathComponent:file];
 		NSError *error = nil;
 		if (NO == [fm removeItemAtPath:filePath error:&error]) {
 			NSLog(@"Could clear file %@: %@ (%@)",filePath, [error localizedDescription], [error userInfo]);

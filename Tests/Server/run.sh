@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #  run.sh
-#  RESTClient
+#  Cumulus
 #
 #  Created by John Clayton on 9/10/11.
 #  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.

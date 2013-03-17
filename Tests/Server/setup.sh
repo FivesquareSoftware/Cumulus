@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #  setup.sh
-#  RESTClient
+#  Cumulus
 #
 #  Created by John Clayton on 10/16/11.
 #  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.

@@ -1,11 +1,11 @@
 //
 //  Specs.xcconfig
-//  RESTClient
+//  Cumulus
 //
 //  Created by John Clayton on 11/27/11.
 //  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
-RESTClientTestServerHost = localhost
-RESTClientTestServerPort = 4567
-RESTClientTestServerSSLPort = 4543
+CumulusTestServerHost = localhost
+CumulusTestServerPort = 4567
+CumulusTestServerSSLPort = 4543
