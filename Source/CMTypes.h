@@ -44,8 +44,8 @@ typedef BOOL (^CMPreflightBlock)(CMRequest *request);
 /** A block that is called once when a request begins, and subsequently whenever a request receives more data from the server. 
  *
  * @param progressInfo is an CMProgressInfo instance that responds to the following keys:
- *   - kRESTClientProgressInfoKeyURL (URL)
- *   - kRESTClientProgressInfoKeyProgress (progress)
+ *   - kCumulusProgressInfoKeyURL (URL)
+ *   - kCumulusProgressInfoKeyProgress (progress)
  */
 typedef void (^CMProgressBlock)(id progressInfo);
 

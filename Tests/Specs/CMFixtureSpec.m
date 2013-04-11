@@ -59,7 +59,7 @@
 
 - (void) shouldGetAStringFixture {
 	CMResource *resource = [self.service resource:@"anything"];
-	[resource setFixture:@"FOO" forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodGET];
 	resource.contentType = CMContentTypeText;
     CMResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
@@ -69,7 +69,7 @@
 - (void) shouldGetADataFixture {
 	CMResource *resource = [self.service resource:@"anything"];
 	NSData *data = [@"FOO" dataUsingEncoding:NSUTF8StringEncoding];
-	[resource setFixture:data forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:data forHTTPMethod:kCumulusHTTPMethodGET];
     CMResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, data, @"Result did not equal data");
@@ -78,7 +78,7 @@
 - (void) shouldGetAnItemFixture {
 	CMResource *resource = [self.service resource:@"anything"];
 	resource.contentType = CMContentTypeJSON;
-	[resource setFixture:self.specHelper.item forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:self.specHelper.item forHTTPMethod:kCumulusHTTPMethodGET];
 
     CMResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
@@ -88,7 +88,7 @@
 - (void) shouldGetAListFixture {
 	CMResource *resource = [self.service resource:@"anything"];
 	resource.contentType = CMContentTypeJSON;
-	[resource setFixture:self.specHelper.list forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:self.specHelper.list forHTTPMethod:kCumulusHTTPMethodGET];
 
     CMResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
@@ -99,7 +99,7 @@
 	CMResource *resource = [self.service resource:@"anything"];
 	UIImage *image = [UIImage imageNamed:@"t_hero.png"];
 	NSData *imageData = UIImagePNGRepresentation(image);
-	[resource setFixture:image forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:image forHTTPMethod:kCumulusHTTPMethodGET];
 
     CMResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
@@ -112,7 +112,7 @@
 	UIImage *image = [UIImage imageNamed:@"t_hero.png"];
 	NSData *imageData = UIImagePNGRepresentation(image);
 
-	[resource setFixture:imageURL forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:imageURL forHTTPMethod:kCumulusHTTPMethodGET];
 	
     CMResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
@@ -129,7 +129,7 @@
 
 - (void) shouldNotGetAFixtureMeantForPost {
 	CMResource *resource = [self.service resource:@"index"];
-	[resource setFixture:@"FOO" forHTTPMethod:kRESTClientHTTPMethodPOST];
+	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodPOST];
 	resource.contentType = CMContentTypeText;
     CMResponse *response = [resource get];
     STAssertTrue(response.success, @"Response should have succeeded: %@",response);
@@ -140,7 +140,7 @@
 	CMResource *resource = [self.service resource:@"anything"];
 	resource.contentType = CMContentTypeText;
 
-	[Cumulus addFixture:@"FOO" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kRESTClientHTTPMethodGET,[resource.URL absoluteString]]];
+	[Cumulus addFixture:@"FOO" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kCumulusHTTPMethodGET,[resource.URL absoluteString]]];
 	[Cumulus useFixtures:YES];
 
 	CMResponse *response = [resource get];
@@ -151,9 +151,9 @@
 - (void) shouldNotUseAGlobalFixtureWhenThereIsALocalFixture {
 	CMResource *resource = [self.service resource:@"index"];
 	resource.contentType = CMContentTypeText;
-	[resource setFixture:@"FOO" forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodGET];
 
-	[Cumulus addFixture:@"BAR" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kRESTClientHTTPMethodGET,[resource.URL absoluteString]]];
+	[Cumulus addFixture:@"BAR" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kCumulusHTTPMethodGET,[resource.URL absoluteString]]];
 	[Cumulus useFixtures:YES];
 	
 	CMResponse *response = [resource get];
@@ -165,7 +165,7 @@
 	CMResource *resource = [self.service resource:@"index"];
 	resource.contentType = CMContentTypeText;
 	
-	[Cumulus addFixture:@"FOO" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kRESTClientHTTPMethodGET,[resource.URL absoluteString]]];
+	[Cumulus addFixture:@"FOO" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kCumulusHTTPMethodGET,[resource.URL absoluteString]]];
 	[Cumulus useFixtures:NO];
 	
 	CMResponse *response = [resource get];
@@ -187,7 +187,7 @@
 	NSData *imageData = asURL ? [NSData dataWithContentsOfURL:imageURL] : UIImagePNGRepresentation(image);
 
 	id fixture = asURL ? imageURL : image;
-	[resource setFixture:fixture forHTTPMethod:kRESTClientHTTPMethodGET];
+	[resource setFixture:fixture forHTTPMethod:kCumulusHTTPMethodGET];
 
 	// Set up a mock to receive progress blocks
 	__block id mockProgressObject = [OCMockObject mockForClass:[NSObject class]];
@@ -223,7 +223,7 @@
 	__block NSData *resultData = nil;
 	CMCompletionBlock completionBlock = ^(CMResponse *response) {
 		localResponse = response;
-		downloadedFileURL = [localResponse.result valueForKey:kRESTClientProgressInfoKeyTempFileURL];
+		downloadedFileURL = [localResponse.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
 		NSFileManager *fm = [[NSFileManager alloc] init];
 		fileExistedAtCompletion = [fm fileExistsAtPath:[downloadedFileURL path]];
 		resultData = [NSData dataWithContentsOfURL:downloadedFileURL];

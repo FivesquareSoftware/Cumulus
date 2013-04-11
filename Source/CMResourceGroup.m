@@ -126,4 +126,7 @@
 	});
 }
 
+- (void) do:(void(^)(CMResourceGroup *group))groupWork withCompletionBlock:(void(^)(NSArray *responses))completionBlock {
+}
+
 @end

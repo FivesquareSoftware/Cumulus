@@ -71,7 +71,7 @@
 	
 	// Get the mime-type from UTI
 	NSString *MIMEType = [self mimeTypeForFileAtPath:[self.fileToUploadURL path]];
-	[URLRequest setValue:MIMEType forHTTPHeaderField:kRESTClientHTTPHeaderContentType];
+	[URLRequest setValue:MIMEType forHTTPHeaderField:kCumulusHTTPHeaderContentType];
 }
 
 // ========================================================================== //

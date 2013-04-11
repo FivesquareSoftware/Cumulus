@@ -162,7 +162,7 @@
 	// Set it to the Auth header
 	if (signature && signature.length) {
 		NSString *authHeader = [NSString stringWithFormat:@"AWS %@:%@", self.credentials.accessKey, signature];
-        [URLRequest setValue:authHeader forHTTPHeaderField:kRESTClientHTTPHeaderAuthorization];
+        [URLRequest setValue:authHeader forHTTPHeaderField:kCumulusHTTPHeaderAuthorization];
         [URLRequest setValue:self.credentials.securityToken forHTTPHeaderField:@"x-amz-security-token"];
         [URLRequest setValue:amazonDate forHTTPHeaderField:@"Date"];
 	}

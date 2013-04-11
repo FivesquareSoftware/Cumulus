@@ -35,22 +35,22 @@
 
 #import "CMConstants.h"
 
-NSString *kRESTClientErrorDomain = @"CumulusErrorDomain";
+NSString *kCumulusErrorDomain = @"CumulusErrorDomain";
 NSString *kRESTCLientHTTPStatusCodeErrorKey = @"Failing HTTP Status Code";
 
-NSString *kRESTClientHTTPMethodGET = @"GET";
-NSString *kRESTClientHTTPMethodPOST = @"POST";
-NSString *kRESTClientHTTPMethodPUT = @"PUT";
-NSString *kRESTClientHTTPMethodDELETE = @"DELETE";
-NSString *kRESTClientHTTPMethodHEAD = @"HEAD";
+NSString *kCumulusHTTPMethodGET = @"GET";
+NSString *kCumulusHTTPMethodPOST = @"POST";
+NSString *kCumulusHTTPMethodPUT = @"PUT";
+NSString *kCumulusHTTPMethodDELETE = @"DELETE";
+NSString *kCumulusHTTPMethodHEAD = @"HEAD";
 
-NSString *kRESTClientHTTPHeaderAccept = @"Accept";
-NSString *kRESTClientHTTPHeaderContentType = @"Content-Type";
-NSString *kRESTClientHTTPHeaderAuthorization = @"Authorization";
+NSString *kCumulusHTTPHeaderAccept = @"Accept";
+NSString *kCumulusHTTPHeaderContentType = @"Content-Type";
+NSString *kCumulusHTTPHeaderAuthorization = @"Authorization";
 
-NSString *kRESTClientProgressInfoKeyURL = @"URL";
-NSString *kRESTClientProgressInfoKeyTempFileURL = @"tempFileURL";
-NSString *kRESTClientProgressInfoKeyFilename = @"filename";
-NSString *kRESTClientProgressInfoKeyProgress = @"progress";
+NSString *kCumulusProgressInfoKeyURL = @"URL";
+NSString *kCumulusProgressInfoKeyTempFileURL = @"tempFileURL";
+NSString *kCumulusProgressInfoKeyFilename = @"filename";
+NSString *kCumulusProgressInfoKeyProgress = @"progress";
 
-NSString *kRESTClientCachesDirectoryName = @"Cumulus";
+NSString *kCumulusCachesDirectoryName = @"Cumulus";

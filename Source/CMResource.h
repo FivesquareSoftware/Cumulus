@@ -287,10 +287,10 @@
 /** Downloads the data represented by the receiver directly to disk instead of holding it in memory. When the request is complete #result holds an instance of CMProgressInfo with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it. 
  *
  * The progress info object IS KVC for the following keys, and you can use the constants if you wish:
- *   - kRESTClientProgressInfoKeyURL (URL)
- *   - kRESTClientProgressInfoKeyTempFileURL (tempFileURL)
- *   - kRESTClientProgressInfoKeyFilename (filename)
- *   - kRESTClientProgressInfoKeyProgress (progress)
+ *   - kCumulusProgressInfoKeyURL (URL)
+ *   - kCumulusProgressInfoKeyTempFileURL (tempFileURL)
+ *   - kCumulusProgressInfoKeyFilename (filename)
+ *   - kCumulusProgressInfoKeyProgress (progress)
  */
 - (void) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 

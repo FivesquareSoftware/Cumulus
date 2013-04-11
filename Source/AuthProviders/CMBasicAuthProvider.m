@@ -101,7 +101,7 @@
 - (void) addAuthHeader:(NSMutableURLRequest *)urlRequest {
 	NSString *encodedCredentials = [self encodedCredentials];
 	if(encodedCredentials) {
-		[urlRequest setValue:encodedCredentials forHTTPHeaderField:kRESTClientHTTPHeaderAuthorization];
+		[urlRequest setValue:encodedCredentials forHTTPHeaderField:kCumulusHTTPHeaderAuthorization];
 	}
 }
 

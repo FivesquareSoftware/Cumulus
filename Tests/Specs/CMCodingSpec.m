@@ -104,7 +104,7 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeJSONUsingAcceptWhenServerSendsWrongContentType {
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/json/wrong-content-type"];
-	[resource setValue:@"application/json" forHeaderField:kRESTClientHTTPHeaderAccept];
+	[resource setValue:@"application/json" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
@@ -135,7 +135,7 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeXMLUsingAcceptWhenServerSendsWrongContentType {
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/plist/wrong-content-type"];
-	[resource setValue:@"application/xml" forHeaderField:kRESTClientHTTPHeaderAccept];
+	[resource setValue:@"application/xml" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
@@ -157,7 +157,7 @@ static NSString *kHelloWorld = @"Hello World!";
 
 - (void)shouldDecodeTextUsingAcceptWhenServerSendsWrongContentType {
 	CMResource *resource = [self.service resource:@"test/decoding/text/wrong-content-type"];
-	[resource setValue:@"text/plain" forHeaderField:kRESTClientHTTPHeaderAccept];
+	[resource setValue:@"text/plain" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
@@ -181,7 +181,7 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeImageUsingAcceptWhenServerSendsWrongContentType {
 	UIImage *image =  [UIImage imageNamed:@"t_hero.png"];
 	CMResource *resource = [self.service resource:@"test/decoding/image/wrong-content-type"];
-	[resource setValue:@"image/png" forHeaderField:kRESTClientHTTPHeaderAccept];
+	[resource setValue:@"image/png" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
 	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);

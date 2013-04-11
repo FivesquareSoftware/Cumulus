@@ -50,7 +50,7 @@
 - (void)shouldNotBeAbleToStartARequestThatIsStarted {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
-	[URLRequest setHTTPMethod:kRESTClientHTTPMethodGET];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 
@@ -63,7 +63,7 @@
 - (void)shouldNotBeAbleToStartARequestThatIsCanceled {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
-	[URLRequest setHTTPMethod:kRESTClientHTTPMethodGET];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	[request startWithCompletionBlock:nil];
@@ -74,7 +74,7 @@
 - (void)shouldNotBeAbleToStartARequestThatIsFinished {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
-	[URLRequest setHTTPMethod:kRESTClientHTTPMethodGET];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	
@@ -94,7 +94,7 @@
 	NSString *endpoint = [NSString stringWithFormat:@"%@/slow",kTestServerHost];
 
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
-	[URLRequest setHTTPMethod:kRESTClientHTTPMethodGET];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
@@ -110,7 +110,7 @@
 	NSString *endpoint = [NSString stringWithFormat:@"%@/slow",kTestServerHost];
 	
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
-	[URLRequest setHTTPMethod:kRESTClientHTTPMethodGET];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
@@ -133,7 +133,7 @@
 - (void) shouldTimeoutWhenNoResponseAfterTimeoutInterval {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/slow",kTestServerHost];
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
-	[URLRequest setHTTPMethod:kRESTClientHTTPMethodGET];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	request.timeout = .01;
@@ -154,7 +154,7 @@
 - (void) shouldRunCompletionBlockOnTimeout {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/slow",kTestServerHost];
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
-	[URLRequest setHTTPMethod:kRESTClientHTTPMethodGET];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	request.timeout = .01;

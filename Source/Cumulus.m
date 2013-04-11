@@ -89,7 +89,7 @@
 			NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 			NSString *systemCaches = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
 			if (systemCaches) {
-				cachesDir = [systemCaches stringByAppendingPathComponent:kRESTClientCachesDirectoryName];
+				cachesDir = [systemCaches stringByAppendingPathComponent:kCumulusCachesDirectoryName];
 			}
 		}
 	}
@@ -192,17 +192,17 @@ static BOOL _usingFixtures = NO;
 #pragma mark -GET
 
 + (CMResponse *) get:(id)URL {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
 	return [resource get];
 }
 
 + (void) get:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
 	[resource getWithCompletionBlock:completionBlock];
 }
 
 + (void) get:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
 	[resource getWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
@@ -210,58 +210,58 @@ static BOOL _usingFixtures = NO;
 #pragma mark -HEAD
 
 + (CMResponse *) head:(id)URL {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodHEAD];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodHEAD];
 	return [resource head];
 }
 
 + (void) head:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodHEAD];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodHEAD];
 	[resource headWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -DELETE
 
 + (CMResponse *) delete:(id)URL {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodDELETE];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodDELETE];
 	return [resource delete];
 }
 
 + (void) delete:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodDELETE];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodDELETE];
 	[resource deleteWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -POST
 
 + (CMResponse *) post:(id)URL payload:(id)payload {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPOST];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPOST];
 	return [resource post:payload];
 }
 
 + (void) post:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPOST];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPOST];
 	[resource post:payload withCompletionBlock:completionBlock];
 }
 
 + (void) post:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPOST];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPOST];
 	[resource post:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 #pragma mark -PUT
 
 + (CMResponse *) put:(id)URL payload:(id)payload {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPUT];
 	return [resource put:payload];
 }
 
 + (void) put:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPUT];
 	[resource put:payload withCompletionBlock:completionBlock];
 }
 
 + (void) put:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPUT];
 	[resource put:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
@@ -269,12 +269,12 @@ static BOOL _usingFixtures = NO;
 #pragma mark -Files
 
 + (void) download:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodGET];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
 	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 + (void) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMResource *resource = [self configuredResourceForURL:URL method:kRESTClientHTTPMethodPUT];
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPUT];
 	[resource uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 

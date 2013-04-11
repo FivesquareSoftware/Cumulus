@@ -124,7 +124,7 @@
 - (void) addAuthHeader:(NSMutableURLRequest *)URLRequest {
 	if(self.token.accessToken.length) {
 		NSString *authHeader = [NSString stringWithFormat:@"OAuth %@",self.token.accessToken];
-		[URLRequest setValue:authHeader forHTTPHeaderField:kRESTClientHTTPHeaderAuthorization];
+		[URLRequest setValue:authHeader forHTTPHeaderField:kCumulusHTTPHeaderAuthorization];
 	}
 }
 

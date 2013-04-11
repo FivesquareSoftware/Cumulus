@@ -396,7 +396,7 @@
 
 
 - (CMResponse *) get {        
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET];
     return [self runBlockingRequest:request];	
 }
 
@@ -405,13 +405,13 @@
 }
 
 - (void) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET];
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) getWithQuery:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET query:query];
     return [self runBlockingRequest:request];	
 }
 
@@ -420,7 +420,7 @@
 }
 
 - (void) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET query:query];
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
@@ -430,22 +430,22 @@
 
 
 - (CMResponse *) head {
-    CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodHEAD];
+    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD];
     return [self runBlockingRequest:request];	
 }
 
 - (void) headWithCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodHEAD];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD];
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) headWithQuery:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodHEAD query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
     return [self runBlockingRequest:request];	
 }
 
 - (void) headWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodHEAD query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
@@ -454,22 +454,22 @@
 
 
 - (CMResponse *) delete {
-    CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodDELETE];
+    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE];
     return [self runBlockingRequest:request];	
 }
 
 - (void) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodDELETE];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE];
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) deleteWithQuery:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodDELETE query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE query:query];
     return [self runBlockingRequest:request];	
 }
 
 - (void) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodDELETE query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE query:query];
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
@@ -478,7 +478,7 @@
 
 
 - (CMResponse *) post:(id)payload {
-    CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPOST];
+    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
     request.payload = payload;
     return [self runBlockingRequest:request];	
 }
@@ -488,14 +488,14 @@
 }
 
 - (void) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPOST];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) post:(id)payload withQuery:(id)query {
-    CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPOST query:query];
+    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST query:query];
     request.payload = payload;
     return [self runBlockingRequest:request];	
 }
@@ -505,7 +505,7 @@
 }
 
 - (void) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPOST query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST query:query];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
@@ -516,7 +516,7 @@
 
 
 - (CMResponse *) put:(id)payload {
-    CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPUT];
+    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
     request.payload = payload;
     return [self runBlockingRequest:request];	
 }
@@ -526,14 +526,14 @@
 }
 
 - (void) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPUT];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) put:(id)payload withQuery:(id)query {
-    CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPUT query:query];
+    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT query:query];
     request.payload = payload;
     return [self runBlockingRequest:request];	
 }
@@ -543,7 +543,7 @@
 }
 
 - (void) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query {
-	CMRequest *request = [self requestForHTTPMethod:kRESTClientHTTPMethodPUT query:query];
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT query:query];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	[self runRequest:request withCompletionBlock:completionBlock];
@@ -591,10 +591,10 @@
 }
 
 - (CMRequest *) downloadRequestWithQuery:query {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodGET query:query];
+	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodGET query:query];
 	CMRequest *request;
 	id fixture = nil;
-	if ( (fixture = [self fixtureForHTTPMethod:kRESTClientHTTPMethodGET]) ) {
+	if ( (fixture = [self fixtureForHTTPMethod:kCumulusHTTPMethodGET]) ) {
 		request = [[CMFixtureDownloadRequest alloc] initWithURLRequest:URLRequest fixture:fixture];
 	} else {
 		request = [[CMDownloadRequest alloc] initWithURLRequest:URLRequest];
@@ -605,7 +605,7 @@
 }
 
 - (CMRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kRESTClientHTTPMethodPUT query:query];
+	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodPUT query:query];
 	CMUploadRequest *request = [[CMUploadRequest alloc] initWithURLRequest:URLRequest];
 	[self configureRequest:request];
 	request.fileToUploadURL = fileURL;
@@ -623,24 +623,24 @@
 - (void) setHeadersForContentType:(CMContentType)contentType {
 	switch (contentType) {
 		case CMContentTypeJSON:
-			[self.headers setObject:@"application/json" forKey:kRESTClientHTTPHeaderContentType];
-			[self.headers setObject:@"application/json" forKey:kRESTClientHTTPHeaderAccept];
+			[self.headers setObject:@"application/json" forKey:kCumulusHTTPHeaderContentType];
+			[self.headers setObject:@"application/json" forKey:kCumulusHTTPHeaderAccept];
 			break;
 		case CMContentTypeXML:
-			[self.headers setObject:@"application/xml" forKey:kRESTClientHTTPHeaderContentType];
-			[self.headers setObject:@"application/xml" forKey:kRESTClientHTTPHeaderAccept];
+			[self.headers setObject:@"application/xml" forKey:kCumulusHTTPHeaderContentType];
+			[self.headers setObject:@"application/xml" forKey:kCumulusHTTPHeaderAccept];
 			break;
 		case CMContentTypeHTML:
-			[self.headers setObject:@"text/html" forKey:kRESTClientHTTPHeaderContentType];
-			[self.headers setObject:@"text/html" forKey:kRESTClientHTTPHeaderAccept];
+			[self.headers setObject:@"text/html" forKey:kCumulusHTTPHeaderContentType];
+			[self.headers setObject:@"text/html" forKey:kCumulusHTTPHeaderAccept];
 			break;			
 		case CMContentTypeText:
-			[self.headers setObject:@"text/plain" forKey:kRESTClientHTTPHeaderContentType];
-			[self.headers setObject:@"text/plain" forKey:kRESTClientHTTPHeaderAccept];
+			[self.headers setObject:@"text/plain" forKey:kCumulusHTTPHeaderContentType];
+			[self.headers setObject:@"text/plain" forKey:kCumulusHTTPHeaderAccept];
 			break;			
 		case CMContentTypePNG:
-			[self.headers setObject:@"image/png" forKey:kRESTClientHTTPHeaderContentType];
-			[self.headers setObject:@"image/png" forKey:kRESTClientHTTPHeaderAccept];
+			[self.headers setObject:@"image/png" forKey:kCumulusHTTPHeaderContentType];
+			[self.headers setObject:@"image/png" forKey:kCumulusHTTPHeaderAccept];
 			break;			
 		default:
 			break;

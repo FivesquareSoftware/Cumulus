@@ -73,8 +73,8 @@
 	resource.contentType = CMContentTypeJSON;
 	
 	NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:
-							 @"application/json", kRESTClientHTTPHeaderContentType
-							 , @"application/json", kRESTClientHTTPHeaderAccept
+							 @"application/json", kCumulusHTTPHeaderContentType
+							 , @"application/json", kCumulusHTTPHeaderAccept
 							 , nil];
 	STAssertEqualObjects(resource.headers, headers, @"Should set resource headsers from content type");
 }

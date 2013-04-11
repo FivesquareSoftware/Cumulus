@@ -32,7 +32,7 @@ Cumulus was implemented with automatic reference counting (ARC) and uses weak re
 
 The simplest way to use Cumulus in your Xcode project is to just copy the files in "Source" to your own project.
 
-The best way to include Cumulus is to drag the project into your workspace, then add either libRESTClient.a (iOS) or Cumulus.framework (Mac OS) to your main target's link phase. 
+The best way to include Cumulus is to drag the project into your workspace, then add either libCumulus.a (iOS) or Cumulus.framework (Mac OS) to your main target's link phase. 
 
 If you are using the Mac OS framework, the headers are automatically in your header search path. To add them for iOS, add "${SRCROOT}/relative/path/to/Cumulus/Source" to your HEADER_SEARCH_PATHS build setting and check the recursive box.
 
@@ -101,7 +101,7 @@ _Create stuff_
 
 ```objective-c 	
 CMProgressBlock postProgressBlock = ^(NSDictionary *progressInfo) {
-	postProgressView.progress = [[progressInfo objectForKey:kRESTClientProgressInfoKeyProgress] floatValue];
+	postProgressView.progress = [[progressInfo objectForKey:kCumulusProgressInfoKeyProgress] floatValue];
 };
 
 NSDictionary *postData = ...;
@@ -144,7 +144,7 @@ _Download stuff directly to disk_
 ```objective-c 	
 CMResource *images = [site resource:@"images"];
 [images downloadWithProgressBlock:nil completionBlock:^(CMResponse *response) {
-	NSURL *downloadedFile = [response.result valueForKey:kRESTClientProgressInfoKeyTempFileURL];
+	NSURL *downloadedFile = [response.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
 	// Move the file to where you want it
 }
 ```
@@ -154,7 +154,7 @@ _Test stuff even before your services are ready_
 ```objective-c 	
 CMResource *posts = [site resource:@"posts"];
 posts.contentType = CMContentTypeJSON;
-[posts setFixture:[NSArray arrayWithObjects:postOne,postTwo,nil] forHTTPMethod:kRESTClientHTTPMethodGET];
+[posts setFixture:[NSArray arrayWithObjects:postOne,postTwo,nil] forHTTPMethod:kCumulusHTTPMethodGET];
 [posts getWithCompletionBlock:^(CMResponse *response) {
 	postsController.posts = response.result;
 }];

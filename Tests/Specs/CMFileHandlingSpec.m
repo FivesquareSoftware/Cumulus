@@ -78,7 +78,7 @@
 	CMResource *hero = [self.service resource:@"test/upload/hero"];
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		NSLog(@"progress: %@",progress);
 //		[mockProgressObject setValue:progress forKey:@"Progress"];
 //		if ([progress floatValue] < 1.f) {
@@ -137,7 +137,7 @@
 	[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:zeroProgressBlock] forKey:@"Progress"];
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		[mockProgressObject setValue:progress forKey:@"Progress"];
 		if ([progress floatValue] < 1.f) {
 			[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:someProgressBlock] forKey:@"Progress"];
@@ -149,7 +149,7 @@
 	__block BOOL fileExistedAtCompletion = NO;
 	CMCompletionBlock completionBlock = ^(CMResponse *response) {
 		localResponse = response;
-		self.downloadedFileURL = [localResponse.result valueForKey:kRESTClientProgressInfoKeyTempFileURL];
+		self.downloadedFileURL = [localResponse.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
 		NSFileManager *fm = [[NSFileManager alloc] init];
 		fileExistedAtCompletion = [fm fileExistsAtPath:[self.downloadedFileURL path]];
 		dispatch_semaphore_signal(request_sema);
@@ -164,8 +164,8 @@
 	
 	[mockProgressObject verify];
 	
-	NSString *filename = [localResponse.result valueForKey:kRESTClientProgressInfoKeyFilename];
-	NSString *URL =  [localResponse.result valueForKey:kRESTClientProgressInfoKeyURL];
+	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
+	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
 	
 	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
 	

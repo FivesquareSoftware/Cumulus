@@ -83,7 +83,7 @@
 	id fakeResponse = [[CMFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:_expectedContentType expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
 	[fakeResponse setStatusCode:200];
 	if (_expectedContentType) {
-		[fakeResponse setAllHeaderFields:[NSDictionary dictionaryWithObject:_expectedContentType forKey:kRESTClientHTTPHeaderContentType]];
+		[fakeResponse setAllHeaderFields:[NSDictionary dictionaryWithObject:_expectedContentType forKey:kCumulusHTTPHeaderContentType]];
 	}
 	self.URLResponse = fakeResponse;
 	

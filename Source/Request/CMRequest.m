@@ -222,12 +222,12 @@ static NSUInteger requestCount = 0;
 
 @dynamic acceptHeader;
 - (NSString *) acceptHeader {
-	return [self.headers objectForKey:kRESTClientHTTPHeaderAccept];
+	return [self.headers objectForKey:kCumulusHTTPHeaderAccept];
 }
 
 @dynamic contentTypeHeader;
 - (NSString *) contentTypeHeader {
-	return [self.headers objectForKey:kRESTClientHTTPHeaderContentType];
+	return [self.headers objectForKey:kCumulusHTTPHeaderContentType];
 }
 
 - (NSMutableArray *) authProviders {
@@ -254,7 +254,7 @@ static NSUInteger requestCount = 0;
 			_payloadEncoder = [CMCoder coderForFileExtension:self.fileExtension];
 		}
 		
-		contentType = [_URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderContentType];
+		contentType = [_URLRequest valueForHTTPHeaderField:kCumulusHTTPHeaderContentType];
 
         if (nil == _payloadEncoder) { // we have an non-literal object type, figure out encoding based on content type
             if (contentType && contentType.length > 0) {
@@ -269,7 +269,7 @@ static NSUInteger requestCount = 0;
 
 - (id<CMCoder>) responseDecoder {
     if (_responseDecoder == nil) {
-        NSString *contentType = [[_URLResponse allHeaderFields] valueForKey:kRESTClientHTTPHeaderContentType];
+        NSString *contentType = [[_URLResponse allHeaderFields] valueForKey:kCumulusHTTPHeaderContentType];
         if (contentType.length > 0) { // First, let's try content type, because the server is telling us what it sent
             _responseDecoder = [CMCoder coderForMimeType:contentType];
         }
@@ -279,7 +279,7 @@ static NSUInteger requestCount = 0;
 			_responseDecoder = [CMCoder coderForFileExtension:self.fileExtension];
 			
 			if (_responseDecoder == nil) {
-				NSString *accepts = [_URLRequest valueForHTTPHeaderField:kRESTClientHTTPHeaderAccept];
+				NSString *accepts = [_URLRequest valueForHTTPHeaderField:kCumulusHTTPHeaderAccept];
 				if (accepts && accepts.length > 0) {
 					_responseDecoder = [CMCoder coderForMimeType:accepts];
 				}
@@ -468,7 +468,7 @@ static NSUInteger requestCount = 0;
 		});
 	}
 	@catch (NSException *exception) {
-		self.error = [NSError errorWithDomain:kRESTClientErrorDomain code:kRESTClientErrorCodeErrorProcessingResponse userInfo:[exception userInfo]];
+		self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorProcessingResponse userInfo:[exception userInfo]];
 	}
 	@finally {
 		if (self.completionBlock) {

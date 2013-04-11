@@ -33,8 +33,8 @@
 - (void)beforeEach {
     // set up resources that need to be initialized before each example here 
 	[Cumulus setHeaders:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-							@"application/json", kRESTClientHTTPHeaderContentType
-							, @"application/json", kRESTClientHTTPHeaderAccept
+							@"application/json", kCumulusHTTPHeaderContentType
+							, @"application/json", kCumulusHTTPHeaderAccept
 							, nil]];
 	[Cumulus setAuthProviders:nil];
 }
@@ -102,7 +102,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		NSLog(@"progress: %@",progress);
 	};
 
@@ -204,7 +204,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		NSLog(@"progress: %@",progress);
 	};
 	
@@ -256,7 +256,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		NSLog(@"progress: %@",progress);
 	};
 	
@@ -278,7 +278,7 @@
 	NSString *endpoint = [NSString stringWithFormat:@"%@/test/download/hero",kTestServerHost];
 
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		NSLog(@"progress: %@",progress);
 	};
 	
@@ -304,7 +304,7 @@
 
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		NSLog(@"progress: %@",progress);
 	};
 	

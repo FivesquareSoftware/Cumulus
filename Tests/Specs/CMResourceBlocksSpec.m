@@ -193,7 +193,7 @@
 	[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:zeroProgressBlock] forKey:@"Progress"];
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kRESTClientProgressInfoKeyProgress];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		[mockProgressObject setValue:progress forKey:@"Progress"];
 		if ([progress floatValue] < 1.f) {
 			[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:someProgressBlock] forKey:@"Progress"];

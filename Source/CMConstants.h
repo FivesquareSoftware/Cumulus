@@ -46,29 +46,29 @@
 #endif
 
 
-extern NSString *kRESTClientErrorDomain;
+extern NSString *kCumulusErrorDomain;
 extern NSString *kRESTCLientHTTPStatusCodeErrorKey;
 
 enum  {
-	kRESTClientErrorCodeErrorProcessingResponse = 1000
+	kCumulusErrorCodeErrorProcessingResponse = 1000
 };
 
-extern NSString *kRESTClientHTTPMethodGET;
-extern NSString *kRESTClientHTTPMethodPOST;
-extern NSString *kRESTClientHTTPMethodPUT;
-extern NSString *kRESTClientHTTPMethodDELETE;
-extern NSString *kRESTClientHTTPMethodHEAD;
+extern NSString *kCumulusHTTPMethodGET;
+extern NSString *kCumulusHTTPMethodPOST;
+extern NSString *kCumulusHTTPMethodPUT;
+extern NSString *kCumulusHTTPMethodDELETE;
+extern NSString *kCumulusHTTPMethodHEAD;
 
-extern NSString *kRESTClientHTTPHeaderAccept;
-extern NSString *kRESTClientHTTPHeaderContentType;
-extern NSString *kRESTClientHTTPHeaderAuthorization;
+extern NSString *kCumulusHTTPHeaderAccept;
+extern NSString *kCumulusHTTPHeaderContentType;
+extern NSString *kCumulusHTTPHeaderAuthorization;
 
-extern NSString *kRESTClientProgressInfoKeyURL;
-extern NSString *kRESTClientProgressInfoKeyTempFileURL;
-extern NSString *kRESTClientProgressInfoKeyFilename;
-extern NSString *kRESTClientProgressInfoKeyProgress;
+extern NSString *kCumulusProgressInfoKeyURL;
+extern NSString *kCumulusProgressInfoKeyTempFileURL;
+extern NSString *kCumulusProgressInfoKeyFilename;
+extern NSString *kCumulusProgressInfoKeyProgress;
 
-extern NSString *kRESTClientCachesDirectoryName;
+extern NSString *kCumulusCachesDirectoryName;
 
 
 // HTTP Status Codes (so we don't make silly mistakes :)

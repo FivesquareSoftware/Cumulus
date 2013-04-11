@@ -213,7 +213,7 @@
 		A43E63A2152A47E6006AEBCD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		A43E63A3152A47E6006AEBCD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A43E63A4152A47E6006AEBCD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		A43E63B2152A60F1006AEBCD /* CumulusFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "CumulusFramework-Info.plist"; path = "Users/johnclay/Code/Source/Trunk/RESTClient/CumulusFramework-Info.plist"; sourceTree = SDKROOT; };
+		A43E63B2152A60F1006AEBCD /* CumulusFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CumulusFramework-Info.plist"; path = "../CumulusFramework-Info.plist"; sourceTree = "<group>"; };
 		A43E63B5152A60FA006AEBCD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A43F86A9144A9AC200C69C3D /* proxy_string.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = proxy_string.rb; sourceTree = "<group>"; };
 		A43F86AB144AAC5D00C69C3D /* CMImageCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMImageCoder.h; sourceTree = "<group>"; };
@@ -328,6 +328,7 @@
 		A4EFF210155334D200868358 /* CMFixtureHTTPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMFixtureHTTPResponse.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A4F536B41624A15F000B7B78 /* appledoc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = appledoc; sourceTree = "<group>"; };
 		A4F536B61624A187000B7B78 /* gendocs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = gendocs.sh; sourceTree = "<group>"; };
+		A4FB357816F6944D00FA8B62 /* CumulusLib-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CumulusLib-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -409,7 +410,7 @@
 		A414FD4413DB459200F96152 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A4A8CC5F147ED43700BE6C0E /* RESTClient */,
+				A4A8CC5F147ED43700BE6C0E /* Cumulus */,
 				A4A8CC60147ED44700BE6C0E /* Specs */,
 				A43E639F152A47E6006AEBCD /* Cocoa.framework */,
 				A43E63A1152A47E6006AEBCD /* Other Frameworks */,
@@ -447,6 +448,7 @@
 			isa = PBXGroup;
 			children = (
 				A43E63B2152A60F1006AEBCD /* CumulusFramework-Info.plist */,
+				A4FB357816F6944D00FA8B62 /* CumulusLib-Info.plist */,
 				A414FD4913DB459200F96152 /* Cumulus-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -665,14 +667,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		A4A8CC5F147ED43700BE6C0E /* RESTClient */ = {
+		A4A8CC5F147ED43700BE6C0E /* Cumulus */ = {
 			isa = PBXGroup;
 			children = (
 				A409B3991408F193003495BA /* Security.framework */,
 				A414FD4513DB459200F96152 /* Foundation.framework */,
 				A4A8CC5D147ED3FF00BE6C0E /* MobileCoreServices.framework */,
 			);
-			name = RESTClient;
+			name = Cumulus;
 			sourceTree = "<group>";
 		};
 		A4A8CC60147ED44700BE6C0E /* Specs */ = {
@@ -839,7 +841,7 @@
 			dependencies = (
 			);
 			name = CumulusLib;
-			productName = RESTClient;
+			productName = Cumulus;
 			productReference = A414FD4213DB459200F96152 /* libCumulus.a */;
 			productType = "com.apple.product-type.library.static";
 		};
@@ -858,7 +860,7 @@
 			dependencies = (
 			);
 			name = CumulusFramework;
-			productName = RESTClient;
+			productName = Cumulus;
 			productReference = A43E639E152A47E6006AEBCD /* Cumulus.framework */;
 			productType = "com.apple.product-type.framework";
 		};
@@ -876,7 +878,7 @@
 			dependencies = (
 			);
 			name = CumulusSpecs;
-			productName = RESTClientSpecs;
+			productName = CumulusSpecs;
 			productReference = A46269A114198ED3005544D6 /* Cumulus.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -940,7 +942,7 @@
 			);
 			name = "Generate docs";
 			outputPaths = (
-				"\"${SRCROOT}/Docs/API/com.fivesquaresoftware.RESTClient.docset\"",
+				"\"${SRCROOT}/Docs/API/com.fivesquaresoftware.Cumulus.docset\"",
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
@@ -956,7 +958,7 @@
 			);
 			name = "Generate docs";
 			outputPaths = (
-				"\"${SRCROOT}/Docs/API/com.fivesquaresoftware.RESTClient.docset\"",
+				"\"${SRCROOT}/Docs/API/com.fivesquaresoftware.Cumulus.docset\"",
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
@@ -1142,32 +1144,38 @@
 		A414FD5013DB459200F96152 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/RESTClient.dst;
+				CURRENT_PROJECT_VERSION = 2;
+				DSTROOT = /tmp/Cumulus.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Source/Cumulus-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Ext/TouchXML/Source\"/**",
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
+				INFOPLIST_FILE = "CumulusLib-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;
 				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		A414FD5113DB459200F96152 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/RESTClient.dst;
+				CURRENT_PROJECT_VERSION = 2;
+				DSTROOT = /tmp/Cumulus.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Source/Cumulus-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Ext/TouchXML/Source\"/**",
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
+				INFOPLIST_FILE = "CumulusLib-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;
 				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -1176,8 +1184,9 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CURRENT_PROJECT_VERSION = 2;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
@@ -1185,15 +1194,16 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Source/RESTClient-Prefix.pch";
+				GCC_PREFIX_HEADER = "Source/Cumulus-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/Users/johnclay/Code/Source/Trunk/RESTClient/CumulusFramework-Info.plist";
+				INFOPLIST_FILE = "CumulusFramework-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Cumulus;
 				SDKROOT = macosx;
+				VERSIONING_SYSTEM = "apple-generic";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1203,9 +1213,10 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
@@ -1213,14 +1224,15 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Source/RESTClient-Prefix.pch";
+				GCC_PREFIX_HEADER = "Source/Cumulus-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/Users/johnclay/Code/Source/Trunk/RESTClient/CumulusFramework-Info.plist";
+				INFOPLIST_FILE = "CumulusFramework-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = Cumulus;
 				SDKROOT = macosx;
+				VERSIONING_SYSTEM = "apple-generic";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
