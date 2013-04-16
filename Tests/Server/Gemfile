@@ -15,4 +15,5 @@ group :test do
 	gem "rack-test", '~>0.5.3'
 	gem "rspec"
 	gem 'ruby-debug'
+	gem 'pry'
 end

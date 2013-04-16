@@ -39,12 +39,6 @@
 #import "Cumulus.h"
 
 @interface CMRequest()
-
-
-// Private Methods
-
-- (void) timeoutFired:(NSTimer *)timer;
-
 @end
 
 
@@ -101,6 +95,14 @@ static NSUInteger requestCount = 0;
 @synthesize finished=_finished;
 @synthesize canceled=_canceled;
 
+@dynamic completed;
+- (BOOL) didComplete {
+	if (self.expectedContentLength == NSURLResponseUnknownLength) {
+		return YES;
+	}
+	return self.expectedContentLength == self.receivedContentLength;
+}
+
 #pragma mark - -Lifecycle
 
 
@@ -146,6 +148,7 @@ static NSUInteger requestCount = 0;
 @dynamic progressReceivedInfo;
 - (CMProgressInfo *) progressReceivedInfo {
 	CMProgressInfo *progressReceivedInfo = [CMProgressInfo new];
+	progressReceivedInfo.request = self;
 	progressReceivedInfo.URL = [self.URLRequest URL];
 	float progress = 0;
 	if (self.expectedContentLength > 0) {
@@ -161,6 +164,7 @@ static NSUInteger requestCount = 0;
 @dynamic progressSentInfo;
 - (CMProgressInfo *) progressSentInfo {
 	CMProgressInfo *progressSentInfo = [CMProgressInfo new];
+	progressSentInfo.request = self;
 	progressSentInfo.URL = [self.URLRequest URL];
 	float progress = 0;
 	if (self.bodyContentLength > 0) {
@@ -180,6 +184,7 @@ static NSUInteger requestCount = 0;
 @synthesize connection=_connection;
 @synthesize originalURLRequest=_originalURLRequest;
 @synthesize timeoutTimer=_timeoutTimer;
+@synthesize requestConfigured = _requestConfigured;
 
 @dynamic fileExtension;
 - (NSString *) fileExtension {
@@ -216,6 +221,11 @@ static NSUInteger requestCount = 0;
 - (NSMutableDictionary *) headers {
 	if (_headers == nil) {
 		_headers = [NSMutableDictionary new];
+	}
+	// Once the request exists, we defer to it for the current headers
+	if (self.requestIsConfigured) {
+		[_headers removeAllObjects];
+		[_headers addEntriesFromDictionary:[_URLRequest allHTTPHeaderFields]];
 	}
 	return _headers;
 }
@@ -437,7 +447,33 @@ static NSUInteger requestCount = 0;
 
 
 - (void) handleConnectionWillStart {
-	
+	// Generally used by subclasses to effect request customization
+}
+
+- (void) handleConnectionDidReceiveData {
+	if (self.canceled || self.connectionFinished) {
+		return;
+	}
+	if (self.didReceiveDataBlock) {
+		CMProgressInfo *progressInfo = self.progressReceivedInfo;
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.didReceiveDataBlock(progressInfo);
+		});
+	}
+}
+
+- (void) handleConnectionDidSendData {
+	if (self.canceled || self.connectionFinished) {
+		return;
+	}
+	if (self.didSendDataBlock) {
+		CMProgressInfo *progressInfo = self.progressSentInfo;
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.didSendDataBlock(progressInfo);
+		});
+	}
 }
 
 - (void) handleConnectionFinished {
@@ -464,7 +500,7 @@ static NSUInteger requestCount = 0;
 		dispatch_queue_t q_current = dispatch_get_current_queue();
 		NSAssert(q != q_current, @"Tried to run response processing on the current queue! ** DEADLOCK **");
 		dispatch_sync(q, ^{
-			[self processResponse:response];
+			[self postProcessResponse:response];
 		});
 	}
 	@catch (NSException *exception) {
@@ -478,27 +514,6 @@ static NSUInteger requestCount = 0;
 		}
 		self.timeoutTimer = nil;
 		self.finished = YES;
-	}
-}
-
-
-- (void) handleConnectionDidReceiveData {
-	if (self.didReceiveDataBlock) {
-		CMProgressInfo *progressInfo = self.progressReceivedInfo;
-
-		dispatch_async(dispatch_get_main_queue(), ^{
-			self.didReceiveDataBlock(progressInfo);
-		});
-	}
-}
-
-- (void) handleConnectionDidSendData {
-	if (self.didSendDataBlock) {				
-		CMProgressInfo *progressInfo = self.progressSentInfo;
-
-		dispatch_async(dispatch_get_main_queue(), ^{
-			self.didSendDataBlock(progressInfo);
-		});
 	}
 }
 
@@ -525,9 +540,10 @@ static NSUInteger requestCount = 0;
 	if (self.timeout > 0) {
 		URLRequest.timeoutInterval = self.timeout;
 	}
+	self.requestConfigured = YES;
 }
 
-- (void) processResponse:(CMResponse *)response {
+- (void) postProcessResponse:(CMResponse *)response {
     
 	// if there was a response body, decode it
     if (self.data.length) {
@@ -543,7 +559,6 @@ static NSUInteger requestCount = 0;
 		}
     }
 }
-
 
 - (NSString *) mimeTypeForFileAtPath:(NSString *)filePath {
 	CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[filePath pathExtension], NULL);
@@ -625,6 +640,7 @@ static NSUInteger requestCount = 0;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.URLResponse = (NSHTTPURLResponse *)response;
+//	RCLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
 	self.expectedContentLength = [response expectedContentLength];
 }
 

@@ -76,30 +76,54 @@
 #import "CMCoder.h"
 
 
-/** 
- *  Cumulus is the main header for the Cumulus HTTP client and provides some static methods for making one-off or non-conforming requests. In general, however, the main point of usage for Cumulus is CMResource, which allows for simple configuration and resusability of requests.
+/** Cumulus.h is the main header for the Cumulus HTTP client—include it in your project to use Cumulus. The Cumulus class interface provides global configuration options, some static methods for making one-off or non-conforming requests, and fixture configuration and usage. In general, however, the main point of usage for the Cumulus HTTP client is CMResource, which allows for simple configuration and resusability of response processing across any number of requests.
+ *
+ *  ### Static Request Interface
+ *
+ *  Static request methods simply create anonymous resources under the hood, delegating the request to that resource. They are useful if you have a non-conforming service, or just need to make the odd request.
+ *
+ *  - In all cases URL may be an NSURL or an NSString representing an URL
+ *  - In general, the equivalent methods in CMResource should be preferred if you plan on using these more than once.
+ *
  */
 @interface Cumulus : NSObject {
 	
 }
 
 
+/** Log a message to the console. 
+ *
+ * Whether or not this method actually logs a message is controlled by setting CumulusLoggingOn in the environment (Generally by setting it in the environment of the Run phase of your target's scheme). Setting it to YES|true|1 turns logging on, setting it to NO|false|0 to turns logging off (the default is off).
+ * @warning - If you are writing code for Cumulus or a Cumulus extension, you shouldn't be calling this method. Instead, call the RCLog() macro, which includes compile time checks to make sure logging doesn't make it into a release build of your application or framework.
+*/
 + (void) log:(NSString *)format, ...;
+
+
+/** @name Configuration for Static Requests */
+
+
+/** The global default cache directory used by download requests and some state saving mechanisms. Can be overridden by individual requests. */
 + (NSString *) cachesDir;
 
-/** @name Configuration for Static Requests
- *  @{
- *  @note In general, the equivalent methods in CMResource should be preferred if you plan on using these more than once. 
- */
-
+/** @see [CMResource timeout] */
 + (NSTimeInterval) timeout;
+/** @see [CMResource setTimeout] */
 + (void) setTimeout:(NSTimeInterval)timeout;
 
+/** @see [CMResource authProviders] */
 + (NSMutableArray *)authProviders;
+/** @see [CMResource setAuthProviders] */
 + (void) setAuthProviders:(NSMutableArray *)authProviders;
 
+/** @see [CMResource headers] */
 + (NSMutableDictionary *) headers;
+/** @see [CMResource setHeaders] */
 + (void) setHeaders:(NSMutableDictionary *)headers;
+
+
+
+/** @name Global Fixture Configuration */
+
 
 /** Returns the current fixture data, which is a dictionary whose keys are request signatures (<Method URL>, e.g."GET http:///wwww.foo.com") and values are any valid payload object type. */
 + (NSMutableDictionary *) fixtures;
@@ -117,16 +141,8 @@
 + (BOOL) usingFixtures;
 + (void) useFixtures:(BOOL)useFixtures;
 
-/** @} */
 
-
-
-/** @name Static Requests
- *  @{
- *  @brief These methods simply create anonymous resources under the hood and delegate the request to them. They are useful if you have a non-conforming service, or just need to make the odd request.
- *  @param in all cases URL may be an NSURL or an NSString representing an URL
- *  @note In general, the equivalent methods in CMResource should be preferred if you plan on using these more than once. 
- */
+/** @name Static Requests */
 
 /** @see CMResource#get. */
 + (CMResponse *) get:(id)URL;
@@ -164,7 +180,6 @@
 /** @see CMResource#uploadFile:withProgressBlock:completionBlock:. */
 + (void) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-/** @} */
 
 @end
 

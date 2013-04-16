@@ -42,6 +42,7 @@
 @class CMResource;
 @class CMOAuthToken;
 
+/** Provides OAuth2 authentication to CMResources. */
 @interface CMOAuth2AuthProvider : NSObject <CMAuthProvider>
 
 @property (strong, nonatomic) NSURL *authorizationURL; ///< Initiates an authorization request from the resource owner 

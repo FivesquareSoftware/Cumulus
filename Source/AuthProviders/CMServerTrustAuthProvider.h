@@ -37,6 +37,7 @@
 
 #import "CMAuthProvider.h"
 
+/** Provides Server Trust authentication to CMResources. */
 @interface CMServerTrustAuthProvider : NSObject <CMAuthProvider>
 
 /** When this is set to YES, will trust any certificate, which is inherently insecure. If you need to use a self-signed cert during testing, it's better to import the cert into your keychain so you don't forget and leave this on. Defaults to NO. */

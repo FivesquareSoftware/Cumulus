@@ -35,6 +35,7 @@
 
 #import "Cumulus.h"
 
+
 @interface Cumulus()
 + (CMResource *) configuredResourceForURL:(id)URL method:(NSString *)HTTPMethod;
 @end
@@ -62,18 +63,21 @@
 + (void) log:(NSString *)format, ... {
 	static id CumulusLoggingOnEnvironment = nil;
 	static BOOL isLoggingEnabled = NO;
-	@synchronized(@"CumulusLoggingOn") {
+	static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
 		if (nil == CumulusLoggingOnEnvironment) {
 			NSProcessInfo *processInfo = [NSProcessInfo processInfo];
 			CumulusLoggingOnEnvironment = [[processInfo environment] objectForKey:@"CumulusLoggingOn"];
 			if (nil == CumulusLoggingOnEnvironment) {
 				CumulusLoggingOnEnvironment = [NSNumber numberWithBool:NO]; // don't check anymore
 				isLoggingEnabled = NO;
-			} else {
+			}
+			else {
 				isLoggingEnabled = [CumulusLoggingOnEnvironment boolValue];
 			}
 		}
-	}
+    });
+
 	if (isLoggingEnabled) {
         va_list args;
         va_start(args,format);

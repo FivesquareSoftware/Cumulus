@@ -41,7 +41,7 @@
 
 @protocol CMAmazonCredentials;
 
-/** Lots of the auth code was adapted from what Amazon are doing in their AmazonS3Client, available in their SDK. */
+/** Provides Amazon S3 authentication to CMResources. Lots of the auth code was adapted from what Amazon are doing in their AmazonS3Client, available in their SDK. */
 @interface CMS3AuthProvider : NSObject<CMAuthProvider>
 
 /** Any object that implements <CMAmazonCredentials> can satisfy this role. If the credentials are present and valid they will be used, otherwise if a provider is supplied, new ones will be requested. */

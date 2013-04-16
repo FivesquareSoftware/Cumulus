@@ -35,6 +35,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 #ifdef DEBUG
 	#ifdef CumulusLoggingOn
 		#define RCLog(fmt,...) NSLog(fmt, ##__VA_ARGS__ )
@@ -61,7 +62,13 @@ extern NSString *kCumulusHTTPMethodHEAD;
 
 extern NSString *kCumulusHTTPHeaderAccept;
 extern NSString *kCumulusHTTPHeaderContentType;
+extern NSString *kCumulusHTTPHeaderContentLength;
 extern NSString *kCumulusHTTPHeaderAuthorization;
+extern NSString *kCumulusHTTPHeaderContentDisposition;
+extern NSString *kCumulusHTTPHeaderETag;
+extern NSString *kCumulusHTTPHeaderLastModified;
+extern NSString *kCumulusHTTPHeaderRange;
+extern NSString *kCumulusHTTPHeaderIfRange;
 
 extern NSString *kCumulusProgressInfoKeyURL;
 extern NSString *kCumulusProgressInfoKeyTempFileURL;

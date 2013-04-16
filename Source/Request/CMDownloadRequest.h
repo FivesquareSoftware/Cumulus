@@ -34,8 +34,21 @@
  */
 #import "CMRequest.h"
 
-@interface CMDownloadRequest : CMRequest
 
-@property (nonatomic, strong) NSString *cachesDir; ///< The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located.
+extern NSString *kDownloadStateInfoKeyTempFileURL;
+extern NSString *kDownloadStateInfoKeyExpectedContentLength;
+extern NSString *kDownloadStateInfoKeyETag;
+extern NSString *kDownloadStateInfoKeyLastModifiedDate;
+
+@protocol CMDownloadRequest <NSObject>
+
+/** The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located. */
+@property (nonatomic, strong) NSString *cachesDir;
+/** Whether the request should consider any existing files on disk and request a byte range from the server. The default is NO. */
+@property (nonatomic) BOOL shouldResume;
+
+@end
+
+@interface CMDownloadRequest : CMRequest <CMDownloadRequest>
 
 @end

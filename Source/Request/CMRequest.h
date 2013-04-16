@@ -45,11 +45,11 @@
 @class CMRequest;
 
 /**
- * CMRequest wraps an NSURLRequest and executes it using and NSURLConnection, running blocks along various points in the lifecycle and serializing/deserialzing the results using various implementations of <CMCoder>. The end result of each request is stored in #result and reflects any transformations of the raw response data that have occurred. If there has been an error, this is reflected in #error. However, to interrogate the state of the request after completion, it is generally easier to use the CMResponse object stored in #response, as this provides a number of conveniences to make inspection easier.
+ * CMRequest wraps an NSURLRequest and executes it using an NSURLConnection, running blocks along various points in the lifecycle and serializing/deserialzing the results using various implementations of <CMCoder>. The end result of each request is stored in #result and reflects any transformations of the raw response data that have occurred. If there has been an error, this is reflected in #error. However, to interrogate the state of the request after completion, it is generally easier to use the CMResponse object stored in #response, as this provides a number of conveniences to make inspection easier.
  *
- * CMRequest is meant as a lovel-level class. Generally you will want to use CMResource directly unless you need more control than CMResource allows.
+ * CMRequest is meant as a lovel-level class. Generally you will want to use CMResource rather than CMRequest directly unless you need more control than CMResource allows.
  *
- * = Lifecycle
+ * ### Lifecycle
  *
  * There are five blocks that are run, if defined, at various points in a request's lifecycle:
  *  - didSendData, which is passed a progress dictionary
@@ -58,32 +58,31 @@
  *  - completion, which runs when a request completes, regardless of success or failure
  *  - abort, which runs when a request is canceled before its url connection is started
  *
- * = Authentication
+ * ### Authentication
  *
  * Each request can have a collection of authentication providers, which implement <CMAuthProvider> and can do any kind of authentication that is supported by the protocol. Several common auth providers are included with Cumulus.
  *
- * = Encoding/Decoding
+ * ### Encoding/Decoding
  *
  * Payloads and results are serialized/deserialized automatically if a coder for the particular object type or content-type can be found. Custom coders can be added to the system by simply implementing <CMCoder> and registering the new coder with the system by calling CMCoder+registerCoder:objectType:mimeTypes:. Only one coder per object or content-type is allowed, with the last one added winning if there are more than one. It is also possible to simply set an instance of <CMCoder> on any instance of a request as either an encoder or decoder, though if the coder is registered with the system properly this generally shouldn't be necessary.
  */
 @interface CMRequest : NSObject <NSURLConnectionDelegate,NSURLConnectionDataDelegate>  
 
 
-/** @name Request State
- *  @{
- */
+/** @name Request State */
 
 @property (readonly, getter = isStarted) BOOL started;
 @property (readonly, getter = isFinished) BOOL finished;
 @property (readonly, getter = wasCanceled) BOOL canceled;
-
-
-/** @} */
-
-
-/** @name Lifecycle Blocks
- *  @{
+/** Whether or not the request received the entirety of the data it was expecting.
+ *  @note Currently this is just a dumb check of received data vs the value in the Content-length header, which works for single cases. Things like HTTP chunking that span multiple requests would require a more complex calculation outside of the scope of the receiver, making the returned value here meaningful only in a limited sense.
+ *  @returns YES if receivedContentLength == expectedContentLength or if expectedContentLength == NSURLResponseUnknownLength, which is typically the case with streamed content.
  */
+@property (readonly, getter = didComplete) BOOL completed;
+
+
+
+/** @name Lifecycle Blocks */
 
 
 /** This block gets called every time the connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite: delegate method is invoked. */
@@ -97,12 +96,9 @@
 /** Gets a chance to handle the value of #response when the entire request is complete. Should not raise an exception as a mechanism for controlling execution, since it won't be seen outside the block. */
 @property (copy) CMCompletionBlock completionBlock;
 
-/** @} */
 
 
-/** @name Content Encoding/Decoding
- *  @{
- */
+/** @name Content Encoding/Decoding */
 
 
 /** @returns either a manually set payloadEncoder or one that is created from inferences based on request headers. 
@@ -117,11 +113,13 @@
 /** @} */
 
 
-/** @name Configuration
- *  @{
+/** @name Configuration */
+
+
+/** Values added to this collection before the request is constructed (prior to calling [CMRequest start]) will become a part of the underlying HTTP request's (#URLRequest) headers. Once the HTTP request has started, the return value of this property reflects the current request's actual headers, which may have mutated in the process of responding to lifecycle events.
+ *  @note Adding values to this collection after calling start has no effect.
+ *  @returns The headers associated with URLRequest at a given point in time.
  */
-
-
 @property (nonatomic, readonly, strong) NSMutableDictionary *headers;
 @property (nonatomic, readonly) NSString *acceptHeader; ///< Convenience that returns the Accept header from headers if there is one
 @property (nonatomic, readonly) NSString *contentTypeHeader; ///< Convenience that returns the Content-Type header from headers if there is one
@@ -133,21 +131,19 @@
 @property (nonatomic, strong) id payload; ///< If this is set, #payloadEncoder is used to turn the payload into data for the HTTPBody.
 @property (nonatomic, readonly) NSDictionary *queryDictionary; ///< @returns the query string as a dictionary if there is one
 
-/** @} */
 
 
-/** @name Execution Context
- *  @{
- */
+/** @name Request/Response Handling */
 
 
-/** Constructed dynamically from the URL request used in the contructor and any headers that exist in #headers. Cannot be set externally, but since it's mutable, can be manipulated to achieve various custom configurations as needed. */
+/** When called creates an NSMutableURLRequest from the URL request used in initWithURLRequest: and any headers set on the receiver. Cannot be set externally, but since it's mutable, can be manipulated to achieve various custom configurations as needed. */
 @property (readonly, strong) NSMutableURLRequest *URLRequest;
 @property (readonly, strong) NSHTTPURLResponse *URLResponse;
 @property long long bodyContentLength;
 @property long long sentContentLength;
 @property long long expectedContentLength;
 @property long long receivedContentLength;
+
 /** Stores any data returned in the body of the response. */
 @property (readonly, strong) NSMutableData *data;
 /** @returns a progress info object representing the current progress of receiving all the expected data. */
@@ -161,23 +157,16 @@
 @property (strong) NSError *error;
 
 
-/** @} */
 
-
-/** @name Creating Requests
- *  @{
- */
+/** @name Creating Requests */
 
 
 - (id) initWithURLRequest:(NSURLRequest *)URLRequest;
 //+ (id) startRequestWithURLRequest:(NSURLRequest*)aURLRequest queue:(NSOperationQueue *)queue completionBlock:(CMCompletionBlock)block;
 
-/** @} */
 
 
-/** @name Controlling Requests
- *  @{
- */
+/** @name Controlling Requests */
 
 - (void) start;
 - (void) startWithCompletionBlock:(CMCompletionBlock)completionBlock;
@@ -191,16 +180,11 @@
 - (void) abortWithBlock:(CMAbortBlock)abortBlock;
 
 
-/** @} */
 
 
-/** @name Request Helpers
- *  @{
- */
+/** @name Request Helpers */
 
 - (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
-
-/** @} */
 
 
 @end

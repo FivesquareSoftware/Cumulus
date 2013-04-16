@@ -55,3 +55,8 @@ end
 put '/echo' do
 	respond(200,{ :message => params[:message] })
 end
+
+get '/modified' do
+	last_modified(Time.now)
+	ok('OK')
+end

@@ -21,6 +21,7 @@
 // Public
 
 @synthesize cachesDir=_cachesDir;
+@synthesize shouldResume = _shouldResume;
 
 // Private
 

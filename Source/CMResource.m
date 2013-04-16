@@ -62,29 +62,6 @@
 @property (nonatomic, strong) NSMutableSet *_requests; ///< The internal property for directly accessing request objects
 @property (nonatomic, strong) NSMutableDictionary *fixtures;
 
-// Request Builder
-
-- (CMRequest *) requestForHTTPMethod:(NSString *)method;
-- (CMRequest *) requestForHTTPMethod:(NSString *)method query:(id)query;
-- (CMRequest *) downloadRequestWithQuery:query;
-- (CMRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query;
-
-// Helpers
-
-- (void) setHeadersForContentType:(CMContentType)contentType;
-- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(id)query ;
-- (void) configureRequest:(CMRequest *)request;
-- (NSString *) requestSignatureForHTTPMethod:(NSString *)method;
-
-// Runners
-
-- (CMResponse *) runBlockingRequest:(CMRequest *)request;
-- (void) runRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock;
-- (void) runRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock;
-- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock;
-
-- (void) addRequest:(CMRequest *)request;
-- (void) removeRequest:(CMRequest *)request;
 
 @end
 
@@ -554,8 +531,13 @@
 
 
 - (void) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self downloadRequestWithQuery:nil];
+	[self downloadWithResume:NO progressBlock:progressBlock completionBlock:completionBlock];
+}
+
+- (void) downloadWithResume:(BOOL)shouldResume progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
+	request.shouldResume = shouldResume;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 
@@ -590,9 +572,9 @@
 	return request;
 }
 
-- (CMRequest *) downloadRequestWithQuery:query {
+- (CMRequest<CMDownloadRequest> *) downloadRequestWithQuery:query {
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodGET query:query];
-	CMRequest *request;
+	CMRequest<CMDownloadRequest> *request;
 	id fixture = nil;
 	if ( (fixture = [self fixtureForHTTPMethod:kCumulusHTTPMethodGET]) ) {
 		request = [[CMFixtureDownloadRequest alloc] initWithURLRequest:URLRequest fixture:fixture];

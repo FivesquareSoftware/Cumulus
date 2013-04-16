@@ -43,14 +43,13 @@
 @class CMResourceGroup;
 
 /**
- * @mainpage
- * CMResource is the primary public interface for RESTKit, and each instance is meant to reflect an actual resource residing on the WWW, generally accessed via a REST web service. 
+ * CMResource is the primary public interface for Cumulus, and each instance is meant to reflect an actual resource residing on the WWW, generally accessed via a REST web service. 
  *
- * = Configuration
+ * ### Configuration
  *
- * Child resources can be constructed from parents, and will inherit all the configuration information of their ancestors. Their URLs are constructed as sub-URLs to their parents, and they retain their parents, to allow dynamic lookup of an ancestor's configuration information. With the exception of headers, configuration is an either/or prospect—it comes from only one resource in the chain, whether that is the receiver or one of the ancestors. Headers, being a mutable dictionary are merged down the whole tree.
+ * Child resources can be constructed from parents, and will inherit all the configuration information of their ancestors. Their URLs are constructed as sub-URLs relative to their parents', and children retain their parents to allow dynamic lookup of an ancestor's configuration information at runtime. With the exception of headers and auth providers, configuration is an either/or prospect—it comes from only one resource in the chain, whether that is the receiver or one of the ancestors. Headers, being a mutable dictionary are merged down the whole tree.
  *
- * = Lifecycle
+ * ### Lifecycle
  *
  * A resource has a lifecycle that is defined by the blocks you can run at various points in the execution of a request for the resource. These points are:
  *  - preflight, which can abort a request
@@ -59,16 +58,16 @@
  *  - completion, which runs when a request completes, regardless of success or failure
  *  The posprocess block is unique because it runs on the high-priority concurrent global queue, whereas all the other blocks run on the main queue to allow UI code to safely run.
  *
- * = Authentication
+ * ### Authentication
  *
  * Each resource can have an instance of an authentication provider, which implements <CMAuthProvider> and can do any kind of authentication that is supported by the protocol. A BASIC auth provider is included with Cumulus, and if username and password are set on a resource, an instance of this provider will be created on demand.
  *
- * = Encoding/Decoding
+ * # Encoding/Decoding
  *
  * Payloads and results are serialized/deserialized automatically using instances of <CMCoder>.
  *  @see CMRequest for more information
  *
- * = Query Strings
+ * ### Query Strings
  *
  * To make it easier to reuse resource objects, you can pass a query argument—consisting either of a single dictionary or an array of values and keys—to one of the HTTP request methods, like getWithQuery: and it will be expanded for you to a query string for the request. The expansion follows these rules:
  *    - NSString - <key>=<value>
@@ -82,7 +81,7 @@
  *    [resource getWithQuery:[NSArray arrayWithObjets:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"foo",@"bar",nil]]
  *  would yield only ?foo=bar because the dictionary terminated argument processing. Notice that the order of parameter names and values is reversed when you pass a dictionary, because the values come before the keys in the dictionary constructors themselves.
  *
- * = Fixtures
+ * ### Fixtures
  *
  *  To make it easier to get coding on your app, you can use fixtures to simulate a working set of web services. Fixtures are objects that are converted to NSData using an instance of CMCoder and then used in processing the response as if this was the data that the server sent back. Using them is pretty simple:
  *  
@@ -106,34 +105,26 @@
 	
 }
 
+/** @name Resource Information */
+
 @property (nonatomic, readonly, strong) CMResource *parent;
 @property (nonatomic, readonly, strong) NSString *relativePath;
 @property (nonatomic, readonly, strong) NSURL *URL;
 @property (nonatomic, readonly, strong) NSString *queryString;
 
-/** Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. */
-@property (nonatomic, strong) NSMutableDictionary *headers;
+
+/** @name Lifecycle Handlers */
 
 
-@property (nonatomic) NSTimeInterval timeout; ///< If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses. The underlying URL request also has this value set for #timeoutInterval, which means that (except in the case of POST requests for which the system overrides #timeoutInterval) the request will quit if it has been idle for this length of time.
-@property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< The cache policy to pass on to request. By default uses the default for NSURLRequest.
-@property (nonatomic, strong) NSString *cachesDir; ///< The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located. This directory is created on demand as needed. Defaults to Cumulus#cachesDir.
-@property (nonatomic, strong) NSString *username; ///< If #authProviders is nil and #username and #password are not empty, an CMBasicAuthProvider is created on demand and added to #authProviders
-@property (nonatomic, strong) NSString *password;
-
-/** Auth providers, like headers, are set on each individual resource, but when a request is marshaled, a merged array from the receiver and all it's ancestors is used. Per resource, auth providers are given a chance to authorize requests in the order they were added. However child providers take precedence over ancestors' providers. */
-@property (nonatomic, strong) NSMutableArray *authProviders;
-
-@property (nonatomic, assign) CMContentType contentType; ///< When set, will set 'Content-Type' and 'Accept' headers appropriately
-@property (nonatomic, copy) CMPreflightBlock preflightBlock; ///< Runs before every request for the receiver, which is aborted if this block returns NO
-@property (nonatomic, copy) CMPostProcessorBlock postProcessorBlock; ///< Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
-@property (readonly) NSMutableSet *requests; ///< The array of non-blocking CMRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
+/// Runs before every request for the receiver, which is aborted if this block returns NO
+@property (nonatomic, copy) CMPreflightBlock preflightBlock;
+/// Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
+@property (nonatomic, copy) CMPostProcessorBlock postProcessorBlock;
 
 @property (nonatomic, weak) CMResourceGroup *resourceGroup;
 
-/** @name Creating Resources
- *  @{
- */
+
+/** @name Creating Resources */
 
 
 + (id) withURL:(id)URL;
@@ -164,13 +155,36 @@
  */
 - (CMResource *) resourceWithFormat:(NSString *)relativePathFormat,...;
 
-/** @} */
 
 
+// ========================================================================== //
+// @name Configuration 
+// ========================================================================== //
 
-/** @name Configuration
- *  @{
- */
+
+/** Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. */
+@property (nonatomic, strong) NSMutableDictionary *headers;
+
+
+/** If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses. The underlying URL request also has this value set for #timeoutInterval, which means that (except in the case of POST requests for which the system overrides #timeoutInterval) the request will quit if it has been idle for this length of time. */
+@property (nonatomic) NSTimeInterval timeout;
+
+/// The cache policy to pass on to request. By default uses the default for NSURLRequest.
+@property (nonatomic) NSURLRequestCachePolicy cachePolicy;
+
+/// The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located. This directory is created on demand as needed. Defaults to Cumulus#cachesDir.
+@property (nonatomic, strong) NSString *cachesDir;
+
+/// If #authProviders is nil and #username and #password are not empty, an CMBasicAuthProvider is created on demand and added to #authProviders
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *password;
+
+/** Auth providers, like headers, are set on each individual resource, but when a request is marshaled, a merged array from the receiver and all it's ancestors is used. Per resource, auth providers are given a chance to authorize requests in the order they were added. However child providers take precedence over ancestors' providers. */
+@property (nonatomic, strong) NSMutableArray *authProviders;
+
+/// When set, will set 'Content-Type' and 'Accept' headers appropriately
+@property (nonatomic, assign) CMContentType contentType;
+
 
 /** Convenience method for setting a single header.
  * @param value - if nil, will remove the header from the receiver, if not a string, will have #description called on it
@@ -182,12 +196,9 @@
 /** Adds authProvider to the end of the provider list. */
 - (void) addAuthProvider:(id<CMAuthProvider>)authProvider;
 
-/** @} */
 
 
-/** @name Fixtures
- *  @{
- */
+/** @name Fixtures */
 
 /** Sets the fixture the receiver will use when issuing a request using the supplied HTTP method. */
 - (void) setFixture:(id)value forHTTPMethod:(NSString *)method;
@@ -198,10 +209,10 @@
 /** @} */
 
 
-/** @name Request Control
- *  @{
- */
+/** @name Request Control */
 
+/// The array of non-blocking CMRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
+@property (readonly) NSMutableSet *requests;
 
 /** Cancels all non-blocking requests started by the receiver. Blocking requests, once begun, cannot be canceled. 
  *  @note Returns immediately (Does not wait for requests to actually shut down)
@@ -212,13 +223,10 @@
  */
 - (void) cancelRequestsWithBlock:(void (^)(void))block; 
 
-/** @} */
 
 
 
-/** @name HTTP Methods
- *  @{
- */
+/** @name HTTP Methods */
 
 // GET
 
@@ -276,23 +284,23 @@
 - (void) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
 
 
-/** @} */
+
+/** @name Handling Files */
 
 
-/** @name Handling Files
- *  @{
- */
-
-
-/** Downloads the data represented by the receiver directly to disk instead of holding it in memory. When the request is complete #result holds an instance of CMProgressInfo with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it. 
- *
- * The progress info object IS KVC for the following keys, and you can use the constants if you wish:
- *   - kCumulusProgressInfoKeyURL (URL)
- *   - kCumulusProgressInfoKeyTempFileURL (tempFileURL)
- *   - kCumulusProgressInfoKeyFilename (filename)
- *   - kCumulusProgressInfoKeyProgress (progress)
- */
+/** @see downloadWithProgressBlock:completionBlock:resume:. */
 - (void) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+/** Downloads the data represented by the receiver directly to disk instead of holding it in memory. When the request is complete #result holds an instance of CMProgressInfo with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it.
+ * @param resume Whether or not to pick up downloading from where a previous request left off.
+ * @note The progress info object IS KVC for the following keys, and you can use the constants if you wish:
+ *
+ * - kCumulusProgressInfoKeyURL (URL)
+ * - kCumulusProgressInfoKeyTempFileURL (tempFileURL)
+ * - kCumulusProgressInfoKeyFilename (filename)
+ * - kCumulusProgressInfoKeyProgress (progress)
+ */
+- (void) downloadWithResume:(BOOL)shouldResume progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** Allows for uploading files directly from disk rather than keeping them in memory, which is particularly useful for large files. The progress block is called each time a chunk of data is sent to the server. The content type sent to the server is inferred from the UTI of the file on disk and overrides any content type set on the receiver.
  *  
@@ -300,8 +308,6 @@
  */
 - (void) uploadFile:(NSURL *)fileURL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-
-/** @} */
 
 
 

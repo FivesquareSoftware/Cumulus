@@ -1,12 +1,12 @@
 //
-//  CMResponseCodesSpec.m
+//  CMResponseSpec.m
 //  Cumulus
 //
 //  Created by John Clayton on 10/15/11.
 //  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
-#import "CMResponseCodesSpec.h"
+#import "CMResponseSpec.h"
 
 // This class will be instantiated for you and made available in the property "self.specHelper", store your cross-test data and helper methods there
 #import "SpecHelper.h"
@@ -15,7 +15,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 
-@implementation CMResponseCodesSpec
+@implementation CMResponseSpec
 
 @synthesize service;
 @synthesize endpoint;
@@ -68,6 +68,12 @@
 //	STAssertTrue([response isSwitchingProtocols], @"Response#isSwitchingProtocols should be true: %@",response);
 //}
 
+- (void) shouldReturnLastModifiedAsDate {
+	CMResource *resource = [self.service resource:@"modified"];
+	CMResponse *response = [resource get];
+	BOOL lastModifiedWasDate = [response.lastModified isKindOfClass:[NSDate class]];
+	STAssertTrue(lastModifiedWasDate, @"Response last modified should have been a date: %@",response.lastModified);
+}
 
 - (void) shouldCreateAnErrorForHTTPErrorStatusCodes {
 	CMResource *resource = [self.endpoint resource:@"badrequest"];
@@ -111,10 +117,9 @@
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
 //	dispatch_semaphore_signal(cancel_sema);
 	dispatch_release(cancel_sema);
-
-    
 	STAssertTrue([localResponse HTTPCanceled], @"Response#HTTPCanceled should be true: %@",localResponse);
 }
+
 - (void) shouldBeOk {
 	CMResource *resource = [self.endpoint resource:@"ok"];
 	CMResponse *response = [resource get];

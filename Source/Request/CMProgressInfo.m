@@ -10,6 +10,10 @@
 
 @implementation CMProgressInfo
 
-@synthesize URL=_URL, tempFileURL=_tempFileURL, filename=_filename, progress=_progress;
+@synthesize request = _request;
+@synthesize URL=_URL;
+@synthesize tempFileURL=_tempFileURL;
+@synthesize filename=_filename;
+@synthesize progress=_progress;
 
 @end

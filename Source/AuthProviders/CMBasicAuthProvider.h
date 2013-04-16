@@ -39,6 +39,7 @@
 //@protocol CMAuthProvider;
 #import "CMAuthProvider.h"
 
+/** Provides BASIC authentication to CMResources. */
 @interface CMBasicAuthProvider : NSObject <CMAuthProvider> {
 	
 }

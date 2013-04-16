@@ -16,7 +16,6 @@
 #import "OCMock.h"
 
 @interface CMFileHandlingSpec ()
-- (void) assertDownloadAFileToDisk;
 @end
 
 @implementation CMFileHandlingSpec
@@ -42,6 +41,7 @@
     // set up resources that need to be initialized before each example here 
 
 	self.service = [CMResource withURL:kTestServerHost];
+	self.service.cachePolicy = NSURLCacheStorageNotAllowed;
 }
 
 - (void)afterEach {
@@ -62,7 +62,14 @@
 #pragma mark - Specs
 
 - (void)shouldDownloadAFileToDisk {
-	[self assertDownloadAFileToDisk];
+	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
+	[self assertDownloadAFileToDisk:heroDownload];
+}
+
+- (void)shouldDownloadAStreamedFileToDisk {
+	// no content-length header
+	CMResource *heroDownload = [self.service resource:@"test/stream/hero"];
+	[self assertDownloadAFileToDisk:heroDownload];
 }
 
 - (void)shouldDownloadAFileToCustomCacheLocation {
@@ -70,14 +77,100 @@
 	NSString *directory = [paths lastObject];
 	
 	self.cachesDir = [directory stringByAppendingPathComponent:@"CumulusSpecs"];
+	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
+
+	[self assertDownloadAFileToDisk:heroDownload];
+}
+
+- (void) shouldResumeDownloadingAFileToDisk {
 	
-	[self assertDownloadAFileToDisk];
+	CMResource *massive = [self.service resource:@"test/download/massive"];
+
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		self.downloadedFileURL = [progressInfo tempFileURL];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+		if ([progress floatValue] > 0.f) {
+			[massive cancelRequests];
+		}
+	};
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	};
+	
+	[massive downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	__block float firstProgress = -1.f;
+	__block BOOL hadRangeHeader = NO;
+	progressBlock = ^(CMProgressInfo *progressInfo){
+		if (NO == hadRangeHeader) {
+			hadRangeHeader = ([progressInfo.request.headers objectForKey:@"Range"] != nil || [progressInfo.request.headers objectForKey:@"If-Range"] != nil);
+		}
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (firstProgress == -1.f && progress > 0.f && progress < 1.f) {
+			firstProgress = progress;
+		}
+	};
+	[massive downloadWithResume:YES progressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+
+	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(hadRangeHeader, @"Request should have included a range header");
+	STAssertTrue(firstProgress > 0.f, @"Download should have resumed at a non-zero offset");
+}
+
+- (void) shouldFailToResumeDownloadingAStreamedFile {
+	CMResource *massiveStream = [self.service resource:@"test/stream/massive"];
+	
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		self.downloadedFileURL = [progressInfo tempFileURL];
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+		if ([progress floatValue] > 0.f) {
+			[massiveStream cancelRequests];
+		}
+	};
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	};
+	
+	[massiveStream downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	
+	__block float firstProgress = -1.f;
+	__block BOOL hadRangeHeader = NO;
+	progressBlock = ^(CMProgressInfo *progressInfo){
+		if (NO == hadRangeHeader) {
+			hadRangeHeader = ([progressInfo.request.headers objectForKey:@"Range"] != nil || [progressInfo.request.headers objectForKey:@"If-Range"] != nil);
+		}
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (firstProgress == -1.f) {
+			firstProgress = progress;
+		}
+	};
+	[massiveStream downloadWithResume:YES progressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
+	STAssertTrue(firstProgress == 0.f, @"Download should have reset to a zero byte offset");
+	
 }
 
 - (void)shouldUploadAFileFromDisk {
 	CMResource *hero = [self.service resource:@"test/upload/hero"];
 	
-	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		NSLog(@"progress: %@",progress);
 //		[mockProgressObject setValue:progress forKey:@"Progress"];
@@ -113,11 +206,10 @@
 
 #pragma mark - Helpers
 
-- (void) assertDownloadAFileToDisk {
-	CMResource *hero = [self.service resource:@"test/download/hero"];
+- (void) assertDownloadAFileToDisk:(CMResource *)resource {
 	
 	if (self.cachesDir) {
-		hero.cachesDir = self.cachesDir;
+		resource.cachesDir = self.cachesDir;
 	}
 	
 	// Set up a mock to receive progress blocks
@@ -136,7 +228,7 @@
 	
 	[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:zeroProgressBlock] forKey:@"Progress"];
 	
-	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		[mockProgressObject setValue:progress forKey:@"Progress"];
 		if ([progress floatValue] < 1.f) {
@@ -156,7 +248,7 @@
 	};
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[hero downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);

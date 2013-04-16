@@ -46,7 +46,13 @@ NSString *kCumulusHTTPMethodHEAD = @"HEAD";
 
 NSString *kCumulusHTTPHeaderAccept = @"Accept";
 NSString *kCumulusHTTPHeaderContentType = @"Content-Type";
+NSString *kCumulusHTTPHeaderContentLength = @"Content-Length";
 NSString *kCumulusHTTPHeaderAuthorization = @"Authorization";
+NSString *kCumulusHTTPHeaderContentDisposition = @"Content-Disposition";
+NSString *kCumulusHTTPHeaderETag = @"ETag";
+NSString *kCumulusHTTPHeaderLastModified = @"Last-Modified";
+NSString *kCumulusHTTPHeaderRange = @"Range";
+NSString *kCumulusHTTPHeaderIfRange = @"If-Range";
 
 NSString *kCumulusProgressInfoKeyURL = @"URL";
 NSString *kCumulusProgressInfoKeyTempFileURL = @"tempFileURL";

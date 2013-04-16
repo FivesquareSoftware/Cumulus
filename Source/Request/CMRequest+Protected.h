@@ -56,6 +56,7 @@
 @property (readwrite, strong) NSURLConnection *connection;
 @property (nonatomic, strong) NSURLRequest *originalURLRequest;
 @property (weak) NSTimer *timeoutTimer;
+@property (getter = requestIsConfigured) BOOL requestConfigured;
 @property (readonly) BOOL canStart;
 @property (readonly) BOOL canCancel;
 @property (readonly) BOOL canAbort;
@@ -63,7 +64,7 @@
 // Helpers
 
 - (void) configureURLRequest:(NSMutableURLRequest *)URLRequest;
-- (void) processResponse:(CMResponse *)response;
+- (void) postProcessResponse:(CMResponse *)response;
 
 // Connection event handlers
 

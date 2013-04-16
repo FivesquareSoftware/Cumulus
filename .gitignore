@@ -6,3 +6,4 @@ build
 *.perspectivev3
 xcuserdata
 *.log
+tmp

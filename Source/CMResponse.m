@@ -38,6 +38,10 @@
 #import "CMRequest.h"
 #import "CMConstants.h"
 
+@interface CMResponse ()
+@property (nonatomic) NSDateFormatter *httpDateFormatter;
+@end
+
 @implementation CMResponse
 
 // ========================================================================== //
@@ -49,12 +53,27 @@
 @synthesize request=_request;
 @synthesize status=_status;
 @synthesize error = _error;
-
+@synthesize httpDateFormatter = _httpDateFormatter;
 
 
 @dynamic headers;
 - (NSDictionary *) headers {
 	return [_request.URLResponse allHeaderFields];
+}
+
+@dynamic ETag;
+- (NSString *) ETag {
+	return self.headers[kCumulusHTTPHeaderETag];
+}
+
+@dynamic lastModified;
+- (NSDate *) lastModified {
+	NSDate *lastModified = nil;
+	NSString *lastModifiedString = self.headers[kCumulusHTTPHeaderLastModified];
+	if (lastModifiedString.length > 0) {
+		lastModified = [_httpDateFormatter dateFromString:lastModifiedString];
+	}
+	return lastModified;
 }
 
 - (NSString *) body {
@@ -108,6 +127,9 @@
         else {
 			_status = [request.URLResponse statusCode];
 		}
+		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+		[dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
+		_httpDateFormatter = dateFormatter;
     }
     return self;
 }

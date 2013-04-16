@@ -35,10 +35,24 @@
 
 #import <Foundation/Foundation.h>
 
+/** CMAuthProvider is a simple protocol that can be easily implemented to include just about any type of request authorization. Cumulus includes built in implementations of CMAuthProvider that provide [BASIC](CMBasicAuthProvider), [CMServerTrustAuthProvider](Server Trust), [CMClientCertificateAuthProvider](Client Certificate), [CMOAuth2AuthProvider](OAuth2) and [CMS3AuthProvider](Amazon S3) authoriization. 
+ *  @see howto.md for an example implementation of a custom auth provider.
+ */
 @protocol CMAuthProvider <NSObject>
 
+/** One of the authentication methods defined in the NSURLAuthenticationMethod* constants. For example, a BASIC auth provider would return NSURLAuthenticationMethodHTTPBasic.
+  * @returns The authentication type provided.
+  */
 - (NSString *) providedAuthenticationMethod;
+
+/** Each implementation performs the works specific to their authentication type in this method, authorizing the specified request. 
+ *  @param urlRequest the NSMutableURLRequest to authorize
+ */
 - (void) authorizeRequest:(NSMutableURLRequest *)urlRequest;
+
+/** If appropriate for the authentication type, an auth provider implementation may return an NSURLCredential from this method. 
+ *  @returns An instance of NSURLCredential
+ */
 - (NSURLCredential *) credentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 
 @end

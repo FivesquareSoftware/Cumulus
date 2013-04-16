@@ -9,9 +9,8 @@
 #import "CMDownloadRequest.h"
 
 #import "CMFixtureRequest.h"
+#import "CMDownloadRequest.h"
 
-@interface CMFixtureDownloadRequest : CMFixtureRequest
-
-@property (nonatomic, strong) NSString *cachesDir; ///< The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located.
+@interface CMFixtureDownloadRequest : CMFixtureRequest <CMDownloadRequest>
 
 @end

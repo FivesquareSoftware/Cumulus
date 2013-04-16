@@ -1,5 +1,5 @@
 //
-//  CMResponseCodesSpec.h
+//  CMResponseSpec.h
 //  Cumulus
 //
 //  Created by John Clayton on 10/15/11.
@@ -12,7 +12,7 @@
 
 @class CMResource;
 
-@interface CMResponseCodesSpec : OCExampleGroup {
+@interface CMResponseSpec : OCExampleGroup {
  // add any ivars you need to store state for specs
 }
 

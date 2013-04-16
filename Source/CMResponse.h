@@ -38,23 +38,28 @@
 @class CMRequest;
 
 
-/** CMResponse contains a pointer back to the CMRequest that generated it, as well as numeroud conveniences that allow introspection of the HTTP response and any transformed results or NSError objects. */
+/** CMResponse contains a pointer back to the CMRequest that generated it, as well as numerous conveniences that allow quick introspection of the HTTP response and any transformed results or NSError objects. */
 @interface CMResponse : NSObject {
     
 }
 
+/** @name Response Information */
+
 @property (nonatomic, strong) CMRequest *request;
 @property (nonatomic, readonly) NSInteger status;
 @property (nonatomic, readonly) NSDictionary *headers;
+@property (nonatomic, readonly) NSString *ETag;
+@property (nonatomic, readonly) NSDate *lastModified;
 @property (nonatomic, readonly) NSString *body;
 @property (nonatomic, readonly) id result;
 @property (nonatomic, readonly) NSError *error;
-@property (nonatomic, readonly) BOOL success; ///< @return YES if #error is nil and #wasSuccessful returns YES (status is in the range 200-299). This is the primary mechanism for quickly determining the success or failure of a request.
+/// @returns YES if error is nil and wasSuccessful returns YES (status is in the range 200-299). This is the primary mechanism for quickly determining the success or failure of a request.
+@property (nonatomic, readonly) BOOL success;
 
 - (id)initWithRequest:(CMRequest *)request;
 
 
-/** Some common NSURLErrorDomain error tests. */
+/** @name Tests for Common NSURLErrorDomain errors. */
 
 
 - (BOOL) ErrorBadURL; // -1000
@@ -102,7 +107,7 @@
 
 
 
-/** Specific HTTP response codes */
+/** @name Tests for Specific HTTP response codes */
 
 - (BOOL) HTTPCanceled; // 0
 
@@ -156,7 +161,7 @@
 - (BOOL) HTTPVersionNotSupported; // 505
 
 
-/** Ranges of HTTP response codes */
+/** @name Tests for Ranges of HTTP response codes */
 
 - (BOOL) HTTPInformational; // 100's
 - (BOOL) HTTPSuccessful; // 200's

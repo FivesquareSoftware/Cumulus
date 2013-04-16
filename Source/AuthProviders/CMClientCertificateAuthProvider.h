@@ -38,6 +38,7 @@
 
 #import "CMAuthProvider.h"
 
+/** Provides Client Certificate authentication to CMResources. */
 @interface CMClientCertificateAuthProvider : NSObject <CMAuthProvider>
 
 @end
