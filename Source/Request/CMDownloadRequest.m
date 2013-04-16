@@ -78,15 +78,18 @@ NSString *kDownloadStateInfoKeyLastModifiedDate = @"lastModifiedDate";
 	if (nil == _downloadStateInfo) {
 		NSURL *stateDataURL = [self downloadStateURL];
 		if (stateDataURL) {
-			NSInputStream *inputStream = [NSInputStream inputStreamWithURL:stateDataURL];
-			[inputStream open];
-			if ([inputStream hasBytesAvailable]) {
+//			NSInputStream *inputStream = [NSInputStream inputStreamWithURL:stateDataURL];
+//			[inputStream open];
+//			if ([inputStream hasBytesAvailable]) {
+			NSData *stateData = [NSData dataWithContentsOfURL:stateDataURL];
+			if ([stateData length] > 0) {
 				NSError *error = nil;
-				NSMutableDictionary *state = [NSPropertyListSerialization propertyListWithStream:inputStream options:NSPropertyListMutableContainersAndLeaves format:NULL error:&error];
+//				NSMutableDictionary *state = [NSPropertyListSerialization propertyListWithStream:inputStream options:NSPropertyListMutableContainersAndLeaves format:NULL error:&error];
+				NSMutableDictionary *state = [NSPropertyListSerialization propertyListWithData:stateData options:NSPropertyListMutableContainersAndLeaves format:NULL error:&error];
 				NSAssert2(state || error == nil, @"Could not load state data from URL %@ (%@)",stateDataURL,error);
 				_downloadStateInfo = state;
 			}
-			[inputStream close];
+//			[inputStream close];
 			if (nil == _downloadStateInfo) {
 				_downloadStateInfo = [NSMutableDictionary new];
 			}
