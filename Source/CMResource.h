@@ -105,7 +105,6 @@
 	
 }
 
-+ (dispatch_queue_t) dispatch_queue;
 
 /** @name Resource Information */
 

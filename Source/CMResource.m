@@ -68,7 +68,7 @@
 
 @implementation CMResource
 
-+ (dispatch_queue_t) dispatch_queue {
++ (dispatch_queue_t) dispatchQueue {
 	static dispatch_queue_t _dispatch_queue = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
@@ -393,7 +393,7 @@
 - (void) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET];
 	request.didReceiveDataBlock = progressBlock;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) getWithQuery:(id)query {
@@ -408,7 +408,7 @@
 - (void) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET query:query];
 	request.didReceiveDataBlock = progressBlock;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 #pragma mark -HEAD
@@ -422,7 +422,7 @@
 
 - (void) headWithCompletionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD];
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) headWithQuery:(id)query {
@@ -432,7 +432,7 @@
 
 - (void) headWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -446,7 +446,7 @@
 
 - (void) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE];
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) deleteWithQuery:(id)query {
@@ -456,7 +456,7 @@
 
 - (void) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE query:query];
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -477,7 +477,7 @@
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) post:(id)payload withQuery:(id)query {
@@ -494,7 +494,7 @@
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST query:query];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -515,7 +515,7 @@
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) put:(id)payload withQuery:(id)query {
@@ -532,7 +532,7 @@
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT query:query];
     request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -547,13 +547,13 @@
 	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	request.shouldResume = shouldResume;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (void) uploadFile:(NSURL *)fileURL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest *request = [self uploadRequestWithFileURL:fileURL query:nil];
 	request.didSendDataBlock = progressBlock;
-	[self runRequest:request withCompletionBlock:completionBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 
@@ -644,11 +644,13 @@
 		NSDictionary *queryDictionary;
 		if ([query isKindOfClass:[NSDictionary class]]) {
 			queryDictionary = query;
-		} else {
+		}
+		else {
 			id firstObject = [query count] > 0 ? [query objectAtIndex:0] : nil;
 			if ([firstObject isKindOfClass:[NSDictionary class]]) {
 				queryDictionary = firstObject;
-			} else {
+			}
+			else {
 				NSUInteger idx = 0;
 				NSMutableArray *queryValues = [NSMutableArray new];
 				NSMutableArray *queryKeys = [NSMutableArray new];
@@ -656,7 +658,8 @@
 					BOOL isKey = ( (idx % 2) == 0 );
 					if (isKey) {
 						[queryKeys addObject:queryObject];
-					} else {
+					}
+					else {
 						[queryValues addObject:queryObject];
 					}
 					idx++;
@@ -671,10 +674,12 @@
 	if (queryString.length) {
 		if (self.queryString) {
 			requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@&%@",self.URL,queryString]];
-		} else {
+		}
+		else {
 			requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",self.URL,queryString]];
 		}
-	} else {
+	}
+	else {
 		requestURL = self.URL;
 	}
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:requestURL];
@@ -717,13 +722,14 @@
 	};
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[self runRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
 
 	if ([NSThread currentThread] == [NSThread mainThread]) {
 		while(dispatch_semaphore_wait(request_sema, 0.01) != 0) {
 			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantPast]];
 		}
-	} else {
+	}
+	else {
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	}
 	dispatch_semaphore_signal(request_sema);
@@ -731,28 +737,30 @@
     return localResponse;
 }
 
-- (void) runRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
-	[self runRequest:request withCompletionBlock:completionBlock abortBlock:NULL];
+- (void) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
+	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:NULL];
 }
 
-- (void) runRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock {
+- (void) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock {
 	CMPreflightBlock preflightBlock = self.preflightBlock;
 	if (preflightBlock) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			BOOL success = preflightBlock(request);
 			if(success) {
 				[self dispatchRequest:request withCompletionBlock:completionBlock];
-			} else {
+			}
+			else {
 				[request abortWithBlock:abortBlock];
 			}
 		});
-	} else {
+	}
+	else {
 		[self dispatchRequest:request withCompletionBlock:completionBlock];
 	}
 }
 
 - (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
-	dispatch_queue_t request_queue = [CMResource dispatch_queue];//dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_queue_t request_queue = [CMResource dispatchQueue];//dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(request_queue, ^{
 		[self addRequest:request];
 		[request startWithCompletionBlock:^(CMResponse *response){
@@ -769,7 +777,7 @@
 - (void) addRequest:(CMRequest *)request {
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self._requests addObject:request];
-	_resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context([CMResource dispatch_queue]));
+	_resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context([CMResource dispatchQueue]));
 	if (_resourceGroup) {
 		RCLog(@"addRequest ->");
 		[_resourceGroup enter];
@@ -780,7 +788,7 @@
 - (void) removeRequest:(CMRequest *)request {
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self._requests removeObject:request];
-	_resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context([CMResource dispatch_queue]));
+	_resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context([CMResource dispatchQueue]));
 	if (_resourceGroup) {
 		RCLog(@"removeRequest  ->");
 		[_resourceGroup leaveWithResponse:request.response];

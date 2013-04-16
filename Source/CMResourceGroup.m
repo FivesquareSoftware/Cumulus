@@ -9,6 +9,7 @@
 
 #import "CMResourceGroup.h"
 #import "CMResourceGroup+Protected.h"
+#import "CMResource+Protected.h"
 
 #import "Cumulus.h"
 
@@ -133,8 +134,8 @@
 	// run work block
 	// run completion block
 	
-	dispatch_queue_t dispatch_queue = [CMResource dispatch_queue];
-	dispatch_set_context(dispatch_queue, (__bridge void *)(self));
+	dispatch_queue_t requestQueue = [CMResource dispatchQueue];
+	dispatch_set_context(requestQueue, (__bridge void *)(self));
 	dispatch_async(_dispatchQueue, ^{
 		[_currentResponses removeAllObjects];
 		groupWork(self);
@@ -148,7 +149,7 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			 completionBlock(success,_currentResponses);
 		});
-		dispatch_set_context(dispatch_queue, NULL);
+		dispatch_set_context(requestQueue, NULL);
 	});
 	
 }
