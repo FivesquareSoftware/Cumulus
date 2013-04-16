@@ -39,6 +39,7 @@
 #import "Cumulus.h"
 
 @interface CMRequest()
+
 @end
 
 
@@ -140,6 +141,7 @@ static NSUInteger requestCount = 0;
 @synthesize expectedContentLength=_expectedContentLength;
 @synthesize receivedContentLength=_receivedContentLength;
 @synthesize data=_data;
+@synthesize response = _response;
 @synthesize result=_result;
 @synthesize responseBody=_responseBody;
 @synthesize error=_error;
@@ -375,6 +377,9 @@ static NSUInteger requestCount = 0;
 	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 //	[self.connection setDelegateQueue:[[self class] delegateQueue]];
+//	[self.connection setDelegateQueue:[NSOperationQueue mainQueue]];
+//	_queue = [NSOperationQueue new];
+//	[self.connection setDelegateQueue:_queue];
     [self.connection start];
 	RCLog(@"%@", self);
 
@@ -482,6 +487,7 @@ static NSUInteger requestCount = 0;
     }
 	self.connectionFinished = YES;
 	CMResponse *response = [[CMResponse alloc] initWithRequest:self];
+	self.response = response;
 
 	// Make sure processing the results doesn't stop us from calling our completion block
 	@try {

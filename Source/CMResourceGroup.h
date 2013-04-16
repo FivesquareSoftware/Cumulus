@@ -27,6 +27,6 @@
 - (void) mark;
 - (void) markAfterDelay:(NSTimeInterval)delay; ///< calls #mark after a delay, useful if you are firing a lot of requests rapidly and need to give them a chance to launch before marking
 
-- (void) do:(void(^)(CMResourceGroup *group))groupWork withCompletionBlock:(void(^)(NSArray *responses))completionBlock;
+- (void) performWork:(void(^)(CMResourceGroup *group))groupWork withCompletionBlock:(void(^)(BOOL success, NSArray *responses))completionBlock;
 
 @end

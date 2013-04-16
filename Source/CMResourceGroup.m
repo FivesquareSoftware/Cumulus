@@ -17,6 +17,7 @@
 @property (nonatomic, assign) dispatch_group_t dispatchGroup;
 @property (nonatomic, strong) NSMutableSet *resourcesInternal;
 @property (nonatomic, strong) NSMutableSet *completionBlocksInternal;
+@property (nonatomic, strong) NSMutableArray *currentResponses;
 @end
 
 @implementation CMResourceGroup 
@@ -70,6 +71,7 @@
 		_completionBlocksInternal = [NSMutableSet new];
 		_resourcesInternal = [NSMutableSet new];
 		_clearsBlocksOnCompletion = YES;
+		_currentResponses = [NSMutableArray new];
     }
     return self;
 }
@@ -126,7 +128,34 @@
 	});
 }
 
-- (void) do:(void(^)(CMResourceGroup *group))groupWork withCompletionBlock:(void(^)(NSArray *responses))completionBlock {
+- (void) performWork:(void(^)(CMResourceGroup *group))groupWork withCompletionBlock:(void(^)(BOOL success, NSArray *responses))completionBlock {
+	// set group somewhere so that any resource inside work block can see it and attach
+	// run work block
+	// run completion block
+	
+	dispatch_queue_t dispatch_queue = [CMResource dispatch_queue];
+	dispatch_set_context(dispatch_queue, (__bridge void *)(self));
+	dispatch_async(_dispatchQueue, ^{
+		[_currentResponses removeAllObjects];
+		groupWork(self);
+		dispatch_group_wait(_dispatchGroup, DISPATCH_TIME_FOREVER);
+		__block BOOL success = YES;
+		[_currentResponses enumerateObjectsUsingBlock:^(CMResponse *response, NSUInteger idx, BOOL *stop) {
+			if (success) {
+				success = response.success;
+			}
+		}];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			 completionBlock(success,_currentResponses);
+		});
+		dispatch_set_context(dispatch_queue, NULL);
+	});
+	
+}
+
+- (void) leaveWithResponse:(CMResponse *)response {
+	[_currentResponses addObject:response];
+	dispatch_group_leave(_dispatchGroup);
 }
 
 @end

@@ -150,6 +150,8 @@
 @property (readonly) CMProgressInfo *progressReceivedInfo;
 /** @returns a progress info object representing the current progress of sending all of the local data. */
 @property (readonly) CMProgressInfo *progressSentInfo;
+/** A weak pointer to the response that owns the receiver. */
+@property (weak) CMResponse *response;
 /** The results of processing any response data with and instance of <CMCoder> and/or post-processing blocks are stored here. */
 @property (readonly, strong) id result;
 /** If the response data can be represented as a string, this property reflects the value. */
@@ -167,6 +169,8 @@
 
 
 /** @name Controlling Requests */
+
+@property (nonatomic, strong) NSOperationQueue *queue;
 
 - (void) start;
 - (void) startWithCompletionBlock:(CMCompletionBlock)completionBlock;

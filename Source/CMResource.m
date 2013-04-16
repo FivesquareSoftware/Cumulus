@@ -68,6 +68,15 @@
 
 @implementation CMResource
 
++ (dispatch_queue_t) dispatch_queue {
+	static dispatch_queue_t _dispatch_queue = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		_dispatch_queue = dispatch_queue_create("com.fivesquaresoftware.CMResource.dispatch_queue", DISPATCH_QUEUE_SERIAL);
+	});
+	return _dispatch_queue;
+}
+
 // ========================================================================== //
 
 #pragma mark - Properties
@@ -743,7 +752,7 @@
 }
 
 - (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
-	dispatch_queue_t request_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_queue_t request_queue = [CMResource dispatch_queue];//dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(request_queue, ^{
 		[self addRequest:request];
 		[request startWithCompletionBlock:^(CMResponse *response){
@@ -760,6 +769,7 @@
 - (void) addRequest:(CMRequest *)request {
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self._requests addObject:request];
+	_resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context([CMResource dispatch_queue]));
 	if (_resourceGroup) {
 		RCLog(@"addRequest ->");
 		[_resourceGroup enter];
@@ -770,9 +780,10 @@
 - (void) removeRequest:(CMRequest *)request {
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self._requests removeObject:request];
+	_resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context([CMResource dispatch_queue]));
 	if (_resourceGroup) {
 		RCLog(@"removeRequest  ->");
-		[_resourceGroup leave];
+		[_resourceGroup leaveWithResponse:request.response];
 	}
 	dispatch_semaphore_signal(_requests_semaphore);
 }

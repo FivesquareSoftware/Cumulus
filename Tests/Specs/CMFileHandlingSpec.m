@@ -35,6 +35,7 @@
 
 - (void)beforeAll {
     // set up resources common to all examples here
+	[self.specHelper cleanCaches];
 }
 
 - (void)beforeEach {

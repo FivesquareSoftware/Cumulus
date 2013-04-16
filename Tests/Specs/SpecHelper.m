@@ -76,7 +76,7 @@ NSString *kTestServerHostSSL = CumulusTestServerSSL;
 		NSString *filePath = [[Cumulus cachesDir] stringByAppendingPathComponent:file];
 		NSError *error = nil;
 		if (NO == [fm removeItemAtPath:filePath error:&error]) {
-			NSLog(@"Could clear file %@: %@ (%@)",filePath, [error localizedDescription], [error userInfo]);
+			NSLog(@"Could not clear file %@: %@ (%@)",filePath, [error localizedDescription], [error userInfo]);
 		}
 	}	
 }

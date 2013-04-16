@@ -105,6 +105,8 @@
 	
 }
 
++ (dispatch_queue_t) dispatch_queue;
+
 /** @name Resource Information */
 
 @property (nonatomic, readonly, strong) CMResource *parent;
@@ -206,7 +208,6 @@
 /** Returns the receiver's stored fixture for the supplied HTTP method if it exists or, if Cumulus#usingFixtures is YES, will attempt to return a global fixture for the request signature. */
 - (id) fixtureForHTTPMethod:(NSString *)method;
 
-/** @} */
 
 
 /** @name Request Control */
@@ -222,7 +223,6 @@
  *  @note When the block is called, there is no guarantee that the underlying NSURLConnection objects have fully canceled.
  */
 - (void) cancelRequestsWithBlock:(void (^)(void))block; 
-
 
 
 
