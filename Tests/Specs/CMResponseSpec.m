@@ -100,7 +100,7 @@
 	dispatch_release(cancel_sema);
 	
 	NSError *error = localResponse.error;
-    STAssertNil(error, @"Status code error should have been nil");
+    STAssertNil(error, @"Status code error should have been nil: %@",error);
 }
 
 - (void) shouldBeCanceled {

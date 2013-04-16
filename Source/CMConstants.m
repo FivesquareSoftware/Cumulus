@@ -60,3 +60,8 @@ NSString *kCumulusProgressInfoKeyFilename = @"filename";
 NSString *kCumulusProgressInfoKeyProgress = @"progress";
 
 NSString *kCumulusCachesDirectoryName = @"Cumulus";
+
+NSString *kCumulusDownloadStateInfoKeyTempFileURL = @"downloadedFileTempURL";
+NSString *kCumulusDownloadStateInfoKeyExpectedContentLength = @"expectedContentLength";
+NSString *kCumulusDownloadStateInfoKeyETag = @"ETag";
+NSString *kCumulusDownloadStateInfoKeyLastModifiedDate = @"lastModifiedDate";

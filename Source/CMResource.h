@@ -198,7 +198,9 @@
 
 
 
+// ========================================================================== //
 /** @name Fixtures */
+// ========================================================================== //
 
 /** Sets the fixture the receiver will use when issuing a request using the supplied HTTP method. */
 - (void) setFixture:(id)value forHTTPMethod:(NSString *)method;
@@ -209,7 +211,9 @@
 /** @} */
 
 
+// ========================================================================== //
 /** @name Request Control */
+// ========================================================================== //
 
 /// The array of non-blocking CMRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
 @property (readonly) NSMutableSet *requests;
@@ -224,9 +228,9 @@
 - (void) cancelRequestsWithBlock:(void (^)(void))block; 
 
 
-
-
+// ========================================================================== //
 /** @name HTTP Methods */
+// ========================================================================== //
 
 // GET
 
@@ -285,7 +289,9 @@
 
 
 
+// ========================================================================== //
 /** @name Handling Files */
+// ========================================================================== //
 
 
 /** @see downloadWithProgressBlock:completionBlock:resume:. */
