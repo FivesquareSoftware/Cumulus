@@ -51,6 +51,23 @@
 #pragma mark - Specs
 
 
+- (void) shouldReturnARequestIdentifierWhenLaunchingARequestAsynchronously {
+	CMResource *index = [self.service resource:@"index"];
+	
+	id identifier = [index getWithCompletionBlock:^(CMResponse *response) {}];
+	STAssertNotNil(identifier, @"Launching a request asynchronously should return an identifier");
+}
+
+- (void) shouldCancelARequestForIdentifier {
+	CMResource *index = [self.service resource:@"index"];
+	index.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;	
+	id identifier = [index getWithCompletionBlock:nil];
+	CMRequest *request = [index requestForIdentifier:identifier];
+	[index cancelRequestForIdentifier:identifier];
+	STAssertTrue(request.wasCanceled, @"wasCanceled should be YES");
+	STAssertNil(request.URLResponse, @"URLResponse should be nil");
+}
+
 - (void)shouldCancelAllRequests {
 	CMResource *smallResource = [self.service resource:@"slow"];
 	smallResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
@@ -62,13 +79,11 @@
 	
 	NSMutableSet *requests = smallResource.requests; // the ones that are still running at the moment
 	
-	dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(1);
-	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
 	[smallResource cancelRequestsWithBlock:^{
 		dispatch_semaphore_signal(cancel_sema);
 	}];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(cancel_sema);
 	dispatch_release(cancel_sema);
 	
 	for (CMRequest *request in requests) {
@@ -77,12 +92,19 @@
 	}
 }
 
-- (void) shouldProperlyRunFromTheMainQueue {
+- (void) shouldNotRemoveRequestsOnCancelation {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldNotIncludeAbortedRequests {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldRunAsynchronouslyFromTheMainQueue {
 	CMResource *index = [self.service resource:@"index"];
 	
 	__block CMResponse *localResponse = nil;
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[index getWithCompletionBlock:^(CMResponse *response) {
@@ -91,19 +113,17 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	STAssertTrue(localResponse.success, @"Response should be successful: %@", localResponse);
 }
 
-- (void) shouldProperlyRunFromConcurrentQueue {
+- (void) shouldRunAsynchronouslyFromConcurrentQueue {
 	CMResource *index = [self.service resource:@"index"];
 	
 	__block CMResponse *localResponse = nil;
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	
 	dispatch_async(queue, ^{
 		[index getWithCompletionBlock:^(CMResponse *response) {
@@ -112,12 +132,11 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	STAssertTrue(localResponse.success, @"Response should be successful: %@", localResponse);
 }
 
-- (void) shouldBeAbleToRunABlockingRequestFromTheMainThread {
+- (void) shouldRunABlockingRequestFromTheMainThread {
 	if ([NSThread currentThread] != [NSThread mainThread]) {
 		[self performSelectorOnMainThread:_cmd withObject:nil waitUntilDone:YES];
 		return;
@@ -158,5 +177,7 @@
 //	dispatch_release(request_sema);
 //	STAssertTrue(localResponse.success, @"Response should be successful: %@", localResponse);
 //}
+
+
 
 @end

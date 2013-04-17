@@ -135,21 +135,38 @@
 	// run completion block
 	
 	dispatch_queue_t requestQueue = [CMResource dispatchQueue];
-	dispatch_set_context(requestQueue, (__bridge void *)(self));
 	dispatch_async(_dispatchQueue, ^{
+		
+		// Install a choke point on request dispatch Q to set the resource group
+		// This allows any blocks on the queue already to complete, subsequent request dispatches will see us as their group
+		dispatch_barrier_sync(requestQueue, ^{
+			dispatch_set_context(requestQueue, (__bridge void *)(self));
+		});
+		
+		// Clear the responses and dispatch the current work block
 		[_currentResponses removeAllObjects];
 		groupWork(self);
+		
+		// Wait for the group to complete
 		dispatch_group_wait(_dispatchGroup, DISPATCH_TIME_FOREVER);
+		// Zero out the request dispatch Q's group
+		dispatch_barrier_sync(requestQueue, ^{
+			dispatch_set_context(requestQueue, NULL);
+		});
+		
+		// Collect our success rate
 		__block BOOL success = YES;
 		[_currentResponses enumerateObjectsUsingBlock:^(CMResponse *response, NSUInteger idx, BOOL *stop) {
 			if (success) {
 				success = response.success;
 			}
 		}];
+		
+		// Fire off the completion block
 		dispatch_async(dispatch_get_main_queue(), ^{
 			 completionBlock(success,_currentResponses);
 		});
-		dispatch_set_context(requestQueue, NULL);
+
 	});
 	
 }

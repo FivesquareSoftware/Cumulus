@@ -91,6 +91,9 @@
 /** The URL associated with the URL request the receiver was created with. */
 @property (nonatomic, readonly) NSURL *URL;
 
+/** An arbitrary identifier assigned to the receiver, typically by a resource dispatching many requests. */
+@property (nonatomic, strong) id identifier;
+
 /** Values added to this collection before the request is constructed (prior to calling [CMRequest start]) will become a part of the underlying HTTP request's (#URLRequest) headers. Once the HTTP request has started, the return value of this property reflects the current request's actual headers, which may have mutated in the process of responding to lifecycle events.
  *  @note Adding values to this collection after calling start has no effect.
  *  @returns The headers associated with URLRequest at a given point in time.
