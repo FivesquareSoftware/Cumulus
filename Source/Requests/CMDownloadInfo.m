@@ -95,4 +95,8 @@
 	[aCoder encodeObject:_lastModifiedDate forKey:@"_lastModifiedDate"];
 }
 
+- (NSString *) description {
+	return [NSString stringWithFormat:@"%@ { tempURL:%@, expectedContentLength: %@, ETag: %@, lastModifiedDate: %@ }",[super description],_downloadedFileTempURL,@(_expectedContentLength),_ETag,_lastModifiedDate];
+}
+
 @end
