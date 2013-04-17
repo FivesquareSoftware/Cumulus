@@ -742,12 +742,14 @@
 }
 
 - (void) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock {
+	dispatch_semaphore_t launch_sema = dispatch_semaphore_create(0);
+	
 	CMPreflightBlock preflightBlock = self.preflightBlock;
 	if (preflightBlock) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			BOOL success = preflightBlock(request);
 			if(success) {
-				[self dispatchRequest:request withCompletionBlock:completionBlock];
+				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema];
 			}
 			else {
 				[request abortWithBlock:abortBlock];
@@ -755,11 +757,14 @@
 		});
 	}
 	else {
-		[self dispatchRequest:request withCompletionBlock:completionBlock];
+		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema];
 	}
+	
+	dispatch_semaphore_wait(launch_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(launch_sema);
 }
 
-- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
+- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launch_semaphore {
 	dispatch_queue_t request_queue = [CMResource dispatchQueue];//dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(request_queue, ^{
 		[self addRequest:request];
@@ -771,6 +776,7 @@
 				[self removeRequest:request];
 			});
 		}];
+		dispatch_semaphore_signal(launch_semaphore);
 	});
 }
 

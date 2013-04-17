@@ -35,11 +35,6 @@
 #import "CMRequest.h"
 
 
-extern NSString *kDownloadStateInfoKeyTempFileURL;
-extern NSString *kDownloadStateInfoKeyExpectedContentLength;
-extern NSString *kDownloadStateInfoKeyETag;
-extern NSString *kDownloadStateInfoKeyLastModifiedDate;
-
 @protocol CMDownloadRequest <NSObject>
 
 /** The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located. */

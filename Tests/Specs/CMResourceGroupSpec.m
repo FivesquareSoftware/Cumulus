@@ -130,12 +130,16 @@
 	CMResourceGroup *group = [CMResourceGroup new];
 	
 	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
-	__block localSuccess = NO;
+	__block BOOL localSuccess = NO;
 	__block NSArray *localResponses = nil;
+	__block BOOL completionBlockRan = NO;
 
 	[group performWork:^(CMResourceGroup *group) {
 		CMResource *index = [self.service resource:@"index"];
 		[index get];
+		[index getWithCompletionBlock:^(CMResponse *response) {
+			completionBlockRan = YES;
+		}];
 		
 	} withCompletionBlock:^(BOOL success, NSArray *responses) {
 		localSuccess = success;
@@ -147,7 +151,8 @@
 	dispatch_release(group_semaphore);
 
 	STAssertTrue(localSuccess, @"Group should have succeeded");
-	STAssertTrue(localResponses.count == 1, @"Group should have passed along contained responses: %@",localResponses);
+	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
+	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
 	
 	
 }

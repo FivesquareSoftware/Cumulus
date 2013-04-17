@@ -69,7 +69,9 @@
 @interface CMRequest : NSObject <NSURLConnectionDelegate,NSURLConnectionDataDelegate>  
 
 
+// ========================================================================== //
 /** @name Request State */
+// ========================================================================== //
 
 @property (readonly, getter = isStarted) BOOL started;
 @property (readonly, getter = isFinished) BOOL finished;
@@ -81,40 +83,13 @@
 @property (readonly, getter = didComplete) BOOL completed;
 
 
-
-/** @name Lifecycle Blocks */
-
-
-/** This block gets called every time the connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite: delegate method is invoked. */
-@property (copy) CMProgressBlock didSendDataBlock;
-/** This block gets called every time connection:didReceiveData: delegate method is invoked. */
-@property (copy) CMProgressBlock didReceiveDataBlock;
-/** This block gets a chance to modify the value of #result before the response is passed to the completion block. */
-@property (strong) CMPostProcessorBlock postProcessorBlock;
-/** Runs when a request is aborted or when the receiver fails before starting to make the request. */
-@property (copy) CMAbortBlock abortBlock;
-/** Gets a chance to handle the value of #response when the entire request is complete. Should not raise an exception as a mechanism for controlling execution, since it won't be seen outside the block. */
-@property (copy) CMCompletionBlock completionBlock;
-
-
-
-/** @name Content Encoding/Decoding */
-
-
-/** @returns either a manually set payloadEncoder or one that is created from inferences based on request headers. 
- *  @see CMCoder for details about how this is created by inference. 
- */
-@property (nonatomic, strong) id<CMCoder> payloadEncoder;
-/** @returns either a manually set responseDecoder or one that is created from inferences based on response headers.  
- *  @see CMCoder for details about how this is created by inference. 
- */
-@property (nonatomic, strong) id<CMCoder> responseDecoder;
-
-/** @} */
-
-
+// ========================================================================== //
 /** @name Configuration */
+// ========================================================================== //
 
+
+/** The URL associated with the URL request the receiver was created with. */
+@property (nonatomic, readonly) NSURL *URL;
 
 /** Values added to this collection before the request is constructed (prior to calling [CMRequest start]) will become a part of the underlying HTTP request's (#URLRequest) headers. Once the HTTP request has started, the return value of this property reflects the current request's actual headers, which may have mutated in the process of responding to lifecycle events.
  *  @note Adding values to this collection after calling start has no effect.
@@ -133,7 +108,43 @@
 
 
 
+// ========================================================================== //
+/** @name Lifecycle Handlers */
+// ========================================================================== //
+
+
+/** This block gets called every time the connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite: delegate method is invoked. */
+@property (copy) CMProgressBlock didSendDataBlock;
+/** This block gets called every time connection:didReceiveData: delegate method is invoked. */
+@property (copy) CMProgressBlock didReceiveDataBlock;
+/** This block gets a chance to modify the value of #result before the response is passed to the completion block. */
+@property (strong) CMPostProcessorBlock postProcessorBlock;
+/** Runs when a request is aborted or when the receiver fails before starting to make the request. */
+@property (copy) CMAbortBlock abortBlock;
+/** Gets a chance to handle the value of #response when the entire request is complete. Should not raise an exception as a mechanism for controlling execution, since it won't be seen outside the block. */
+@property (copy) CMCompletionBlock completionBlock;
+
+
+
+// ========================================================================== //
+/** @name Content Encoding/Decoding */
+// ========================================================================== //
+
+
+/** @returns either a manually set payloadEncoder or one that is created from inferences based on request headers.
+ *  @see CMCoder for details about how this is created by inference.
+ */
+@property (nonatomic, strong) id<CMCoder> payloadEncoder;
+/** @returns either a manually set responseDecoder or one that is created from inferences based on response headers.
+ *  @see CMCoder for details about how this is created by inference.
+ */
+@property (nonatomic, strong) id<CMCoder> responseDecoder;
+
+
+
+// ========================================================================== //
 /** @name Request/Response Handling */
+// ========================================================================== //
 
 
 /** When called creates an NSMutableURLRequest from the URL request used in initWithURLRequest: and any headers set on the receiver. Cannot be set externally, but since it's mutable, can be manipulated to achieve various custom configurations as needed. */
@@ -160,7 +171,9 @@
 
 
 
+// ========================================================================== //
 /** @name Creating Requests */
+// ========================================================================== //
 
 
 - (id) initWithURLRequest:(NSURLRequest *)URLRequest;
@@ -168,7 +181,9 @@
 
 
 
+// ========================================================================== //
 /** @name Controlling Requests */
+// ========================================================================== //
 
 @property (nonatomic, strong) NSOperationQueue *queue;
 
@@ -186,7 +201,9 @@
 
 
 
+// ========================================================================== //
 /** @name Request Helpers */
+// ========================================================================== //
 
 - (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
 

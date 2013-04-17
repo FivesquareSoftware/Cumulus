@@ -77,6 +77,11 @@ extern NSString *kCumulusProgressInfoKeyProgress;
 
 extern NSString *kCumulusCachesDirectoryName;
 
+extern NSString *kCumulusDownloadStateInfoKeyTempFileURL;
+extern NSString *kCumulusDownloadStateInfoKeyExpectedContentLength;
+extern NSString *kCumulusDownloadStateInfoKeyETag;
+extern NSString *kCumulusDownloadStateInfoKeyLastModifiedDate;
+
 
 // HTTP Status Codes (so we don't make silly mistakes :)
 

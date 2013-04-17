@@ -130,6 +130,11 @@ static NSUInteger requestCount = 0;
 @synthesize maxAuthRetries=_maxAuthRequests;
 @synthesize payload=_payload;
 
+@dynamic URL;
+- (NSURL *) URL {
+	return _originalURLRequest.URL;
+}
+
 
 #pragma mark - -Execution Context
 

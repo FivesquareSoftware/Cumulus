@@ -86,7 +86,7 @@
 - (void) shouldResumeDownloadingAFileToDisk {
 	
 	CMResource *massive = [self.service resource:@"test/download/massive"];
-
+	
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
 		self.downloadedFileURL = [progressInfo tempFileURL];
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
@@ -104,13 +104,25 @@
 	
 	[massive downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+
+	NSDictionary *downloadState = [CMDownloadInfo downloadInfo];
+	CMDownloadInfo *massiveInfo = [downloadState objectForKey:[massive URL]];
+	NSURL *tempFileURL = massiveInfo.downloadedFileTempURL;
 	
+	NSFileManager *fm = [NSFileManager new];
+	BOOL partialDownloadExists = [fm fileExistsAtPath:[tempFileURL path]];
+	
+	STAssertTrue(partialDownloadExists, @"Resumable file did not exist prior to resuming");
+	
+
 	__block float firstProgress = -1.f;
 	__block BOOL hadRangeHeader = NO;
+	__block BOOL writesToSameTempFile = NO;
 	progressBlock = ^(CMProgressInfo *progressInfo){
 		if (NO == hadRangeHeader) {
-			hadRangeHeader = ([progressInfo.request.headers objectForKey:@"Range"] != nil || [progressInfo.request.headers objectForKey:@"If-Range"] != nil);
+			hadRangeHeader = ([progressInfo.request.headers objectForKey:kCumulusHTTPHeaderRange] != nil || [progressInfo.request.headers objectForKey:kCumulusHTTPHeaderIfRange] != nil);
 		}
+		writesToSameTempFile = [progressInfo.tempFileURL isEqual:tempFileURL];
 		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
 		if (firstProgress == -1.f && progress > 0.f && progress < 1.f) {
 			firstProgress = progress;
@@ -122,6 +134,7 @@
 
 	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
 	STAssertTrue(hadRangeHeader, @"Request should have included a range header");
+	STAssertTrue(writesToSameTempFile, @"Download should have resumed writing to partial download");
 	STAssertTrue(firstProgress > 0.f, @"Download should have resumed at a non-zero offset");
 }
 
