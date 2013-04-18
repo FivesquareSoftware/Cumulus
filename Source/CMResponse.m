@@ -53,8 +53,25 @@
 @synthesize request=_request;
 @synthesize status=_status;
 @synthesize error = _error;
+@synthesize contentLength = _contentLength;
+@synthesize contentRange = _contentRange;
+@synthesize totalLength = _totalLength;
 @synthesize httpDateFormatter = _httpDateFormatter;
 
+
+- (NSInteger) status {
+	if (_status == kCFNotFound) {
+		// If user canceled auth, we need to help a bit and set the right status code
+		NSError *error = _request.error;
+		if(error.code == NSURLErrorUserCancelledAuthentication) {
+			_status = 401;
+		}
+        else if (_request.URLResponse) {
+			_status = [_request.URLResponse statusCode];
+		}
+	}
+	return _status;
+}
 
 @dynamic headers;
 - (NSDictionary *) headers {
@@ -76,6 +93,52 @@
 	return lastModified;
 }
 
+- (long long) contentLength {
+	if (_contentLength == kCFNotFound) {
+		_contentLength = 0;
+		NSString *contentLengthHeaderValue = self.headers[kCumulusHTTPHeaderContentLength];
+		if (contentLengthHeaderValue) {
+			_contentLength = [contentLengthHeaderValue longLongValue];
+		}
+		else if (self.contentRange.location != kCFNotFound) {
+			_contentLength = _contentRange.contentLength;
+		}
+	}
+	return _contentLength;
+}
+
+- (CMContentRange) contentRange {
+	if (_contentRange.location == kCFNotFound) {
+		NSString *contentRangeHeaderValue = self.headers[kCumulusHTTPHeaderContentRange];
+		if (contentRangeHeaderValue) {
+			NSError *error = nil;
+			NSRegularExpression *contentRangeExpression = [NSRegularExpression regularExpressionWithPattern:@"bytes (\\d+)-(\\d+)/(\\d+)" options:NSRegularExpressionCaseInsensitive error:&error];
+			NSTextCheckingResult *match = [contentRangeExpression firstMatchInString:contentRangeHeaderValue options:0 range:NSMakeRange(0, contentRangeHeaderValue.length)];
+			if (match) {
+				long long startBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:1]] longLongValue];
+				long long endBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:2]] longLongValue];
+				long long possibleBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:3]] longLongValue];
+				_contentRange.location = startBytes;
+				_contentRange.length = endBytes-startBytes;
+				_contentRange.contentLength = possibleBytes;
+			}
+		}
+	}
+	return _contentRange;
+}
+
+- (long long) totalLength {
+	if (_totalLength == kCFNotFound) {
+		if (self.contentRange.location != kCFNotFound) {
+			_totalLength = self.contentRange.contentLength;
+		}
+		else {
+			_totalLength = self.contentLength;
+		}
+	}
+	return _totalLength;
+}
+
 - (NSString *) body {
 	return _request.responseBody;
 } 
@@ -84,7 +147,7 @@
 	if (nil == _error) {
 		if (NO == _request.wasCanceled && NO == [self HTTPSuccessful] && nil == _request.error) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSString stringWithFormat:@"Received %u HTTP Status code",_status], NSLocalizedDescriptionKey
+								  [NSString stringWithFormat:@"Received %u HTTP Status code",self.status], NSLocalizedDescriptionKey
 								  , _request.responseBody, NSLocalizedFailureReasonErrorKey
 								  , [_request.URLResponse URL], NSURLErrorFailingURLErrorKey
 								  , [NSNumber numberWithInt:_status], kRESTCLientHTTPStatusCodeErrorKey
@@ -104,6 +167,11 @@
 
 @dynamic success;
 - (BOOL) success {
+	return self.wasSuccessful;
+}
+
+@dynamic wasSuccessful;
+- (BOOL) wasSuccessful {
 	return self.error == nil && [self HTTPSuccessful];
 }
 
@@ -120,13 +188,18 @@
     if (self) {
         _request = request;
 		// If user canceled auth, we need to help a bit and set the right status code
-		NSError *error = request.error;
-		if(error.code == NSURLErrorUserCancelledAuthentication) {
-			_status = 401;
-		}
-        else {
-			_status = [request.URLResponse statusCode];
-		}
+//		NSError *error = request.error;
+//		if(error.code == NSURLErrorUserCancelledAuthentication) {
+//			_status = 401;
+//		}
+//        else {
+//			_status = [request.URLResponse statusCode];
+//		}
+		_status = kCFNotFound;
+		_contentLength = kCFNotFound;
+		_contentRange = (CMContentRange){ kCFNotFound , 0, 0 };
+		_totalLength = kCFNotFound;
+		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
 		_httpDateFormatter = dateFormatter;

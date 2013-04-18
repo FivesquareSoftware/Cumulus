@@ -76,7 +76,7 @@
 @property (readonly, getter = isStarted) BOOL started;
 @property (readonly, getter = isFinished) BOOL finished;
 @property (readonly, getter = wasCanceled) BOOL canceled;
-/** Whether or not the request received the entirety of the data it was expecting.
+/** Whether or not the request received the entirety of the bytes representing a particular piece of content. 
  *  @note Currently this is just a dumb check of received data vs the value in the Content-length header, which works for single cases. Things like HTTP chunking that span multiple requests would require a more complex calculation outside of the scope of the receiver, making the returned value here meaningful only in a limited sense.
  *  @returns YES if receivedContentLength == expectedContentLength or if expectedContentLength == NSURLResponseUnknownLength, which is typically the case with streamed content.
  */

@@ -54,6 +54,10 @@
 #pragma mark - Specs
 
 
+
+#pragma mark - - State and Derived Values
+
+
 // requests never quit with this range, have to figure out another way to test
 
 //- (void) shouldBeContinue {
@@ -73,6 +77,34 @@
 	CMResponse *response = [resource get];
 	BOOL lastModifiedWasDate = [response.lastModified isKindOfClass:[NSDate class]];
 	STAssertTrue(lastModifiedWasDate, @"Response last modified should have been a date: %@",response.lastModified);
+}
+
+- (void) shouldReturnAValidContentRangeForARangeRequest {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldReturnAnInvalidContentRangeForANonRangeRequest {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldReturnAValidContentLengthWhenServerReportedIt {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldReturnTheLengthOfContentRangeWhenContentRangeWasNotReported {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldReturnAZeroContentRangeWhenServerDidNotReportIt {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldReportContentRangeContentLengthForTotalLengthForARangeRequest {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
+}
+
+- (void) shouldReturnContentLengthForTotalLengthWhenThereIsNoRange {
+	STAssertTrue(NO, @"UNIMPLEMENTED");
 }
 
 - (void) shouldCreateAnErrorForHTTPErrorStatusCodes {
@@ -119,6 +151,13 @@
 	dispatch_release(cancel_sema);
 	STAssertTrue([localResponse HTTPCanceled], @"Response#HTTPCanceled should be true: %@",localResponse);
 }
+
+
+
+
+#pragma mark - - Response Codes
+
+
 
 - (void) shouldBeOk {
 	CMResource *resource = [self.endpoint resource:@"ok"];

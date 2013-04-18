@@ -100,6 +100,10 @@ static NSUInteger requestCount = 0;
 	if (self.expectedContentLength == NSURLResponseUnknownLength) {
 		return YES;
 	}
+	NSString *contentRange = nil;
+	if ( (contentRange = [[self.URLResponse allHeaderFields] objectForKey:kCumulusHTTPHeaderContentRange]) ) {
+		
+	}
 	return self.expectedContentLength == self.receivedContentLength;
 }
 
@@ -190,6 +194,7 @@ static NSUInteger requestCount = 0;
 @synthesize originalURLRequest=_originalURLRequest;
 @synthesize timeoutTimer=_timeoutTimer;
 @synthesize requestConfigured = _requestConfigured;
+@synthesize responseInternal = _responseInternal;
 
 @dynamic fileExtension;
 - (NSString *) fileExtension {
@@ -486,7 +491,8 @@ static NSUInteger requestCount = 0;
         return;
     }
 	self.connectionFinished = YES;
-	CMResponse *response = [[CMResponse alloc] initWithRequest:self];
+	CMResponse *response = self.responseInternal;//[[CMResponse alloc] initWithRequest:self];
+	self.responseInternal = nil;
 
 	// Make sure processing the results doesn't stop us from calling our completion block
 	@try {
@@ -647,6 +653,7 @@ static NSUInteger requestCount = 0;
 	self.URLResponse = (NSHTTPURLResponse *)response;
 //	RCLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
 	self.expectedContentLength = [response expectedContentLength];
+	self.responseInternal = [[CMResponse alloc] initWithRequest:self];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {

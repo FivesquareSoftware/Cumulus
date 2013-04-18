@@ -66,3 +66,9 @@ typedef enum {
 	, CMContentTypeText
 	, CMContentTypePNG
 } CMContentType;
+
+typedef struct {
+    long long location;
+    long long length;
+	long long contentLength;
+} CMContentRange;

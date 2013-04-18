@@ -45,8 +45,9 @@
 @property (readwrite) BOOL canceled;
 
 @property (readwrite, strong) NSHTTPURLResponse *URLResponse;
-
 @property (readwrite, strong) NSString *responseBody;
+@property (nonatomic, strong) CMResponse *responseInternal;
+
 
 
 // Private properties
