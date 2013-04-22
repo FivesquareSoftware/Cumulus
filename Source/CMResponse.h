@@ -63,28 +63,31 @@
  */
 @property (nonatomic, readonly) NSDate *lastModified;
 
-/** The length of the response body as reported by the server. 
- *  @discussion If there is a 'Content-Length' response header, its value is used to represent this attribute. Otherwise, if there was a content range, the difference between the start and end bytes is returned. If it is not possible to calculate contentLength by either method (such as when the response reflects streamed content), 0 is returned.
- *  @returns The content length or 0.
+/** The expected length of the response body reported by the server. 
+ *  @discussion If there is a 'Content-Length' response header, its value is used to represent this attribute. Otherwise, if there was a 'Content-Range' header, the difference between the start and end bytes is returned. If it is not possible to calculate contentLength by either method (such as when the response reflects streamed content), NSURLResponseUnknownLength is returned.
+ *  @returns The content length or NSURLResponseUnknownLength.
  */
-@property (nonatomic, readonly) long long contentLength;
+@property (nonatomic, readonly) long long expectedContentLength;
 
-/** The range of the selected content sent back by the server in response to a range request.
+/** The expected range of the selected content to be sent back by the server in response to a range request.
  *  @discussion When the server sends back part of the selected content it includes a 'Content-Range' header with a value similar to: 'bytes 0-10000/50000, which corresponds the start and end of the range over the total bytes of the content. This property returns each of the three distinct data points in the location,length and contentLength of a CMContentRange.
  *  @note If there was no 'Content-Range' header, the returned range will have a location of kCFNotFound.
  */
-@property (nonatomic, readonly) CMContentRange contentRange;
+@property (nonatomic, readonly) CMContentRange expectedContentRange;
 
-/** The total bytes of the selected content as reported by the server. 
- *  @discussion  If part of the selected content was returned in response to a range request the total bytes as reported in the 'Content-Range' header is returned. Otherwise, contentLength is returned.
+/** The total bytes of the selected content as reported by the server, regardless of any range being returned in the current response. 
+ *  @discussion  If part of the selected content was returned in response to a range request expectedContentRange.contentLength is returned. Otherwise, expectedContentLength is returned.
  */
-@property (nonatomic, readonly) long long totalLength;
+@property (nonatomic, readonly) long long totalContentLength;
 
 /** @see [CMRequest  responseBody]. */
 @property (nonatomic, readonly) NSString *body;
 
 /** @see [CMRequest  result]. */
 @property (nonatomic, readonly) id result;
+
+/** Whether the request received all the content in the response it was expecting. */
+@property (nonatomic, readonly) BOOL wasComplete;
 
 /** Either the request.error or a generic error constructed around an unsuccessful HTTP status if the request did not contain an error. 
  *  @returns an NSError or nil
@@ -98,6 +101,10 @@
  *  @returns YES if error is nil and HTTPSuccessful returns YES (status is in the range 200-299).
  */
 @property (nonatomic, readonly) BOOL wasSuccessful;
+
+/** @see wasSuccessful */
+@property (nonatomic, readonly) BOOL wasUnsuccessful;
+
 
 
 /** @name Creating requests. */

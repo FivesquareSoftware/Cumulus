@@ -17,7 +17,7 @@
 
 
 @property (nonatomic, strong) NSURL *downloadedFileTempURL;
-@property (nonatomic) long long expectedContentLength;
+@property (nonatomic) long long totalContentLength;
 @property (nonatomic, strong) NSString *ETag;
 @property (nonatomic, strong) NSString *lastModifiedDate;
 

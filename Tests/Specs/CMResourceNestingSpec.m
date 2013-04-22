@@ -245,24 +245,24 @@
 // Caching
 
 - (void)shouldInheritCachePolicyFromParent {
-	self.parent.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringLocalAndRemoteCacheData, @"Child should inherit cache policy from parent");
+	self.parent.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should inherit cache policy from parent");
 }
 
 - (void)shouldUseOwnCachePolicyOverParents {
 	self.parent.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-	self.child.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringLocalAndRemoteCacheData, @"Child should use own cache policy over parent's");
+	self.child.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should use own cache policy over parent's");
 }
 
 - (void)shouldInheritCachePolicyFromFirstParentOnlyIfSet {
-	self.child.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringLocalAndRemoteCacheData, @"Child should use parent's cache policy only if set");
+	self.child.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should use parent's cache policy only if set");
 }
 
 - (void)shouldInheritCachePolicyFromAnyParent {
-	self.ancestor.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringLocalAndRemoteCacheData, @"Child should inherit cache policy from any parent");
+	self.ancestor.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should inherit cache policy from any parent");
 }
 
 

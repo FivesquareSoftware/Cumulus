@@ -44,27 +44,27 @@
 @class CMResponse;
 @class CMRequest;
 
-/**
- * CMRequest wraps an NSURLRequest and executes it using an NSURLConnection, running blocks along various points in the lifecycle and serializing/deserialzing the results using various implementations of <CMCoder>. The end result of each request is stored in #result and reflects any transformations of the raw response data that have occurred. If there has been an error, this is reflected in #error. However, to interrogate the state of the request after completion, it is generally easier to use the CMResponse object stored in #response, as this provides a number of conveniences to make inspection easier.
+/** CMRequest wraps an NSURLRequest and executes it using an NSURLConnection, running blocks along various points in the lifecycle and serializing/deserialzing the results using various implementations of <CMCoder>. The end result of each request is stored in #result and reflects any transformations of the raw response data that have occurred. If there has been an error, this is reflected in #error. However, to interrogate the state of the request after completion, it is generally easier to use the CMResponse object stored in #response, as this provides a number of conveniences to make inspection easier.
  *
- * CMRequest is meant as a lovel-level class. Generally you will want to use CMResource rather than CMRequest directly unless you need more control than CMResource allows.
+ *  CMRequest is meant as a lovel-level class. Generally you will want to use CMResource rather than CMRequest directly unless you need more control than CMResource allows.
  *
- * ### Lifecycle
+ *  ### Lifecycle
  *
- * There are five blocks that are run, if defined, at various points in a request's lifecycle:
+ *  There are five blocks that are run, if defined, at various points in a request's lifecycle:
+ *
  *  - didSendData, which is passed a progress dictionary
  *  - didreceiveData, which is also passed a progress dictionary
  *  - postprocess, which sets the request's results to the return value of the block, which is passed the existing results as an argument
  *  - completion, which runs when a request completes, regardless of success or failure
  *  - abort, which runs when a request is canceled before its url connection is started
  *
- * ### Authentication
+ *  ### Authentication
  *
- * Each request can have a collection of authentication providers, which implement <CMAuthProvider> and can do any kind of authentication that is supported by the protocol. Several common auth providers are included with Cumulus.
+ *  Each request can have a collection of authentication providers, which implement <CMAuthProvider> and can do any kind of authentication that is supported by the protocol. Several common auth providers are included with Cumulus.
  *
- * ### Encoding/Decoding
+ *  ### Encoding/Decoding
  *
- * Payloads and results are serialized/deserialized automatically if a coder for the particular object type or content-type can be found. Custom coders can be added to the system by simply implementing <CMCoder> and registering the new coder with the system by calling CMCoder+registerCoder:objectType:mimeTypes:. Only one coder per object or content-type is allowed, with the last one added winning if there are more than one. It is also possible to simply set an instance of <CMCoder> on any instance of a request as either an encoder or decoder, though if the coder is registered with the system properly this generally shouldn't be necessary.
+ *  Payloads and results are serialized/deserialized automatically if a coder for the particular object type or content-type can be found. Custom coders can be added to the system by simply implementing <CMCoder> and registering the new coder with the system by calling CMCoder+registerCoder:objectType:mimeTypes:. Only one coder per object or content-type is allowed, with the last one added winning if there are more than one. It is also possible to simply set an instance of <CMCoder> on any instance of a request as either an encoder or decoder, though if the coder is registered with the system properly this generally shouldn't be necessary.
  */
 @interface CMRequest : NSObject <NSURLConnectionDelegate,NSURLConnectionDataDelegate>  
 
@@ -76,11 +76,6 @@
 @property (readonly, getter = isStarted) BOOL started;
 @property (readonly, getter = isFinished) BOOL finished;
 @property (readonly, getter = wasCanceled) BOOL canceled;
-/** Whether or not the request received the entirety of the bytes representing a particular piece of content. 
- *  @note Currently this is just a dumb check of received data vs the value in the Content-length header, which works for single cases. Things like HTTP chunking that span multiple requests would require a more complex calculation outside of the scope of the receiver, making the returned value here meaningful only in a limited sense.
- *  @returns YES if receivedContentLength == expectedContentLength or if expectedContentLength == NSURLResponseUnknownLength, which is typically the case with streamed content.
- */
-@property (readonly, getter = didComplete) BOOL completed;
 
 
 // ========================================================================== //
@@ -96,15 +91,33 @@
  *  @returns The headers associated with URLRequest at a given point in time.
  */
 @property (nonatomic, readonly, strong) NSMutableDictionary *headers;
-@property (nonatomic, readonly) NSString *acceptHeader; ///< Convenience that returns the Accept header from headers if there is one
-@property (nonatomic, readonly) NSString *contentTypeHeader; ///< Convenience that returns the Content-Type header from headers if there is one
-@property (nonatomic) NSTimeInterval timeout; ///< If this is non-zero and a response is not received by the time this interval has elapsed, the request is canceled. The underlying URL request also has this value set, which means that (except in the case of POST request which the system overrides) the request will quit if it has been idle for this length of time.
-@property (nonatomic) NSURLRequestCachePolicy cachePolicy; ///< @see NSURLRequest#cachePolicy
-@property (nonatomic, readonly, strong) NSMutableArray *authProviders; ///< Given the chance to authorize a request and respond to auth challenges, in order
-@property (nonatomic) NSInteger maxAuthRetries; ///< Auth challenges will be canceled if they exceed this value. Defaults to 1.
 
-@property (nonatomic, strong) id payload; ///< If this is set, #payloadEncoder is used to turn the payload into data for the HTTPBody.
-@property (nonatomic, readonly) NSDictionary *queryDictionary; ///< @returns the query string as a dictionary if there is one
+/// Convenience that returns the Accept header from headers if there is one
+@property (nonatomic, readonly) NSString *acceptHeader;
+
+/// Convenience that returns the Content-Type header from headers if there is one
+@property (nonatomic, readonly) NSString *contentTypeHeader;
+
+/// If this is non-zero and a response is not received by the time this interval has elapsed, the request is canceled. The underlying URL request also has this value set, which means that (except in the case of POST request which the system overrides) the request will quit if it has been idle for this length of time.
+@property (nonatomic) NSTimeInterval timeout;
+
+/// @see NSURLRequest#cachePolicy
+@property (nonatomic) NSURLRequestCachePolicy cachePolicy;
+
+/// Given the chance to authorize a request and respond to auth challenges, in order
+@property (nonatomic, readonly, strong) NSMutableArray *authProviders;
+
+/// Auth challenges will be canceled if they exceed this value. Defaults to 1.
+@property (nonatomic) NSInteger maxAuthRetries;
+
+/// When this is set, #payloadEncoder is used to turn the payload into data for the HTTPBody.
+@property (nonatomic, strong) id payload;
+
+/// The query string as a dictionary
+@property (nonatomic, readonly) NSDictionary *queryDictionary;
+
+/** When set, the request will include the appropriate 'Range' and 'if-Range' along with 'ETag' and/or 'Last-Modified' headers to request a range of the resource. */
+@property (nonatomic) CMContentRange range;
 
 
 
@@ -152,6 +165,10 @@
 @property (readonly, strong) NSHTTPURLResponse *URLResponse;
 @property long long bodyContentLength;
 @property long long sentContentLength;
+
+/** The length of the content expected by the receiver, including ranges of content. 
+ *  @note Returns NSURLResponseUnknownLength when the content length cannot be determined, which is typically the case for streamed files. 
+ */
 @property long long expectedContentLength;
 @property long long receivedContentLength;
 
@@ -161,6 +178,8 @@
 @property (readonly) CMProgressInfo *progressReceivedInfo;
 /** @returns a progress info object representing the current progress of sending all of the local data. */
 @property (readonly) CMProgressInfo *progressSentInfo;
+/** A weak pointer to the response object (reponses own their requests). */
+@property (readonly, weak) CMResponse *response;
 /** The results of processing any response data with and instance of <CMCoder> and/or post-processing blocks are stored here. */
 @property (readonly, strong) id result;
 /** If the response data can be represented as a string, this property reflects the value. */

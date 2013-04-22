@@ -45,9 +45,6 @@
 @interface CMDownloadRequest() 
 @property (copy) NSURL *downloadedFileTempURL;
 @property (copy) NSString *downloadedFilename;
-@property (nonatomic) NSURL *downloadInfoURL;
-@property (nonatomic, readonly) NSMutableDictionary *downloadInfoInfo;
-
 @end
 
 
@@ -73,6 +70,10 @@
 - (CMProgressInfo *) progressReceivedInfo {
 	CMProgressInfo *progressInfo = [super progressReceivedInfo];
 	progressInfo.tempFileURL = self.downloadedFileTempURL;
+	if (_shouldResume && self.responseInternal.totalContentLength > 0) { // in the case of resumes, we report progress a little differently, against the content total rather than the range
+		progressInfo.progress = @((float)(self.responseInternal.expectedContentRange.location+self.receivedContentLength) / (float)self.responseInternal.totalContentLength);
+	}
+
 	return progressInfo;
 }
 
@@ -94,37 +95,35 @@
 	BOOL canResume = NO;
 	if (_shouldResume) {
 		CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForURL:self.URL];
-		long long expectedContentLength = downloadInfo.expectedContentLength;
 		NSString *ETag = downloadInfo.ETag;
 		NSString *lastModifiedDate = downloadInfo.lastModifiedDate;
-		if (expectedContentLength > 0) {
-			NSURL *tempFileURL = downloadInfo.downloadedFileTempURL;
-			if (tempFileURL) {
-				NSFileManager *fm = [NSFileManager new];
-				if ([fm fileExistsAtPath:[tempFileURL path]]) {
-					NSError *error = nil;
-					NSDictionary *attributes = [fm attributesOfItemAtPath:[tempFileURL path] error:&error];
-					long long currentOffset = [attributes fileSize];
-					if (ETag.length > 0 || lastModifiedDate) {
-						if (ETag.length) {
-							[self.URLRequest addValue:ETag forHTTPHeaderField:kCumulusHTTPHeaderIfRange];
-						}
-						else {
-							[self.URLRequest addValue:lastModifiedDate forHTTPHeaderField:kCumulusHTTPHeaderIfRange];
-						}
-					}
-					[self.URLRequest addValue:[NSString stringWithFormat:@"bytes=%@-",@(currentOffset)] forHTTPHeaderField:kCumulusHTTPHeaderRange];
-					canResume = YES;
+		NSURL *tempFileURL = downloadInfo.downloadedFileTempURL;
+		if (tempFileURL) {
+			NSFileManager *fm = [NSFileManager new];
+			if ([fm fileExistsAtPath:[tempFileURL path]]) {
+				NSError *error = nil;
+				NSDictionary *attributes = [fm attributesOfItemAtPath:[tempFileURL path] error:&error];
+				long long currentOffset = [attributes fileSize];
+				if (ETag.length) {
+					[self.URLRequest addValue:ETag forHTTPHeaderField:kCumulusHTTPHeaderIfRange];
 				}
+				else {
+					[self.URLRequest addValue:lastModifiedDate forHTTPHeaderField:kCumulusHTTPHeaderIfRange];
+				}
+				[self.URLRequest addValue:[NSString stringWithFormat:@"bytes=%@-",@(currentOffset)] forHTTPHeaderField:kCumulusHTTPHeaderRange];
+				canResume = YES;
 			}
 		}
 	}
 	_shouldResume = canResume;
+	if (NO == _shouldResume) {
+		[CMDownloadInfo resetDownloadInfoForURL:self.URL];
+	}
 }
 
 - (void) handleConnectionFinished {
 	CMProgressInfo *progressInfo = [CMProgressInfo new];
-	progressInfo.progress = [NSNumber numberWithFloat:1.f];
+	progressInfo.progress = @(1.f);
 	progressInfo.tempFileURL = self.downloadedFileTempURL;
 	progressInfo.URL = [self.URLRequest URL];
 	progressInfo.filename = self.downloadedFilename;
@@ -132,7 +131,7 @@
 	self.result = progressInfo;
 	[super handleConnectionFinished];
 
-	if (self.didComplete) {
+	if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful)) {
 		[CMDownloadInfo resetDownloadInfoForURL:self.URLRequest.URL];
 		// Remove the file on the main Q so we know the completion block has had a chance to run
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -166,6 +165,10 @@
 		}		
 	}
 	
+	if (_shouldResume && NO == self.responseInternal.HTTPPartialContent) { // the server has reset the range on us, most likely the resource was modified
+		_shouldResume = NO;
+	}
+	
 	CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForURL:self.URLRequest.URL];
 	if (downloadInfo.downloadedFileTempURL) {
 		self.downloadedFileTempURL = downloadInfo.downloadedFileTempURL;
@@ -179,20 +182,20 @@
 		self.downloadedFileTempURL = [NSURL fileURLWithPath:filePath];
 		
 		downloadInfo.downloadedFileTempURL = self.downloadedFileTempURL;
+		// Record addition info for possible future resumes
+		downloadInfo.totalContentLength = self.responseInternal.totalContentLength;
+		downloadInfo.ETag = [responseHeaders valueForKey:kCumulusHTTPHeaderETag];
+		downloadInfo.lastModifiedDate = [responseHeaders valueForKey:kCumulusHTTPHeaderLastModified];
+		
+		[CMDownloadInfo saveDownloadInfo];
 	}
-
-	// Record addition info for possible future resumes
-	downloadInfo.expectedContentLength = self.expectedContentLength;
-	downloadInfo.ETag = [responseHeaders valueForKey:kCumulusHTTPHeaderETag];
-	downloadInfo.lastModifiedDate = [responseHeaders valueForKey:kCumulusHTTPHeaderLastModified];
-
-	[CMDownloadInfo saveDownloadInfo];
 #endif
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 #if BROKEN_DOWNLOAD_DELEGATE
 	// When delegate calls are broken we have to write the data to the file ourselves
+	// We don't call super because we want to stream the data directly to disk
 	NSError *writeError = nil;
 
 	NSFileManager *fm = [[NSFileManager alloc] init];

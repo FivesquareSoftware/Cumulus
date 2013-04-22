@@ -40,12 +40,12 @@
 - (void)beforeEach {
     // set up resources that need to be initialized before each example here 
     self.service = [CMResource withURL:kTestServerHost];
-    self.service.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+    self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	self.protectedResource = [self.service resource:@"test/protected"];
 
 	
     self.SSLService = [CMResource withURL:kTestServerHostSSL];
-	self.SSLService.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	self.SSLService.cachePolicy = NSURLRequestReloadIgnoringCacheData;
     self.SSLProtectedResource = [self.SSLService resource:@"test/protected"];
 	
 	
@@ -128,7 +128,6 @@
 	
 	[mockAuthProvider verify];
 }
-
 
 - (void) shouldRejectSelfSignedCertWhenSecure {
 	CMServerTrustAuthProvider *authProvider = [CMServerTrustAuthProvider new];

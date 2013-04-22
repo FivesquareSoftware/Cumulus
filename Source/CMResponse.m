@@ -53,9 +53,9 @@
 @synthesize request=_request;
 @synthesize status=_status;
 @synthesize error = _error;
-@synthesize contentLength = _contentLength;
-@synthesize contentRange = _contentRange;
-@synthesize totalLength = _totalLength;
+@synthesize expectedContentLength = _expectedContentLength;
+@synthesize expectedContentRange = _expectedContentRange;
+@synthesize totalContentLength = _totalContentLength;
 @synthesize httpDateFormatter = _httpDateFormatter;
 
 
@@ -65,6 +65,9 @@
 		NSError *error = _request.error;
 		if(error.code == NSURLErrorUserCancelledAuthentication) {
 			_status = 401;
+		}
+		else if (_request.wasCanceled) { // sometimes a request can cancel even before there is an HTTP response, so just to be safe, set this
+			_status = kHTTPStatusCanceled;
 		}
         else if (_request.URLResponse) {
 			_status = [_request.URLResponse statusCode];
@@ -93,22 +96,22 @@
 	return lastModified;
 }
 
-- (long long) contentLength {
-	if (_contentLength == kCFNotFound) {
-		_contentLength = 0;
+- (long long) expectedContentLength {
+	if (_expectedContentLength == kCFNotFound) {
+		_expectedContentLength = NSURLResponseUnknownLength;
 		NSString *contentLengthHeaderValue = self.headers[kCumulusHTTPHeaderContentLength];
 		if (contentLengthHeaderValue) {
-			_contentLength = [contentLengthHeaderValue longLongValue];
+			_expectedContentLength = [contentLengthHeaderValue longLongValue];
 		}
-		else if (self.contentRange.location != kCFNotFound) {
-			_contentLength = _contentRange.contentLength;
+		else if (self.expectedContentRange.location != kCFNotFound) {
+			_expectedContentLength = _expectedContentRange.length;
 		}
 	}
-	return _contentLength;
+	return _expectedContentLength;
 }
 
-- (CMContentRange) contentRange {
-	if (_contentRange.location == kCFNotFound) {
+- (CMContentRange) expectedContentRange {
+	if (_expectedContentRange.location == kCFNotFound) {
 		NSString *contentRangeHeaderValue = self.headers[kCumulusHTTPHeaderContentRange];
 		if (contentRangeHeaderValue) {
 			NSError *error = nil;
@@ -118,25 +121,25 @@
 				long long startBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:1]] longLongValue];
 				long long endBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:2]] longLongValue];
 				long long possibleBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:3]] longLongValue];
-				_contentRange.location = startBytes;
-				_contentRange.length = endBytes-startBytes;
-				_contentRange.contentLength = possibleBytes;
+				_expectedContentRange.location = startBytes;
+				_expectedContentRange.length = (endBytes-startBytes)+1; // because 0-100/500 means 101 bytes since they are 0 indexed
+				_expectedContentRange.contentLength = possibleBytes;
 			}
 		}
 	}
-	return _contentRange;
+	return _expectedContentRange;
 }
 
-- (long long) totalLength {
-	if (_totalLength == kCFNotFound) {
-		if (self.contentRange.location != kCFNotFound) {
-			_totalLength = self.contentRange.contentLength;
+- (long long) totalContentLength {
+	if (_totalContentLength == kCFNotFound) {
+		if (self.expectedContentRange.location != kCFNotFound) {
+			_totalContentLength = self.expectedContentRange.contentLength;
 		}
 		else {
-			_totalLength = self.contentLength;
+			_totalContentLength = self.expectedContentLength;
 		}
 	}
-	return _totalLength;
+	return _totalContentLength;
 }
 
 - (NSString *) body {
@@ -165,6 +168,18 @@
 	return _request.result;
 }
 
+@dynamic wasComplete;
+- (BOOL) wasComplete {
+	// A streamed file most likely, but either way we don't know the length, assume it's complete
+	if (self.expectedContentLength == NSURLResponseUnknownLength) {
+		return YES;
+	}
+	// - A range request is complete if the length of the range was returned
+	// - A non-range request is complete if the expected content length was returned
+	// #contentLength captures both of these cases
+	return self.expectedContentLength == _request.receivedContentLength;
+}
+
 @dynamic success;
 - (BOOL) success {
 	return self.wasSuccessful;
@@ -175,6 +190,10 @@
 	return self.error == nil && [self HTTPSuccessful];
 }
 
+@dynamic wasUnsuccessful;
+- (BOOL) wasUnsuccessful {
+	return !self.wasUnsuccessful;
+}
 
 
 // ========================================================================== //
@@ -196,9 +215,9 @@
 //			_status = [request.URLResponse statusCode];
 //		}
 		_status = kCFNotFound;
-		_contentLength = kCFNotFound;
-		_contentRange = (CMContentRange){ kCFNotFound , 0, 0 };
-		_totalLength = kCFNotFound;
+		_expectedContentLength = kCFNotFound;
+		_expectedContentRange = (CMContentRange){ kCFNotFound , 0, 0 };
+		_totalContentLength = kCFNotFound;
 		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];

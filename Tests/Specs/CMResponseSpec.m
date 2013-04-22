@@ -21,7 +21,7 @@
 @synthesize endpoint;
 
 + (NSString *)description {
-    return @"Response Codes";
+    return @"Response Internals";
 }
 
 // ========================================================================== //
@@ -31,11 +31,18 @@
 
 - (void)beforeAll {
     // set up resources common to all examples here
+	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"t_hero" ofType:@"png"];
+	
+	NSFileManager *fm = [NSFileManager new];
+	NSError *error = nil;
+	NSDictionary *attributes = [fm attributesOfItemAtPath:resourceImagePath error:&error];
+	_heroBytes = (long long)[attributes fileSize];
 }
 
 - (void)beforeEach {
     // set up resources that need to be initialized before each example here 
 	self.service = [CMResource withURL:kTestServerHost];
+	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	
 	self.endpoint = [self.service resource:@"test/response_codes"];
 }
@@ -58,19 +65,6 @@
 #pragma mark - - State and Derived Values
 
 
-// requests never quit with this range, have to figure out another way to test
-
-//- (void) shouldBeContinue {
-//	CMResource *resource = [self.endpoint resource:@"continue"];
-//	CMResponse *response = [resource get];
-//	STAssertTrue([response isContinue], @"Response#isContinue should be true: %@",response);
-//}
-
-//- (void) shouldBeSwitchingProtocols {
-//	CMResource *resource = [self.endpoint resource:@"switchingprotocols"];
-//	CMResponse *response = [resource get];
-//	STAssertTrue([response isSwitchingProtocols], @"Response#isSwitchingProtocols should be true: %@",response);
-//}
 
 - (void) shouldReturnLastModifiedAsDate {
 	CMResource *resource = [self.service resource:@"modified"];
@@ -80,31 +74,112 @@
 }
 
 - (void) shouldReturnAValidContentRangeForARangeRequest {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+	
+	CMResource *hero = [self.service resource:@"resources/t_hero.png"];
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+
+	__block CMResponse *localResponse = nil;
+	[hero downloadRange:CMContentRangeMake(0,(_heroBytes/2),0) progressBlock:nil completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	STAssertTrue(localResponse.expectedContentRange.location == 0, @"Content range location should be equal to the start of the range");
+	STAssertTrue(CMContentRangeLastByte(localResponse.expectedContentRange) == (_heroBytes/2)-1, @"Content range last byte should be equal to the length of the range minus 1 because bytes are zero indexed");
+	STAssertTrue(localResponse.expectedContentRange.contentLength == _heroBytes, @"Content range contentLength should be equal to the length of the content");
+}
+
+- (void) shouldReportPartialContentForARangeRequest {
+	CMResource *hero = [self.service resource:@"resources/t_hero.png"];
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block CMResponse *localResponse = nil;
+	[hero downloadRange:CMContentRangeMake(0,(_heroBytes/2),0) progressBlock:nil completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	STAssertTrue(localResponse.HTTPPartialContent, @"Should return YES for a HTTPPartialContent for a range request");
 }
 
 - (void) shouldReturnAnInvalidContentRangeForANonRangeRequest {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+	CMResource *index = [self.service resource:@"index"];
+	CMResponse *response = [index get];
+	STAssertTrue(response.expectedContentRange.location == kCFNotFound, @"Content range location should be invalid for a non range request");
 }
 
 - (void) shouldReturnAValidContentLengthWhenServerReportedIt {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+	CMResource *index = [self.service resource:@"index"];
+	CMResponse *response = [index get];
+	NSString *contentLengthHeader = [response.headers objectForKey:kCumulusHTTPHeaderContentLength];
+	STAssertTrue(response.expectedContentLength == [contentLengthHeader longLongValue], @"Content length should match what's in the Content-Length header");
 }
 
-- (void) shouldReturnTheLengthOfContentRangeWhenContentRangeWasNotReported {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+- (void) shouldReturnContentRangeLengthForContentLengthWhenContentLengthWasNotReportedForARangeRequest {
+	CMResource *hero = [self.service resource:@"resources/t_hero.png"];
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block CMResponse *localResponse = nil;
+	[hero downloadRange:CMContentRangeMake(0,(_heroBytes/2),0) progressBlock:nil completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertNil([localResponse.headers objectForKey:kCumulusHTTPHeaderContentLength], @"Content length header must be nil for this to be a valid test");
+	STAssertEquals(localResponse.expectedContentLength, localResponse.expectedContentRange.length, @"Content length should derive from content range when the header is missing");
 }
 
-- (void) shouldReturnAZeroContentRangeWhenServerDidNotReportIt {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+- (void) shouldReturnAContentRangeLengthThatIsTheSameAsWhatTheRequestExpectedForARangeRequest {
+	CMResource *hero = [self.service resource:@"resources/t_hero.png"];
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block CMResponse *localResponse = nil;
+	[hero downloadRange:CMContentRangeMake(0,(_heroBytes/2),0) progressBlock:nil completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertEquals(localResponse.expectedContentRange.length, localResponse.request.expectedContentLength, @"Content range length should equal what the request expected: %@",@(localResponse.request.expectedContentLength));
 }
 
 - (void) shouldReportContentRangeContentLengthForTotalLengthForARangeRequest {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+	CMResource *hero = [self.service resource:@"resources/t_hero.png"];
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block CMResponse *localResponse = nil;
+	[hero downloadRange:CMContentRangeMake(0,(_heroBytes/2),0) progressBlock:nil completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertEquals(localResponse.totalContentLength, localResponse.expectedContentRange.contentLength, @"Total length should derive from content range for a range request");
 }
 
-- (void) shouldReturnContentLengthForTotalLengthWhenThereIsNoRange {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+- (void) shouldReturnContentLengthForTotalLengthForANonRangeRequest {
+	CMResource *index = [self.service resource:@"index"];
+	CMResponse *response = [index get];
+	STAssertTrue(response.totalContentLength == response.expectedContentLength, @"Total length should derive from content length for a non range request");
+}
+
+- (void) shouldReturnUnknownContentLengthWhenThereIsNoContentLengthAndNoContentRange {
+	CMResource *heroStream = [self.service resource:@"test/stream/hero"];
+	CMResponse *response = [heroStream get];
+	STAssertNil([response.headers objectForKey:kCumulusHTTPHeaderContentLength], @"Content length header must be nil for this to be a valid test");
+	STAssertNil([response.headers objectForKey:kCumulusHTTPHeaderContentRange], @"Content range header must be nil for this to be a valid test");
+	STAssertTrue(response.expectedContentLength == NSURLResponseUnknownLength, @"Content length should be unknown when not a range request and no content length reported");
 }
 
 - (void) shouldCreateAnErrorForHTTPErrorStatusCodes {
@@ -118,17 +193,19 @@
 }
 
 - (void) shouldNotCreateAnErrorForCanceledRequest {
-	CMResource *resource = [self.service resource:@"slow"];
+	CMResource *resource = [self.service resource:@"test/download/massive"];
 	__block CMResponse *localResponse = nil;
-    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(1);
-	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-    [resource getWithCompletionBlock:^(CMResponse *response) {
+    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
+	[resource getWithProgressBlock:^(CMProgressInfo *progressInfo) {
+		if ([progressInfo.progress floatValue] > 0.f) {
+			[progressInfo.request cancel];
+		}
+	} completionBlock:^(CMResponse *response) {
         localResponse = response;
 		dispatch_semaphore_signal(cancel_sema);
-    }];
+	}];
     [resource cancelRequests];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(cancel_sema);
 	dispatch_release(cancel_sema);
 	
 	NSError *error = localResponse.error;
@@ -136,18 +213,22 @@
 }
 
 - (void) shouldBeCanceled {
-	CMResource *resource = [self.service resource:@"slow"];
-	resource.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+	CMResource *resource = [self.service resource:@"test/download/massive"];
 	__block CMResponse *localResponse = nil;
     dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
 //	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-    [resource getWithCompletionBlock:^(CMResponse *response) {
+	[resource getWithProgressBlock:^(CMProgressInfo *progressInfo) {
+		if ([progressInfo.progress floatValue] > 0.f) {
+			[progressInfo.request cancel];
+		}
+	} completionBlock:^(CMResponse *response) {
         localResponse = response;
 		dispatch_semaphore_signal(cancel_sema);
-    }];
-    [resource cancelRequests];
+	}];
+//    [resource cancelRequestsWithBlock:^{
+//		dispatch_semaphore_signal(cancel_sema);
+//	}];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-//	dispatch_semaphore_signal(cancel_sema);
 	dispatch_release(cancel_sema);
 	STAssertTrue([localResponse HTTPCanceled], @"Response#HTTPCanceled should be true: %@",localResponse);
 }
@@ -157,6 +238,23 @@
 
 #pragma mark - - Response Codes
 
+
+
+/* requests never quit with this range, have to figure out another way to test
+ 
+ //- (void) shouldBeContinue {
+ //	CMResource *resource = [self.endpoint resource:@"continue"];
+ //	CMResponse *response = [resource get];
+ //	STAssertTrue([response isContinue], @"Response#isContinue should be true: %@",response);
+ //}
+ 
+ //- (void) shouldBeSwitchingProtocols {
+ //	CMResource *resource = [self.endpoint resource:@"switchingprotocols"];
+ //	CMResponse *response = [resource get];
+ //	STAssertTrue([response isSwitchingProtocols], @"Response#isSwitchingProtocols should be true: %@",response);
+ //}
+ 
+ end */
 
 
 - (void) shouldBeOk {
@@ -367,17 +465,22 @@
 	CMResponse *response = [resource get];
 	STAssertTrue([response HTTPVersionNotSupported], @"Response#isHTTPVersionNotSupported should be true: %@",response);
 }
-
+ 
+ 
 
 /** Ranges of codes */
 
-// requests never quit with this range
+/* requests never quit with this range
 
 //- (void) shouldBeInformational {
 //	CMResource *resource = [self.endpoint resource:@"informational"];
 //	CMResponse *response = [resource get];
 //	STAssertTrue([response wasInformational], @"Response#wasInformational should be true: %@",response);
 //}
+ 
+ end */
+
+
 
 - (void) shouldBeSuccessful {
 	CMResource *resource = [self.endpoint resource:@"successful"];
@@ -403,8 +506,6 @@
 	STAssertTrue([response HTTPServerError], @"Response#wasServerError should be true: %@",response);
 }
 
- 
- 
 
 
 @end

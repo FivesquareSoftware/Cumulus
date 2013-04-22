@@ -531,13 +531,22 @@
 
 
 - (void) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	[self downloadWithResume:NO progressBlock:progressBlock completionBlock:completionBlock];
-}
-
-- (void) downloadWithResume:(BOOL)shouldResume progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
-	request.shouldResume = shouldResume;
+	[self runRequest:request withCompletionBlock:completionBlock];
+}
+
+- (void) resumeOrBeginDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
+	request.didReceiveDataBlock = progressBlock;
+	request.shouldResume = YES;
+	[self runRequest:request withCompletionBlock:completionBlock];
+}
+
+- (void) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
+	request.didReceiveDataBlock = progressBlock;
+	request.range = range;
 	[self runRequest:request withCompletionBlock:completionBlock];
 }
 

@@ -40,6 +40,10 @@ get '/slow' do
   sleep(5)
 end
 
+get '/superslow' do
+	sleep(20)
+end
+
 put '/index' do
 	ok('OK')
 end

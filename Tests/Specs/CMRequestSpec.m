@@ -47,6 +47,7 @@
 
 #pragma mark - Specs
 
+
 - (void)shouldNotBeAbleToStartARequestThatIsStarted {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
@@ -97,7 +98,7 @@
 	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
-	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	
 	[request startWithCompletionBlock:nil];
 	[request cancel];	
@@ -113,7 +114,7 @@
 	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
-	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	
 	__block BOOL touched = NO;
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
@@ -182,5 +183,155 @@
 	STAssertNil(request, @"Should not create a request without a URL request");
 #endif
 }
+
+- (void) shouldZeroOutResponseInternalWhenThereIsNoCompletionBlock {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
+	
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
+	request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	
+	[request startWithCompletionBlock:nil];
+	while (NO == request.isFinished) {
+		[NSThread sleepForTimeInterval:.001];
+	}
+	STAssertNil([request valueForKey:@"responseInternal"], @"Internal response pointer should be nil on finish");
+}
+
+- (void) shouldZeroOutResponseInternalAfterCompletionBlockRuns {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/slow",kTestServerHost];
+	
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
+	request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	[request startWithCompletionBlock:^(CMResponse *response){
+		dispatch_semaphore_signal(request_sema);
+	}];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertNil([request valueForKey:@"responseInternal"], @"Internal response pointer should be nil after completion block runs");
+}
+
+- (void) shouldZeroOutResponseInternalWhenCanceled {	
+	NSString *endpoint = [NSString stringWithFormat:@"%@/slow",kTestServerHost];
+	
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
+	request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	[request startWithCompletionBlock:^(CMResponse *response){
+		dispatch_semaphore_signal(request_sema);
+	}];
+	[request cancel];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertNil([request valueForKey:@"responseInternal"], @"Internal response pointer should be nil after cancelation");
+}
+
+- (void) shouldReportCompleteForACompletedRequest {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block BOOL complete = NO;
+	[request startWithCompletionBlock:^(CMResponse *response) {
+		complete = response.wasComplete;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(complete, @"Simple request should have completed");
+}
+
+- (void) shouldReportCompleteForAStreamedFile {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/test/stream/hero",kTestServerHost];
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+
+	__block BOOL complete = NO;
+	[request startWithCompletionBlock:^(CMResponse *response) {
+		complete = response.wasComplete;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(complete, @"Streamed request should have completed");
+}
+
+- (void) shouldReportCompleteForARangeRequest {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/test/download/hero",kTestServerHost];
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
+	request.range = CMContentRangeMake(0, 1000, 0);
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block BOOL complete = NO;
+	[request startWithCompletionBlock:^(CMResponse *response) {
+		complete = response.wasComplete;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(complete, @"Simple request should have completed");
+}
+
+- (void) shouldReportIncompleteForAnInterruptedRequest {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/test/download/massive",kTestServerHost];
+	
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMDownloadRequest *request = [[CMDownloadRequest alloc] initWithURLRequest:URLRequest];
+	request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	request.cachesDir  = [Cumulus cachesDir];
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+
+	__block BOOL complete = NO;
+	__weak CMRequest *weakRequest = request;
+	request.didReceiveDataBlock = ^(CMProgressInfo *progressInfo) {
+		NSLog(@"");
+		if (progressInfo.progress.floatValue > 0.f) {
+			[weakRequest cancel];
+		}
+	};
+	
+	[request startWithCompletionBlock:^(CMResponse *response) {
+		complete = response.wasComplete;
+		dispatch_semaphore_signal(request_sema);
+	}];
+
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertFalse(complete,@"Interrupted request should not have been complete");
+}
+
+
 
 @end

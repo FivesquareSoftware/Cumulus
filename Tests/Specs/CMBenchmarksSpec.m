@@ -75,11 +75,11 @@
 	CMResource *smallFile = [self.benchmarks resource:@"small-file.png"];
 	CMResource *largeFile = [self.benchmarks resource:@"large-file.png"];
 
-	smallResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	largeResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	complicatedResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	smallFile.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	largeFile.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	smallResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	largeResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	complicatedResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	smallFile.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	largeFile.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 
 	[smallResource get];
 	[largeResource get];
@@ -106,7 +106,7 @@
 - (void)shouldGetManySmallResourcesWithNoCaching {
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *smallResource = [self.benchmarks resource:@"small-resource.json"];
-	smallResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	smallResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 
 	__block BOOL success = YES;
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
@@ -160,7 +160,7 @@
 - (void)shouldGetOneLargeResourceWithNoCaching {
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *largeResource = [self.benchmarks resource:@"large-resource.json"];
-	largeResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	largeResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 
@@ -200,7 +200,7 @@
 - (void)shouldGetABunchOfComplicatedResourcesWithNoCaching {
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *complicatedResource = [self.benchmarks resource:@"complicated-resource.json"];
-	complicatedResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	complicatedResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	__block BOOL success = YES;
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
@@ -394,7 +394,7 @@
 
 - (void)shouldDownloadManySmallFilesWithNoCaching {
 	CMResource *smallFile = [self.benchmarks resource:@"small-file.png"];
-	smallFile.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	smallFile.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	__block BOOL success = YES;
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
@@ -482,7 +482,7 @@
 
 - (void)shouldDownloadOneLargeFileWithNoCaching {
 	CMResource *largeFile = [self.benchmarks resource:@"large-file.png"];
-	largeFile.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	largeFile.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	__block CMResponse *localResponse = nil;
 	
 	

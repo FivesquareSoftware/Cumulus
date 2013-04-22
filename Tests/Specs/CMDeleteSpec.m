@@ -35,6 +35,7 @@
 - (void)beforeEach {
     // set up resources that need to be initialized before each example here 
 	self.service = [CMResource withURL:kTestServerHost];
+	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 }
 
 - (void)afterEach {
