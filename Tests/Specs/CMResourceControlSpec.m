@@ -93,11 +93,40 @@
 }
 
 - (void) shouldNotRemoveRequestsOnCancelation {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+	CMResource *smallResource = [self.service resource:@"slow"];
+	smallResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+	dispatch_apply(100, queue, ^(size_t i) {
+		[smallResource getWithCompletionBlock:nil];
+	});
+		
+	dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
+	
+	__block NSUInteger afterCancelRequestsCount = 0;
+	[smallResource cancelRequestsWithBlock:^{
+		afterCancelRequestsCount = smallResource.requests.count;
+		dispatch_semaphore_signal(cancel_sema);
+	}];
+	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(cancel_sema);
+	
+	STAssertTrue(afterCancelRequestsCount > 0, @"Canceled requests should be allowed to remove themselves from their completion block");
 }
 
 - (void) shouldNotIncludeAbortedRequests {
-	STAssertTrue(NO, @"UNIMPLEMENTED");
+	CMResource *smallResource = [self.service resource:@"slow"];
+	smallResource.preflightBlock = ^(CMRequest *request) {
+		return NO;
+	};
+	
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+	dispatch_apply(100, queue, ^(size_t i) {
+		[smallResource getWithCompletionBlock:nil];
+	});
+	
+	NSUInteger *requestsCount = smallResource.requests.count;
+	STAssertTrue(requestsCount == 0, @"Aborted requests should not be tracked as part of the resources in flight requests");
 }
 
 - (void) shouldRunAsynchronouslyFromTheMainQueue {
@@ -147,6 +176,8 @@
 
 	STAssertTrue(response.success,@"Response should be successful");
 }
+
+
 
 //- (void) shouldBeAbleToRunARequestFromAPreflightBlock {	
 //	CMResource *index = [self.service resource:@"index"];

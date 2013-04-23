@@ -29,14 +29,31 @@
 		A414FD6113DB468D00F96152 /* CMResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5F13DB468D00F96152 /* CMResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A414FD6213DB468D00F96152 /* CMResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD6013DB468D00F96152 /* CMResponse.m */; };
 		A416122A14411A800008A235 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A416122914411A800008A235 /* libOCMock.a */; };
+		A41681C91726521300B76689 /* CMResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* CMResourceControlSpec.m */; };
+		A41681CA1726556300B76689 /* CMResponseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* CMResponseSpec.m */; };
+		A41681CB1726556300B76689 /* CMCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* CMCodingSpec.m */; };
+		A41681CC1726556300B76689 /* CMResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* CMResourceConfigSpec.m */; };
+		A41681CD1726556300B76689 /* CMResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* CMResourceNestingSpec.m */; };
+		A41681CE1726556300B76689 /* CMAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* CMAuthSpec.m */; };
+		A41681CF1726556300B76689 /* CMGetSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* CMGetSpec.m */; };
+		A41681D01726556300B76689 /* CMHeadSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23E81483F4FC0045CA21 /* CMHeadSpec.m */; };
+		A41681D11726556300B76689 /* CMDeleteSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E23EA1483F50A0045CA21 /* CMDeleteSpec.m */; };
+		A41681D21726556300B76689 /* CMPostSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EEBA1A14242D6100376DAC /* CMPostSpec.m */; };
+		A41681D31726556300B76689 /* CMPutSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120B1441096A0008A235 /* CMPutSpec.m */; };
+		A41681D41726556300B76689 /* CMQueryStringSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* CMQueryStringSpec.m */; };
+		A41681D51726556300B76689 /* CMResourceBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* CMResourceBlocksSpec.m */; };
+		A41681D61726556300B76689 /* CMFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* CMFileHandlingSpec.m */; };
+		A41681D71726556300B76689 /* CMStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* CMStaticMethodsSpec.m */; };
+		A41681D81726556300B76689 /* CMBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* CMBenchmarksSpec.m */; };
+		A41681D91726556300B76689 /* CMRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* CMRequestSpec.m */; };
+		A41681DA1726556300B76689 /* CMFixtureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17DF315533E880063B061 /* CMFixtureSpec.m */; };
+		A41681DB1726556300B76689 /* CMResourceGroupSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124415ED5D9100513F73 /* CMResourceGroupSpec.m */; };
 		A41C901114F2ED4800E16A9E /* NSString+Cumulus.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+Cumulus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A41C901214F2ED4800E16A9E /* NSString+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+Cumulus.m */; };
 		A420158F171DD3B000878B47 /* CMDownloadInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A420158D171DD3B000878B47 /* CMDownloadInfo.h */; };
 		A4201590171DD3B000878B47 /* CMDownloadInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A420158D171DD3B000878B47 /* CMDownloadInfo.h */; };
 		A4201591171DD3B000878B47 /* CMDownloadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A420158E171DD3B000878B47 /* CMDownloadInfo.m */; };
 		A4201592171DD3B000878B47 /* CMDownloadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A420158E171DD3B000878B47 /* CMDownloadInfo.m */; };
-		A427617D171E71730066817D /* CMResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* CMResourceControlSpec.m */; };
-		A427617E171E71730066817D /* CMResourceGroupSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124415ED5D9100513F73 /* CMResourceGroupSpec.m */; };
 		A432B46E149D0B56006582DB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B3991408F193003495BA /* Security.framework */; };
 		A4366F6C171D1C8600F77606 /* CMResource+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4366F6B171D1C8600F77606 /* CMResource+Protected.h */; };
 		A4366F6D171D1C8600F77606 /* CMResource+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4366F6B171D1C8600F77606 /* CMResource+Protected.h */; };
@@ -1074,8 +1091,25 @@
 			files = (
 				A4626A4D14199082005544D6 /* main.m in Sources */,
 				A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */,
-				A427617D171E71730066817D /* CMResourceControlSpec.m in Sources */,
-				A427617E171E71730066817D /* CMResourceGroupSpec.m in Sources */,
+				A41681C91726521300B76689 /* CMResourceControlSpec.m in Sources */,
+				A41681CA1726556300B76689 /* CMResponseSpec.m in Sources */,
+				A41681CB1726556300B76689 /* CMCodingSpec.m in Sources */,
+				A41681CC1726556300B76689 /* CMResourceConfigSpec.m in Sources */,
+				A41681CD1726556300B76689 /* CMResourceNestingSpec.m in Sources */,
+				A41681CE1726556300B76689 /* CMAuthSpec.m in Sources */,
+				A41681CF1726556300B76689 /* CMGetSpec.m in Sources */,
+				A41681D01726556300B76689 /* CMHeadSpec.m in Sources */,
+				A41681D11726556300B76689 /* CMDeleteSpec.m in Sources */,
+				A41681D21726556300B76689 /* CMPostSpec.m in Sources */,
+				A41681D31726556300B76689 /* CMPutSpec.m in Sources */,
+				A41681D41726556300B76689 /* CMQueryStringSpec.m in Sources */,
+				A41681D51726556300B76689 /* CMResourceBlocksSpec.m in Sources */,
+				A41681D61726556300B76689 /* CMFileHandlingSpec.m in Sources */,
+				A41681D71726556300B76689 /* CMStaticMethodsSpec.m in Sources */,
+				A41681D81726556300B76689 /* CMBenchmarksSpec.m in Sources */,
+				A41681D91726556300B76689 /* CMRequestSpec.m in Sources */,
+				A41681DA1726556300B76689 /* CMFixtureSpec.m in Sources */,
+				A41681DB1726556300B76689 /* CMResourceGroupSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

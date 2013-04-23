@@ -100,7 +100,6 @@
 @synthesize contentType=_contentType;
 @synthesize preflightBlock=_preflightBlock;
 @synthesize postProcessorBlock=_postprocessorBlock;
-@synthesize resourceGroup = _resourceGroup;
 
 @dynamic queryString;
 - (NSString *) queryString {
@@ -176,13 +175,6 @@
 	NSMutableSet *requests = [NSMutableSet setWithSet:self.requestsInternal];
 	dispatch_semaphore_signal(_requests_semaphore);
 	return requests;
-}
-
-- (void) setResourceGroup:(CMResourceGroup *)resourceGroup {
-	if (_resourceGroup != resourceGroup) {
-		_resourceGroup = resourceGroup;
-		[_resourceGroup addResource:self];
-	}
 }
 
 
@@ -730,7 +722,7 @@
 
 
 - (CMResponse *) runBlockingRequest:(CMRequest *)request {	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
     __block CMResponse *localResponse = nil;
 	
 	CMCompletionBlock completionBlock = ^(CMResponse *response){
@@ -742,7 +734,6 @@
 		dispatch_semaphore_signal(request_sema);
 	};
 
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
 
 	if ([NSThread currentThread] == [NSThread mainThread]) {
@@ -753,7 +744,6 @@
 	else {
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	}
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
     return localResponse;
 }
@@ -763,6 +753,12 @@
 }
 
 - (id) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock {
+
+	CMResourceGroup *resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context(dispatch_get_current_queue()));
+	if (resourceGroup) {
+		RCLog(@"Dispatching request to resource group: %@",resourceGroup);
+	}
+
 	dispatch_semaphore_t launch_sema = dispatch_semaphore_create(0);
 	
 	CMPreflightBlock preflightBlock = self.preflightBlock;
@@ -770,15 +766,16 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			BOOL success = preflightBlock(request);
 			if(success) {
-				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema];
+				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema resourceGroup:resourceGroup];
 			}
 			else {
 				[request abortWithBlock:abortBlock];
+				dispatch_semaphore_signal(launch_sema);
 			}
 		});
 	}
 	else {
-		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema];
+		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema resourceGroup:resourceGroup];
 	}
 	
 	dispatch_semaphore_wait(launch_sema, DISPATCH_TIME_FOREVER);
@@ -786,41 +783,41 @@
 	return request.identifier;
 }
 
-- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launch_semaphore {
+- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launch_semaphore resourceGroup:(CMResourceGroup *)resourceGroup {
 	dispatch_queue_t request_queue = [CMResource dispatchQueue];
 	dispatch_async(request_queue, ^{
-		[self addRequest:request];
+		[self addRequest:request resourceGroup:resourceGroup];
 		[request startWithCompletionBlock:^(CMResponse *response){
 			if (completionBlock) {
 				completionBlock(response);
 			}
 			dispatch_async(request_queue, ^{
-				[self removeRequest:request];
+				[self removeResponse:response resourceGroup:resourceGroup];
 			});
 		}];
 		dispatch_semaphore_signal(launch_semaphore);
 	});
 }
 
-- (void) addRequest:(CMRequest *)request {
+- (void) addRequest:(CMRequest *)request resourceGroup:(CMResourceGroup *)resourceGroup {
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self.requestsInternal addObject:request];
-	_resourceGroup = (__bridge CMResourceGroup *)(dispatch_get_context(dispatch_get_current_queue()));
-	if (_resourceGroup) {
-		[_resourceGroup enter];
+	if (resourceGroup) {
+		[resourceGroup enter];
 	}
 	dispatch_semaphore_signal(_requests_semaphore);
 }
 
-- (void) removeRequest:(CMRequest *)request {
+- (void) removeResponse:(CMResponse *)response resourceGroup:(CMResourceGroup *)resourceGroup {
+	CMRequest *request = response.request;
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self.requestsInternal removeObject:request];
-	if (_resourceGroup) {
+	if (resourceGroup) {
 		if (request.response) {
-			[_resourceGroup leaveWithResponse:request.response];
+			[resourceGroup leaveWithResponse:request.response];
 		}
 		else {
-			[_resourceGroup leave];
+			[resourceGroup leave];
 		}
 	}
 	dispatch_semaphore_signal(_requests_semaphore);

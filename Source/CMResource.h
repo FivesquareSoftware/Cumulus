@@ -122,7 +122,6 @@
 /// Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
 @property (nonatomic, copy) CMPostProcessorBlock postProcessorBlock;
 
-@property (nonatomic, weak) CMResourceGroup *resourceGroup;
 
 
 /** @name Creating Resources */
