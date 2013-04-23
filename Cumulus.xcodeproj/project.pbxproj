@@ -155,8 +155,8 @@
 		A4D17EB4155481E20063B061 /* CMFixtureDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17EB0155481E20063B061 /* CMFixtureDownloadRequest.m */; };
 		A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1214199082005544D6 /* SpecHelper.m */; };
 		A4D4FFC7141A5A4E00E58873 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */; };
-		A4EB124915ED5E1100513F73 /* CMResourceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EB124715ED5E1100513F73 /* CMResourceGroup.h */; };
-		A4EB124A15ED5E1100513F73 /* CMResourceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EB124715ED5E1100513F73 /* CMResourceGroup.h */; };
+		A4EB124915ED5E1100513F73 /* CMResourceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EB124715ED5E1100513F73 /* CMResourceGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4EB124A15ED5E1100513F73 /* CMResourceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EB124715ED5E1100513F73 /* CMResourceGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4EB124B15ED5E1100513F73 /* CMResourceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124815ED5E1100513F73 /* CMResourceGroup.m */; };
 		A4EB124C15ED5E1100513F73 /* CMResourceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124815ED5E1100513F73 /* CMResourceGroup.m */; };
 		A4EB126315ED79C500513F73 /* CMResourceGroup+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EB126215ED79C500513F73 /* CMResourceGroup+Protected.h */; };
@@ -804,8 +804,8 @@
 				A4D17EB1155481E20063B061 /* CMFixtureDownloadRequest.h in Headers */,
 				A456515C1523D454001302A7 /* Cumulus.h in Headers */,
 				A4BA020115DDC72F00042F1C /* CMS3AuthProvider.h in Headers */,
-				A4BA021215DDC94200042F1C /* CMAmazonCredentials.h in Headers */,
 				A4EB124915ED5E1100513F73 /* CMResourceGroup.h in Headers */,
+				A4BA021215DDC94200042F1C /* CMAmazonCredentials.h in Headers */,
 				A4EB126315ED79C500513F73 /* CMResourceGroup+Protected.h in Headers */,
 				A4366F6C171D1C8600F77606 /* CMResource+Protected.h in Headers */,
 				A420158F171DD3B000878B47 /* CMDownloadInfo.h in Headers */,
@@ -846,8 +846,8 @@
 				A4EFF212155334D200868358 /* CMFixtureHTTPResponse.h in Headers */,
 				A4D17EB2155481E20063B061 /* CMFixtureDownloadRequest.h in Headers */,
 				A4BA020215DDC72F00042F1C /* CMS3AuthProvider.h in Headers */,
-				A4BA021315DDC94200042F1C /* CMAmazonCredentials.h in Headers */,
 				A4EB124A15ED5E1100513F73 /* CMResourceGroup.h in Headers */,
+				A4BA021315DDC94200042F1C /* CMAmazonCredentials.h in Headers */,
 				A4EB126415ED79C500513F73 /* CMResourceGroup+Protected.h in Headers */,
 				A4366F6D171D1C8600F77606 /* CMResource+Protected.h in Headers */,
 				A4201590171DD3B000878B47 /* CMDownloadInfo.h in Headers */,

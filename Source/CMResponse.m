@@ -192,7 +192,7 @@
 
 @dynamic wasUnsuccessful;
 - (BOOL) wasUnsuccessful {
-	return !self.wasUnsuccessful;
+	return !self.wasSuccessful;
 }
 
 

@@ -64,7 +64,53 @@
 
 #pragma mark - - State and Derived Values
 
+- (void) shouldBeSuccessful {
+	CMResource *resource = [self.endpoint resource:@"successful"];
+	CMResponse *response = [resource get];
+	STAssertTrue([response wasSuccessful], @"Response#wasSuccessful should be true: %@",response);
+}
 
+- (void) shouldBeUnsuccessful {
+	CMResource *resource = [self.endpoint resource:@"informational"];
+	CMResponse *response = [resource get];
+	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for informational: %@",response);
+
+	resource = [self.endpoint resource:@"redirect"];
+	response = [resource get];
+	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for redirect: %@",response);
+
+	resource = [self.endpoint resource:@"clienterrror"];
+	response = [resource get];
+	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for clienterrror: %@",response);
+
+	resource = [self.endpoint resource:@"servererror"];
+	response = [resource get];
+	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for servererror: %@",response);
+}
+
+- (void) shouldNotBeUnsuccessful {
+	CMResource *resource = [self.endpoint resource:@"successful"];
+	CMResponse *response = [resource get];
+	STAssertFalse([response wasUnsuccessful], @"Response#wasUnsuccessful should be false: %@",response);
+}
+
+- (void) shouldNotBeSuccessful {
+	CMResource *resource = [self.endpoint resource:@"informational"];
+	CMResponse *response = [resource get];
+	STAssertFalse([response wasSuccessful], @"Response#wasSuccessful should be false for informational: %@",response);
+	
+	resource = [self.endpoint resource:@"redirect"];
+	response = [resource get];
+	STAssertFalse([response wasSuccessful], @"Response#wasSuccessful should be false for redirect: %@",response);
+	
+	resource = [self.endpoint resource:@"clienterrror"];
+	response = [resource get];
+	STAssertFalse([response wasSuccessful], @"Response#wasSuccessful should be false for clienterrror: %@",response);
+	
+	resource = [self.endpoint resource:@"servererror"];
+	response = [resource get];
+	STAssertFalse([response wasSuccessful], @"Response#wasSuccessful should be false for servererror: %@",response);
+}
 
 - (void) shouldReturnLastModifiedAsDate {
 	CMResource *resource = [self.service resource:@"modified"];
@@ -482,28 +528,28 @@
 
 
 
-- (void) shouldBeSuccessful {
+- (void) shouldBeHTTPSuccessful {
 	CMResource *resource = [self.endpoint resource:@"successful"];
 	CMResponse *response = [resource get];
-	STAssertTrue([response HTTPSuccessful], @"Response#wasSuccessful should be true: %@",response);
+	STAssertTrue([response HTTPSuccessful], @"Response#HTTPSuccessful should be true: %@",response);
 }
 
-- (void) shouldBeRedirect {
+- (void) shouldBeHTTPRedirect {
 	CMResource *resource = [self.endpoint resource:@"redirect"];
 	CMResponse *response = [resource get];
-	STAssertTrue([response HTTPRedirect], @"Response#wasRedirect should be true: %@",response);
+	STAssertTrue([response HTTPRedirect], @"Response#HTTPRedirect should be true: %@",response);
 }
 
-- (void) shouldBeClientErrror {
+- (void) shouldBeHTTPClientErrror {
 	CMResource *resource = [self.endpoint resource:@"clienterrror"];
 	CMResponse *response = [resource get];
-	STAssertTrue([response HTTPClientErrror], @"Response#wasClientErrror should be true: %@",response);
+	STAssertTrue([response HTTPClientErrror], @"Response#HTTPClientErrror should be true: %@",response);
 }
 
-- (void) shouldBeServerError {
+- (void) shouldBeHTTPServerError {
 	CMResource *resource = [self.endpoint resource:@"servererror"];
 	CMResponse *response = [resource get];
-	STAssertTrue([response HTTPServerError], @"Response#wasServerError should be true: %@",response);
+	STAssertTrue([response HTTPServerError], @"Response#HTTPServerError should be true: %@",response);
 }
 
 
