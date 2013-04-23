@@ -69,6 +69,7 @@ extern NSString *kCumulusHTTPHeaderETag;
 extern NSString *kCumulusHTTPHeaderLastModified;
 extern NSString *kCumulusHTTPHeaderRange;
 extern NSString *kCumulusHTTPHeaderIfRange;
+extern NSString *kCumulusHTTPHeaderContentRange;
 
 extern NSString *kCumulusProgressInfoKeyURL;
 extern NSString *kCumulusProgressInfoKeyTempFileURL;
@@ -77,10 +78,6 @@ extern NSString *kCumulusProgressInfoKeyProgress;
 
 extern NSString *kCumulusCachesDirectoryName;
 
-extern NSString *kCumulusDownloadStateInfoKeyTempFileURL;
-extern NSString *kCumulusDownloadStateInfoKeyExpectedContentLength;
-extern NSString *kCumulusDownloadStateInfoKeyETag;
-extern NSString *kCumulusDownloadStateInfoKeyLastModifiedDate;
 
 
 // HTTP Status Codes (so we don't make silly mistakes :)

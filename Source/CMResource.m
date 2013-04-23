@@ -550,13 +550,22 @@
 
 
 - (id) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	return [self downloadWithResume:NO progressBlock:progressBlock completionBlock:completionBlock];
-}
-
-- (id) downloadWithResume:(BOOL)shouldResume progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
-	request.shouldResume = shouldResume;
+	return [self launchRequest:request withCompletionBlock:completionBlock];
+}
+
+- (id) resumeOrBeginDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
+	request.didReceiveDataBlock = progressBlock;
+	request.shouldResume = YES;
+	return [self launchRequest:request withCompletionBlock:completionBlock];
+}
+
+- (id) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
+	request.didReceiveDataBlock = progressBlock;
+	request.range = range;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
@@ -737,9 +746,11 @@
 	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
 
 	if ([NSThread currentThread] == [NSThread mainThread]) {
-		while(dispatch_semaphore_wait(request_sema, 0.01) != 0) {
-			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantPast]];
-		}
+		do {
+			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
+		} while (dispatch_semaphore_wait(request_sema, 0.01) != 0);
+//		while() {
+//		}
 	}
 	else {
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
@@ -813,12 +824,7 @@
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self.requestsInternal removeObject:request];
 	if (resourceGroup) {
-		if (request.response) {
-			[resourceGroup leaveWithResponse:request.response];
-		}
-		else {
-			[resourceGroup leave];
-		}
+		[resourceGroup leaveWithResponse:response];
 	}
 	dispatch_semaphore_signal(_requests_semaphore);
 }

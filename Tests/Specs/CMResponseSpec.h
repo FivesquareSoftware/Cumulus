@@ -19,6 +19,7 @@
 // add properties as needed
 @property (nonatomic, strong) CMResource *service;
 @property (nonatomic, strong) CMResource *endpoint;
+@property (nonatomic) long long heroBytes;
 
 
 @end

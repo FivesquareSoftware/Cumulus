@@ -42,7 +42,7 @@
     // set up resources that need to be initialized before each example here 
 
 	self.service = [CMResource withURL:kTestServerHost];
-	self.service.cachePolicy = NSURLCacheStorageNotAllowed;
+	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 }
 
 - (void)afterEach {
@@ -62,36 +62,134 @@
 
 #pragma mark - Specs
 
-//- (void)shouldDownloadAFileToDisk {
-//	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
-//	[self assertDownloadAFileToDisk:heroDownload];
-//}
-//
-//- (void)shouldDownloadAStreamedFileToDisk {
-//	// no content-length header
-//	CMResource *heroDownload = [self.service resource:@"test/stream/hero"];
-//	[self assertDownloadAFileToDisk:heroDownload];
-//}
-//
-//- (void)shouldDownloadAFileToCustomCacheLocation {
-//	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-//	NSString *directory = [paths lastObject];
-//	
-//	self.cachesDir = [directory stringByAppendingPathComponent:@"CumulusSpecs"];
-//	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
-//
-//	[self assertDownloadAFileToDisk:heroDownload];
-//}
+
+- (void)shouldDownloadAFileToDisk {
+	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
+	[self assertDownloadResourceToDisk:heroDownload];
+}
+
+- (void)shouldDownloadAStreamedFileToDisk {
+	// no content-length header
+	CMResource *heroDownload = [self.service resource:@"test/stream/hero"];
+		
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	__block BOOL fileExistedAtCompletion = NO;
+	__block NSNumber *progress = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		self.downloadedFileURL = [localResponse.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
+		NSFileManager *fm = [[NSFileManager alloc] init];
+		fileExistedAtCompletion = [fm fileExistsAtPath:[self.downloadedFileURL path]];
+		progress = [(CMProgressInfo *)response.result progress];
+		dispatch_semaphore_signal(request_sema);
+	};
+	
+	[heroDownload downloadWithProgressBlock:nil completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
+	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
+	
+	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	
+	STAssertNotNil(filename, @"Filename should not be nil");
+	STAssertNotNil(URL, @"URL should not be nil");
+	STAssertNotNil(self.downloadedFileURL, @"Temp file URL should not be nil");
+	STAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",self.downloadedFileURL);
+	STAssertEquals([progress floatValue], 1.f, @"Final progress should have been 1: %@",progress);
+
+	__block BOOL tempFileWasRemovedAfterCompletion = NO;
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		NSFileManager *fm = [[NSFileManager alloc] init];
+		tempFileWasRemovedAfterCompletion = ![fm fileExistsAtPath:[self.downloadedFileURL path]];
+	});
+	STAssertTrue(tempFileWasRemovedAfterCompletion, @"Downloaded temp file should be cleaned up after completion: %@",self.downloadedFileURL);
+}
+
+- (void)shouldDownloadAFileToCustomCacheLocation {
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	NSString *directory = [paths lastObject];
+	
+	self.cachesDir = [directory stringByAppendingPathComponent:@"CumulusSpecs"];
+	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
+
+	[self assertDownloadResourceToDisk:heroDownload];
+}
 
 - (void) shouldResumeDownloadingAFileToDisk {
-	
 	CMResource *massive = [self.service resource:@"test/download/massive"];
+	[self assertResumeDownloadingResource:massive];
+}
 
+- (void) shouldResumeDownloadingAnUnmodifiedFileByETag {
+	CMResource *massive = [self.service resource:@"test/download/massive/etag/notmodified"];
+	[self assertResumeDownloadingResource:massive];
+}
+
+- (void) shouldResumeDownloadingAnUnmodifiedFileByLastModified {
+	CMResource *massive = [self.service resource:@"test/download/massive/date/notmodified"];
+	[self assertResumeDownloadingResource:massive];
+}
+
+- (void) shouldDownloadEntireFileWhenServerFailsAnIfRangeRequestByETag {
+	CMResource *massive = [self.service resource:@"test/download/massive/etag/modified"];
+	[self assertResumeDownloadingResource:massive];
+}
+
+- (void) shouldDownloadEntireFileWhenServerFailsAnIfRangeRequestByLastModified {
+	CMResource *massive = [self.service resource:@"test/download/massive/date/modified"];
+	[self assertResumeDownloadingResource:massive];
+}
+
+- (void) shouldResetDownloadStateWhenResumeFails {
+	CMResource *massiveFailure = [self.service resource:@"test/download/massive/resume/fail"];
+
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (progress > 0.f) {
+			[progressInfo.request cancel];
+		}
+	};
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	};
+	[massiveFailure downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	NSDictionary *downloadState = [CMDownloadInfo downloadInfo];
+	CMDownloadInfo *massiveInfo = [downloadState objectForKey:[massiveFailure URL]];
+	NSURL *tempFileURL = massiveInfo.downloadedFileTempURL;
+			
+	[massiveFailure resumeOrBeginDownloadWithProgressBlock:nil completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+		
+	downloadState = [CMDownloadInfo downloadInfo];
+	massiveInfo = [downloadState objectForKey:[massiveFailure URL]];
+	STAssertNil(massiveInfo, @"Download state should have been cleaned up on a resume failure");
+
+	__block BOOL tempFileWasRemovedAfterCompletion = NO;
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		NSFileManager *fm = [[NSFileManager alloc] init];
+		tempFileWasRemovedAfterCompletion = ![fm fileExistsAtPath:[tempFileURL path]];
+	});
+	STAssertTrue(tempFileWasRemovedAfterCompletion, @"Temp file should have been cleaned up on a resume failure");
+}
+
+- (void) shouldRevertToDownloadingWholeFileWhenAskedToResumeAStreamedFile {
+	CMResource *massiveStream = [self.service resource:@"test/stream/massive"];
+	
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
 		self.downloadedFileURL = [progressInfo tempFileURL];
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		if ([progress floatValue] > 0.f) {
-			[massive cancelRequests];
+			[massiveStream cancelRequests];
 		}
 	};
 	
@@ -102,38 +200,40 @@
 		dispatch_semaphore_signal(request_sema);
 	};
 	
-	[massive downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	[massiveStream downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-
-	NSDictionary *downloadState = [CMDownloadInfo downloadInfo];
-	CMDownloadInfo *massiveInfo = [downloadState objectForKey:[massive URL]];
-	NSURL *tempFileURL = massiveInfo.downloadedFileTempURL;
 	
-	NSFileManager *fm = [NSFileManager new];
-	BOOL partialDownloadExists = [fm fileExistsAtPath:[tempFileURL path]];
-
-	STAssertTrue(partialDownloadExists, @"Resumable file did not exist prior to resuming");
-
+	
 	__block float firstProgress = -1.f;
 	__block BOOL hadRangeHeader = NO;
-	__block BOOL writesToSameTempFile = NO;
-	__block NSData *downloadedImageData = nil;
-	__block NSURL *copiedFileURL = nil;
 	progressBlock = ^(CMProgressInfo *progressInfo){
 		if (NO == hadRangeHeader) {
-			hadRangeHeader = ([progressInfo.request.headers objectForKey:kCumulusHTTPHeaderRange] != nil);
+			hadRangeHeader = ([progressInfo.request.headers objectForKey:@"Range"] != nil || [progressInfo.request.headers objectForKey:@"If-Range"] != nil);
 		}
-		writesToSameTempFile = [progressInfo.tempFileURL isEqual:tempFileURL];
 		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
-		if (firstProgress == -1.f && progress > 0.f && progress < 1.f) {
+		if (firstProgress == -1.f) {
 			firstProgress = progress;
 		}
 	};
-	completionBlock = ^(CMResponse *response) {
+	[massiveStream resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
+	STAssertTrue(firstProgress == 0.f, @"Download should have reset to a zero byte offset");
+	
+}
+
+- (void) shouldDownloadARangeAndBeComplete {
+	CMResource *massive = [self.service resource:@"resources/hs-2006-01-c-full_tif.png"];
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	__block NSURL *copiedFileURL = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
 		localResponse = response;
 		CMProgressInfo *result = response.result;
-//		UIImage *downloadedImage = [UIImage imageWithContentsOfFile:[result.tempFileURL path]];
-//		downloadedImageData = UIImagePNGRepresentation(downloadedImage);
 		copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
 		
 		NSFileManager *fm = [NSFileManager new];
@@ -142,111 +242,66 @@
 		
 		dispatch_semaphore_signal(request_sema);
 	};
-	[massive downloadWithResume:YES progressBlock:progressBlock completionBlock:completionBlock];
+
+	CMContentRange contentRange = CMContentRangeMake(0, 100000, 0);
+	[massive downloadRange:contentRange progressBlock:nil completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
 
+	NSDictionary *downloadInfo = [CMDownloadInfo downloadInfo];
+	CMDownloadInfo *downloadState = [downloadInfo objectForKey:[massive URL]];
+	STAssertNil(downloadState, @"Download state for range download should have been reset");
+	
+	NSFileManager *fm = [NSFileManager new];
+	NSError *error = nil;
+	NSDictionary *attributes = [fm attributesOfItemAtPath:[copiedFileURL path] error:&error];
+	long long fileSize = (long long)[attributes fileSize];
+	
 	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
-	STAssertTrue(hadRangeHeader, @"Request should have included a range header");
-	STAssertTrue(writesToSameTempFile, @"Download should have resumed writing to partial download");
-	STAssertTrue(firstProgress > 0.f, @"Download should have resumed at a non-zero offset");
-
-	UIImage *image =  [UIImage imageNamed:@"hs-2006-01-c-full_tif.png"];
-	UIImage *downloadedImage = [UIImage imageWithContentsOfFile:[copiedFileURL path]];
-	STAssertEqualObjects(image, downloadedImage, @"Completed file should be the same as if it were downloaded without interruption.");
+	STAssertEquals(fileSize, contentRange.length, @"Downloaded file size should have equaled request range length");
 }
 
-//- (void) shouldResumeDownloadingAFileWithAKnownETag {
-//	STAssertTrue(NO, @"UNIMPLEMENTED");
-//}
-//
-//- (void) shouldDownloadEntireFileWhenServerFailsAnIfRangeRequest {
-//	STAssertTrue(NO, @"UNIMPLEMENTED");
-//}
-//
-//- (void) shouldFailToResumeDownloadingAStreamedFile {
-//	CMResource *massiveStream = [self.service resource:@"test/stream/massive"];
-//	
-//	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
-//		self.downloadedFileURL = [progressInfo tempFileURL];
-//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-//		if ([progress floatValue] > 0.f) {
-//			[massiveStream cancelRequests];
+
+- (void)shouldUploadAFileFromDisk {
+	CMResource *hero = [self.service resource:@"test/upload/hero"];
+	
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+		NSLog(@"progress: %@",progress);
+//		[mockProgressObject setValue:progress forKey:@"Progress"];
+//		if ([progress floatValue] < 1.f) {
+//			[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:someProgressBlock] forKey:@"Progress"];
 //		}
-//	};
-//	
-//	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
-//	__block CMResponse *localResponse = nil;
-//	CMCompletionBlock completionBlock = ^(CMResponse *response) {
-//		localResponse = response;
-//		dispatch_semaphore_signal(request_sema);
-//	};
-//	
-//	[massiveStream downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
-//	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-//	
-//	
-//	__block float firstProgress = -1.f;
-//	__block BOOL hadRangeHeader = NO;
-//	progressBlock = ^(CMProgressInfo *progressInfo){
-//		if (NO == hadRangeHeader) {
-//			hadRangeHeader = ([progressInfo.request.headers objectForKey:@"Range"] != nil || [progressInfo.request.headers objectForKey:@"If-Range"] != nil);
-//		}
-//		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
-//		if (firstProgress == -1.f) {
-//			firstProgress = progress;
-//		}
-//	};
-//	[massiveStream downloadWithResume:YES progressBlock:progressBlock completionBlock:completionBlock];
-//	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-//	dispatch_release(request_sema);
-//	
-//	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
-//	STAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
-//	STAssertTrue(firstProgress == 0.f, @"Download should have reset to a zero byte offset");
-//	
-//}
-//
-//- (void)shouldUploadAFileFromDisk {
-//	CMResource *hero = [self.service resource:@"test/upload/hero"];
-//	
-//	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
-//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-//		NSLog(@"progress: %@",progress);
-////		[mockProgressObject setValue:progress forKey:@"Progress"];
-////		if ([progress floatValue] < 1.f) {
-////			[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:someProgressBlock] forKey:@"Progress"];
-////		}
-//	};
-//
-//	
-//	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
-//	__block CMResponse *localResponse = nil;
-//	CMCompletionBlock completionBlock = ^(CMResponse *response) {
-//		localResponse = response;
-//		dispatch_semaphore_signal(request_sema);
-//	};
-//	
-//	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-//	
-//	NSString *filePath = [[NSBundle mainBundle] pathForResource:@"t_hero" ofType:@"png"];
-//	NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-//	[hero uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
-//
-//	
-//	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-//	dispatch_semaphore_signal(request_sema);
-//	dispatch_release(request_sema);
-//
-//	STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
-//}
+	};
+
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	__block CMResponse *localResponse = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	};
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	NSString *filePath = [[NSBundle mainBundle] pathForResource:@"t_hero" ofType:@"png"];
+	NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+	[hero uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
+
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_signal(request_sema);
+	dispatch_release(request_sema);
+
+	STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+}
 
 
 // ========================================================================== //
 
 #pragma mark - Helpers
 
-- (void) assertDownloadAFileToDisk:(CMResource *)resource {
+- (void) assertDownloadResourceToDisk:(CMResource *)resource {
 	
 	if (self.cachesDir) {
 		resource.cachesDir = self.cachesDir;
@@ -316,7 +371,88 @@
 
 }
 
-
+- (void) assertResumeDownloadingResource:(CMResource *)massive {
+	
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (progress > 0.f) {
+			[progressInfo.request cancel];
+		}
+	};
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	};
+	[massive downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	NSDictionary *downloadState = [CMDownloadInfo downloadInfo];
+	CMDownloadInfo *massiveInfo = [downloadState objectForKey:[massive URL]];
+	NSURL *tempFileURL = massiveInfo.downloadedFileTempURL;
+	
+	STAssertNotNil(tempFileURL, @"Download state for partial download should include a temp file URL");
+	
+	NSFileManager *fm = [NSFileManager new];
+	BOOL partialDownloadExists = [fm fileExistsAtPath:[tempFileURL path]];
+	NSError *error = nil;
+	NSDictionary *attributes = [fm attributesOfItemAtPath:[tempFileURL path] error:&error];
+	long long currentOffset = (long long)[attributes fileSize];
+	
+	
+	STAssertTrue(partialDownloadExists, @"Resumable file did not exist prior to resuming");
+	
+	
+	__block float firstProgress = -1.f;
+	__block BOOL hadRangeHeader = NO;
+	__block BOOL writesToSameTempFile = NO;
+	__block NSURL *copiedFileURL = nil;
+	__block BOOL sentPartialContent = NO;
+	progressBlock = ^(CMProgressInfo *progressInfo){
+		if (NO == hadRangeHeader) {
+			hadRangeHeader = ([progressInfo.request.headers objectForKey:kCumulusHTTPHeaderRange] != nil);
+		}
+		writesToSameTempFile = [progressInfo.tempFileURL isEqual:tempFileURL];
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (firstProgress == -1.f && progress > 0.f && progress < 1.f) {
+			firstProgress = progress;
+		}
+	};
+	completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		CMProgressInfo *result = response.result;
+		copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
+		
+		NSFileManager *fm = [NSFileManager new];
+		NSError *error = nil;
+		[fm moveItemAtURL:result.tempFileURL toURL:copiedFileURL error:&error];
+		
+		sentPartialContent = response.HTTPPartialContent;
+		
+		dispatch_semaphore_signal(request_sema);
+	};
+	[massive resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(hadRangeHeader, @"Request should have included a range header");
+	STAssertTrue(writesToSameTempFile, @"Download should have resumed writing to partial download");
+	
+	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
+	if (sentPartialContent) {
+		STAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
+	}
+	else {
+		STAssertTrue(firstProgress < initialProgress, @"Download should have started at less than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
+	}
+	
+	
+	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
+	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[copiedFileURL path]], @"Completed file should be the same as if it were downloaded without interruption.");
+}
 
 
 

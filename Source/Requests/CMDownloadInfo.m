@@ -54,8 +54,11 @@
 
 + (BOOL) resetDownloadInfoForURL:(NSURL *)URL {
 	NSMutableDictionary *info = [self downloadInfo];
-	[info removeObjectForKey:URL];
-	return [self saveDownloadInfo];
+	if ([info objectForKey:URL]) {
+		[info removeObjectForKey:URL];
+		return [self saveDownloadInfo];
+	}
+	return YES;
 }
 
 + (BOOL) saveDownloadInfo {
@@ -81,7 +84,7 @@
 
 - (id)initWithCoder:(NSCoder *)coder {
 	_downloadedFileTempURL = [coder decodeObjectForKey:@"_downloadedFileTempURL"];
-	_expectedContentLength = [[coder decodeObjectForKey:@"_expectedContentLength"] longLongValue];
+	_totalContentLength = [[coder decodeObjectForKey:@"_totalContentLength"] longLongValue];
 	_ETag = [coder decodeObjectForKey:@"_ETag"];
 	_lastModifiedDate = [coder decodeObjectForKey:@"_lastModifiedDate"];
     
@@ -90,13 +93,13 @@
 
 - (void) encodeWithCoder:(NSCoder *)aCoder {
 	[aCoder encodeObject:_downloadedFileTempURL forKey:@"_downloadedFileTempURL"];
-	[aCoder encodeObject:@(_expectedContentLength) forKey:@"_expectedContentLength"];
+	[aCoder encodeObject:@(_totalContentLength) forKey:@"_totalContentLength"];
 	[aCoder encodeObject:_ETag forKey:@"_ETag"];
 	[aCoder encodeObject:_lastModifiedDate forKey:@"_lastModifiedDate"];
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ { tempURL:%@, expectedContentLength: %@, ETag: %@, lastModifiedDate: %@ }",[super description],_downloadedFileTempURL,@(_expectedContentLength),_ETag,_lastModifiedDate];
+	return [NSString stringWithFormat:@"%@ { tempURL:%@, totalContentLength: %@, ETag: %@, lastModifiedDate: %@ }",[super description],_downloadedFileTempURL,@(_totalContentLength),_ETag,_lastModifiedDate];
 }
 
 @end

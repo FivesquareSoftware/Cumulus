@@ -12,6 +12,5 @@
 
 @interface CMResourceGroup ()
 - (void) enter;
-- (void) leave;
 - (void) leaveWithResponse:(CMResponse *)response;
 @end

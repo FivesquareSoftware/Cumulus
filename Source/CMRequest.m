@@ -98,10 +98,14 @@ static NSUInteger requestCount = 0;
 
 @dynamic completed;
 - (BOOL) didComplete {
-	if (self.expectedContentLength == NSURLResponseUnknownLength) {
+	// A streamed file most likely, but either way we don't know the length, assume it's complete
+	if (self.responseInternal.expectedContentLength == NSURLResponseUnknownLength) {
 		return YES;
 	}
-	return self.expectedContentLength == self.receivedContentLength;
+	// - A range request is complete if the length of the range was returned
+	// - A non-range request is complete if the expected content length was returned
+	// #responseInternal.contentLength captures both of these cases
+	return self.responseInternal.expectedContentLength == self.receivedContentLength;
 }
 
 #pragma mark - -Lifecycle
@@ -129,6 +133,7 @@ static NSUInteger requestCount = 0;
 @synthesize authProviders=_authProviders;
 @synthesize maxAuthRetries=_maxAuthRequests;
 @synthesize payload=_payload;
+@synthesize range = _range;
 
 @dynamic URL;
 - (NSURL *) URL {
@@ -160,7 +165,7 @@ static NSUInteger requestCount = 0;
 	float progress = 0;
 	if (self.expectedContentLength > 0) {
 		progress = (float)self.receivedContentLength / (float)self.expectedContentLength;
-		progressReceivedInfo.progress = [NSNumber numberWithFloat:progress];
+		progressReceivedInfo.progress = @(progress);
 	}
 	else {
 		progressReceivedInfo.progress = @(0);
@@ -192,6 +197,7 @@ static NSUInteger requestCount = 0;
 @synthesize originalURLRequest=_originalURLRequest;
 @synthesize timeoutTimer=_timeoutTimer;
 @synthesize requestConfigured = _requestConfigured;
+@synthesize responseInternal = _responseInternal;
 
 @dynamic fileExtension;
 - (NSString *) fileExtension {
@@ -345,6 +351,7 @@ static NSUInteger requestCount = 0;
 		self.originalURLRequest = URLRequest;
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
 		self.maxAuthRetries = 1;
+		self.range = (CMContentRange){ kCFNotFound , 0, 0 };
     }
     
     return self;
@@ -491,9 +498,11 @@ static NSUInteger requestCount = 0;
         return;
     }
 	self.connectionFinished = YES;
-	CMResponse *response = [[CMResponse alloc] initWithRequest:self];
-	self.response = response;
 
+	if (nil == self.responseInternal) {
+		self.responseInternal = [[CMResponse alloc] initWithRequest:self];
+	}
+	
 	// Make sure processing the results doesn't stop us from calling our completion block
 	@try {
 //		dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
@@ -511,7 +520,7 @@ static NSUInteger requestCount = 0;
 		dispatch_queue_t q_current = dispatch_get_current_queue();
 		NSAssert(q != q_current, @"Tried to run response processing on the current queue! ** DEADLOCK **");
 		dispatch_sync(q, ^{
-			[self postProcessResponse:response];
+			[self postProcessResponse:self.responseInternal];
 		});
 	}
 	@catch (NSException *exception) {
@@ -520,8 +529,12 @@ static NSUInteger requestCount = 0;
 	@finally {
 		if (self.completionBlock) {
 			dispatch_async(dispatch_get_main_queue(), ^{
-				self.completionBlock(response);
+				self.completionBlock(self.responseInternal);
+				self.responseInternal = nil;
 			});
+		}
+		else {
+			self.responseInternal = nil;
 		}
 		self.timeoutTimer = nil;
 		self.finished = YES;
@@ -551,6 +564,11 @@ static NSUInteger requestCount = 0;
 	if (self.timeout > 0) {
 		URLRequest.timeoutInterval = self.timeout;
 	}
+	
+	if (self.range.location != kCFNotFound) {
+		[URLRequest setValue:[NSString stringWithFormat:@"bytes=%lld-%lld",self.range.location,CMContentRangeLastByte(self.range)] forHTTPHeaderField:kCumulusHTTPHeaderRange];
+	}
+	
 	self.requestConfigured = YES;
 }
 
@@ -652,7 +670,10 @@ static NSUInteger requestCount = 0;
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.URLResponse = (NSHTTPURLResponse *)response;
 //	RCLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
-	self.expectedContentLength = [response expectedContentLength];
+	self.responseInternal = [[CMResponse alloc] initWithRequest:self];
+//	self.expectedContentLength = [response expectedContentLength]; // fails when there is no content length header, often in a range request this is true
+	// Works for simple requests as well as range requests
+	self.expectedContentLength = self.responseInternal.expectedContentLength;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {

@@ -38,6 +38,7 @@
 	
 	self.service = [CMResource withURL:kTestServerHost];
 	self.service.contentType = CMContentTypeJSON;
+	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 }
 
 - (void)afterEach {

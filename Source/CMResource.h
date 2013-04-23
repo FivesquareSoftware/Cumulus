@@ -183,7 +183,7 @@
 @property (nonatomic, strong) NSMutableArray *authProviders;
 
 /// When set, will set 'Content-Type' and 'Accept' headers appropriately
-@property (nonatomic, assign) CMContentType contentType;
+@property (nonatomic) CMContentType contentType;
 
 
 /** Convenience method for setting a single header.
@@ -303,19 +303,19 @@
 // ========================================================================== //
 
 
-/** @see downloadWithProgressBlock:completionBlock:resume:. */
 - (id) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-/** Downloads the data represented by the receiver directly to disk instead of holding it in memory. When the request is complete #result holds an instance of CMProgressInfo with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it.
- * @param resume Whether or not to pick up downloading from where a previous request left off.
- * @note The progress info object IS KVC for the following keys, and you can use the constants if you wish:
- *
- * - kCumulusProgressInfoKeyURL (URL)
- * - kCumulusProgressInfoKeyTempFileURL (tempFileURL)
- * - kCumulusProgressInfoKeyFilename (filename)
- * - kCumulusProgressInfoKeyProgress (progress)
+/** Behaves like downloadWithProgressBlock:completionBlock: with the exception that it will resume the download if the temp download file already existes on disk.
+ *  @see downloadWithProgressBlock:completionBlock:. 
  */
-- (id) downloadWithResume:(BOOL)shouldResume progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) resumeOrBeginDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+/** Downloads a range of the resource directly to disk.
+ *  @param range a CMContentRange with location and length representing the start and end (location+length) of range to be downloaded. 
+ *  @see downloadWithProgressBlock:completionBlock:
+ */
+- (id) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
 
 /** Allows for uploading files directly from disk rather than keeping them in memory, which is particularly useful for large files. The progress block is called each time a chunk of data is sent to the server. The content type sent to the server is inferred from the UTI of the file on disk and overrides any content type set on the receiver.
  *  

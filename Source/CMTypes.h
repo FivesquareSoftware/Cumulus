@@ -66,3 +66,23 @@ typedef enum {
 	, CMContentTypeText
 	, CMContentTypePNG
 } CMContentType;
+
+typedef struct {
+    long long location;
+    long long length;
+	long long contentLength;
+} CMContentRange;
+
+static inline CMContentRange CMContentRangeMake(long long loc, long long len, long long clen) {
+    CMContentRange range;
+    range.location = loc;
+    range.length = len;
+	range.contentLength = clen;
+    return range;
+}
+
+static inline long long CMContentRangeLastByte(CMContentRange range) {
+	return range.location+range.length-1; // byte ranges are 0 indexed
+}
+
+

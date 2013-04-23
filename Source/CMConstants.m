@@ -53,6 +53,7 @@ NSString *kCumulusHTTPHeaderETag = @"ETag";
 NSString *kCumulusHTTPHeaderLastModified = @"Last-Modified";
 NSString *kCumulusHTTPHeaderRange = @"Range";
 NSString *kCumulusHTTPHeaderIfRange = @"If-Range";
+NSString *kCumulusHTTPHeaderContentRange = @"Content-Range";
 
 NSString *kCumulusProgressInfoKeyURL = @"URL";
 NSString *kCumulusProgressInfoKeyTempFileURL = @"tempFileURL";
@@ -61,7 +62,3 @@ NSString *kCumulusProgressInfoKeyProgress = @"progress";
 
 NSString *kCumulusCachesDirectoryName = @"Cumulus";
 
-NSString *kCumulusDownloadStateInfoKeyTempFileURL = @"downloadedFileTempURL";
-NSString *kCumulusDownloadStateInfoKeyExpectedContentLength = @"expectedContentLength";
-NSString *kCumulusDownloadStateInfoKeyETag = @"ETag";
-NSString *kCumulusDownloadStateInfoKeyLastModifiedDate = @"lastModifiedDate";

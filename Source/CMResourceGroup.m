@@ -105,18 +105,13 @@
 	dispatch_group_enter(_dispatchGroup);
 }
 
-- (void) leave {
-	RCLog(@"leave ->");
-	dispatch_group_leave(_dispatchGroup);
-}
-
 - (void) leaveWithResponse:(CMResponse *)response {
 	RCLog(@"leaveWithResponse: ->");
-	[_currentResponses addObject:response];
+	if (response) {
+		[_currentResponses addObject:response];
+	}
 	dispatch_group_leave(_dispatchGroup);
 }
-
-
 
 
 

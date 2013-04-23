@@ -43,10 +43,13 @@
 @property (readwrite) BOOL started;
 @property (readwrite) BOOL finished;
 @property (readwrite) BOOL canceled;
+@property (readonly, getter = didComplete) BOOL completed;
+
 
 @property (readwrite, strong) NSHTTPURLResponse *URLResponse;
-
 @property (readwrite, strong) NSString *responseBody;
+@property (nonatomic, strong) CMResponse *responseInternal;
+
 
 
 // Private properties

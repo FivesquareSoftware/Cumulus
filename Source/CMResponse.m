@@ -53,8 +53,28 @@
 @synthesize request=_request;
 @synthesize status=_status;
 @synthesize error = _error;
+@synthesize expectedContentLength = _expectedContentLength;
+@synthesize expectedContentRange = _expectedContentRange;
+@synthesize totalContentLength = _totalContentLength;
 @synthesize httpDateFormatter = _httpDateFormatter;
 
+
+- (NSInteger) status {
+	if (_status == kCFNotFound) {
+		// If user canceled auth, we need to help a bit and set the right status code
+		NSError *error = _request.error;
+		if(error.code == NSURLErrorUserCancelledAuthentication) {
+			_status = 401;
+		}
+		else if (_request.wasCanceled) { // sometimes a request can cancel even before there is an HTTP response, so just to be safe, set this
+			_status = kHTTPStatusCanceled;
+		}
+        else if (_request.URLResponse) {
+			_status = [_request.URLResponse statusCode];
+		}
+	}
+	return _status;
+}
 
 @dynamic headers;
 - (NSDictionary *) headers {
@@ -76,6 +96,52 @@
 	return lastModified;
 }
 
+- (long long) expectedContentLength {
+	if (_expectedContentLength == kCFNotFound) {
+		_expectedContentLength = NSURLResponseUnknownLength;
+		NSString *contentLengthHeaderValue = self.headers[kCumulusHTTPHeaderContentLength];
+		if (contentLengthHeaderValue) {
+			_expectedContentLength = [contentLengthHeaderValue longLongValue];
+		}
+		else if (self.expectedContentRange.location != kCFNotFound) {
+			_expectedContentLength = _expectedContentRange.length;
+		}
+	}
+	return _expectedContentLength;
+}
+
+- (CMContentRange) expectedContentRange {
+	if (_expectedContentRange.location == kCFNotFound) {
+		NSString *contentRangeHeaderValue = self.headers[kCumulusHTTPHeaderContentRange];
+		if (contentRangeHeaderValue) {
+			NSError *error = nil;
+			NSRegularExpression *contentRangeExpression = [NSRegularExpression regularExpressionWithPattern:@"bytes (\\d+)-(\\d+)/(\\d+)" options:NSRegularExpressionCaseInsensitive error:&error];
+			NSTextCheckingResult *match = [contentRangeExpression firstMatchInString:contentRangeHeaderValue options:0 range:NSMakeRange(0, contentRangeHeaderValue.length)];
+			if (match) {
+				long long startBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:1]] longLongValue];
+				long long endBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:2]] longLongValue];
+				long long possibleBytes = [[contentRangeHeaderValue substringWithRange:[match rangeAtIndex:3]] longLongValue];
+				_expectedContentRange.location = startBytes;
+				_expectedContentRange.length = (endBytes-startBytes)+1; // because 0-100/500 means 101 bytes since they are 0 indexed
+				_expectedContentRange.contentLength = possibleBytes;
+			}
+		}
+	}
+	return _expectedContentRange;
+}
+
+- (long long) totalContentLength {
+	if (_totalContentLength == kCFNotFound) {
+		if (self.expectedContentRange.location != kCFNotFound) {
+			_totalContentLength = self.expectedContentRange.contentLength;
+		}
+		else {
+			_totalContentLength = self.expectedContentLength;
+		}
+	}
+	return _totalContentLength;
+}
+
 - (NSString *) body {
 	return _request.responseBody;
 } 
@@ -84,7 +150,7 @@
 	if (nil == _error) {
 		if (NO == _request.wasCanceled && NO == [self HTTPSuccessful] && nil == _request.error) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSString stringWithFormat:@"Received %u HTTP Status code",_status], NSLocalizedDescriptionKey
+								  [NSString stringWithFormat:@"Received %u HTTP Status code",self.status], NSLocalizedDescriptionKey
 								  , _request.responseBody, NSLocalizedFailureReasonErrorKey
 								  , [_request.URLResponse URL], NSURLErrorFailingURLErrorKey
 								  , [NSNumber numberWithInt:_status], kRESTCLientHTTPStatusCodeErrorKey
@@ -102,11 +168,32 @@
 	return _request.result;
 }
 
+@dynamic wasComplete;
+- (BOOL) wasComplete {
+	// A streamed file most likely, but either way we don't know the length, assume it's complete
+	if (self.expectedContentLength == NSURLResponseUnknownLength) {
+		return YES;
+	}
+	// - A range request is complete if the length of the range was returned
+	// - A non-range request is complete if the expected content length was returned
+	// #contentLength captures both of these cases
+	return self.expectedContentLength == _request.receivedContentLength;
+}
+
 @dynamic success;
 - (BOOL) success {
+	return self.wasSuccessful;
+}
+
+@dynamic wasSuccessful;
+- (BOOL) wasSuccessful {
 	return self.error == nil && [self HTTPSuccessful];
 }
 
+@dynamic wasUnsuccessful;
+- (BOOL) wasUnsuccessful {
+	return !self.wasUnsuccessful;
+}
 
 
 // ========================================================================== //
@@ -120,13 +207,18 @@
     if (self) {
         _request = request;
 		// If user canceled auth, we need to help a bit and set the right status code
-		NSError *error = request.error;
-		if(error.code == NSURLErrorUserCancelledAuthentication) {
-			_status = 401;
-		}
-        else {
-			_status = [request.URLResponse statusCode];
-		}
+//		NSError *error = request.error;
+//		if(error.code == NSURLErrorUserCancelledAuthentication) {
+//			_status = 401;
+//		}
+//        else {
+//			_status = [request.URLResponse statusCode];
+//		}
+		_status = kCFNotFound;
+		_expectedContentLength = kCFNotFound;
+		_expectedContentRange = (CMContentRange){ kCFNotFound , 0, 0 };
+		_totalContentLength = kCFNotFound;
+		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
 		_httpDateFormatter = dateFormatter;

@@ -35,6 +35,7 @@
 - (void)beforeEach {
     // set up resources that need to be initialized before each example here 
 	self.service = [CMResource withURL:kTestServerHost];
+	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 }
 
 - (void)afterEach {
@@ -70,7 +71,7 @@
 
 - (void)shouldCancelAllRequests {
 	CMResource *smallResource = [self.service resource:@"slow"];
-	smallResource.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	smallResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(100, queue, ^(size_t i) {

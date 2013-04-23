@@ -16,4 +16,8 @@
 @synthesize filename=_filename;
 @synthesize progress=_progress;
 
+- (NSString *) description {
+	return [NSString stringWithFormat:@"%@ { URL: %@, progress: %@}",[super description],_URL,_progress];
+}
+
 @end
