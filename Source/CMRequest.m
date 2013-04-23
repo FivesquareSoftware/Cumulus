@@ -39,6 +39,7 @@
 #import "Cumulus.h"
 
 @interface CMRequest()
+
 @end
 
 
@@ -125,7 +126,7 @@ static NSUInteger requestCount = 0;
 
 #pragma mark - -Configuration
 
-
+@synthesize identifier = _identifier;
 @synthesize headers=_headers;
 @synthesize timeout=_timeout;
 @synthesize cachePolicy=_cachePolicy;
@@ -365,7 +366,7 @@ static NSUInteger requestCount = 0;
 
 - (NSString *) description {
 	NSURLRequest *request = nil == _URLRequest ? _originalURLRequest : _URLRequest;
-	return [NSString stringWithFormat:@"%@ : %@ %@",[super description],[request HTTPMethod],[request description]];
+	return [NSString stringWithFormat:@"%@(identifier: '%@') : %@ %@",[super description],_identifier,[request HTTPMethod],[request description]];
 }
 
 
@@ -388,6 +389,9 @@ static NSUInteger requestCount = 0;
 	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 //	[self.connection setDelegateQueue:[[self class] delegateQueue]];
+//	[self.connection setDelegateQueue:[NSOperationQueue mainQueue]];
+//	_queue = [NSOperationQueue new];
+//	[self.connection setDelegateQueue:_queue];
     [self.connection start];
 	RCLog(@"%@", self);
 

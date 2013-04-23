@@ -105,6 +105,7 @@
 	
 }
 
+
 /** @name Resource Information */
 
 @property (nonatomic, readonly, strong) CMResource *parent;
@@ -121,7 +122,6 @@
 /// Runs on the result of a request for the receiver before any completion block is run. Runs on a non-main concurrent queue so is the ideal place to do any long-running processing of request results.
 @property (nonatomic, copy) CMPostProcessorBlock postProcessorBlock;
 
-@property (nonatomic, weak) CMResourceGroup *resourceGroup;
 
 
 /** @name Creating Resources */
@@ -208,24 +208,33 @@
 /** Returns the receiver's stored fixture for the supplied HTTP method if it exists or, if Cumulus#usingFixtures is YES, will attempt to return a global fixture for the request signature. */
 - (id) fixtureForHTTPMethod:(NSString *)method;
 
-/** @} */
 
 
 // ========================================================================== //
 /** @name Request Control */
 // ========================================================================== //
 
-/// The array of non-blocking CMRequest objects that are currently running. Since these requests may be running, the returned set only reflects a snapshot in time of the receiver's requests.
+/// The array of CMRequest objects that are currently running. Since these requests may quit at any point, the returned set only reflects a snapshot in time of the receiver's requests.
 @property (readonly) NSMutableSet *requests;
 
-/** Cancels all non-blocking requests started by the receiver. Blocking requests, once begun, cannot be canceled. 
- *  @note Returns immediately (Does not wait for requests to actually shut down)
+/** A request from the running requests that has the supplied identifier. */
+- (CMRequest *) requestForIdentifier:(id)identifier;
+
+/** Cancels all requests started by the receiver. 
+ *  @note Returns immediately (Does not wait for HTTP requests to actually shut down)
  */
 - (void) cancelRequests;
-/** Calls #cancelRequests and executes block on the main queue when all calls are made
- *  @note When the block is called, there is no guarantee that the underlying NSURLConnection objects have fully canceled.
+
+/** Cancels all requests started by the receiver and executes block on the main queue when all calls are made.
+ *  @note When the block is called there is no guarantee that the underlying NSURLConnection objects have fully canceled.
  */
-- (void) cancelRequestsWithBlock:(void (^)(void))block; 
+- (void) cancelRequestsWithBlock:(void (^)(void))block;
+
+/** Calls [CMRequest cancel] on a request with identifier matching the supplied identifier and waits for it to cancel before returning. 
+ *  @note When this method returns there is no guarantee that the underlying NSURLConnection object associated with the request has fully canceled.
+ */
+- (void) cancelRequestForIdentifier:(id)identifier;
+
 
 
 // ========================================================================== //
@@ -235,57 +244,57 @@
 // GET
 
 - (CMResponse *) get;
-- (void) getWithCompletionBlock:(CMCompletionBlock)completionBlock;
-- (void) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock;
+- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) getWithQuery:(id)query ;
-- (void) getWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
-- (void) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
+- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
+- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
 
 
 // HEAD
 
 - (CMResponse *) head;
-- (void) headWithCompletionBlock:(CMCompletionBlock)completionBlock;
+- (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock;
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) headWithQuery:(id)query;
-- (void) headWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see headWithQuery:
+- (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see headWithQuery:
 
 
 // DELETE
 
 - (CMResponse *) delete;
-- (void) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock;
+- (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock;
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) deleteWithQuery:(id)query;
-- (void) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see deleteWithQuery:
+- (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see deleteWithQuery:
 
 
 // POST
 
 - (CMResponse *) post:(id)payload;
-- (void) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
-- (void) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
+- (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) post:(id)payload withQuery:(id)query;
-- (void) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
-- (void) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
+- (id) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
+- (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
 
 
 // PUT
 
 - (CMResponse *) put:(id)payload;
-- (void) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
-- (void) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
+- (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) put:(id)payload withQuery:(id)query;
-- (void) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
-- (void) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
+- (id) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
+- (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
 
 
 
@@ -294,33 +303,25 @@
 // ========================================================================== //
 
 
-/** Downloads the resource directly to disk instead of holding it in memory. When the request is complete #result holds an instance of CMProgressInfo with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it.
- * @note The progress info object IS KVC for the following keys, and you can use the constants if you wish to be safe from future attribute name changes:
- *
- * - kCumulusProgressInfoKeyURL (URL)
- * - kCumulusProgressInfoKeyTempFileURL (tempFileURL)
- * - kCumulusProgressInfoKeyFilename (filename)
- * - kCumulusProgressInfoKeyProgress (progress)
- */
-- (void) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** Behaves like downloadWithProgressBlock:completionBlock: with the exception that it will resume the download if the temp download file already existes on disk.
  *  @see downloadWithProgressBlock:completionBlock:. 
  */
-- (void) resumeOrBeginDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) resumeOrBeginDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** Downloads a range of the resource directly to disk.
  *  @param range a CMContentRange with location and length representing the start and end (location+length) of range to be downloaded. 
  *  @see downloadWithProgressBlock:completionBlock:
  */
-- (void) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 
 /** Allows for uploading files directly from disk rather than keeping them in memory, which is particularly useful for large files. The progress block is called each time a chunk of data is sent to the server. The content type sent to the server is inferred from the UTI of the file on disk and overrides any content type set on the receiver.
  *  
  *  @note Currently implemented using HTTP PUT rather than Multipart POST, which may not be supported by your server. 
  */
-- (void) uploadFile:(NSURL *)fileURL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) uploadFile:(NSURL *)fileURL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 
 

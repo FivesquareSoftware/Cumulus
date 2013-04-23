@@ -8,7 +8,9 @@
 
 #import "CMResourceGroup.h"
 
+@class CMResponse;
+
 @interface CMResourceGroup ()
 - (void) enter;
-- (void) leave;
+- (void) leaveWithResponse:(CMResponse *)response;
 @end
