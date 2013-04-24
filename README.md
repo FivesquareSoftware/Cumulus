@@ -66,6 +66,11 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 [Running the Tests][TESTS]  
 
 
+## License
+
+Cumulus is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause)
+
+
 ## Basic Usage
 
 The most common way to use Cumulus is to set up a base resource and some children, define a couple blocks and start making requests. 

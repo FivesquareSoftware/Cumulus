@@ -12,7 +12,8 @@
 
 /** Used as the HTTP response data (a fake successful response is made) */
 @property (nonatomic, strong) id fixture;
-@property (nonatomic, strong) NSString *expectedContentType; ///< Computed from fixture type and Accept header
+/// Computed from fixture type and Accept header
+@property (nonatomic, strong) NSString *expectedContentType;
 @property (nonatomic, strong, readonly) NSData *fixtureData;
 
 

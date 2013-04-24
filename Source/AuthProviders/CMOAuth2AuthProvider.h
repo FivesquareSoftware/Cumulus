@@ -45,8 +45,10 @@
 /** Provides OAuth2 authentication to CMResources. */
 @interface CMOAuth2AuthProvider : NSObject <CMAuthProvider>
 
-@property (strong, nonatomic) NSURL *authorizationURL; ///< Initiates an authorization request from the resource owner 
-@property (strong, nonatomic) CMResource *tokenService; ///< Used to request an access token for both authorization
+/// Initiates an authorization request from the resource owner 
+@property (strong, nonatomic) NSURL *authorizationURL;
+/// Used to request an access token for both authorization
+@property (strong, nonatomic) CMResource *tokenService;
 @property (strong, nonatomic) CMOAuthToken *token; // includes an access token and the refresh token + expiration date if they exist
 
 + (id) withAuthorizationURL:(NSURL *)authorizationURL tokenService:(CMResource *)tokenService;

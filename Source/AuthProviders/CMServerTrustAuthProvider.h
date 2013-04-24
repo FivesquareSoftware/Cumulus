@@ -43,8 +43,10 @@
 /** When this is set to YES, will trust any certificate, which is inherently insecure. If you need to use a self-signed cert during testing, it's better to import the cert into your keychain so you don't forget and leave this on. Defaults to NO. */
 @property (nonatomic, getter = isInsecure) BOOL insecure; 
 
-@property (nonatomic, readonly, strong) NSMutableArray *certificates; ///< The list of certificates that will be checked for trust in addition to those in the default set (keychain)
+/// The list of certificates that will be checked for trust in addition to those in the default set (keychain)
+@property (nonatomic, readonly, strong) NSMutableArray *certificates;
 
-- (void) addCertificate:(id)certificate; ///< Add a certificate to trust
+/// Add a certificate to trust
+- (void) addCertificate:(id)certificate;
 
 @end

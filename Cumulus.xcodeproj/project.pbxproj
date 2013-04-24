@@ -276,6 +276,7 @@
 		A47598121717CA2200A385F3 /* AppledocSettings.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppledocSettings.plist; sourceTree = SOURCE_ROOT; };
 		A47598171717D7BF00A385F3 /* faq.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = faq.md; sourceTree = "<group>"; };
 		A47598181717D7BF00A385F3 /* howto.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = howto.md; sourceTree = "<group>"; };
+		A498296A1727AABA001E1F07 /* index.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = index.md; sourceTree = "<group>"; };
 		A49D484114B4BD8B0045D66F /* NSObject+Cumulus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Cumulus.h"; sourceTree = "<group>"; };
 		A49D484214B4BD8B0045D66F /* NSObject+Cumulus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Cumulus.m"; sourceTree = "<group>"; };
 		A4A22271148AA893001726E4 /* CMRequest+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CMRequest+Protected.h"; sourceTree = "<group>"; };
@@ -644,10 +645,19 @@
 		A47598131717D7BF00A385F3 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				A498296B1727AAC7001E1F07 /* API */,
 				A47598171717D7BF00A385F3 /* faq.md */,
 				A47598181717D7BF00A385F3 /* howto.md */,
 			);
 			path = Docs;
+			sourceTree = "<group>";
+		};
+		A498296B1727AAC7001E1F07 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				A498296A1727AABA001E1F07 /* index.md */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 		A49D483F14B4BD760045D66F /* Extensions */ = {

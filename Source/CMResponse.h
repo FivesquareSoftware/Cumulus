@@ -95,7 +95,7 @@
 @property (nonatomic, readonly) NSError *error;
 
 /** @deprecated Use wasSuccessful instead. */
-@property (nonatomic, readonly) BOOL success;
+@property (nonatomic, readonly) BOOL success DEPRECATED_ATTRIBUTE;
 
 /** This is the primary mechanism for quickly determining the success or failure of a request.
  *  @returns YES if error is nil and HTTPSuccessful returns YES (status is in the range 200-299).

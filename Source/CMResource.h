@@ -43,7 +43,7 @@
 @class CMResourceGroup;
 
 /**
- * CMResource is the primary public interface for Cumulus, and each instance is meant to reflect an actual resource residing on the WWW, generally accessed via a REST web service. 
+ * CMResource is the primary public interface for Cumulus, and each instance is meant to reflect an actual resource residing on the Internet, generally accessed via a REST web service. 
  *
  * ### Configuration
  *
@@ -52,50 +52,58 @@
  * ### Lifecycle
  *
  * A resource has a lifecycle that is defined by the blocks you can run at various points in the execution of a request for the resource. These points are:
+ *
  *  - preflight, which can abort a request
  *  - progress, which can be either up or down depending on the type of request
  *  - postprocess, which can perform transformations and other work based on the results of the request
  *  - completion, which runs when a request completes, regardless of success or failure
+ *
  *  The posprocess block is unique because it runs on the high-priority concurrent global queue, whereas all the other blocks run on the main queue to allow UI code to safely run.
  *
  * ### Authentication
  *
  * Each resource can have an instance of an authentication provider, which implements <CMAuthProvider> and can do any kind of authentication that is supported by the protocol. A BASIC auth provider is included with Cumulus, and if username and password are set on a resource, an instance of this provider will be created on demand.
  *
- * # Encoding/Decoding
+ * ### Encoding/Decoding
  *
- * Payloads and results are serialized/deserialized automatically using instances of <CMCoder>.
- *  @see CMRequest for more information
+ * Payloads and results are serialized/deserialized automatically using instances of CMCoder. (See CMRequest for more information about how these are used)
  *
  * ### Query Strings
  *
  * To make it easier to reuse resource objects, you can pass a query argument—consisting either of a single dictionary or an array of values and keys—to one of the HTTP request methods, like getWithQuery: and it will be expanded for you to a query string for the request. The expansion follows these rules:
- *    - NSString - <key>=<value>
- *    - NSArray - <key>[]=<value1>&<key>[]=<value2>&...
- *    - NSObject - <key>=<[value description]>
+ *
+ *    - NSString - \<key\>=\<value\>
+ *    - NSArray - \<key\>[]=\<value1\>&\<key\>[]=\<value2\>&...
+ *    - NSObject - \<key\>=\<[value description]\>
  *    - NSDictionary - dictionary values are transformed recursively using the above rules, and query list processing is terminated.
  *
  *  For example, the following message:
- *    [resource getWithQuery:[NSArray arrayWithObjects:@"foo",@"bar",@"baz",@"bat"]] 
+ *
+ *		[resource getWithQuery:@[@"foo",@"bar",@"baz",@"bat"]]
+ *
  *  would yield ?foo=bar&baz=bat, while 
- *    [resource getWithQuery:[NSArray arrayWithObjets:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"foo",@"bar",nil]]
+ *
+ *		[resource getWithQuery:@[ @{ @"foo" : @"bar" }, @"baz", @"bat"] ]
+ *
  *  would yield only ?foo=bar because the dictionary terminated argument processing. Notice that the order of parameter names and values is reversed when you pass a dictionary, because the values come before the keys in the dictionary constructors themselves.
  *
  * ### Fixtures
  *
  *  To make it easier to get coding on your app, you can use fixtures to simulate a working set of web services. Fixtures are objects that are converted to NSData using an instance of CMCoder and then used in processing the response as if this was the data that the server sent back. Using them is pretty simple:
  *  
- *	CMResource *posts = [site resource:@"posts"];
- *  posts.fixture = [NSArray arrayWithObjects:postOne,posTwo,nil];
- *  [posts getWithCompletionBlock:^(CMResponse *response) {
- *		postsController.posts = response.result;
- *  }];
+ *		CMResource *posts = [site resource:@"posts"];
+ *		posts.fixture = [NSArray arrayWithObjects:postOne,postTwo,nil];
+ *		[posts getWithCompletionBlock:^(CMResponse *response) {
+ *			postsController.posts = response.result;
+ *		}];
  *
- *  If #fixture is nil, a resource will check Cumulus#fixtures to see if a global fixture exists for its signature (URL+Method) and use that before determining that there is no fixture for the request. This makes central management of fixtures possible.
+ *  If fixture is nil, a resource will check [Cumulus fixtures] to see if a global fixture exists for its signature (URL+Method) and use that before determining that there is no fixture for the request. This makes central management of fixtures possible.
  *
  *  One of the gotchas with fixtures is that there is no Content-type header to rely on from the server when it comes time to decode the fixture data, so it needs to be inferred. If it is obvious from the kind of object that #fixture is, then that value is used. For example:
+ *
  *    - NSString - results in text/plain, regardless of the type of data being represented
  *    - UIImage - results in image/jpg, image/png, image/gif, image/tiff, or nothing, depending on the actual image type
+ *
  *  Since there is no way to be 100% sure what the intended content type is—obviously a string could actually represent an object in any number of text based data encodings—the only way to fully control how the fixture is decoded is to make sure you have set an 'Accept' header on your resource, either directly or by setting the #contentType. The value there will be used to select a decoder if it is set.
  *
  *  At this time, upload requests do not support fixtures.
@@ -249,8 +257,10 @@
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) getWithQuery:(id)query ;
-- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
-- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query ; ///< @see getWithQuery:
+/// @see getWithQuery:
+- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query ;
+/// @see getWithQuery:
+- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query ;
 
 
 // HEAD
@@ -260,7 +270,8 @@
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) headWithQuery:(id)query;
-- (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see headWithQuery:
+/// @see headWithQuery:
+- (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
 
 
 // DELETE
@@ -270,7 +281,8 @@
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) deleteWithQuery:(id)query;
-- (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see deleteWithQuery:
+/// @see deleteWithQuery:
+- (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
 
 
 // POST
@@ -281,8 +293,10 @@
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) post:(id)payload withQuery:(id)query;
-- (id) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
-- (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see post:withQuery:
+/// @see post:withQuery:
+- (id) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
+/// @see post:withQuery:
+- (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query;
 
 
 // PUT
@@ -293,8 +307,10 @@
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) put:(id)payload withQuery:(id)query;
-- (id) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
-- (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query; ///< @see put:withQuery:
+/// @see put:withQuery:
+- (id) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
+/// @see put:withQuery:
+- (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query;
 
 
 
