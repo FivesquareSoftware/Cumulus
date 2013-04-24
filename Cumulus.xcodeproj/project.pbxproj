@@ -254,6 +254,7 @@
 		A45489E11728772E001A032D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		A45489E317287734001A032D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		A45489E7172877D9001A032D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		A45489EA17288989001A032D /* Cumulus-Podspec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cumulus-Podspec.h"; sourceTree = "<group>"; };
 		A46269A114198ED3005544D6 /* Cumulus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cumulus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A46269A514198ED3005544D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		A46269F014199082005544D6 /* config.ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.ru; sourceTree = "<group>"; };
@@ -481,6 +482,7 @@
 				A4FB357816F6944D00FA8B62 /* CumulusLib-Info.plist */,
 				A47598121717CA2200A385F3 /* AppledocSettings.plist */,
 				A414FD4913DB459200F96152 /* Cumulus-Prefix.pch */,
+				A45489EA17288989001A032D /* Cumulus-Podspec.h */,
 			);
 			name = "Supporting Files";
 			path = Source;

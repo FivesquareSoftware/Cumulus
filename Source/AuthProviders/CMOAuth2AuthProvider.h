@@ -34,9 +34,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#if TARGET_OS_IPHONE == 0
-#import <WebKit/WebKit.h>
-#endif
+//#if TARGET_OS_IPHONE == 0
+//#import <WebKit/WebKit.h>
+//#endif
 
 
 #import "CMAuthProvider.h"
