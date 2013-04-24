@@ -37,6 +37,7 @@
 
 #import "CMCoder.h"
 
+/** A coder that converts to and from text and data. */
 @interface CMTextCoder : NSObject <CMCoder>
 
 @end

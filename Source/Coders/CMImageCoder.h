@@ -37,6 +37,7 @@
 
 #import "CMCoder.h"
 
+/** A coder that converts to and from PNGs and data. */
 @interface CMImageCoder : NSObject <CMCoder>
 
 @end

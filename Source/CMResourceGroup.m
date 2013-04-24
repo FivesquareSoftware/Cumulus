@@ -82,7 +82,7 @@
 		__block BOOL success = YES;
 		[_currentResponses enumerateObjectsUsingBlock:^(CMResponse *response, NSUInteger idx, BOOL *stop) {
 			if (success) {
-				success = response.success;
+				success = response.wasSuccessful;
 			}
 		}];
 		

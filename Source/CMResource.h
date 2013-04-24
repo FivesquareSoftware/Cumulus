@@ -114,7 +114,10 @@
 }
 
 
+// ========================================================================== //
 /** @name Resource Information */
+// ========================================================================== //
+
 
 @property (nonatomic, readonly, strong) CMResource *parent;
 @property (nonatomic, readonly, strong) NSString *relativePath;
@@ -122,7 +125,9 @@
 @property (nonatomic, readonly, strong) NSString *queryString;
 
 
+// ========================================================================== //
 /** @name Lifecycle Handlers */
+// ========================================================================== //
 
 
 /// Runs before every request for the receiver, which is aborted if this block returns NO
@@ -132,7 +137,9 @@
 
 
 
+// ========================================================================== //
 /** @name Creating Resources */
+// ========================================================================== //
 
 
 + (id) withURL:(id)URL;

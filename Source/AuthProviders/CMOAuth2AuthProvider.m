@@ -73,7 +73,7 @@
 									  , nil];
 		
 		CMCompletionBlock completionBlock = ^(CMResponse *response) {
-			if (response.success) {		
+			if (response.wasSuccessful) {
 				self.token = [CMOAuthToken new];
 				[self mapTokenFromResult:response.result];
 			}
@@ -136,7 +136,7 @@
 									  , nil];
 		
 		CMResponse *response = [self.tokenService post:tokenPayload];
-		if (response.success) {
+		if (response.wasSuccessful) {
 			[self mapTokenFromResult:response.result];
 		} else {
 			RCLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);

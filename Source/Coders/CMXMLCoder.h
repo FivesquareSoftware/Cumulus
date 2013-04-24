@@ -37,6 +37,7 @@
 
 #import "CMCoder.h"
 
+/** A coder that converts to and from XML and data. */
 @interface CMXMLCoder : NSObject <CMCoder>
 
 @end

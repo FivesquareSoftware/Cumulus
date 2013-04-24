@@ -35,16 +35,19 @@
 
 #import <Foundation/Foundation.h>
 
-/** The <CMCoder< protocol is implemented in order to provide two-way encoding/decoding of response/request data to and from native objects and raw bytes. Which <CMCoder> implementation is employed for any given request/response cycle is determined by examining the criteria (payload object type, file extension, mime type) that each implementation has registered to handle, and using metadata about the payload, request and/or response type to match to those criteria. Cumulus includes coder implementations for [NSData](CMIdentityCoder), [NSString](CMTextCoder.h), [JSON](CMJSONCoder), [XML Plists](CMXMLCoder), and [PNGs](CMImageCoder). Writing a new coder is trivial.  */
+/** The \<CMCoder\> protocol is implemented in order to provide two-way encoding/decoding of response/request data to and from native objects and raw bytes. In this way, they are very similar to NSValueTransformer with some additional services layered on top. Which \<CMCoder\> implementation is employed for any given request/response cycle is determined by examining the criteria (payload object type, file extension, mime type) that each implementation has registered to handle, and using metadata about the payload, request and/or response type to match to those criteria. Cumulus includes coder implementations for [NSData](CMIdentityCoder), [NSString](CMTextCoder), [JSON](CMJSONCoder), [XML Plists](CMXMLCoder), and [PNGs](CMImageCoder). Writing a new coder is trivial.  */
 @protocol CMCoder <NSObject>
-/** Accepts payload (or fixture) objects and encodes them for transport in the body of an HTTP request. 
+
+/** Accepts payload (or fixture) objects and encodes them for transport in the body of an HTTP request.
  *  @param object The payload object to encode for transport
  */
 - (NSData *) encodeObject:(id)object;
-/** Accepts raw response (or fixture) data and decodes it to native object types. 
+
+/** Accepts raw response (or fixture) data and decodes it to native object types.
  *  @param data The response data to decode to native objects
  */
 - (id) decodeData:(NSData *)data;
+
 @end
 
 
@@ -55,8 +58,11 @@
 	
 }
 
+/** Collection of coders registered by object types. */
 + (NSMutableDictionary *) codersByObject;
+/** Collection of coders registered by mime types. */
 + (NSMutableDictionary *) codersByMimeType;
+/** Collection of coders registered by file extensions. */
 + (NSMutableDictionary *) codersByFileExtension;
 
 /**

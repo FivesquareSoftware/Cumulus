@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
+/** Represents a set of Amazon S3 credentials. */
 @protocol CMAmazonCredentials <NSObject>
 
 @property (nonatomic, strong) NSString *accessKey;

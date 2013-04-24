@@ -37,6 +37,7 @@
 
 #import "CMCoder.h"
 
+/** A coder that converts to and from JSON and data. */
 @interface CMJSONCoder : NSObject <CMCoder>
 
 @end

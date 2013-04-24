@@ -37,6 +37,7 @@
 
 #import "CMCoder.h"
 
+/** A coder that returns the input unchanged. */
 @interface CMIdentityCoder : NSObject <CMCoder>
 
 @end

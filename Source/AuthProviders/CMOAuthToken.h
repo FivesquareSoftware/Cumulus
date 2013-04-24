@@ -35,11 +35,16 @@
 
 #import <Foundation/Foundation.h>
 
+/** Represents an OAuth token. */
 @interface CMOAuthToken : NSObject <NSCoding>
 
+/// The token string that can be used to authorize a request
 @property (nonatomic, strong) NSString *accessToken;
+/// The token string that can be used to request a new access token
 @property (nonatomic, strong) NSString *refreshToken;
+/// When the token expires
 @property (nonatomic, strong) NSDate *accessExpires;
+/// The associated scope for the token
 @property (nonatomic, strong) NSString *scope;
 
 @end

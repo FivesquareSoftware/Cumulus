@@ -49,8 +49,13 @@
 @property (strong, nonatomic) NSURL *authorizationURL;
 /// Used to request an access token for both authorization
 @property (strong, nonatomic) CMResource *tokenService;
-@property (strong, nonatomic) CMOAuthToken *token; // includes an access token and the refresh token + expiration date if they exist
+/// includes an access token and the refresh token + expiration date if they exist
+@property (strong, nonatomic) CMOAuthToken *token;
 
+/** Creates a new auth provider using the authorization URL and token service requested. 
+ *  @param authorizationURL A URL for an OAuth auth page. (Currently unused)
+ *  @param tokenService an instance of CMResource that knows how to request, return and map a token response to an instance of CMOAuthToken.
+ */
 + (id) withAuthorizationURL:(NSURL *)authorizationURL tokenService:(CMResource *)tokenService;
 
 /** Aysnchronously requests and stores an access token directly from the token service using a 'password' grant type. */

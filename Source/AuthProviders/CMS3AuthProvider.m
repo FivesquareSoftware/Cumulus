@@ -112,7 +112,7 @@
 		dispatch_semaphore_t credentialsSemaphore = dispatch_semaphore_create(1);
 		dispatch_semaphore_wait(credentialsSemaphore, DISPATCH_TIME_FOREVER);
 		[_credentialsProvider getWithCompletionBlock:^(CMResponse *response) {
-            if (response.success) {
+            if (response.wasSuccessful) {
                 self.credentials = (id<CMAmazonCredentials>)response.result;//The service provider must have a postProcessing block that makes response#result a credentials object
                 [self signRequest:URLRequest];
             }

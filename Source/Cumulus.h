@@ -81,7 +81,7 @@
  *
  *  ### Static Request Interface
  *
- *  Static request methods simply create anonymous resources under the hood, delegating the request to that resource. They are useful if you have a non-conforming service, or just need to make the odd request.
+ *  Static request methods simply create anonymous resources under the hood, delegating the request to that resource. They are useful if you have a non-conforming service, or you want to use Cumulus a a general purpose HTTP client (for which it is well suited).
  *
  *  - In all cases URL may be an NSURL or an NSString representing an URL
  *  - In general, the equivalent methods in CMResource should be preferred if you plan on using these more than once.
@@ -95,12 +95,14 @@
 /** Log a message to the console. 
  *
  * Whether or not this method actually logs a message is controlled by setting CumulusLoggingOn in the environment (Generally by setting it in the environment of the Run phase of your target's scheme). Setting it to YES|true|1 turns logging on, setting it to NO|false|0 to turns logging off (the default is off).
- * @warning - If you are writing code for Cumulus or a Cumulus extension, you shouldn't be calling this method. Instead, call the RCLog() macro, which includes compile time checks to make sure logging doesn't make it into a release build of your application or framework.
+ * @warning If you are writing code for Cumulus or a Cumulus extension, you shouldn't be calling this method. Instead, call the RCLog() macro, which includes compile time checks to make sure logging doesn't make it into a release build of your application or framework.
 */
 + (void) log:(NSString *)format, ...;
 
 
+// ========================================================================== //
 /** @name Configuration for Static Requests */
+// ========================================================================== //
 
 
 /** The global default cache directory used by download requests and some state saving mechanisms. Can be overridden by individual requests. */
@@ -123,7 +125,9 @@
 
 
 
+// ========================================================================== //
 /** @name Global Fixture Configuration */
+// ========================================================================== //
 
 
 /** Returns the current fixture data, which is a dictionary whose keys are request signatures (<Method URL>, e.g."GET http:///wwww.foo.com") and values are any valid payload object type. */
@@ -143,43 +147,66 @@
 + (void) useFixtures:(BOOL)useFixtures;
 
 
+// ========================================================================== //
 /** @name Static Requests */
+// ========================================================================== //
 
-/** @see CMResource#get. */
+
+/** @see [CMResource get]. */
 + (CMResponse *) get:(id)URL;
-/** @see CMResource#getWithCompletionBlock:. */
-+ (void) get:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock;
-/** @see CMResource#getWithProgressBlock:completionBlock:. */
-+ (void) get:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-/** @see CMResource#head. */
+/** @see [CMResource getWithCompletionBlock:]. */
++ (id) get:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock;
+
+/** @see [CMResource getWithProgressBlock:completionBlock:]. */
++ (id) get:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+
+/** @see [CMResource head]. */
 + (CMResponse *) head:(id)URL;
-/** @see CMResource#deleteWithCompletionBlock:. */
-+ (void) head:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock;
 
-/** @see CMResource#delete. */
+/** @see [CMResource deleteWithCompletionBlock:]. */
++ (id) head:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock;
+
+
+/** @see [CMResource delete]. */
 + (CMResponse *) delete:(id)URL;
-/** @see CMResource#deleteWithCompletionBlock:. */
-+ (void) delete:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock;
 
-/** @see CMResource#post:. */
+/** @see [CMResource deleteWithCompletionBlock:]. */
++ (id) delete:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock;
+
+
+/** @see [CMResource post:]. */
 + (CMResponse *) post:(id)URL payload:(id)payload;
-/** @see CMResource#post:completionBlock:. */
-+ (void) post:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
-/** @see CMResource#post:progressBlock:completionBlock:. */
-+ (void) post:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-/** @see CMResource#put:. */
+/** @see [CMResource post:completionBlock:]. */
++ (id) post:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
+
+/** @see [CMResource post:progressBlock:completionBlock:]. */
++ (id) post:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+
+/** @see [CMResource put:]. */
 + (CMResponse *) put:(id)URL payload:(id)payload;
-/** @see CMResource#put:completionBlock:. */
-+ (void) put:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
-/** @see CMResource#put:progressBlock:completionBlock:. */
-+ (void) put:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-/** @see CMResource#downloadWithProgressBlock:completionBlock:. */
-+ (void) download:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
-/** @see CMResource#uploadFile:withProgressBlock:completionBlock:. */
-+ (void) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+/** @see [CMResource put:completionBlock:]. */
++ (id) put:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
+
+/** @see [CMResource put:progressBlock:completionBlock:]. */
++ (id) put:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+
+/** @see [CMResource downloadWithProgressBlock:completionBlock:]. */
++ (id) download:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+/** @see [CMResource resumeOrBeginDownloadWithProgressBlock:completionBlock:]. */
++ (id) resumeOrBeginDownload:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+/** @see [CMResource downloadRange:progressBlock::completionBlock:]. */
++ (id) download:(id)URL range:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
+/** @see [CMResource uploadFile:withProgressBlock:completionBlock:]. */
++ (id) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 
 @end

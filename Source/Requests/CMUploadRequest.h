@@ -37,6 +37,7 @@
 
 @interface CMUploadRequest : CMRequest
 
+/// The URL to the local file to upload
 @property (strong) NSURL *fileToUploadURL;
 
 @end

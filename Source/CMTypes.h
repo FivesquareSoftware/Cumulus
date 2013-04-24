@@ -67,6 +67,7 @@ typedef enum {
 	, CMContentTypePNG
 } CMContentType;
 
+/** A content range represents an HTTP content range by setting location to the initial byte, length to the difference between the first byte and last byte and contentLength to the total length of the content for which a range is being requested. */
 typedef struct {
     long long location;
     long long length;

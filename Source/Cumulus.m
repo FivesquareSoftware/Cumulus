@@ -200,14 +200,14 @@ static BOOL _usingFixtures = NO;
 	return [resource get];
 }
 
-+ (void) get:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
++ (id) get:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
-	[resource getWithCompletionBlock:completionBlock];
+	return [resource getWithCompletionBlock:completionBlock];
 }
 
-+ (void) get:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
++ (id) get:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
-	[resource getWithProgressBlock:progressBlock completionBlock:completionBlock];
+	return [resource getWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 
@@ -218,9 +218,9 @@ static BOOL _usingFixtures = NO;
 	return [resource head];
 }
 
-+ (void) head:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
++ (id) head:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodHEAD];
-	[resource headWithCompletionBlock:completionBlock];
+	return [resource headWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -DELETE
@@ -230,9 +230,9 @@ static BOOL _usingFixtures = NO;
 	return [resource delete];
 }
 
-+ (void) delete:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
++ (id) delete:(id)URL withCompletionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodDELETE];
-	[resource deleteWithCompletionBlock:completionBlock];
+	return [resource deleteWithCompletionBlock:completionBlock];
 }
 
 #pragma mark -POST
@@ -242,14 +242,14 @@ static BOOL _usingFixtures = NO;
 	return [resource post:payload];
 }
 
-+ (void) post:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
++ (id) post:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPOST];
-	[resource post:payload withCompletionBlock:completionBlock];
+	return [resource post:payload withCompletionBlock:completionBlock];
 }
 
-+ (void) post:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
++ (id) post:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPOST];
-	[resource post:payload withProgressBlock:progressBlock completionBlock:completionBlock];
+	return [resource post:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 #pragma mark -PUT
@@ -259,27 +259,37 @@ static BOOL _usingFixtures = NO;
 	return [resource put:payload];
 }
 
-+ (void) put:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
++ (id) put:(id)URL payload:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPUT];
-	[resource put:payload withCompletionBlock:completionBlock];
+	return [resource put:payload withCompletionBlock:completionBlock];
 }
 
-+ (void) put:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
++ (id) put:(id)URL payload:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPUT];
-	[resource put:payload withProgressBlock:progressBlock completionBlock:completionBlock];
+	return [resource put:payload withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 
 #pragma mark -Files
 
-+ (void) download:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
++ (id) download:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
-	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	return [resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
-+ (void) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
++ (id) resumeOrBeginDownload:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
+	return [resource resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+}
+
++ (id) download:(id)URL range:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
+	return [resource downloadRange:range progressBlock:progressBlock completionBlock:completionBlock];
+}
+
++ (id) uploadFile:(NSURL *)fileURL to:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodPUT];
-	[resource uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
+	return [resource uploadFile:fileURL withProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
 

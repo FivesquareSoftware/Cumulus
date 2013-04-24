@@ -116,112 +116,203 @@
 /** @name Tests for Common NSURLErrorDomain errors. */
 
 
-- (BOOL) ErrorBadURL; // -1000
-- (BOOL) ErrorTimedOut; // -1001
-- (BOOL) ErrorUnsupportedURL; // -1002
-- (BOOL) ErrorCannotFindHost; // -1003
-- (BOOL) ErrorCannotConnectToHost; // -1004
-- (BOOL) ErrorDataLengthExceedsMaximum; // -1103
-- (BOOL) ErrorNetworkConnectionLost; // -1005
-- (BOOL) ErrorDNSLookupFailed; // -1006
-- (BOOL) ErrorHTTPTooManyRedirects; // -1007
-- (BOOL) ErrorResourceUnavailable; // -1008
-- (BOOL) ErrorNotConnectedToInternet; // -1009
-- (BOOL) ErrorRedirectToNonExistentLocation; // -1010
-- (BOOL) ErrorBadServerResponse; // -1011
-- (BOOL) ErrorUserCancelledAuthentication; // -1012
-- (BOOL) ErrorUserAuthenticationRequired; // -1013
-- (BOOL) ErrorZeroByteResource; // -1014
-- (BOOL) ErrorCannotDecodeRawData; // -1015
-- (BOOL) ErrorCannotDecodeContentData; // -1016
-- (BOOL) ErrorCannotParseResponse; // -1017
-- (BOOL) ErrorInternationalRoamingOff; // -1018
-- (BOOL) ErrorCallIsActive; // -1019
-- (BOOL) ErrorDataNotAllowed; // -1020
-- (BOOL) ErrorRequestBodyStreamExhausted; // -1021
-- (BOOL) ErrorFileDoesNotExist; // -1100
-- (BOOL) ErrorFileIsDirectory; // -1101
-- (BOOL) ErrorNoPermissionsToReadFile; // -1102
-- (BOOL) ErrorSecureConnectionFailed; // -1200
-- (BOOL) ErrorServerCertificateHasBadDate; // -1201
-- (BOOL) ErrorServerCertificateUntrusted; // -1202
-- (BOOL) ErrorServerCertificateHasUnknownRoot; // -1203
-- (BOOL) ErrorServerCertificateNotYetValid; // -1204
-- (BOOL) ErrorClientCertificateRejected; // -1205
-- (BOOL) ErrorClientCertificateRequired; // -1206
-- (BOOL) ErrorCannotLoadFromNetwork; // -2000
-- (BOOL) ErrorCannotCreateFile; // -3000
-- (BOOL) ErrorCannotOpenFile; // -3001
-- (BOOL) ErrorCannotCloseFile; // -3002
-- (BOOL) ErrorCannotWriteToFile; // -3003
-- (BOOL) ErrorCannotRemoveFile; // -3004
-- (BOOL) ErrorCannotMoveFile; // -3005
-- (BOOL) ErrorDownloadDecodingFailedMidStream; // -3006
-- (BOOL) ErrorDownloadDecodingFailedToComplete; // -3007
+/// NSErrorBadURL (-1000)
+- (BOOL) ErrorBadURL;
+/// NSErrorTimedOut (-1001)
+- (BOOL) ErrorTimedOut;
+/// NSErrorUnsupportedURL (-1002)
+- (BOOL) ErrorUnsupportedURL;
+/// NSErrorCannotFindHost (-1003)
+- (BOOL) ErrorCannotFindHost;
+/// NSErrorCannotConnectToHost (-1004)
+- (BOOL) ErrorCannotConnectToHost;
+/// NSErrorDataLengthExceedsMaximum (-1103)
+- (BOOL) ErrorDataLengthExceedsMaximum;
+/// NSErrorNetworkConnectionLost (-1005)
+- (BOOL) ErrorNetworkConnectionLost;
+/// NSErrorDNSLookupFailed (-1006)
+- (BOOL) ErrorDNSLookupFailed;
+/// NSErrorHTTPTooManyRedirects (-1007)
+- (BOOL) ErrorHTTPTooManyRedirects;
+/// NSErrorResourceUnavailable (-1008)
+- (BOOL) ErrorResourceUnavailable;
+/// NSErrorNotConnectedToInternet (-1009)
+- (BOOL) ErrorNotConnectedToInternet;
+/// NSErrorRedirectToNonExistentLocation (-1010)
+- (BOOL) ErrorRedirectToNonExistentLocation;
+/// NSErrorBadServerResponse (-1011)
+- (BOOL) ErrorBadServerResponse;
+/// NSErrorUserCancelledAuthentication (-1012)
+- (BOOL) ErrorUserCancelledAuthentication;
+/// NSErrorUserAuthenticationRequired (-1013)
+- (BOOL) ErrorUserAuthenticationRequired;
+/// NSErrorZeroByteResource (-1014)
+- (BOOL) ErrorZeroByteResource;
+/// NSErrorCannotDecodeRawData (-1015)
+- (BOOL) ErrorCannotDecodeRawData;
+/// NSErrorCannotDecodeContentData (-1016)
+- (BOOL) ErrorCannotDecodeContentData;
+/// NSErrorCannotParseResponse (-1017)
+- (BOOL) ErrorCannotParseResponse;
+/// NSErrorInternationalRoamingOff (-1018)
+- (BOOL) ErrorInternationalRoamingOff;
+/// NSErrorCallIsActive (-1019)
+- (BOOL) ErrorCallIsActive;
+/// NSErrorDataNotAllowed (-1020)
+- (BOOL) ErrorDataNotAllowed;
+/// NSErrorRequestBodyStreamExhausted (-1021)
+- (BOOL) ErrorRequestBodyStreamExhausted;
+/// NSErrorFileDoesNotExist (-1100)
+- (BOOL) ErrorFileDoesNotExist;
+/// NSErrorFileIsDirectory (-1101)
+- (BOOL) ErrorFileIsDirectory;
+/// NSErrorNoPermissionsToReadFile (-1102)
+- (BOOL) ErrorNoPermissionsToReadFile;
+/// NSErrorSecureConnectionFailed (-1200)
+- (BOOL) ErrorSecureConnectionFailed;
+/// NSErrorServerCertificateHasBadDate (-1201)
+- (BOOL) ErrorServerCertificateHasBadDate;
+/// NSErrorServerCertificateUntrusted (-1202)
+- (BOOL) ErrorServerCertificateUntrusted;
+/// NSErrorServerCertificateHasUnknownRoot (-1203)
+- (BOOL) ErrorServerCertificateHasUnknownRoot;
+/// NSErrorServerCertificateNotYetValid (-1204)
+- (BOOL) ErrorServerCertificateNotYetValid;
+/// NSErrorClientCertificateRejected (-1205)
+- (BOOL) ErrorClientCertificateRejected;
+/// NSErrorClientCertificateRequired (-1206)
+- (BOOL) ErrorClientCertificateRequired;
+/// NSErrorCannotLoadFromNetwork (-2000)
+- (BOOL) ErrorCannotLoadFromNetwork;
+/// NSErrorCannotCreateFile (-3000)
+- (BOOL) ErrorCannotCreateFile;
+/// NSErrorCannotOpenFile (-3001)
+- (BOOL) ErrorCannotOpenFile;
+/// NSErrorCannotCloseFile (-3002)
+- (BOOL) ErrorCannotCloseFile;
+/// NSErrorCannotWriteToFile (-3003)
+- (BOOL) ErrorCannotWriteToFile;
+/// NSErrorCannotRemoveFile (-3004)
+- (BOOL) ErrorCannotRemoveFile;
+/// NSErrorCannotMoveFile (-3005)
+- (BOOL) ErrorCannotMoveFile;
+/// NSErrorDownloadDecodingFailedMidStream (-3006)
+- (BOOL) ErrorDownloadDecodingFailedMidStream;
+/// NSErrorDownloadDecodingFailedToComplete (-3007)
+- (BOOL) ErrorDownloadDecodingFailedToComplete;
 
 
 
 /** @name Tests for Specific HTTP response codes */
 
-- (BOOL) HTTPCanceled; // 0
+/// HTTP  0
+- (BOOL) HTTPCanceled;
 
-- (BOOL) HTTPContinue; // 100
-- (BOOL) HTTPSwitchingProtocols; // 101
+/// HTTP  100
+- (BOOL) HTTPContinue;
+/// HTTP  101
+- (BOOL) HTTPSwitchingProtocols;
 
 
-- (BOOL) HTTPOk; // 200
-- (BOOL) HTTPCreated; // 201
-- (BOOL) HTTPAccepted; // 202
-- (BOOL) HTTPNonAuthoritative; // 203
-- (BOOL) HTTPNoContent; // 204
-- (BOOL) HTTPResetContent; // 205
-- (BOOL) HTTPPartialContent; // 206
+/// HTTP  200
+- (BOOL) HTTPOk;
+/// HTTP  201
+- (BOOL) HTTPCreated;
+/// HTTP  202
+- (BOOL) HTTPAccepted;
+/// HTTP  203
+- (BOOL) HTTPNonAuthoritative;
+/// HTTP  204
+- (BOOL) HTTPNoContent;
+/// HTTP  205
+- (BOOL) HTTPResetContent;
+/// HTTP  206
+- (BOOL) HTTPPartialContent;
 
-- (BOOL) HTTPMultipleChoices; // 300
-- (BOOL) HTTPMovedPermanently; // 301
-- (BOOL) HTTPFound; // 302
-- (BOOL) HTTPSeeOther; // 303
-- (BOOL) HTTPNotModified; // 304
-- (BOOL) HTTPUseProxy; // 305
-- (BOOL) HTTPSwitchProxy; // 306
-- (BOOL) HTTPTemporaryRedirect; // 307
-- (BOOL) HTTPResumeIncomplete; // 308
+/// HTTP  300
+- (BOOL) HTTPMultipleChoices;
+/// HTTP  301
+- (BOOL) HTTPMovedPermanently;
+/// HTTP  302
+- (BOOL) HTTPFound;
+/// HTTP  303
+- (BOOL) HTTPSeeOther;
+/// HTTP  304
+- (BOOL) HTTPNotModified;
+/// HTTP  305
+- (BOOL) HTTPUseProxy;
+/// HTTP  306
+- (BOOL) HTTPSwitchProxy;
+/// HTTP  307
+- (BOOL) HTTPTemporaryRedirect;
+/// HTTP  308
+- (BOOL) HTTPResumeIncomplete;
 
-- (BOOL) HTTPBadRequest; // 400
-- (BOOL) HTTPUnauthorized; // 401
-- (BOOL) HTTPPaymentRequired; // 402
-- (BOOL) HTTPForbidden; // 403
-- (BOOL) HTTPNotFound; // 404
-- (BOOL) HTTPMethodNotAllowed; // 405
-- (BOOL) HTTPNotAcceptable; // 406
-- (BOOL) HTTPProxyAuthenticationRequired; // 407
-- (BOOL) HTTPRequestTimeout; // 408
-- (BOOL) HTTPConflict; // 409
-- (BOOL) HTTPGone; // 410
-- (BOOL) HTTPLengthRequired; // 411
-- (BOOL) HTTPPreconditionFailed; // 412
-- (BOOL) HTTPRequestEntityTooLarge; // 413
-- (BOOL) HTTPRequestURITooLong; // 414
-- (BOOL) HTTPUnsupportedMediaType; // 415
-- (BOOL) HTTPRequestRangeNotSatisfied; // 416
-- (BOOL) HTTPExpectationFailed; // 417
-- (BOOL) HTTPUnprocessableEntity; // 422
+/// HTTP  400
+- (BOOL) HTTPBadRequest;
+/// HTTP  401
+- (BOOL) HTTPUnauthorized;
+/// HTTP  402
+- (BOOL) HTTPPaymentRequired;
+/// HTTP  403
+- (BOOL) HTTPForbidden;
+/// HTTP  404
+- (BOOL) HTTPNotFound;
+/// HTTP  405
+- (BOOL) HTTPMethodNotAllowed;
+/// HTTP  406
+- (BOOL) HTTPNotAcceptable;
+/// HTTP  407
+- (BOOL) HTTPProxyAuthenticationRequired;
+/// HTTP  408
+- (BOOL) HTTPRequestTimeout;
+/// HTTP  409
+- (BOOL) HTTPConflict;
+/// HTTP  410
+- (BOOL) HTTPGone;
+/// HTTP  411
+- (BOOL) HTTPLengthRequired;
+/// HTTP  412
+- (BOOL) HTTPPreconditionFailed;
+/// HTTP  413
+- (BOOL) HTTPRequestEntityTooLarge;
+/// HTTP  414
+- (BOOL) HTTPRequestURITooLong;
+/// HTTP  415
+- (BOOL) HTTPUnsupportedMediaType;
+/// HTTP  416
+- (BOOL) HTTPRequestRangeNotSatisfied;
+/// HTTP  417
+- (BOOL) HTTPExpectationFailed;
+/// HTTP  422
+- (BOOL) HTTPUnprocessableEntity;
 
-- (BOOL) HTTPInternalServerError; // 500
-- (BOOL) HTTPNotImplemented; // 501
-- (BOOL) HTTPBadGateway; // 502
-- (BOOL) HTTPServiceUnavailable; // 503
-- (BOOL) HTTPGatewayTimeout; // 504
-- (BOOL) HTTPVersionNotSupported; // 505
+/// HTTP  500
+- (BOOL) HTTPInternalServerError;
+/// HTTP  501
+- (BOOL) HTTPNotImplemented;
+/// HTTP  502
+- (BOOL) HTTPBadGateway;
+/// HTTP  503
+- (BOOL) HTTPServiceUnavailable;
+/// HTTP  504
+- (BOOL) HTTPGatewayTimeout;
+/// HTTP  505
+- (BOOL) HTTPVersionNotSupported;
 
 
 /** @name Tests for Ranges of HTTP response codes */
 
-- (BOOL) HTTPInformational; // 100's
-- (BOOL) HTTPSuccessful; // 200's
-- (BOOL) HTTPRedirect; // 300's
-- (BOOL) HTTPClientErrror; // 400's
-- (BOOL) HTTPServerError; // 500's
+/// HTTP  100's
+- (BOOL) HTTPInformational;
+/// HTTP  200's
+- (BOOL) HTTPSuccessful;
+/// HTTP  300's
+- (BOOL) HTTPRedirect;
+/// HTTP  400's
+- (BOOL) HTTPClientErrror;
+/// HTTP  500's
+- (BOOL) HTTPServerError;
 
 
 
