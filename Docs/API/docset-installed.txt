@@ -1,4 +1,0 @@
-Documentation set was installed to Xcode!
-
-Path: /Users/johnclay/Code/Source/Trunk/Cumulus/Docs/API/com.fivesquaresoftware.Cumulus.docset
-Time: 2013-04-24 18:38:10 +0000
