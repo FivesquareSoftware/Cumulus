@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		A45489DC17285D63001A032D /* Cumulus Docs */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = A45489DF17285D63001A032D /* Build configuration list for PBXAggregateTarget "Cumulus Docs" */;
+			buildPhases = (
+				A45489E017285D7E001A032D /* Run Script */,
+			);
+			dependencies = (
+			);
+			name = "Cumulus Docs";
+			productName = "Generate Docs";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		A4092665149725F300C42E8B /* CMOAuth2AuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092663149725F300C42E8B /* CMOAuth2AuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4092666149725F300C42E8B /* CMOAuth2AuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A4092664149725F300C42E8B /* CMOAuth2AuthProvider.m */; };
@@ -946,6 +960,7 @@
 				A414FD4113DB459200F96152 /* CumulusLib */,
 				A43E639D152A47E6006AEBCD /* CumulusFramework */,
 				A46269A014198ED3005544D6 /* CumulusSpecs */,
+				A45489DC17285D63001A032D /* Cumulus Docs */,
 			);
 		};
 /* End PBXProject section */
@@ -972,6 +987,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A45489E017285D7E001A032D /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Source",
+			);
+			name = "Run Script";
+			outputPaths = (
+				"\"${SRCROOT}/Docs/API/com.fivesquaresoftware.Cumulus.docset\"",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Tools/bin/gendocs.sh\"";
+		};
 		A4B50B491624A2480067E9DF /* Generate docs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -986,7 +1017,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Tools/bin/gendocs.sh\"";
+			shellScript = "#\"${SRCROOT}/Tools/bin/gendocs.sh\"";
 		};
 		A4B50B4A1624A3F90067E9DF /* Generate docs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1002,7 +1033,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Tools/bin/gendocs.sh\"";
+			shellScript = "#\"${SRCROOT}/Tools/bin/gendocs.sh\"";
 		};
 		A4D4FFCF141BB50200E58873 /* Restart Server */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1279,6 +1310,20 @@
 			};
 			name = Release;
 		};
+		A45489DD17285D63001A032D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A45489DE17285D63001A032D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		A46269B414198ED3005544D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A4CC12741482EE2E0066C7E6 /* Specs.xcconfig */;
@@ -1370,6 +1415,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		A45489DF17285D63001A032D /* Build configuration list for PBXAggregateTarget "Cumulus Docs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A45489DD17285D63001A032D /* Debug */,
+				A45489DE17285D63001A032D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		A46269B314198ED3005544D6 /* Build configuration list for PBXNativeTarget "CumulusSpecs" */ = {
 			isa = XCConfigurationList;
