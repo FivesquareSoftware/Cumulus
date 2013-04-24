@@ -34,6 +34,10 @@
  */
 
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE == 0
+#import <WebKit/WebKit.h>
+#endif
+
 
 #import "CMAuthProvider.h"
 
@@ -64,7 +68,7 @@
 - (void) requestAccessTokenWithUsername:(NSString *)username password:(NSString *)password completionBlock:(CMCompletionBlock)passedBlock;
 
 /** Will direct the user to the authorization service, collect the authorization code that results from the authorization flow presented there, then request an access token from the token service using the 'authorization' grant type. 
- *  @note - Unimplemented
+ *  @note Unimplemented
  */
 #if TARGET_OS_IPHONE
 - (void) requestAccessTokenUsingWebView:(UIWebView *)webView;
