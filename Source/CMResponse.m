@@ -150,10 +150,10 @@
 	if (nil == _error) {
 		if (NO == _request.wasCanceled && NO == [self HTTPSuccessful] && nil == _request.error) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSString stringWithFormat:@"Received %u HTTP Status code",self.status], NSLocalizedDescriptionKey
+								  [NSString stringWithFormat:@"Received %@ HTTP Status code",@(_status)], NSLocalizedDescriptionKey
 								  , _request.responseBody, NSLocalizedFailureReasonErrorKey
 								  , [_request.URLResponse URL], NSURLErrorFailingURLErrorKey
-								  , [NSNumber numberWithInt:_status], kRESTCLientHTTPStatusCodeErrorKey
+								  , @(_status), kRESTCLientHTTPStatusCodeErrorKey
 								  , nil];
 			_error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:info];
 		}
@@ -227,10 +227,10 @@
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ (request = %@, status = %d, response.headers = %@, response.body = %@, result = %@, error = %@)"
+	return [NSString stringWithFormat:@"%@ (request = %@, status = %@, response.headers = %@, response.body = %@, result = %@, error = %@)"
 			,[super description]
 			, [_request description]
-			, self.status
+			, @(self.status)
 			, [self.headers description]
 			, self.body
 			, self.result

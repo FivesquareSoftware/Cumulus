@@ -103,7 +103,7 @@
 			if ([fm fileExistsAtPath:[tempFileURL path]]) {
 				NSError *error = nil;
 				NSDictionary *attributes = [fm attributesOfItemAtPath:[tempFileURL path] error:&error];
-				long long currentOffset = [attributes fileSize];
+				unsigned long long currentOffset = [attributes fileSize];
 				if (ETag.length) {
 					[self.URLRequest addValue:ETag forHTTPHeaderField:kCumulusHTTPHeaderIfRange];
 				}

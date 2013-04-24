@@ -64,6 +64,10 @@
 /** Will direct the user to the authorization service, collect the authorization code that results from the authorization flow presented there, then request an access token from the token service using the 'authorization' grant type. 
  *  @note - Unimplemented
  */
+#if TARGET_OS_IPHONE
 - (void) requestAccessTokenUsingWebView:(UIWebView *)webView;
+#else 
+- (void) requestAccessTokenUsingWebView:(WebView *)webView;
+#endif
 
 @end

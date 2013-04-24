@@ -202,7 +202,7 @@
 	
     CCHmacFinal(&context, digestRaw);
 	
-    NSData *digestData = [NSData dataWithBytes:digestRaw length:digestLength];
+    NSData *digestData = [NSData dataWithBytes:digestRaw length:(NSUInteger)digestLength];
 	NSString *base64String = [digestData cm_base64EncodedStringWithLineBreaks:NO];
 
     return base64String;

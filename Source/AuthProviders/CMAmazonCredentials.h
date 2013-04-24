@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 
 /** Represents a set of Amazon S3 credentials. */

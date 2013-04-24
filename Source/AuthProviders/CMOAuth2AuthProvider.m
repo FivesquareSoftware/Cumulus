@@ -86,7 +86,11 @@
 	}	
 }
 
+#if TARGET_OS_IPHONE
 - (void) requestAccessTokenUsingWebView:(UIWebView *)webView {
+#else
+- (void) requestAccessTokenUsingWebView:(WebView *)webView {
+#endif
 	//TODO
 }
 

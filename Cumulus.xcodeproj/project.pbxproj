@@ -36,7 +36,6 @@
 		A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
 		A41410D514B680070026A8C1 /* NSDictionary+Cumulus.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+Cumulus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A41410D614B680070026A8C1 /* NSDictionary+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+Cumulus.m */; };
-		A414FD4613DB459200F96152 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4513DB459200F96152 /* Foundation.framework */; };
 		A414FD4C13DB459200F96152 /* Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD4B13DB459200F96152 /* Cumulus.m */; };
 		A414FD5913DB466600F96152 /* CMResource.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5713DB466600F96152 /* CMResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A414FD5A13DB466600F96152 /* CMResource.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD5813DB466600F96152 /* CMResource.m */; };
@@ -71,7 +70,6 @@
 		A432B46E149D0B56006582DB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B3991408F193003495BA /* Security.framework */; };
 		A4366F6C171D1C8600F77606 /* CMResource+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4366F6B171D1C8600F77606 /* CMResource+Protected.h */; };
 		A4366F6D171D1C8600F77606 /* CMResource+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A4366F6B171D1C8600F77606 /* CMResource+Protected.h */; };
-		A43E63A0152A47E6006AEBCD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43E639F152A47E6006AEBCD /* Cocoa.framework */; };
 		A43E63B6152A60FA006AEBCD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A43E63B4152A60FA006AEBCD /* InfoPlist.strings */; };
 		A43E63BB152A6185006AEBCD /* CMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* CMConstants.m */; };
 		A43E63BC152A6185006AEBCD /* Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD4B13DB459200F96152 /* Cumulus.m */; };
@@ -91,7 +89,7 @@
 		A43E63CA152A6185006AEBCD /* CMClientCertificateAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A468A773149FA73900612DA9 /* CMClientCertificateAuthProvider.m */; };
 		A43E63CB152A6185006AEBCD /* CMOAuth2AuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A4092664149725F300C42E8B /* CMOAuth2AuthProvider.m */; };
 		A43E63CC152A6185006AEBCD /* CMOAuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B6080414A0224B003C43AE /* CMOAuthToken.m */; };
-		A43E63CD152A6185006AEBCD /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
+		A43E63CD152A6185006AEBCD /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-Wno-sign-conversion -Wno-sign-compare"; }; };
 		A43E63CE152A6185006AEBCD /* NSObject+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A49D484214B4BD8B0045D66F /* NSObject+Cumulus.m */; };
 		A43E63CF152A6185006AEBCD /* NSDictionary+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+Cumulus.m */; };
 		A43E63D0152A6185006AEBCD /* NSString+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+Cumulus.m */; };
@@ -130,9 +128,12 @@
 		A443AE4013DB4C9300D55902 /* CMIdentityCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A443AE3E13DB4C9300D55902 /* CMIdentityCoder.m */; };
 		A443AE4313DB4E8900D55902 /* CMTextCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A443AE4113DB4E8900D55902 /* CMTextCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A443AE4413DB4E8900D55902 /* CMTextCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A443AE4213DB4E8900D55902 /* CMTextCoder.m */; };
+		A45489E21728772E001A032D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A45489E11728772E001A032D /* Security.framework */; };
+		A45489E417287734001A032D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A45489E317287734001A032D /* WebKit.framework */; };
+		A45489E8172877D9001A032D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A45489E7172877D9001A032D /* Cocoa.framework */; };
+		A45489E9172877E9001A032D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B2BF14002529003495BA /* UIKit.framework */; };
 		A456515C1523D454001302A7 /* Cumulus.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD4A13DB459200F96152 /* Cumulus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A46269A314198ED3005544D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B2BF14002529003495BA /* UIKit.framework */; };
-		A46269A414198ED3005544D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4513DB459200F96152 /* Foundation.framework */; };
 		A46269A614198ED3005544D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46269A514198ED3005544D6 /* CoreGraphics.framework */; };
 		A4626A4D14199082005544D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1414199082005544D6 /* main.m */; };
 		A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4626A931419993E005544D6 /* libOCSpec.a */; };
@@ -210,7 +211,6 @@
 		A41410D414B680070026A8C1 /* NSDictionary+Cumulus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Cumulus.m"; sourceTree = "<group>"; };
 		A414784914CD4F3900C3EA48 /* query.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = query.rb; sourceTree = "<group>"; };
 		A414FD4213DB459200F96152 /* libCumulus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCumulus.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		A414FD4513DB459200F96152 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A414FD4913DB459200F96152 /* Cumulus-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cumulus-Prefix.pch"; sourceTree = "<group>"; };
 		A414FD4A13DB459200F96152 /* Cumulus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cumulus.h; sourceTree = "<group>"; };
 		A414FD4B13DB459200F96152 /* Cumulus.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cumulus.m; sourceTree = "<group>"; };
@@ -232,10 +232,6 @@
 		A432B470149D11D8006582DB /* CMResource+Specs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CMResource+Specs.h"; sourceTree = "<group>"; };
 		A4366F6B171D1C8600F77606 /* CMResource+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CMResource+Protected.h"; sourceTree = "<group>"; };
 		A43E639E152A47E6006AEBCD /* Cumulus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cumulus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A43E639F152A47E6006AEBCD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		A43E63A2152A47E6006AEBCD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		A43E63A3152A47E6006AEBCD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		A43E63A4152A47E6006AEBCD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A43E63B2152A60F1006AEBCD /* CumulusFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CumulusFramework-Info.plist"; path = "../CumulusFramework-Info.plist"; sourceTree = "<group>"; };
 		A43E63B5152A60FA006AEBCD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A43F86A9144A9AC200C69C3D /* proxy_string.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = proxy_string.rb; sourceTree = "<group>"; };
@@ -255,6 +251,9 @@
 		A443AE4213DB4E8900D55902 /* CMTextCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMTextCoder.m; sourceTree = "<group>"; };
 		A44C586B147DC15700CD592C /* CMFileHandlingSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMFileHandlingSpec.h; sourceTree = "<group>"; };
 		A44C586C147DC15700CD592C /* CMFileHandlingSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMFileHandlingSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		A45489E11728772E001A032D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		A45489E317287734001A032D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
+		A45489E7172877D9001A032D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		A46269A114198ED3005544D6 /* Cumulus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cumulus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A46269A514198ED3005544D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		A46269F014199082005544D6 /* config.ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.ru; sourceTree = "<group>"; };
@@ -363,7 +362,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A414FD4613DB459200F96152 /* Foundation.framework in Frameworks */,
+				A45489E9172877E9001A032D /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,7 +370,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A43E63A0152A47E6006AEBCD /* Cocoa.framework in Frameworks */,
+				A45489E8172877D9001A032D /* Cocoa.framework in Frameworks */,
+				A45489E417287734001A032D /* WebKit.framework in Frameworks */,
+				A45489E21728772E001A032D /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,7 +384,6 @@
 				A4A8CC64147EDFA200BE6C0E /* MobileCoreServices.framework in Frameworks */,
 				A4D4FFC7141A5A4E00E58873 /* SenTestingKit.framework in Frameworks */,
 				A46269A314198ED3005544D6 /* UIKit.framework in Frameworks */,
-				A46269A414198ED3005544D6 /* Foundation.framework in Frameworks */,
 				A46269A614198ED3005544D6 /* CoreGraphics.framework in Frameworks */,
 				A409B3CD141A530C003495BA /* libCumulus.a in Frameworks */,
 				A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */,
@@ -440,7 +440,6 @@
 			children = (
 				A4A8CC5F147ED43700BE6C0E /* Cumulus */,
 				A4A8CC60147ED44700BE6C0E /* Specs */,
-				A43E639F152A47E6006AEBCD /* Cocoa.framework */,
 				A43E63A1152A47E6006AEBCD /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -490,9 +489,6 @@
 		A43E63A1152A47E6006AEBCD /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A43E63A2152A47E6006AEBCD /* AppKit.framework */,
-				A43E63A3152A47E6006AEBCD /* CoreData.framework */,
-				A43E63A4152A47E6006AEBCD /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -520,6 +516,26 @@
 				A43F86AC144AAC5D00C69C3D /* CMImageCoder.m */,
 			);
 			path = Coders;
+			sourceTree = "<group>";
+		};
+		A45489E517287754001A032D /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				A409B2BF14002529003495BA /* UIKit.framework */,
+				A409B3991408F193003495BA /* Security.framework */,
+				A4A8CC5D147ED3FF00BE6C0E /* MobileCoreServices.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		A45489E61728775E001A032D /* MacOS */ = {
+			isa = PBXGroup;
+			children = (
+				A45489E7172877D9001A032D /* Cocoa.framework */,
+				A45489E317287734001A032D /* WebKit.framework */,
+				A45489E11728772E001A032D /* Security.framework */,
+			);
+			name = MacOS;
 			sourceTree = "<group>";
 		};
 		A46269B614199082005544D6 /* Tests */ = {
@@ -720,9 +736,8 @@
 		A4A8CC5F147ED43700BE6C0E /* Cumulus */ = {
 			isa = PBXGroup;
 			children = (
-				A409B3991408F193003495BA /* Security.framework */,
-				A414FD4513DB459200F96152 /* Foundation.framework */,
-				A4A8CC5D147ED3FF00BE6C0E /* MobileCoreServices.framework */,
+				A45489E517287754001A032D /* iOS */,
+				A45489E61728775E001A032D /* MacOS */,
 			);
 			name = Cumulus;
 			sourceTree = "<group>";
@@ -730,7 +745,6 @@
 		A4A8CC60147ED44700BE6C0E /* Specs */ = {
 			isa = PBXGroup;
 			children = (
-				A409B2BF14002529003495BA /* UIKit.framework */,
 				A46269A514198ED3005544D6 /* CoreGraphics.framework */,
 				A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */,
 				A4626A931419993E005544D6 /* libOCSpec.a */,

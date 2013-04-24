@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		#import <UIKit/UIKit.h>
 	#else
 		#import <AppKit/AppKit.h>
+		#import <WebKit/WebKit.h>
 	#endif
 
 #endif
