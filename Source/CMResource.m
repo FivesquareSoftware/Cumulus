@@ -34,6 +34,7 @@
  */
 
 #import "CMResource.h"
+#import "CMResource+Protected.h"
 
 #import "Cumulus.h"
 
