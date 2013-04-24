@@ -1221,10 +1221,6 @@
 				DSTROOT = /tmp/Cumulus.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Source/Cumulus-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Ext/TouchXML/Source\"/**",
-					"\"$(SDKROOT)/usr/include/libxml2\"",
-				);
 				INFOPLIST_FILE = "CumulusLib-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;
@@ -1240,10 +1236,6 @@
 				DSTROOT = /tmp/Cumulus.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Source/Cumulus-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Ext/TouchXML/Source\"/**",
-					"\"$(SDKROOT)/usr/include/libxml2\"",
-				);
 				INFOPLIST_FILE = "CumulusLib-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;

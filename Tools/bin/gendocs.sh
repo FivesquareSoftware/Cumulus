@@ -11,8 +11,17 @@ appledoc="${SRCROOT}/Tools/bin/appledoc"
 docpath="${SRCROOT}/Docs/API/"
 srcpath="${SRCROOT}/Source"
 
-echo "Documenting Cumulus version ${VERSION} to $docpath"
+echo "Documenting Cumulus"
+echo "version '${VERSION}'"
+echo "srcpath '$srcpath'"
+echo "docpath '$docpath'"
 
 
-$appledoc --project-name=Cumulus --project-version=$VERSION --project-company='Fivesquare Software' --company-id='com.fivesquaresoftware' --no-repeat-first-par --index-desc "${SRCROOT}/Docs/API/index.md" --ignore '.m' --ignore '*+Private.h' --ignore '*+Protected.h' --keep-undocumented-objects --keep-undocumented-members --print-information-block-titles  --crossref-format "#?%@" --exit-threshold 2 --docset-install-path $docpath -o $docpath $srcpath
+$appledoc \
+--project-name=Cumulus --project-version=$VERSION --project-company='Fivesquare Software' --company-id='com.fivesquaresoftware' \
+--ignore '.m' --ignore '*+Private.h' --ignore '*+Protected.h' \
+--index-desc "${SRCROOT}/Docs/API/index.md" --no-repeat-first-par --keep-undocumented-objects --keep-undocumented-members --print-information-block-titles  --crossref-format "#?%@" \
+--exit-threshold 2 \
+--docset-install-path $docpath -o $docpath \
+$srcpath
 

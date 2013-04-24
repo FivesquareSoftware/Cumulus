@@ -1,6 +1,6 @@
 ## About
 
-Cumulus is a simple, powerful and blazing🔥 fast Cocoa HTTP+REST client that makes creating Cloud-backed apps drop dead easy.
+Cumulus is a simple, powerful and blazing🔥 fast Cocoa HTTP+REST client that makes creating Cloud-backed apps stupidly easy.
 
 ## Getting Started
 
