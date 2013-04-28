@@ -54,14 +54,14 @@
 - (void)shouldHeadItem {
 	CMResource *resource = [self.service resource:@"test/head/item"];
     CMResponse *response = [resource head];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 	STAssertNil(response.result, @"Head request should have no body");
 }
 
 - (void)shouldHeadList {
 	CMResource *resource = [self.service resource:@"test/head/list"];
     CMResponse *response = [resource head];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 	STAssertNil(response.result, @"Head request should have no body");
 }
 

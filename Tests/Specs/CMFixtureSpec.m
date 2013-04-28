@@ -62,7 +62,7 @@
 	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodGET];
 	resource.contentType = CMContentTypeText;
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
 }
 
@@ -71,7 +71,7 @@
 	NSData *data = [@"FOO" dataUsingEncoding:NSUTF8StringEncoding];
 	[resource setFixture:data forHTTPMethod:kCumulusHTTPMethodGET];
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, data, @"Result did not equal data");
 }
 
@@ -81,7 +81,7 @@
 	[resource setFixture:self.specHelper.item forHTTPMethod:kCumulusHTTPMethodGET];
 
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
 }
 
@@ -91,7 +91,7 @@
 	[resource setFixture:self.specHelper.list forHTTPMethod:kCumulusHTTPMethodGET];
 
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");	
 }
 
@@ -102,7 +102,7 @@
 	[resource setFixture:image forHTTPMethod:kCumulusHTTPMethodGET];
 
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
 }
 
@@ -115,7 +115,7 @@
 	[resource setFixture:imageURL forHTTPMethod:kCumulusHTTPMethodGET];
 	
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
 }
 
@@ -132,7 +132,7 @@
 	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodPOST];
 	resource.contentType = CMContentTypeText;
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
 }
 
@@ -144,7 +144,7 @@
 	[Cumulus useFixtures:YES];
 
 	CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
 }
 
@@ -157,7 +157,7 @@
 	[Cumulus useFixtures:YES];
 	
 	CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
 }
 
@@ -169,7 +169,7 @@
 	[Cumulus useFixtures:NO];
 	
 	CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
 }
 
@@ -244,7 +244,7 @@
 	NSString *filename = [resultObject filename];
 	NSURL *URL =  [resultObject URL];
 	
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	
 	STAssertNotNil(filename, @"Filename should not be nil");
 	STAssertNotNil(URL, @"URL should not be nil");

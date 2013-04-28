@@ -102,7 +102,7 @@
 
 	STAssertTrue(touched, @"Should have run preflight block");
 	STAssertNotNil(response, @"Response should not be nil when preflight allows a request to run");
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void) shouldExecutePreflightBlockInNonBlockingMode {
@@ -148,7 +148,7 @@
 	
 	STAssertTrue(touched, @"Should have run preflight block");
 	STAssertNotNil(localResponse, @"Response should not be nil when preflight allows a request to run");
-    STAssertTrue(localResponse.success, @"Response should be ok");
+    STAssertTrue(localResponse.wasSuccessful, @"Response should be ok");
 
 }
 

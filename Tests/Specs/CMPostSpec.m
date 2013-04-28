@@ -56,7 +56,7 @@
 - (void) shouldPostItem {
 	CMResource *resource = [self.service resource:@"test/post/item"];
     CMResponse *response = [resource post:self.specHelper.item];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
 }
 
@@ -64,7 +64,7 @@
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.list forKey:@"list"];  // our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/post/list"];
     CMResponse *response = [resource post:payload];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");	
 }
 
@@ -72,7 +72,7 @@
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.largeList forKey:@"list"];  // our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/post/large-list"];
     CMResponse *response = [resource post:payload];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.largeList, @"Result did not equal large resource");	
 }
 
@@ -80,7 +80,7 @@
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.complicatedList forKey:@"list"];  // our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/post/complicated-list"];
     CMResponse *response = [resource post:payload];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.complicatedList, @"Result did not equal complicated resource");	
 }
 

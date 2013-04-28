@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A477202A172CE07D00F098D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A4772029172CE07D00F098D6 /* Default-568h@2x.png */; };
 		A4CDC34A155DC9C000A6299D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC349155DC9C000A6299D /* UIKit.framework */; };
 		A4CDC34C155DC9C000A6299D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC34B155DC9C000A6299D /* Foundation.framework */; };
 		A4CDC34E155DC9C000A6299D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDC34D155DC9C000A6299D /* CoreGraphics.framework */; };
@@ -46,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		A41DF061155DD34700C88D9C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		A4772029172CE07D00F098D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		A4CDC345155DC9C000A6299D /* Geoloqi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geoloqi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4CDC349155DC9C000A6299D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A4CDC34B155DC9C000A6299D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -104,7 +106,7 @@
 		A4CDC3C5155DCBB300A6299D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A4CDC3C9155DCD1500A6299D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A4CDC3CC155DCD3100A6299D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Source/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
-		A4FB355B16F6795700FA8B62 /* libCumulus.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libCumulus.a; path = "../../build/Release-iphoneos/libCumulus.a"; sourceTree = "<group>"; };
+		A4FB355B16F6795700FA8B62 /* libCumulus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCumulus.a; path = "../../build/Release-iphoneos/libCumulus.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 		A4CDC33A155DC9C000A6299D = {
 			isa = PBXGroup;
 			children = (
+				A4772029172CE07D00F098D6 /* Default-568h@2x.png */,
 				A41DF061155DD34700C88D9C /* README.md */,
 				A4CDC374155DCA7C00A6299D /* Source */,
 				A4CDC36E155DCA7C00A6299D /* Ext */,
@@ -309,7 +312,7 @@
 		A4CDC33C155DC9C000A6299D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = Me;
 			};
 			buildConfigurationList = A4CDC33F155DC9C000A6299D /* Build configuration list for PBXProject "Geoloqi" */;
@@ -337,6 +340,7 @@
 				A4CDC3A5155DCA7C00A6299D /* SVProgressHUD.bundle in Resources */,
 				A4CDC3AA155DCA7C00A6299D /* MainStoryboard.storyboard in Resources */,
 				A4CDC3CD155DCD3100A6299D /* InfoPlist.strings in Resources */,
+				A477202A172CE07D00F098D6 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +404,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -425,6 +433,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

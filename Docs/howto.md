@@ -44,7 +44,7 @@ Create child resources using the `-resource:` method with a relative path (which
 ```objective-c 
 RCResource *users = [site resource:@"users"];
 RCResource *posts = [site resource:@"posts"];
-RCResource *one = [site resource:[NSNumber numberWithInt:1]];
+RCResource *one = [site resource:@(1)];
 ```
 
 `resourceWithFormat:` allows you to use format strings to create child resources.
@@ -316,7 +316,7 @@ NSURL *fileURL = [NSURL fileURLWithPath:filePath];
 You can do background work from any of the usual blocks if you want, just by dispatching to another queue.
 
 ```objective-c 
-[[posts resource:[NSNumber numberWithInt:1]] getWithCompletionBlock:^(RCResponse *response){
+[[posts resource:@(1)] getWithCompletionBlock:^(RCResponse *response){
 	if ([response isOK]) {
 		// save something to your database in the background using a dedicated DB mapping queue
 

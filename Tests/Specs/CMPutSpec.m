@@ -56,7 +56,7 @@
 - (void) shouldPutItem {
 	CMResource *resource = [self.service resource:@"test/put/item"];
     CMResponse *response = [resource put:self.specHelper.item];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
 }
 
@@ -64,7 +64,7 @@
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.list forKey:@"list"];  // our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/put/list"];
     CMResponse *response = [resource put:payload];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");	
 }
 

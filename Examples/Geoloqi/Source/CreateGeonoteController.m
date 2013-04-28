@@ -148,7 +148,7 @@
 		
 		[SVProgressHUD showWithStatus:@"Creating.." networkIndicator:NO];
 		[self.geonoteResource post:note withCompletionBlock:^(CMResponse *response) {
-			if (response.success) {
+			if (response.wasSuccessful) {
 				[SVProgressHUD dismissWithSuccess:@"Success!"];
 				[self.navigationController popViewControllerAnimated:YES];
 			} else {

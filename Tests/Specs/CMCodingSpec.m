@@ -96,7 +96,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/json/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
 	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
@@ -106,7 +106,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/decoding/json/wrong-content-type"];
 	[resource setValue:@"application/json" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
 	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
@@ -127,7 +127,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/plist/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
 	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
@@ -137,7 +137,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/decoding/plist/wrong-content-type"];
 	[resource setValue:@"application/xml" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
 	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
@@ -150,7 +150,7 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeTextWhenServerSendsContentType {
 	CMResource *resource = [self.service resource:@"test/decoding/text/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
 	STAssertEqualObjects(kHelloWorld, response.result, @"Response#result should equal text");
 }
@@ -159,7 +159,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/decoding/text/wrong-content-type"];
 	[resource setValue:@"text/plain" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
 	STAssertEqualObjects(kHelloWorld, response.result, @"Response#result should equal text");
 }
@@ -171,7 +171,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	UIImage *image =  [UIImage imageNamed:@"t_hero.png"];
 	CMResource *resource = [self.service resource:@"test/decoding/image/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);
 	NSData *imageData = UIImagePNGRepresentation(image);
 	NSData *resultImageData = UIImagePNGRepresentation(response.result);
@@ -183,7 +183,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/decoding/image/wrong-content-type"];
 	[resource setValue:@"image/png" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);
 	NSData *imageData = UIImagePNGRepresentation(image);
 	NSData *resultImageData = UIImagePNGRepresentation(response.result);
@@ -209,7 +209,7 @@ static NSString *kHelloWorld = @"Hello World!";
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/wrong-content-type.json"];
 	CMResponse *response = [resource get];
-	STAssertTrue(response.success, @"Response should have succeeded: %@", response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
 	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
 	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }

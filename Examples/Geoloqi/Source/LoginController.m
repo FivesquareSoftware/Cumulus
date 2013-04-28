@@ -84,7 +84,7 @@
 		CMOAuth2AuthProvider *authProvider = [self.appDelegate.service.authProviders lastObject];
 		[SVProgressHUD showWithStatus:@"Logging in.." maskType:SVProgressHUDMaskTypeClear networkIndicator:NO];		
 		[authProvider requestAccessTokenWithUsername:self.usernameTextField.text password:self.passwordTextField.text completionBlock:^(CMResponse *response) {
-			if (response.success) {		
+			if (response.wasSuccessful) {
 				if (self.appDelegate.isLoggedIn) {
 					// You might want to store this in the keychain in your app ...
 					[[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:authProvider.token] forKey:@"authToken"];

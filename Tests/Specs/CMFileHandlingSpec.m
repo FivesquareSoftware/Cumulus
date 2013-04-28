@@ -92,7 +92,7 @@
 	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
 	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
 	
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	
 	STAssertNotNil(filename, @"Filename should not be nil");
 	STAssertNotNil(URL, @"URL should not be nil");
@@ -219,7 +219,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
 	
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	STAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
 	STAssertTrue(firstProgress == 0.f, @"Download should have reset to a zero byte offset");
 	
@@ -257,7 +257,7 @@
 	NSDictionary *attributes = [fm attributesOfItemAtPath:[copiedFileURL path] error:&error];
 	long long fileSize = (long long)[attributes fileSize];
 	
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	STAssertEquals(fileSize, contentRange.length, @"Downloaded file size should have equaled request range length");
 }
 
@@ -293,7 +293,7 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 
@@ -354,7 +354,7 @@
 	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
 	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
 	
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	
 	STAssertNotNil(filename, @"Filename should not be nil");
 	STAssertNotNil(URL, @"URL should not be nil");	
@@ -437,7 +437,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
 	
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	STAssertTrue(hadRangeHeader, @"Request should have included a range header");
 	STAssertTrue(writesToSameTempFile, @"Download should have resumed writing to partial download");
 	

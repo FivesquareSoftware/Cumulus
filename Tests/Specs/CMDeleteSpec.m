@@ -54,14 +54,14 @@
 - (void)shouldDeleteItem {
 	CMResource *resource = [self.service resource:@"test/delete/item"];
     CMResponse *response = [resource delete];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
 }
 
 - (void)shouldDeleteList {
 	CMResource *resource = [self.service resource:@"test/delete/list"];
     CMResponse *response = [resource delete];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");	
 }
 

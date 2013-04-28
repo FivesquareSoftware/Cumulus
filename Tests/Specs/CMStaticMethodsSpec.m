@@ -65,13 +65,13 @@
     CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"test" password:@"test"];
 	[Cumulus setAuthProviders:[NSMutableArray arrayWithObject:authProvider]];
     CMResponse *response = [Cumulus get:endpoint];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void)shouldGet {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
     CMResponse *response = [Cumulus get:endpoint];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void)shouldGetWithCompletionBlock {
@@ -90,7 +90,7 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldGetWithProgressBlockAndCompletionBlock {
@@ -117,13 +117,13 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldHead {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
     CMResponse *response = [Cumulus head:endpoint];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void)shouldHeadWithCompletionBlock {
@@ -142,13 +142,13 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldDelete {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
     CMResponse *response = [Cumulus delete:endpoint];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void)shouldDeleteWithCompletionBlock {
@@ -167,13 +167,13 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldPost {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
     CMResponse *response = [Cumulus post:endpoint payload:self.specHelper.item];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void)shouldPostWithCompletionBlock {
@@ -192,7 +192,7 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldPostWithProgressBlockAndCompletionBlock {
@@ -219,13 +219,13 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldPut {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
     CMResponse *response = [Cumulus put:endpoint payload:self.specHelper.item];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void)shouldPutWithCompletionBlock {
@@ -244,7 +244,7 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldPutWithProgressBlockAndCompletionBlock {
@@ -271,7 +271,7 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldDownloadWithProgressBlockAndCompletionBlock {
@@ -296,7 +296,7 @@
 	dispatch_release(request_sema);
 
 	
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 }
 
 - (void)shouldUploadWithProgressBlockAndCompletionBlock {
@@ -327,7 +327,7 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
-	STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 

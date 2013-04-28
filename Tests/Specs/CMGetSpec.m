@@ -55,28 +55,28 @@
 - (void) shouldGetAnItem {
 	CMResource *resource = [self.service resource:@"test/get/item"];
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
 }
 
 - (void) shouldGetAList {
 	CMResource *resource = [self.service resource:@"test/get/list"];
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");	
 }
 
 - (void) shouldGetALargeResource {
 	CMResource *resource = [self.service resource:@"test/get/large-list"];
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.largeList, @"Result did not equal large resource");	
 }
 
 - (void) shouldGetAComplicatedResource {
 	CMResource *resource = [self.service resource:@"test/get/complicated-list"];
     CMResponse *response = [resource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
     STAssertEqualObjects(response.result, self.specHelper.complicatedList, @"Result did not equal complicated resource");	
 }
 

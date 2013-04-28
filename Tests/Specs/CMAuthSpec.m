@@ -89,14 +89,14 @@
     CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"test" password:@"test"];
     [self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void) shouldBeAuthorizedWithAReallyLongUsernameAndPassword {
     CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1" password:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1"];
     [self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void) shouldContinueWhenProviderReturnsNilCredential {
@@ -143,7 +143,7 @@
 	[self.SSLService addAuthProvider:authProvider];
 	CMResource *untrustedServer = [self.SSLService resource:@"index"];
 	CMResponse *response = [untrustedServer get];
-    STAssertTrue(response.success, @"Response should have succeeded: %@",response);
+    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 @end

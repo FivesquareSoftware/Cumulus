@@ -142,6 +142,7 @@
 // ========================================================================== //
 
 
+/** Convenience that creates a resource using initWithURL:. */
 + (id) withURL:(id)URL;
 
 /** Constructs a base resource using an absolute URL string. 
@@ -156,8 +157,10 @@
  *
  *  Examples
  *
- *  [orders resource:[NSNumber numberWithInt:123]]
- *  [users resource:@"joe"]
+ *  `[orders resource:[NSNumber numberWithInt:123]] => orders/123`
+ *  `[users resource:@"joe"] => users/joe`
+ *
+ *  @param relativePathObject a string or any object that responds to #description
  */
 - (CMResource *) resource:(id)relativePathObject;
 
@@ -166,7 +169,9 @@
  *
  *  Examples
  *
- *  [orders resourceWithFormat:@"users/%@/completed",@"joe"]
+ *  `[orders resourceWithFormat:@"users/%@/completed",@"joe"] => users/joe/completed`
+ *
+ *  @param relativePathFormat,... a format string and arguments
  */
 - (CMResource *) resourceWithFormat:(NSString *)relativePathFormat,...;
 
@@ -202,9 +207,12 @@
 
 
 /** Convenience method for setting a single header.
- * @param value - if nil, will remove the header from the receiver, if not a string, will have #description called on it
+ *  @param value A string or any object that responds to #description. May be nil.
+ *  @param key The header field name.
+ *  @note If value is nil, this will remove the header from the receive. If value is not a string, it will have #description called on it before being set to the headers. (All headers are ultimately strings)
  */
 - (void) setValue:(id)value forHeaderField:(NSString *)key;
+
 /** Convenience method for returning the value of a single header. */
 - (id) valueForHeaderField:(NSString *)key;
 
@@ -260,7 +268,9 @@
 
 - (CMResponse *) get;
 - (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock;
+- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
 - (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) getWithQuery:(id)query ;
@@ -326,6 +336,8 @@
 // ========================================================================== //
 
 
+/** Downloads the data represented by the receiver directly to disk instead of appending it in memory. When the request is complete [CMResponse result] holds an instance of CMProgressInfo with information about the downloaded file, including a string representing the filename as it came from the server (if it was sent), and an NSURL pointing to the temporary location of the downloaded file. You should move it immediately to a location of your own choosing if you wish to preserve it.
+ */
 - (id) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** Behaves like downloadWithProgressBlock:completionBlock: with the exception that it will resume the download if the temp download file already existes on disk.
@@ -343,6 +355,7 @@
 /** Allows for uploading files directly from disk rather than keeping them in memory, which is particularly useful for large files. The progress block is called each time a chunk of data is sent to the server. The content type sent to the server is inferred from the UTI of the file on disk and overrides any content type set on the receiver.
  *  
  *  @note Currently implemented using HTTP PUT rather than Multipart POST, which may not be supported by your server. 
+ *  @todo support multipart POST for uploads.
  */
 - (id) uploadFile:(NSURL *)fileURL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 

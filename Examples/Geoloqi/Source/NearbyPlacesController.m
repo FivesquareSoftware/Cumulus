@@ -33,11 +33,11 @@
 		NSManagedObjectContext *childContext = [self.managedObjectContext newChildContext];
 		CMPostProcessorBlock postProcessor = ^(CMResponse *response, id result) {
 			
-			if (NO == response.success) {
+			if (NO == response.wasSuccessful) {
 				return result;
 			}
 			
-			// map new data			
+			// map new data
 			NSMutableArray *localPlaces = [NSMutableArray array];
 			NSArray *remotePlaces = [result valueForKey:@"nearby"];
 			
@@ -167,7 +167,7 @@
 
 	[SVProgressHUD showWithStatus:@"Fetching.." networkIndicator:NO];
 	[nearbyPlacesResource getWithCompletionBlock:^(CMResponse *response) {
-		if (response.success) {
+		if (response.wasSuccessful) {
 			[SVProgressHUD dismiss];
 		} else {
 			NSString *errorMsg = [response.result valueForKey:@"error_description"];

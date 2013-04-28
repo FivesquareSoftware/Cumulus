@@ -34,7 +34,7 @@
 		NSManagedObjectContext *childContext = [self.managedObjectContext newChildContext];
 		CMPostProcessorBlock postProcessor = ^(CMResponse *response, id result) {
 			
-			if (NO == response.success) {
+			if (NO == response.wasSuccessful) {
 				return result;
 			}
 
@@ -141,7 +141,7 @@
 - (void) refreshFromRemoteResource {
 	[SVProgressHUD showWithStatus:@"Updating.." networkIndicator:NO];
 	[self.locationsResource getWithCompletionBlock:^(CMResponse *response) {
-		if (response.success) {
+		if (response.wasSuccessful) {
 			[SVProgressHUD dismiss];
 		} else {
 			NSString *error = [response.result valueForKey:@"error"];

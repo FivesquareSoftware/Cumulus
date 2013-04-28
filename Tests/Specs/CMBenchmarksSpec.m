@@ -172,7 +172,7 @@
 
 	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -193,7 +193,7 @@
 
 	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -293,7 +293,7 @@
 
 	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -388,7 +388,7 @@
 
 	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -505,7 +505,7 @@
 
 	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -540,7 +540,7 @@
 
 	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
-    STAssertTrue(localResponse.success, @"Response should have succeeded: %@",localResponse);
+    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
