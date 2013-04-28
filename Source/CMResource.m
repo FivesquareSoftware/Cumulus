@@ -775,7 +775,7 @@
 	
 	CMPreflightBlock preflightBlock = self.preflightBlock;
 	if (preflightBlock) {
-		dispatch_async(dispatch_get_main_queue(), ^{
+		void(^dispatchPreflightBlock)() = ^{
 			BOOL success = preflightBlock(request);
 			if(success) {
 				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema resourceGroup:resourceGroup];
@@ -784,7 +784,13 @@
 				[request abortWithBlock:abortBlock];
 				dispatch_semaphore_signal(launch_sema);
 			}
-		});
+		};
+		if (dispatch_get_current_queue() == dispatch_get_main_queue()) {
+			dispatchPreflightBlock();
+		}
+		else {
+			dispatch_async(dispatch_get_main_queue(), dispatchPreflightBlock);
+		}
 	}
 	else {
 		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema resourceGroup:resourceGroup];

@@ -144,7 +144,31 @@
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
-	STAssertTrue(localResponse.success, @"Response should be successful: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+}
+
+- (void) shouldRunAsynchronouslyFromTheMainQueueWithPreflightBlock {
+	CMResource *index = [self.service resource:@"index"];
+	
+	__block BOOL preflightBlockRan = NO;
+	index.preflightBlock = ^(CMRequest *request) {
+		preflightBlockRan = YES;
+		return YES;
+	};
+	
+	__block CMResponse *localResponse = nil;
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[index getWithCompletionBlock:^(CMResponse *response) {
+			localResponse = response;
+			dispatch_semaphore_signal(request_sema);
+		}];
+	});
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+	STAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
 }
 
 - (void) shouldRunAsynchronouslyFromConcurrentQueue {
@@ -163,7 +187,7 @@
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
-	STAssertTrue(localResponse.success, @"Response should be successful: %@", localResponse);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThread {
@@ -175,7 +199,7 @@
 	CMResource *index = [self.service resource:@"index"];
 	CMResponse *response = [index get];
 
-	STAssertTrue(response.success,@"Response should be successful");
+	STAssertTrue(response.wasSuccessful,@"Response should be successful");
 }
 
 
@@ -207,7 +231,7 @@
 //	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 //	dispatch_semaphore_signal(request_sema);
 //	dispatch_release(request_sema);
-//	STAssertTrue(localResponse.success, @"Response should be successful: %@", localResponse);
+//	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 //}
 
 
