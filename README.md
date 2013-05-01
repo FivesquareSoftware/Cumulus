@@ -1,11 +1,15 @@
-[HOWTO]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/howto.md (How Tos)
+[HOWTO]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/howto.md (Cumulus Programming Guide)
 [FAQ]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/faq.md (FAQs)
 [DEMO]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples (See Example Apps)
 [TESTS]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Tests#readme (Running the Tests)
 
 ## About
 
-Cumulus for Objective C is inspired by Ruby's [rest-client](https://github.com/archiloque/rest-client), and shares the goal of providing a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a resource. 
+Cumulus for Objective C provides a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a resource. Because Cumulus exposes the bare metal of HTTP, and is so interchangeable, it is an excellent too to build higher level libraries on top of.
+
+#### Designed for Speed
+
+Cumulus was designed from the ground up to use Grand Central Dispatch (CGD) to allow for massive concurrency. 
 
 #### Plays Well With Others
 
@@ -47,28 +51,14 @@ On iOS, use:
 ```objective-c 
 #import "Cumulus.h"
 ```
-
-
-If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding Cumulus as a submodule, `git submodule update --recursive`) to be sure to fetch Cumulus's own externals.
-
 Make sure you link the Security framework (to handle certificate based auth) and MobileCoreServices framework (for iOS), or CoreServices framework (for Mac OS).
 
 You must use the -ObjC linker flag (at least, you could also use -force_load=Cumulus or -all_load if you wanted to be more agressive) in order to link in the categories defined in Cumulus.
 
+If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding Cumulus as a submodule, `git submodule update --recursive`) to be sure to fetch Cumulus's own externals as these are required for the specs to run.
+
 That's it. There is detailed help in the [FAQ][] if you need more information about how to set up your workspace.
 
-
-## Links
-
-[How Tos][HOWTO]  
-[FAQs][FAQ]  
-[Example Apps][DEMO]  
-[Running the Tests][TESTS]  
-
-
-## License
-
-Cumulus is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause)
 
 
 ## Basic Usage
@@ -174,6 +164,18 @@ posts.contentType = CMContentTypeJSON;
 Cumulus does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
 
 
+## Links
+
+[How Tos][HOWTO]  
+[FAQs][FAQ]  
+[Example Apps][DEMO]  
+[Running the Tests][TESTS]  
+
+
+## License
+
+Cumulus is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause)
+
 
 ## Contributors
 
@@ -181,4 +183,8 @@ John Clayton <Cumulus@fivesquaresoftware.com>
 
 Patches are welcome, pull requests make us all excited.
 
+
+## Acknowledgements
+
+Lots of inspiration in the interface design of Cumulus was taken from Ruby's [rest-client](https://github.com/rest-client/rest-client/commits/master)
 

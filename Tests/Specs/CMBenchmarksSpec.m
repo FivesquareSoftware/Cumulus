@@ -114,7 +114,7 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(1000, queue, ^(size_t i) {
 		CMResponse *response = [smallResource get];
-		if (NO == response.success) {
+		if (NO == response.wasSuccessful) {
 			success = NO;
 		}
 	});
@@ -142,7 +142,7 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(1000, queue, ^(size_t i) {
 		CMResponse *response = [smallResource get];
-		if (NO == response.success) {
+		if (NO == response.wasSuccessful) {
 			success = NO;
 		}
 	});
@@ -208,7 +208,7 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(15, queue, ^(size_t i) {
 		CMResponse *response = [complicatedResource get];
-		if (NO == response.success) {
+		if (NO == response.wasSuccessful) {
 			success = NO;
 		}
 	});
@@ -238,7 +238,7 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(15, queue, ^(size_t i) {
 		CMResponse *response = [complicatedResource get];
-		if (NO == response.success) {
+		if (NO == response.wasSuccessful) {
 			success = NO;
 		}
 	});
@@ -263,7 +263,7 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(1000, queue, ^(size_t i) {
 		CMResponse *response = [smallResource post:self.specHelper.item];
-		if (NO == response.success) {
+		if (NO == response.wasSuccessful) {
 			success = NO;
 		}
 	});
@@ -309,7 +309,7 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(15, queue, ^(size_t i) {
 		CMResponse *response = [complicatedResource post:payload];
-		if (NO == response.success) {
+		if (NO == response.wasSuccessful) {
 			success = NO;
 		}
 	});
@@ -340,7 +340,7 @@
 	dispatch_apply(100, queue, ^(size_t i) {
 		dispatch_group_async(group, dispatch_get_current_queue(), ^{
 			[smallFile uploadFile:[NSURL fileURLWithPath:filePath] withProgressBlock:nil completionBlock:^(CMResponse *response){
-				if (NO == response.success) {
+				if (NO == response.wasSuccessful) {
 					success = NO;
 				}
 				if (i >= 99) {
@@ -406,7 +406,7 @@
 	dispatch_apply(100, queue, ^(size_t i) {
 		dispatch_group_async(group, dispatch_get_current_queue(), ^{
 			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){			
-				if (NO == response.success) {
+				if (NO == response.wasSuccessful) {
 					success = NO;
 				}
 				if (i >= 99) {
@@ -456,7 +456,7 @@
 	dispatch_apply(100, queue, ^(size_t i) {
 		dispatch_group_async(group, dispatch_get_current_queue(), ^{
 			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){			
-				if (NO == response.success) {
+				if (NO == response.wasSuccessful) {
 					success = NO;
 				}
 				if (i >= 99) {

@@ -142,7 +142,8 @@
 		CMResponse *response = [self.tokenService post:tokenPayload];
 		if (response.wasSuccessful) {
 			[self mapTokenFromResult:response.result];
-		} else {
+		}
+		else {
 			RCLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);
 		}
 	}

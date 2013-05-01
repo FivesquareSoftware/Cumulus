@@ -746,12 +746,10 @@
 
 	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
 
-	if ([NSThread currentThread] == [NSThread mainThread]) {
+	if ([NSThread isMainThread]) {
 		do {
 			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
 		} while (dispatch_semaphore_wait(request_sema, 0.01) != 0);
-//		while() {
-//		}
 	}
 	else {
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
@@ -785,8 +783,8 @@
 				dispatch_semaphore_signal(launch_sema);
 			}
 		};
-		if (dispatch_get_current_queue() == dispatch_get_main_queue()) {
-			dispatchPreflightBlock();
+		if ([NSThread isMainThread]) {
+			dispatchPreflightBlock();			
 		}
 		else {
 			dispatch_async(dispatch_get_main_queue(), dispatchPreflightBlock);
@@ -796,7 +794,15 @@
 		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema resourceGroup:resourceGroup];
 	}
 	
-	dispatch_semaphore_wait(launch_sema, DISPATCH_TIME_FOREVER);
+//	if ([NSThread isMainThread]) {
+//		long wait = 0;
+//		while ( (wait = dispatch_semaphore_wait(launch_sema, 0.01))  != 0 ) {
+//			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
+//		}
+//	}
+//	else {
+		dispatch_semaphore_wait(launch_sema, DISPATCH_TIME_FOREVER);
+//	}
 	dispatch_release(launch_sema);
 	return request.identifier;
 }

@@ -67,16 +67,16 @@
 	service_.contentType = CMContentTypeJSON;
 
 	// set up a preflight block to make sure we are logging in	
-	__weak AppDelegate *self_ = self;
-	CMPreflightBlock preflight = ^(CMRequest *request) {
-		NSLog(@"Preflighting request: %@, headers: %@",request, request.headers);
-		if (NO == self_.isLoggedIn) {
-			[SVProgressHUD dismissWithError:@"Not logged in"];
-			return NO;
-		}
-		return YES;
-	};		
-	service_.preflightBlock = preflight;
+//	__weak AppDelegate *self_ = self;
+//	CMPreflightBlock preflight = ^(CMRequest *request) {
+//		NSLog(@"Preflighting request: %@, headers: %@",request, request.headers);
+//		if (NO == self_.isLoggedIn) {
+//			[SVProgressHUD dismissWithError:@"Not logged in"];
+//			return NO;
+//		}
+//		return YES;
+//	};		
+//	service_.preflightBlock = preflight;
 	
 	NSURL *authorizationURL = [self.service.URL URLByAppendingPathComponent:@"oauth/authorize"];
 

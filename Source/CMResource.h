@@ -268,9 +268,9 @@
 
 - (CMResponse *) get;
 - (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock;
-- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
+//- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
 - (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
-- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
+//- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
 
 /** @param query - may be either a single dictionary or an array of alternating values and keys. */
 - (CMResponse *) getWithQuery:(id)query ;
