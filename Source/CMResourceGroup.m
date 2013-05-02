@@ -101,12 +101,12 @@
 
 
 - (void) enter {
-	RCLog(@"enter ->");
+//	RCLog(@"enter ->");
 	dispatch_group_enter(_dispatchGroup);
 }
 
 - (void) leaveWithResponse:(CMResponse *)response {
-	RCLog(@"leaveWithResponse: ->");
+//	RCLog(@"leaveWithResponse: ->");
 	if (response) {
 		[_currentResponses addObject:response];
 	}

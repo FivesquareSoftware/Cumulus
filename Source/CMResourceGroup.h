@@ -21,6 +21,7 @@
 
 /** Submits a block of work to the receiver's private serial queue. The array of all response objects from requests launched during the block is collected and passed to the completion block, along with a summary of group success/failure. 
  *  @param groupWork A series of requests made with CMResource objects that you wish to coordinate and get notified of on completion.
+ *  @note Only requests launched during the execution of the top level block are included in the scope of the work. For example, if you launch a new request from the completion block of an asynchronous request launched inside the work block, the group does not wait for that request to complete, nor is it part of any subsequent work scope.
  */
 - (void) performWork:(void(^)(CMResourceGroup *group))groupWork withCompletionBlock:(void(^)(BOOL success, NSArray *responses))completionBlock;
 
