@@ -122,7 +122,7 @@
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 3.f;
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -151,7 +151,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.f;
 	
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -170,7 +170,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.f;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -191,7 +191,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .1;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -218,7 +218,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.f;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -247,7 +247,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .5;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -272,7 +272,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 2.f;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -291,7 +291,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 7.f;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -319,7 +319,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .75;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -357,7 +357,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 3.f;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -386,7 +386,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .5;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -424,7 +424,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.25;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -474,7 +474,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.1f;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -503,7 +503,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .5;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
@@ -538,7 +538,7 @@
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .35;
 
-	self.result.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
+	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);

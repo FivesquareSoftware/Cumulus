@@ -380,6 +380,9 @@
 	if (request) {
 		[request cancel];
 	}
+	else {
+		RCLog(@"Tried to cancel a non-existent request: %@",identifier);
+	}
 }
 
 
@@ -769,48 +772,42 @@
 		RCLog(@"Dispatching request to resource group: %@",resourceGroup);
 	}
 
-	dispatch_semaphore_t launch_sema = dispatch_semaphore_create(0);
-	
+	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
+
 	CMPreflightBlock preflightBlock = self.preflightBlock;
 	if (preflightBlock) {
-		void(^dispatchPreflightBlock)() = ^{
+		void(^dispatchPreflightBlock)(void) = ^{
 			BOOL success = preflightBlock(request);
 			if(success) {
-				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema resourceGroup:resourceGroup];
+				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_semaphore resourceGroup:resourceGroup];
 			}
 			else {
 				[request abortWithBlock:abortBlock];
-				dispatch_semaphore_signal(launch_sema);
+				dispatch_semaphore_signal(launch_semaphore);
 			}
 		};
+		
 		if ([NSThread isMainThread]) {
-			dispatchPreflightBlock();			
+			dispatchPreflightBlock();
 		}
 		else {
 			dispatch_async(dispatch_get_main_queue(), dispatchPreflightBlock);
 		}
 	}
 	else {
-		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_sema resourceGroup:resourceGroup];
+		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_semaphore resourceGroup:resourceGroup];
 	}
-	
-//	if ([NSThread isMainThread]) {
-//		long wait = 0;
-//		while ( (wait = dispatch_semaphore_wait(launch_sema, 0.01))  != 0 ) {
-//			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
-//		}
-//	}
-//	else {
-		dispatch_semaphore_wait(launch_sema, DISPATCH_TIME_FOREVER);
-//	}
-	dispatch_release(launch_sema);
+	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(launch_semaphore);
 	return request.identifier;
 }
 
 - (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launch_semaphore resourceGroup:(CMResourceGroup *)resourceGroup {
+	[self addRequest:request resourceGroup:resourceGroup];
+	dispatch_semaphore_signal(launch_semaphore);
+
 	dispatch_queue_t request_queue = [CMResource dispatchQueue];
 	dispatch_async(request_queue, ^{
-		[self addRequest:request resourceGroup:resourceGroup];
 		[request startWithCompletionBlock:^(CMResponse *response){
 			if (completionBlock) {
 				completionBlock(response);
@@ -819,7 +816,6 @@
 				[self removeResponse:response resourceGroup:resourceGroup];
 			});
 		}];
-		dispatch_semaphore_signal(launch_semaphore);
 	});
 }
 

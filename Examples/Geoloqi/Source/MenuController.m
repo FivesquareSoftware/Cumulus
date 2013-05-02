@@ -50,7 +50,8 @@
 #pragma mark - Actions
 
 - (IBAction)logOut:(id)sender {
-	self.appDelegate.service.authProviders = nil;
+	CMOAuth2AuthProvider *authProvider = [self.appDelegate.service.authProviders lastObject];
+	authProvider.token = nil;
 	[[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"authToken"];
 	[self performSegueWithIdentifier:@"showLoginController" sender:self];
 }

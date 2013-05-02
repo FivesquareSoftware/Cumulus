@@ -82,6 +82,9 @@
 	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
 }
 
+- (void) shouldWaitForRequestsLaunchedFromRequestCompletionBlocks {
+	STAssertTrue(NO, @"Unimplemented");
+}
 
 
 

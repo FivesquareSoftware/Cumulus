@@ -37,7 +37,8 @@
 @class CMResponse;
 
 /** A block that is called after the request is marshalled but before the connection is started. You can use this block to do things like modify request headers or cause a request to abort. 
- *  @return YES if the request should run.
+ *  @returns YES if the request should run.
+ *  @note Runs on the main thread.
  */
 typedef BOOL (^CMPreflightBlock)(CMRequest *request);
 

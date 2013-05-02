@@ -37,7 +37,7 @@ get '/index' do
 end
 
 get '/slow' do
-  sleep(5)
+  sleep(1)
 end
 
 get '/superslow' do

@@ -419,7 +419,7 @@ static NSUInteger requestCount = 0;
     self.canceled = YES;
 
 //	[self.connection cancel];
-	// strangely, not calling this on the main thread will cause other calls to dispatch on the main thread (like to completion block) to deadlock, freakish
+	// strangely, *NOT* calling this on the main thread will cause other calls to dispatch on the main thread (like to completion block) to deadlock, freakish, something about the connection needing to be canceled on the same runloop it was canceled on?
 	[self.connection performSelectorOnMainThread:@selector(cancel) withObject:nil waitUntilDone:NO];
     [self handleConnectionFinished];
 }
