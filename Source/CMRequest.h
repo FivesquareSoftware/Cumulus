@@ -125,9 +125,11 @@
 
 
 // ========================================================================== //
-/** @name Lifecycle Handlers */
+/** @name Lifecycle  */
 // ========================================================================== //
 
+/** When this property is set, the receiver will observe teh value, and if it becomes zeroed out, the receiver cancels itself. */
+@property (nonatomic,weak) id scope;
 
 /** This block gets called every time the connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite: delegate method is invoked. */
 @property (copy) CMProgressBlock didSendDataBlock;

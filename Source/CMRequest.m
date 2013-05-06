@@ -339,7 +339,9 @@ static NSUInteger requestCount = 0;
 
 #pragma mark - Object
 
-
+- (void)dealloc {
+//    [self removeObserver:self forKeyPath:@"scope"];
+}
 
 - (id) initWithURLRequest:(NSURLRequest*)URLRequest {
     self = [super init];
@@ -357,18 +359,23 @@ static NSUInteger requestCount = 0;
     return self;
 }
 
-//+ (id) startRequestWithURLRequest:(NSURLRequest*)URLRequest queue:(NSOperationQueue *)queue completionBlock:(CMCompletionBlock)block {
-//	CMRequest *request = [[self alloc] initWithURLRequest:URLRequest];
-//	request.completionBlock = block;
-//	[request start];
-//    return request;
-//}
-
 - (NSString *) description {
 	NSURLRequest *request = nil == _URLRequest ? _originalURLRequest : _URLRequest;
-	return [NSString stringWithFormat:@"%@(identifier: '%@') : %@ %@",[super description],_identifier,[request HTTPMethod],[request description]];
+	NSString *stateString;
+	if (self.wasCanceled) {
+		stateString = @"canceled";
+	}
+	else if (self.isFinished) {
+		stateString = @"finished";
+	}
+	else if (self.isStarted) {
+		stateString = @"running";
+	}
+	else {
+		stateString = @"waiting";
+	}
+	return [NSString stringWithFormat:@"%@(identifier: '%@', state: %@) : %@ %@",[super description],_identifier,stateString,[request HTTPMethod],[request description]];
 }
-
 
 
 // ========================================================================== //
@@ -403,7 +410,7 @@ static NSUInteger requestCount = 0;
 		NSTimer *timeoutTimer = [NSTimer timerWithTimeInterval:self.timeout target:self selector:@selector(timeoutFired:) userInfo:nil repeats:NO];
 		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];		
 		self.timeoutTimer = timeoutTimer;
-	}	
+	}
 }
 
 - (void) startWithCompletionBlock:(CMCompletionBlock)block {
@@ -517,8 +524,8 @@ static NSUInteger requestCount = 0;
 //		dispatch_semaphore_signal(process_sema);
 //		dispatch_release(process_sema);
 		dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-		dispatch_queue_t q_current = dispatch_get_current_queue();
-		NSAssert(q != q_current, @"Tried to run response processing on the current queue! ** DEADLOCK **");
+//		dispatch_queue_t q_current = dispatch_get_current_queue();
+//		NSAssert(q != q_current, @"Tried to run response processing on the current queue! ** DEADLOCK **");
 		dispatch_sync(q, ^{
 			[self postProcessResponse:self.responseInternal];
 		});
