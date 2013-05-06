@@ -12,7 +12,8 @@ extern NSString *kCMResourceContextKey;
 
 @class CMResource;
 
-/** A resource group is used to coordinate a series of requests together, dispatching a completion block with the overal status of those requests when they are finished. */
+/** A resource context is used to coordinate a series of requests by either grouping them and waiting until they are complete or by scoping their lifecycle to the existence of an arbitratry scope object; when that object disappears remaining requests are automatically canceled. 
+ */
 @interface CMResourceContext : NSObject
 
 /// Used to identify the receiver
