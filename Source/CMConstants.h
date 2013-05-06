@@ -48,20 +48,20 @@
 
 #if TARGET_OS_IPHONE
 	#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
-		#define ARC_SUPPORTS_DISPATCH_OBJECTS 1
+		#define kCumulusARCHandlesDispatchObjects 1
 	#else
-		#define ARC_SUPPORTS_DISPATCH_OBJECTS 0
+		#define kCumulusARCHandlesDispatchObjects 0
 	#endif
 #else
 	#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1080
-		#define ARC_SUPPORTS_DISPATCH_OBJECTS 1
+		#define kCumulusARCHandlesDispatchObjects 1
 	#else
-		#define ARC_SUPPORTS_DISPATCH_OBJECTS 0
+		#define kCumulusARCHandlesDispatchObjects 0
 	#endif
 #endif
 
 
-#if ARC_SUPPORTS_DISPATCH_OBJECTS
+#if kCumulusARCHandlesDispatchObjects
 	#ifdef dispatch_release
 		#undef dispatch_release
 	#endif
