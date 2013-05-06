@@ -315,7 +315,7 @@
 	__block BOOL complete = NO;
 	__weak CMRequest *weakRequest = request;
 	request.didReceiveDataBlock = ^(CMProgressInfo *progressInfo) {
-		NSLog(@"");
+		NSLog(@"progress: %@",progressInfo.progress);
 		if (progressInfo.progress.floatValue > 0.f) {
 			[weakRequest cancel];
 		}
@@ -332,6 +332,16 @@
 	STAssertFalse(complete,@"Interrupted request should not have been complete");
 }
 
+- (void) shouldReturnRequestQueryStringAsADictionary {
+	NSString *endpoint = [NSString stringWithFormat:@"%@/index?foo=bar",kTestServerHost];
+	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
+	[URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
+	
+	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
+	NSDictionary *query = @{ @"foo" : @"bar" };
+	
+    STAssertTrue([query isEqualToDictionary:request.queryDictionary], @"Request query dictionary should equal sent dictionary");
+}
 
 
 @end

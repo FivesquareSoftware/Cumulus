@@ -1,0 +1,282 @@
+//
+//  CMResourceContextSpec.m
+//  Cumulus
+//
+//  Created by John Clayton on 8/28/12.
+//  Copyright 2012 Fivesquare Software, LLC. All rights reserved.
+//
+
+#import "CMResourceContextSpec.h"
+
+// This class will be instantiated for you and made available in the property "self.specHelper", store your cross-test data and helper methods there
+#import "SpecHelper.h"
+
+
+#import <SenTestingKit/SenTestingKit.h>
+#import <objc/runtime.h>
+
+@interface CMResourceContext (Specs)
+@property (nonatomic, copy) void(^shutdownHook)();
+@end
+@implementation CMResourceContext (Specs)
+- (void)dealloc {
+	if (self.shutdownHook) {
+		self.shutdownHook();
+	}
+}
+static const NSString *kNSObject_CMResourceContext_shutdownHook;
+@dynamic shutdownHook;
+- (void(^)()) shutdownHook {
+	id shutdownHookObject = objc_getAssociatedObject(self, &kNSObject_CMResourceContext_shutdownHook);
+	return (void(^)())shutdownHookObject;
+}
+- (void) setShutdownHook:(void (^)())shutdownHook {
+	id shutdownHookObject = (id)shutdownHook;
+	objc_setAssociatedObject(self, &kNSObject_CMResourceContext_shutdownHook, shutdownHookObject, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+@end
+
+
+@interface MyScopeObject : NSObject
+@property (nonatomic, copy) void(^shutdownHook)();
+@end
+@implementation MyScopeObject
+- (void)dealloc {
+	if (_shutdownHook) {
+		_shutdownHook();
+	}
+}
+@end
+
+@implementation CMResourceContextSpec
+
++ (NSString *)description {
+    return @"Resource groups";
+}
+
+// ========================================================================== //
+
+#pragma mark - Setup and Teardown
+
+
+- (void)beforeAll {
+    // set up resources common to all examples here
+}
+
+- (void)beforeEach {
+    // set up resources that need to be initialized before each example here
+	self.service = [CMResource withURL:kTestServerHost];
+	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+}
+
+- (void)afterEach {
+    // tear down resources specific to each example here
+}
+
+
+- (void)afterAll {
+    // tear down common resources here
+}
+
+// ========================================================================== //
+
+#pragma mark - Specs
+
+
+
+- (void) shouldPerformSomeWorkAndRunCompletionBlock {
+	[self runGroupAndAssert];
+}
+
+- (void) shouldRunMultipleWorkBlocksConcurrentlyWithoutMixingThemUp {
+	for (int i = 0; i < 10; i++) {
+		[self runGroupAndAssert];
+	}
+}
+
+- (void) shouldNotExistLongerThanGroupWorkWhenNotRetained {
+	dispatch_semaphore_t context_semaphore = dispatch_semaphore_create(0);
+
+	__weak CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+	context.shutdownHook = ^{
+		dispatch_semaphore_signal(context_semaphore);
+	};
+	
+	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	
+	[context performRequestsAndWait:^() {
+		CMResource *index = [self.service resource:@"index"];
+		[index get];
+		
+		CMResource *item = [self.service resource:@"test/get/item"];
+		[item getWithCompletionBlock:nil];
+		
+	} withCompletionBlock:^(BOOL success, NSSet *responses) {
+		dispatch_semaphore_signal(group_semaphore);
+	}];
+	
+	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(group_semaphore);
+	
+	[self.specRunner deferResult:self.currentResult untilDone:^{
+		dispatch_semaphore_wait(context_semaphore, DISPATCH_TIME_FOREVER);
+		dispatch_release(context_semaphore);
+		STAssertNil(context, @"Context should no longer exist!");
+	}];
+}
+
+- (void) shouldCancelRequestsWhenTheirScopeDisappears {
+
+	dispatch_semaphore_t scope_semaphore = dispatch_semaphore_create(0);
+
+	CMResourceContext *context = [CMResourceContext withName:@"Testing Scope"];
+	
+	MyScopeObject *scope = [MyScopeObject new];
+	scope.shutdownHook = ^{
+		dispatch_semaphore_signal(scope_semaphore);
+	};
+
+
+	NSMutableSet *requests = [NSMutableSet new];
+	NSMutableArray *requestIDs = [NSMutableArray new];
+
+	CMResource *smallResource = [self.service resource:@"crazyslow"];
+	smallResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	smallResource.preflightBlock = ^(CMRequest *request) {
+		[requestIDs addObject:request.identifier];
+		[requests addObject:request];
+		return YES;
+	};
+	
+	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
+	
+	[context performRequests:^{
+//		for (int i = 0; i < 25; i++) {
+			[smallResource getWithCompletionBlock:nil];
+//		}
+		dispatch_semaphore_signal(launch_semaphore);
+	} inScope:scope];
+	
+	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(launch_semaphore);
+	
+	scope = nil;
+	
+	
+	[self.specRunner deferResult:self.currentResult untilDone:^{
+		dispatch_semaphore_wait(scope_semaphore,DISPATCH_TIME_FOREVER);
+		
+//		CMRequest *lastRequest = [[requests objectsPassingTest:^BOOL(CMRequest *obj, BOOL *stop) {
+//			return obj.identifier == [requestIDs lastObject];
+//		}] anyObject];
+//		CMRequest *anyRequest = [requests anyObject];
+		
+		__block BOOL anyRequestCanceled = NO;
+		__block BOOL running = NO;
+		do {
+			[requests enumerateObjectsUsingBlock:^(CMRequest *obj, BOOL *stop) {
+				if (anyRequestCanceled == NO && obj.wasCanceled) {
+					anyRequestCanceled = YES;
+				}
+				if (NO == obj.isFinished) {
+					*stop = YES;
+					running = YES;
+					return;
+				}
+				else {
+					running = NO;
+				}
+			}];
+			if (running) {
+				[NSThread sleepForTimeInterval:.01];
+			}
+			
+		} while (running == YES);
+
+		
+		dispatch_release(scope_semaphore);
+//		STAssertTrue(lastRequest.wasCanceled, @"Request should have been canceled: %@",lastRequest);
+		STAssertTrue(anyRequestCanceled, @"At least one request should have been canceled: %@",requests);
+	}];
+}
+
+
+
+/* No, does not behave like this
+- (void) shouldWaitForRequestsLaunchedFromRequestCompletionBlocks {
+
+	CMResourceContext *group = [CMResourceContext withName:@"Subrequest Group"];
+	
+	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	__block BOOL localSuccess = NO;
+	__block NSArray *localResponses = nil;
+	__block BOOL completionBlockRan = NO;
+	__block BOOL subCompletionBlockRan = NO;
+	
+	[group performWork:^(CMResourceContext *group) {
+		CMResource *item = [self.service resource:@"test/get/item"];
+		[item getWithCompletionBlock:^(CMResponse *response) {
+			completionBlockRan = YES;
+			CMResource *index = [self.service resource:@"index"];
+			[index getWithCompletionBlock:^(CMResponse *response) {
+				subCompletionBlockRan = YES;
+			}];
+		}];
+		
+	} withCompletionBlock:^(BOOL success, NSArray *responses) {
+		localSuccess = success;
+		localResponses = responses;
+		dispatch_semaphore_signal(group_semaphore);
+	}];
+	
+	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(group_semaphore);
+	
+	STAssertTrue(localSuccess, @"Group should have succeeded");
+	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
+	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
+	STAssertTrue(subCompletionBlockRan, @"Completion block of asynchronous sub request should have run");
+}
+
+*/
+
+// ========================================================================== //
+
+#pragma mark - Helpers
+
+
+- (void) runGroupAndAssert {
+	CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+	
+	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	__block BOOL localSuccess = NO;
+	__block NSSet *localResponses = nil;
+	__block BOOL completionBlockRan = NO;
+	
+	[context performRequestsAndWait:^() {
+		CMResource *index = [self.service resource:@"index"];
+		[index get];
+		
+		CMResource *item = [self.service resource:@"test/get/item"];
+		[item getWithCompletionBlock:^(CMResponse *response) {
+			completionBlockRan = YES;
+		}];
+		
+	} withCompletionBlock:^(BOOL success, NSSet *responses) {
+		localSuccess = success;
+		localResponses = responses;
+		dispatch_semaphore_signal(group_semaphore);
+	}];
+	
+	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(group_semaphore);
+	
+	STAssertTrue(localSuccess, @"Group should have succeeded");
+	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
+	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
+}
+
+
+
+
+@end

@@ -90,6 +90,21 @@
 	STAssertEqualObjects(self.child.mergedHeaders, headers, @"Child headers should equal child headers merged with all ancestor headers");
 }
 
+// Query
+
+- (void)shouldInheritQueryFromAllAncestors {
+	[self.ancestor setValue:@"foo" forQueryKey:@"bar"];
+	[self.parent setValue:@"baz" forQueryKey:@"bing"];
+	[self.child setValue:@"ping" forQueryKey:@"pong"];
+	
+	NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:@"foo" forKey:@"bar"];
+	[query setValue:@"baz" forKey:@"bing"];
+	STAssertEqualObjects(self.parent.mergedQuery, query, @"Parent headers should equal parent headers merged with ancestor's headers");
+	
+	[query setValue:@"ping" forKey:@"pong"];
+	STAssertEqualObjects(self.child.mergedQuery, query, @"Child headers should equal child headers merged with all ancestor headers");
+}
+
 // Auth
 
 - (void)shouldInheritAuthProvidersFromAllParents {	
