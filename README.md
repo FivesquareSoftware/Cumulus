@@ -5,7 +5,7 @@
 
 ## About
 
-Cumulus for Objective C provides a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a resource. Because Cumulus exposes the bare metal of HTTP, and is so interchangeable, it is an excellent too to build higher level libraries on top of.
+Cumulus for Objective C provides a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a remote resource. Because Cumulus exposes the bare metal of HTTP, and is so interchangeable, it is an excellent too to build higher level libraries on top of.
 
 #### Designed for Speed
 

@@ -16,7 +16,7 @@
 	NSMutableString *queryString = [NSMutableString new];
 	[[self allKeys] enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
 		NSObject *value = [self objectForKey:key];
-		[queryString appendFormat:@"%@%@",((idx > 0) ? @"&" : @""),[value queryWithKey:key]];
+		[queryString appendFormat:@"%@%@",((idx > 0) ? @"&" : @""),[value queryEncodingWithKey:key]];
 	}];
 	return queryString;
 }

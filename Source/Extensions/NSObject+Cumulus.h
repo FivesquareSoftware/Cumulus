@@ -10,6 +10,11 @@
 
 @interface NSObject (Cumulus)
 
-- (NSString *) queryWithKey:(NSString *)key;
+- (NSString *) queryEncodingWithKey:(NSString *)key;
+
+/** Performs a block of requests in the scope of the receiver: when the receiver is deallocated, any remaining requests are canceled. 
+ *  @see [CMResourceContext performRequests:inScope:]
+ */
+- (void) performRequestsInScope:(void(^)())work;
 
 @end

@@ -67,7 +67,7 @@
 #import "CMTypes.h"
 #import "CMConstants.h"
 
-#import "CMResourceGroup.h"
+#import "CMResourceContext.h"
 #import "CMResource.h"
 #import "CMRequest.h"
 #import "CMDownloadRequest.h"

@@ -1,5 +1,5 @@
 //
-//  CMResourceGroup.h
+//  CMResourceContext.h
 //  Cumulus
 //
 //  Created by John Clayton on 8/28/12.
@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *kCMResourceContextKey;
+
 @class CMResource;
 
 /** A resource group is used to coordinate a series of requests together, dispatching a completion block with the overal status of those requests when they are finished. */
-@interface CMResourceGroup : NSObject
+@interface CMResourceContext : NSObject
 
 /// Used to identify the receiver
 @property (nonatomic, strong) NSString *name;
@@ -19,10 +21,17 @@
 
 + (id) withName:(NSString *)name;
 
-/** Submits a block of work to the receiver's private serial queue. The array of all response objects from requests launched during the block is collected and passed to the completion block, along with a summary of group success/failure. 
- *  @param groupWork A series of requests made with CMResource objects that you wish to coordinate and get notified of on completion.
- *  @note Only requests launched during the execution of the top level block are included in the scope of the work. For example, if you launch a new request from the completion block of an asynchronous request launched inside the work block, the group does not wait for that request to complete, nor is it part of any subsequent work scope.
+/** Submits a block of work to the receiver's private queue. The array of all response objects from requests launched during the block is collected and passed to the completion block, along with a summary of group success/failure. 
+ *  @param work A block containing a series of requests made with CMResource objects that you wish to coordinate and get notified of on completion.
+ *  @note Only requests launched during the execution of the top level block are included in the scope of the work. For example, if you launch a new request from the completion block of an asynchronous request launched inside the work block, the receiver does not wait for that request to complete, nor is it part of any subsequent work scope.
  */
-- (void) performWork:(void(^)(CMResourceGroup *group))groupWork withCompletionBlock:(void(^)(BOOL success, NSArray *responses))completionBlock;
+- (void) performRequestsAndWait:(void(^)())work withCompletionBlock:(void(^)(BOOL success, NSSet *responses))completionBlock;
+
+/** Performs a block of requests in the scope of the receiver: when the receiver is deallocated, any remaining requests are canceled.
+ *  @param work A block containing a series of requests made with CMResource objects that you wish to scope to the lifetime of the scope parameter.
+ *  @param scope An object whose lifetime will define the scope of any requests launched at the top level of the work block; when scope is deallocated, any running requests are canceled.
+ *  @note Only requests launched during the execution of the top level block are included in the scope of the work. For example, if you launch a new request from the completion block of an asynchronous request launched inside the work block, the receiver does not control the lifecycle of that request, nor is it part of any subsequent work scope.
+*/
+- (void) performRequests:(void(^)())work inScope:(id)scope;
 
 @end

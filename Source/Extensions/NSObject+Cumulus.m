@@ -8,11 +8,12 @@
 
 #import "NSObject+Cumulus.h"
 
+#import "CMResourceContext.h"
 #import "NSDictionary+Cumulus.h"
 
 @implementation NSObject (Cumulus)
 
-- (NSString *) queryWithKey:(NSString *)key {
+- (NSString *) queryEncodingWithKey:(NSString *)key {
 	NSString *queryString = nil;
 	if ([self isKindOfClass:[NSArray class]]) {
 		NSMutableString *arrayString = [NSMutableString new];
@@ -20,14 +21,22 @@
 			[arrayString appendFormat:@"%@%@[]=%@",((idx > 0) ? @"&" : @""), key,[value description]];
 		}];
 		queryString = [NSString stringWithString:arrayString];
-	} else if ([self isKindOfClass:[NSString class]]) {
+	}
+	else if ([self isKindOfClass:[NSString class]]) {
 		queryString = [NSString stringWithFormat:@"%@=%@",key,self];
-	} else if ([self isKindOfClass:[NSDictionary class]]) {
+	}
+	else if ([self isKindOfClass:[NSDictionary class]]) {
 		queryString = [(NSDictionary *)self toQueryString];
-	} else {
+	}
+	else {
 		queryString = [NSString stringWithFormat:@"%@=%@",key,[self description]];
 	}
 	return queryString;
+}
+
+- (void) performRequestsInScope:(void(^)())work {
+	CMResourceContext *context = [CMResourceContext withName:[NSString stringWithFormat:@"%@.%p",NSStringFromClass([self class]),self]];
+	[context performRequests:work inScope:self];
 }
 
 

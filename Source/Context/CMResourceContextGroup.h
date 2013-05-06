@@ -8,6 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@class CMResponse;
+
 @interface CMResourceContextGroup : NSObject
+
+@property (nonatomic, copy) id identifier;
+@property (nonatomic, readonly) NSSet *responses;
+
+- (void) enter;
+- (void) leaveWithResponse:(CMResponse *)response;
+- (void) wait;
 
 @end

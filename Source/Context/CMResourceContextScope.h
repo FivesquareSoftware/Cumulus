@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CMResourceScope : NSObject
-
+@interface CMResourceContextScope : NSObject
+@property (nonatomic, copy) void(^shutdownHook)();
++ (id) withScopeObject:(id)scopeObject;
 @end
+
+@interface NSObject (CMResourceContextScope)
+@property (nonatomic, strong) CMResourceContextScope *CMResourceScope;
+@end
+
