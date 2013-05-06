@@ -41,6 +41,10 @@ get '/slow' do
 end
 
 get '/superslow' do
+	sleep(5)
+end
+
+get '/crazyslow' do
 	sleep(20)
 end
 
