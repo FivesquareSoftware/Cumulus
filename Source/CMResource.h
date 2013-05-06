@@ -40,7 +40,7 @@
 
 
 @class CMResponse;
-@class CMResourceGroup;
+@class CMResourceContext;
 
 /**
  * CMResource is the primary public interface for Cumulus, and each instance is meant to reflect an actual resource residing on the Internet, generally accessed via a REST web service. 
@@ -70,22 +70,20 @@
  *
  * ### Query Strings
  *
- * To make it easier to reuse resource objects, you can pass a query argument—consisting either of a single dictionary or an array of values and keys—to one of the HTTP request methods, like getWithQuery: and it will be expanded for you to a query string for the request. The expansion follows these rules:
+ * To make it easier to reuse resource objects, you can set a query dictionary that will be converted to a query string for every request. You may also pass a dictionary to to one of the HTTP request methods, like getWithQuery: and it will be expanded for you to a query string (after being merged with any persistent query object) for just that request. 
+ *
+ *  The expansion of values in the dictionary is performed by [NSObject queryStringEncodingForKey:], and roughly follows these rules:
  *
  *    - NSString - \<key\>=\<value\>
  *    - NSArray - \<key\>[]=\<value1\>&\<key\>[]=\<value2\>&...
  *    - NSObject - \<key\>=\<[value description]\>
- *    - NSDictionary - dictionary values are transformed recursively using the above rules, and query list processing is terminated.
+ *    - NSDictionary - dictionary values are transformed recursively using the above rules.
  *
  *  For example, the following message:
  *
- *		[resource getWithQuery:@[@"foo",@"bar",@"baz",@"bat"]]
+ *		[resource getWithQuery:@{ @"foo" : @"bar" } ]
  *
- *  would yield ?foo=bar&baz=bat, while 
- *
- *		[resource getWithQuery:@[ @{ @"foo" : @"bar" }, @"baz", @"bat"] ]
- *
- *  would yield only ?foo=bar because the dictionary terminated argument processing. Notice that the order of parameter names and values is reversed when you pass a dictionary, because the values come before the keys in the dictionary constructors themselves.
+ *  would yield a query string of ?foo=bar.
  *
  * ### Fixtures
  *
@@ -182,8 +180,15 @@
 // ========================================================================== //
 
 
-/** Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. */
+/** The headers specific to the receiver. 
+ *  @note Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors' headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. 
+ */
 @property (nonatomic, strong) NSMutableDictionary *headers;
+
+/** A query dictionary for the receiver that will be appended to every request as a query string. This attribute is best avoided avoided except to accomodate those circumstances where a non-conforming service requires data more correctly placed in headers (access keys, service versions, etc.) to be in a query string.
+ *  @note When building a request, the receiver's query string will be merged with all of its ancestors' query strings with any conflicts resolved in favor of the resource farthest down the inheriticance chain. If one of the request methods that takes a query string was also used, the resulting dictionary will be merged again with the supplied query object.
+ */
+@property (nonatomic, strong) NSMutableDictionary *query;
 
 
 /** If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses. The underlying URL request also has this value set for #timeoutInterval, which means that (except in the case of POST requests for which the system overrides #timeoutInterval) the request will quit if it has been idle for this length of time. */
@@ -209,12 +214,19 @@
 /** Convenience method for setting a single header.
  *  @param value A string or any object that responds to #description. May be nil.
  *  @param key The header field name.
- *  @note If value is nil, this will remove the header from the receive. If value is not a string, it will have #description called on it before being set to the headers. (All headers are ultimately strings)
+ *  @note If value is nil, this will remove the header from the receive's headers. If value is not a string, it will have #description called on it before being set to the headers. (All headers are ultimately strings)
  */
 - (void) setValue:(id)value forHeaderField:(NSString *)key;
 
 /** Convenience method for returning the value of a single header. */
 - (id) valueForHeaderField:(NSString *)key;
+
+/** A convenience for setting query values and keys.
+ *  @param value Any object that can be converted to a query string fragment using the logic in [NSObject queryEncodingWithKey:]. May be nil.
+ *  @param key The query key name.
+ *  @note If value is nil, this will remove the value from the receiver's query. The value will have queryEncodingWithKey: called on it when the query string is assembled for a request.
+ */
+- (void) setValue:(id)value forQueryKey:(NSString *)key;
 
 /** Adds authProvider to the end of the provider list. */
 - (void) addAuthProvider:(id<CMAuthProvider>)authProvider;
@@ -268,16 +280,18 @@
 
 - (CMResponse *) get;
 - (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock;
-//- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
 - (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
-//- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock scope:(id)scopeObject;
 
-/** @param query - may be either a single dictionary or an array of alternating values and keys. */
-- (CMResponse *) getWithQuery:(id)query ;
-/// @see getWithQuery:
-- (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query ;
-/// @see getWithQuery:
-- (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query ;
+/** Make a request with additional query data used for just this request. Does not affect the receiver's #query dictionary.
+ *  @note the supplied query object is merged with the receiver's (already) merged query if there is one.
+ *  @param query A dictionary of keys and values. 
+ */
+- (CMResponse *) getWithQuery:(NSDictionary *)query;
+/** @see getWithQuery: */
+- (id) getWithQuery:(NSDictionary *)query completionBlock:(CMCompletionBlock)completionBlock;
+/** @see getWithQuery: */
+- (id) getWithQuery:(NSDictionary *)query progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
 
 
 // HEAD
@@ -285,21 +299,19 @@
 - (CMResponse *) head;
 - (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock;
 
-/** @param query - may be either a single dictionary or an array of alternating values and keys. */
-- (CMResponse *) headWithQuery:(id)query;
-/// @see headWithQuery:
-- (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
+/** Make a request with additional query data used for just this request. Does not affect the receiver's #query dictionary.
+ *  @note the supplied query object is merged with the receiver's (already) merged query if there is one.
+ *  @param query A dictionary of keys and values.
+ */
+- (CMResponse *) headWithQuery:(NSDictionary *)query;
+/** @see headWithQuery: */
+- (id) headWithQuery:(NSDictionary *)query completionBlock:(CMCompletionBlock)completionBlock;
 
 
 // DELETE
 
 - (CMResponse *) delete;
 - (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock;
-
-/** @param query - may be either a single dictionary or an array of alternating values and keys. */
-- (CMResponse *) deleteWithQuery:(id)query;
-/// @see deleteWithQuery:
-- (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
 
 
 // POST
@@ -308,12 +320,6 @@
 - (id) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
 - (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-/** @param query - may be either a single dictionary or an array of alternating values and keys. */
-- (CMResponse *) post:(id)payload withQuery:(id)query;
-/// @see post:withQuery:
-- (id) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
-/// @see post:withQuery:
-- (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query;
 
 
 // PUT
@@ -321,13 +327,6 @@
 - (CMResponse *) put:(id)payload;
 - (id) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock;
 - (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
-
-/** @param query - may be either a single dictionary or an array of alternating values and keys. */
-- (CMResponse *) put:(id)payload withQuery:(id)query;
-/// @see put:withQuery:
-- (id) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock query:(id)query;
-/// @see put:withQuery:
-- (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock query:(id)query;
 
 
 
