@@ -22,7 +22,7 @@
 You can set up a base resource for other resources to inherit, or to use directly.
 
 ```objective-c 
-RCResource *site = [RCResource withURL:@"http://example.com"];
+CMResource *site = [CMResource withURL:@"http://example.com"];
 // Health check
 [site getWithCompletionBlock:^(RCResponse *response){
 	if (NO == response.success) {
@@ -42,23 +42,23 @@ site.timeout = 20;
 Create child resources using the `-resource:` method with a relative path (which can be any object that will output a useful description).
 
 ```objective-c 
-RCResource *users = [site resource:@"users"];
-RCResource *posts = [site resource:@"posts"];
-RCResource *one = [site resource:@(1)];
+CMResource *users = [site resource:@"users"];
+CMResource *posts = [site resource:@"posts"];
+CMResource *one = [site resource:@(1)];
 ```
 
 `resourceWithFormat:` allows you to use format strings to create child resources.
 
 ```objective-c 
-RCResource *user123 = [site _resourceWithFormat:@"users/%@",[NSNumber numberWithInt:123]];
-RCResource *todaysPosts = [site _resourceWithFormat:@"posts/%@",@"today"];
+CMResource *user123 = [site _resourceWithFormat:@"users/%@",[NSNumber numberWithInt:123]];
+CMResource *todaysPosts = [site _resourceWithFormat:@"posts/%@",@"today"];
 ```
 
 Children can have children, ad infinitum...
 
 ```objective-c 
- RCResource *uploads = [posts resource:@"uploads"];
- RCResource *myUploads = [uploads resource:@"123"];
+ CMResource *uploads = [posts resource:@"uploads"];
+ CMResource *myUploads = [uploads resource:@"123"];
 ```
 
 Child resources can override settings inherited from parent resources.
@@ -237,7 +237,7 @@ MyAuthProvider *provider = [[MyAuthProvider alloc] initWithSomeKindOfRelevantDat
 Set up a preflight block to run on all requests for a resource. These are run on the main queue so UI code is OK. Returning NO will abort the request.
 
 ```objective-c 
-RCResource *myProtectedResource = [site resource:@"protected"];
+CMResource *myProtectedResource = [site resource:@"protected"];
 myProtectedResource.preflightBlock = ^(RCRequest * request){
 	if (NO == [accountController authorized:request]) {
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"You need to log in to see this" 
@@ -278,7 +278,7 @@ RCProgressBlock pictureProgressBlock = ^(NSDictionary *progressInfo){
 You can download large files directly to disk.
 
 ```objective-c 
-RCResource *images = [site resource:@"images"];
+CMResource *images = [site resource:@"images"];
 [images downloadWithProgressBlock:nil completionBlock:^(RCResponse *response) {
 	NSURL *downloadedFile = [response.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
 	// Move the file to where you want it
@@ -288,7 +288,7 @@ RCResource *images = [site resource:@"images"];
 Uploads can stream files directly from disk.
 
 ```objective-c 
-RCResource *hero = [self.service resource:@"test/upload/hero"];
+CMResource *hero = [self.service resource:@"test/upload/hero"];
 
 RCProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 	NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
@@ -336,7 +336,7 @@ You can do background work from any of the usual blocks if you want, just by dis
 But you can also transform response results on a non-main queue before they are passed to completion blocks using post processing blocks. These are called on a concurrent queue to achieve the best possible throughput. Use these instead of completion blocks when you know you have significant work to do to process a response's data.
 
 ```objective-c 
-RCResource *pictures = [site resource:@"pictures"];
+CMResource *pictures = [site resource:@"pictures"];
 pictures.postProcessorBlock = ^(id result) {
 	// we know the service returns raw data, and we transform it to a custom type
 	MyImageType *image = [MyImageType receiptWithData:(NSData *)result];
