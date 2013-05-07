@@ -234,7 +234,7 @@
 	
 	NSError *error = response.error;
 	STAssertNotNil(error, @"Error should not be nil");
-	NSNumber *errorStatusCode = [[error userInfo] objectForKey:kRESTCLientHTTPStatusCodeErrorKey];
+	NSNumber *errorStatusCode = [[error userInfo] objectForKey:kCumulusHTTPStatusCodeErrorKey];
 	STAssertEqualObjects([NSNumber numberWithInt:kHTTPStatusBadRequest], errorStatusCode, @"Status code in error should have been %d",kHTTPStatusBadRequest);
 }
 

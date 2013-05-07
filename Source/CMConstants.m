@@ -36,7 +36,7 @@
 #import "CMConstants.h"
 
 NSString *kCumulusErrorDomain = @"CumulusErrorDomain";
-NSString *kRESTCLientHTTPStatusCodeErrorKey = @"Failing HTTP Status Code";
+NSString *kCumulusHTTPStatusCodeErrorKey = @"Failing HTTP Status Code";
 
 NSString *kCumulusHTTPMethodGET = @"GET";
 NSString *kCumulusHTTPMethodPOST = @"POST";

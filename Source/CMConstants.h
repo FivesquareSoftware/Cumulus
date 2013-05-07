@@ -69,7 +69,7 @@
 #endif
 
 extern NSString *kCumulusErrorDomain;
-extern NSString *kRESTCLientHTTPStatusCodeErrorKey;
+extern NSString *kCumulusHTTPStatusCodeErrorKey;
 
 enum  {
 	kCumulusErrorCodeErrorProcessingResponse = 1000

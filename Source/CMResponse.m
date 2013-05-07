@@ -153,7 +153,7 @@
 								  [NSString stringWithFormat:@"Received %@ HTTP Status code",@(_status)], NSLocalizedDescriptionKey
 								  , _request.responseBody, NSLocalizedFailureReasonErrorKey
 								  , [_request.URLResponse URL], NSURLErrorFailingURLErrorKey
-								  , @(_status), kRESTCLientHTTPStatusCodeErrorKey
+								  , @(_status), kCumulusHTTPStatusCodeErrorKey
 								  , nil];
 			_error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:info];
 		}
