@@ -24,7 +24,7 @@ You can set up a base resource for other resources to inherit, or to use directl
 ```objective-c 
 CMResource *site = [CMResource withURL:@"http://example.com"];
 // Health check
-[site getWithCompletionBlock:^(RCResponse *response){
+[site getWithCompletionBlock:^(CMResponse *response){
 	if (NO == response.success) {
 		NSLog(@"The site is down!");
 	}
@@ -71,7 +71,7 @@ uploads.timeout = 60;
 Create single resources anonymously if you just want to use them once.
 
 ```objective-c 
-RCResponse *response = [[site resource:@"accounts/abc123"] get];
+CMResponse *response = [[site resource:@"accounts/abc123"] get];
 ```
 
 [Top &#x2191;][top]
@@ -84,7 +84,7 @@ RCResponse *response = [[site resource:@"accounts/abc123"] get];
 Call HTTP methods on resources with blocks to run the requests asynchronously.
 
 ```objective-c 
-[posts getWithCompletionBlock:^(RCResponse *response){
+[posts getWithCompletionBlock:^(CMResponse *response){
 	NSArray *result = response.result;
 	for (id posts in result) {
 		NSLog(post);
@@ -95,14 +95,14 @@ Call HTTP methods on resources with blocks to run the requests asynchronously.
 Or, make synchronous requests to handle responses inline:
 
 ```objective-c 
-RCResponse *response = [posts get];
+CMResponse *response = [posts get];
 NSLog(@"posts: %@",response.result);
 ```
 
 Blocks are well typed, so you can reuse them.
 
 ```objective-c 
-RCCompletionBlock mappingBlock = ^(RCResponse *response) {
+RCCompletionBlock mappingBlock = ^(CMResponse *response) {
 	MyMapper *mapper = [MyMapper withClass:[MyModelObject class]];
 	MyModelObject *object = [mapper map:response.result];
 	[object save];
@@ -114,7 +114,7 @@ RCCompletionBlock mappingBlock = ^(RCResponse *response) {
 Completion blocks run when a request is complete, regardless of whether it was a success or failure. These are called on the main queue so you can interface safely with UI code.
 
 ```objective-c 
-[posts getWithCompletionBlock:^(RCResponse *response) {
+[posts getWithCompletionBlock:^(CMResponse *response) {
 	// it's safe to call UI code here
 	if (response.success) {
 		[myController reload:response.result];
@@ -131,14 +131,14 @@ PUT and POST take payloads, which are just native Cocoa objects, of any kind.
 NSDictionary *payload = [NSDictionary dictionaryWithObjectsAndKeys:
 							@"me",@"username",@"test",@"password",nil];
 
-[myAccount post:payload completionBlock:^(RCResponse *response) {
+[myAccount post:payload completionBlock:^(CMResponse *response) {
    if (NO == [response isOK]) {
 	   // could not create account 
    }
 }];
 
 id accountInformation = ...;
-RCResponse *response = [myAccount put:accountInformation];
+CMResponse *response = [myAccount put:accountInformation];
 if ([response isOK]) {
 	NSLog(@"Updated myAccount: %@",response.result);
 }
@@ -147,7 +147,7 @@ if ([response isOK]) {
 All of the HTTP methods take an optional query object, which can be an array or dictionary.
 
 ```objective-c 
-RCResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:@"bar",@"foo",@"today",@"date",nil]];
+CMResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:@"bar",@"foo",@"today",@"date",nil]];
 ```
 
 will yield a query string like this: "foo=bar&date=today".
@@ -155,13 +155,13 @@ will yield a query string like this: "foo=bar&date=today".
 A single dictionary could also produce a similar result:
 
 ```objective-c 
-RCResponse *response = [posts getWithQuery:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"]];
+CMResponse *response = [posts getWithQuery:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"]];
 ```
 
 However, anything after a dictionary is ignored.
 
 ```objective-c 
-RCResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"today",@"date",nil]];
+CMResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"today",@"date",nil]];
 ```
 
 will yield "foo=bar" and drop the remaining parameters.
@@ -169,7 +169,7 @@ will yield "foo=bar" and drop the remaining parameters.
 Finally, specific objects, like arrays, know how to serialize themselves as query string objects correctly.
 
 ```objective-c 
-RCResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSArray arrayWithObjects:@"1",@"2"],@"foo",@"today",@"date",nil]];
+CMResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSArray arrayWithObjects:@"1",@"2"],@"foo",@"today",@"date",nil]];
 ```
 
 yields this query string: "foo[]=1&foo[]=2&date=today". You can extend this special handling to your own objects by implementing -queryWithKey:.
@@ -263,7 +263,7 @@ RCProgressBlock pictureProgressBlock = ^(NSDictionary *progressInfo){
 	pictureDownloadProgressBar.hidden = NO;
 	pictureDownloadProgressBar.progress = [[progressInfo objectForKey:kCumulusProgressInfoKeyProgress] floatValue];
 }	
-[[pictures resource:@"abc123"] getWithProgressBlock:pictureProgressBlock completionBlock:^(RCResponse *response) {
+[[pictures resource:@"abc123"] getWithProgressBlock:pictureProgressBlock completionBlock:^(CMResponse *response) {
 	pictureDownloadProgressBar.hidden = YES;
 }];
 ```
@@ -279,7 +279,7 @@ You can download large files directly to disk.
 
 ```objective-c 
 CMResource *images = [site resource:@"images"];
-[images downloadWithProgressBlock:nil completionBlock:^(RCResponse *response) {
+[images downloadWithProgressBlock:nil completionBlock:^(CMResponse *response) {
 	NSURL *downloadedFile = [response.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
 	// Move the file to where you want it
 }
@@ -295,7 +295,7 @@ RCProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 	NSLog(@"progress: %@",progress);
 };
 
-RCCompletionBlock completionBlock = ^(RCResponse *response) {
+RCCompletionBlock completionBlock = ^(CMResponse *response) {
 	if (response.success) {
 		NSLog(@"Upload done!");
 	}
@@ -316,7 +316,7 @@ NSURL *fileURL = [NSURL fileURLWithPath:filePath];
 You can do background work from any of the usual blocks if you want, just by dispatching to another queue.
 
 ```objective-c 
-[[posts resource:@(1)] getWithCompletionBlock:^(RCResponse *response){
+[[posts resource:@(1)] getWithCompletionBlock:^(CMResponse *response){
 	if ([response isOK]) {
 		// save something to your database in the background using a dedicated DB mapping queue
 
@@ -344,7 +344,7 @@ pictures.postProcessorBlock = ^(id result) {
 	// response.result is set to the custom image class instead of the original raw data when the block 
 	returns and any completion block will only see the transformed result
 };
-[[pictures resource:@"abc123"] getWithCompletionBlock:^(RCResponse *response) {
+[[pictures resource:@"abc123"] getWithCompletionBlock:^(CMResponse *response) {
 	NSLog(@"Your picture is ready: %@",response.result);
 }];
 ```
@@ -434,11 +434,11 @@ pictures.postProcessorBlock = ^(id result) {
 Maybe you have non-RESTful services, and just need to handle the odd endpoint. You can use the Cumulus class directly.
 
 ```objective-c 
-[Cumulus get:@"http://example.com/products.php?action=list" withCompletionBlock:^(RCResponse *response){
+[Cumulus get:@"http://example.com/products.php?action=list" withCompletionBlock:^(CMResponse *response){
 	// do something with the response
 }];
 
-RCResponse *response = [Cumulus post:@"http://example.com/products.php?action=create" payload:productInformation];
+CMResponse *response = [Cumulus post:@"http://example.com/products.php?action=create" payload:productInformation];
 ```
 
 [Top &#x2191;][top]
@@ -458,11 +458,11 @@ NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSUR
 [URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 
 RCRequest *request = [[RCRequest alloc] initWithURLRequest:URLRequest];
-__block RCResponse *localResponse = nil;
+__block CMResponse *localResponse = nil;
 
 dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
 dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-[request startWithCompletionBlock:^(RCResponse *response) {
+[request startWithCompletionBlock:^(CMResponse *response) {
 	localResponse = response;
 	dispatch_semaphore_signal(request_sema);
 }];
