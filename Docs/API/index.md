@@ -21,7 +21,8 @@ Often you'll configure a base resource—like _site_ above—and use its configu
 	site.password = @"bar";
 
 
-See [the Cumulus README](https://github.com/FivesquareSoftware/Cumulus/blob/master/README.md) for more detailed information and usage.
+See the [Cumulus README](https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/Cumulus-Guide.md) for more detailed information and basic usage.  
+See the [Cumulus Programming Guide](https://github.com/FivesquareSoftware/Cumulus/blob/master/README.md) for detailed usage.  
 
 ## Source
 
@@ -29,9 +30,6 @@ https://github.com/FivesquareSoftware/Cumulus
 
 ## See Also
 
-[Cumulus README](https://github.com/FivesquareSoftware/Cumulus/blob/master/README.md)
-[Cumulus Programming Guide](https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/howto.md)
-[Examples](https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples)
-[FAQs](https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/faq.md)
+[Cumulus Examples](https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples)
 
 

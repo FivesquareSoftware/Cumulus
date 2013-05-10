@@ -1,5 +1,4 @@
 [GUIDE]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/Cumulus-Guide.md (Cumulus Programming Guide)
-[API]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/API/com.fivesquaresoftware.Cumulus.docset (Cumulus API Docset)
 [DEMO]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples (See Example Apps)
 [TESTS]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Tests#readme (Running the Tests)
 
@@ -53,7 +52,7 @@ On iOS, use:
 ```
 Make sure you link the Security framework (to handle certificate based auth) and MobileCoreServices framework (for iOS), or CoreServices framework (for Mac OS).
 
-You must use the -ObjC linker flag (at least, you could also use -force_load=Cumulus or -all_load if you wanted to be more agressive) in order to link in the categories defined in Cumulus.
+You must use the -ObjC linker flag (at least, you could also use -force_load="${BUILT_PRODUCTS_DIR}/libCumulus.a" or -all_load if you wanted to be more agressive) in order to link in the categories defined in Cumulus.
 
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding Cumulus as a submodule, `git submodule update --recursive`) to be sure to fetch Cumulus's own externals as these are required for the specs to run.
 
@@ -164,10 +163,11 @@ posts.contentType = CMContentTypeJSON;
 Cumulus does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
 
 
-### Links
+### Documentation
 
-[Cumulus Programming Guide][GUIDE]  
-[Xcode Docset][API]  
+You can install the Cumulus Xcode docset by running the "Install Cumulus Docs" scheme in Xcode.
+
+[Cumulus Programming Guide][GUIDE]
 [Example Apps][DEMO]  
 [Running the Tests][TESTS]  
 

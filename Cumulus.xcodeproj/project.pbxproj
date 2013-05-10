@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		A45489DC17285D63001A032D /* Cumulus Docs */ = {
+		A45489DC17285D63001A032D /* Install Cumulus Docs */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = A45489DF17285D63001A032D /* Build configuration list for PBXAggregateTarget "Cumulus Docs" */;
+			buildConfigurationList = A45489DF17285D63001A032D /* Build configuration list for PBXAggregateTarget "Install Cumulus Docs" */;
 			buildPhases = (
 				A45489E017285D7E001A032D /* Run Script */,
 			);
 			dependencies = (
 			);
-			name = "Cumulus Docs";
+			name = "Install Cumulus Docs";
 			productName = "Generate Docs";
 		};
 /* End PBXAggregateTarget section */
@@ -280,7 +280,6 @@
 		A468A773149FA73900612DA9 /* CMClientCertificateAuthProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMClientCertificateAuthProvider.m; sourceTree = "<group>"; };
 		A47598121717CA2200A385F3 /* AppledocSettings.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppledocSettings.plist; sourceTree = SOURCE_ROOT; };
 		A481AD1D173D56B500106D7F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		A498296A1727AABA001E1F07 /* index.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = index.md; sourceTree = "<group>"; };
 		A49D484114B4BD8B0045D66F /* NSObject+Cumulus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Cumulus.h"; sourceTree = "<group>"; };
 		A49D484214B4BD8B0045D66F /* NSObject+Cumulus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Cumulus.m"; sourceTree = "<group>"; };
 		A4A22271148AA893001726E4 /* CMRequest+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CMRequest+Protected.h"; sourceTree = "<group>"; };
@@ -327,7 +326,6 @@
 		A4D17DF315533E880063B061 /* CMFixtureSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMFixtureSpec.m; sourceTree = "<group>"; };
 		A4D17EAF155481E20063B061 /* CMFixtureDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMFixtureDownloadRequest.h; sourceTree = "<group>"; };
 		A4D17EB0155481E20063B061 /* CMFixtureDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMFixtureDownloadRequest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		A4D26F61149274530005DFE3 /* Cumulus-Guide.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Cumulus-Guide.md"; sourceTree = "<group>"; };
 		A4D40019141BBA8500E58873 /* run.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run.sh; sourceTree = "<group>"; };
 		A4D4FFC6141A5A4E00E58873 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		A4DDC499173818A4005FC42D /* CMResourceContextScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMResourceContextScope.h; sourceTree = "<group>"; };
@@ -406,7 +404,6 @@
 			children = (
 				A481AD1D173D56B500106D7F /* README.md */,
 				A40F3702144DCB9000FA723B /* LICENSE */,
-				A47598131717D7BF00A385F3 /* Docs */,
 				A414FD4713DB459200F96152 /* Source */,
 				A46269B614199082005544D6 /* Tests */,
 				A4F536B21624A15F000B7B78 /* Tools */,
@@ -628,23 +625,6 @@
 				A4A8CC5A147ED16D00BE6C0E /* Resources */,
 			);
 			path = Target;
-			sourceTree = "<group>";
-		};
-		A47598131717D7BF00A385F3 /* Docs */ = {
-			isa = PBXGroup;
-			children = (
-				A498296B1727AAC7001E1F07 /* API */,
-				A4D26F61149274530005DFE3 /* Cumulus-Guide.md */,
-			);
-			path = Docs;
-			sourceTree = "<group>";
-		};
-		A498296B1727AAC7001E1F07 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				A498296A1727AABA001E1F07 /* index.md */,
-			);
-			path = API;
 			sourceTree = "<group>";
 		};
 		A49D483F14B4BD760045D66F /* Extensions */ = {
@@ -1023,7 +1003,7 @@
 				A414FD4113DB459200F96152 /* CumulusLib */,
 				A43E639D152A47E6006AEBCD /* CumulusFramework */,
 				A46269A014198ED3005544D6 /* CumulusSpecs */,
-				A45489DC17285D63001A032D /* Cumulus Docs */,
+				A45489DC17285D63001A032D /* Install Cumulus Docs */,
 			);
 		};
 /* End PBXProject section */
@@ -1478,7 +1458,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A45489DF17285D63001A032D /* Build configuration list for PBXAggregateTarget "Cumulus Docs" */ = {
+		A45489DF17285D63001A032D /* Build configuration list for PBXAggregateTarget "Install Cumulus Docs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A45489DD17285D63001A032D /* Debug */,

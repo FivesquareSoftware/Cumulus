@@ -14,7 +14,7 @@
 [Mapping Results to Core Data](#core_data)  
 [As a General Purpose HTTP Client](#general_http)  
 [Using Raw Requests](#raw_requests)  
-[Confiuring Logging](#logging)  
+[Configuring Logging](#logging)  
 [Troubleshooting Deadlocks](#troubleshooting)
 
 
