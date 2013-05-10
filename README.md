@@ -186,5 +186,5 @@ Patches are welcome, pull requests make us all excited.
 
 ### Acknowledgements
 
-Lots of inspiration in the interface design of Cumulus was taken from Ruby's [rest-client](https://github.com/rest-client/rest-client/commits/master)
+Lots of inspiration in the interface design of Cumulus was taken from Ruby's [rest-client](https://github.com/rest-client/rest-client/commits/master)  
 Cumulus uses [Appledoc](https://github.com/tomaz/appledoc) for generating API documentation 
