@@ -31,7 +31,7 @@ Cumulus handles the most common cases for you, but provides well defined interfa
 Cumulus was implemented with automatic reference counting (ARC) and uses weak references, as well as new NSURLConnection APIs, so it requires iOS 5 and/or Mac OS 10.7.
 
 
-### Including in Your Project
+## Including in Your Project
 
 #### Building
 
@@ -41,7 +41,7 @@ The best way to include Cumulus is to drag the project into your workspace, then
 
 If you are using the Mac OS framework, the headers are automatically in your header search path. To add them for iOS, add "${SRCROOT}/relative/path/to/Cumulus/Source" to your HEADER_SEARCH_PATHS build setting and check the recursive box.
 
-### Using
+#### Importing
 
 On Mac OS, import Cumulus like this in your source:
 
