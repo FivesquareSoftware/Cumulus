@@ -1,23 +1,22 @@
-[HOWTO]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/howto.md (Cumulus Programming Guide)
-[FAQ]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/faq.md (FAQs)
+[GUIDE]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/Cumulus-Guide.md (Cumulus Programming Guide)
 [DEMO]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples (See Example Apps)
 [TESTS]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Tests#readme (Running the Tests)
 
 ## About
 
-Cumulus for Objective C provides a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a remote resource. Because Cumulus exposes the bare metal of HTTP, and is so interchangeable, it is an excellent too to build higher level libraries on top of.
+Cumulus for Objective C provides a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a remote resource. It is so simple to use that it makes connecting an iOS or Mac app to a Web service stupidly easy. 
 
 #### Designed for Speed
 
-Cumulus was designed from the ground up to use Grand Central Dispatch (CGD) to allow for massive concurrency. 
+Cumulus was designed from the ground up to use Grand Central Dispatch (CGD) allowing for massive concurrency—how fast and how wide you can go is limited by nothing but the hardware and system.
 
 #### Plays Well With Others
 
-It was designed to do one thing only, and one thing well: interact with REST resources and encode/decode the data coming across the wire to/from native, generic types. Because of this, you can drop Cumulus in to any system and it can fill this role without requiring a whole lot of changes to your existing code. It does not provide any kind of caching or persistence layer, no higher-level interface to resources and no UI, but it's so interoperable (via the ubiquitous use of blocks) that you can connect it to these services in a few minutes; in this context, blocks are used much as you would use UNIX pipes to connect different tools.
+It was designed to do one thing only, and one thing well: interact with REST resources and encode/decode the data coming across the wire to/from native, generic types automatically. Because of this, you can drop Cumulus in to any system and it can fill this role without requiring a whole lot of changes to your existing code. It does not provide any kind of caching or persistence layer, no higher-level interface to resources and no UI, but it's so interoperable (via the ubiquitous use of blocks) that you can connect it to these services in a few minutes; in this context, blocks are used much as you would use UNIX pipes to connect different tools. Because Cumulus is so easy to integrate with, it is also an excellent foundation to build higher-level frameworks on top of.
 
 #### Lives in the Moment
 
-Cumulus was also designed to be a joy to use. The primary interfaces are all implemented with blocks, so you can just forget about writing a thousand implementations of a delegate protocol or adding pointers to everything everywhere—define your intentions in a block, where you intend them, and enjoy the rest of your day. All the blocks used in the public interface are typed, so you can define them once and reuse them if you find that convenient.
+Cumulus was also designed to be a joy to use. The primary interfaces are all implemented with blocks, so you can just forget about writing a thousand implementations of a delegate protocol or adding pointers to everything everywhere—define your intentions in a block—where you intend them—and enjoy the rest of your day. All the blocks used in the public interface are typed, so you can define them once and reuse them if you find that convenient.
 
 #### Easy On The I's
 
@@ -25,7 +24,7 @@ Configuring Cumulus is, well, you don't configure Cumulus. You simply set up a b
 
 #### Willing to Try New Things
 
-Cumulus handles the most common cases for you, but provides well defined interfaces to easily extend its functionality if you need to. There are protocols for authentication that will allow you to plug in to any kind of auth system, and for mime-type handling, to let you serialize/deserialize resources to and from any kind of encoding.
+Cumulus handles the most common cases for you, but provides well defined interfaces to easily extend its functionality if you need to. There are protocols for authentication that will allow you to plug in to any kind of auth system, and for mime-type handling to let you serialize/deserialize resources to and from any kind of encoding.
 
 #### Seeking An OS For Long Walks On The Beach
 
@@ -166,8 +165,7 @@ Cumulus does even more, like direct from disk uploads, OAuth2 authentication, au
 
 ## Links
 
-[How Tos][HOWTO]  
-[FAQs][FAQ]  
+[Cumulus Programming Guide][GUIDE]
 [Example Apps][DEMO]  
 [Running the Tests][TESTS]  
 
@@ -177,7 +175,7 @@ Cumulus does even more, like direct from disk uploads, OAuth2 authentication, au
 Cumulus is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause)
 
 
-## Contributors
+## Contributor
 
 John Clayton <Cumulus@fivesquaresoftware.com>  
 

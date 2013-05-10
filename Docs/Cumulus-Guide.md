@@ -2,6 +2,7 @@
 <a name="top"/>
 
 
+[Workspace Setup](#workspace_setup)  
 [Creating Resources](#creating_resources)  
 [Simple Requests](#simple_requests)  
 [Pre-verifying a Request](#pre_verifying)  
@@ -13,6 +14,44 @@
 [Mapping Results to Core Data](#core_data)  
 [As a General Purpose HTTP Client](#general_http)  
 [Using Raw Requests](#raw_requests)  
+[Confiuring Logging](#logging)  
+[Troubleshooting Deadlocks](#troubleshooting)
+
+
+
+<a name="workspace_setup"/>
+
+#### How do I set up my workspace to use Cumulus?
+
+You can build and link libCumulus.a as part of your project build by adding its Xcode project to your workspace and adding libCumulus.a to the link phase. Workspaces don't currently provide a way to automatically search for headers in other projects in the workspace, so you'll also need to add the path to Cumulus to your header search path.  
+
+Let's say you dropped Cumulus in ./Ext/Cumulus. Then, in Xcode, you would:
+
+1. Make sure "Find Implicit Dependencies" is checked in the build phase of the scheme for your main target (Product > Edit Scheme...)
+1. Drag Cumulus.xcodeproj to your workspace, at the top level (as a sibling of your other project(s))
+1. In the inspector for your main target, click "Build Phases", and open "Link Binary With Libraries"
+1. Click the "+", and select "libCumulus.a" from the "Workspaces" group.
+1. Select "Build Settings" in the target inspector and add "$(SRCROOT)/Ext/Cumulus/Source" as an entry to "Header Search Paths", checking the recursive checkbox
+
+If you are interested in tracking the bleeding edge (or if you just want a simpler way to pull down updates), the best way to do that is to set Cumulus up as a git submodule and then follow the steps above to add the project to your workspace.
+
+1. In Terminal:
+```sh
+% cd <your_project>  
+% git submodule add git@github.com:FivesquareSoftware/Cumulus.git Ext/Cumulus  
+```
+1. When you want to get an update:
+```sh
+% cd <your_project>/Ext/Cumulus  
+% git checkout <branch (master, 1.1.1, etc.)>  
+% git pull  
+% cd ../../  
+% git add Ext/Cumulus  
+% git commit -m "New version of Cumulus"  
+```
+
+[Top &#x2191;][top]
+
 
 
 <a name="creating_resources"/>
@@ -238,7 +277,7 @@ Set up a preflight block to run on all requests for a resource. These are run on
 
 ```objective-c 
 CMResource *myProtectedResource = [site resource:@"protected"];
-myProtectedResource.preflightBlock = ^(RCRequest * request){
+myProtectedResource.preflightBlock = ^(CMRequest * request){
 	if (NO == [accountController authorized:request]) {
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"You need to log in to see this" 
 															 forKey:NSLocalizedDescriptionKey];
@@ -451,7 +490,7 @@ CMResponse *response = [Cumulus post:@"http://example.com/products.php?action=cr
 #### Using Raw Requests 
 
 
-If you need more control, you can create raw RCRequest objects directly, but generally, you shouldn't need to,
+If you need more control, you can create raw CMRequest objects directly, but generally, you shouldn't need to,
 
 
 ```objective-c 
@@ -459,7 +498,7 @@ NSString *endpoint = [NSString stringWithFormat:@"%@/index",@"http://www.example
 NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:endpoint]];
 [URLRequest setHTTPMethod:kCumulusHTTPMethodGET];
 
-RCRequest *request = [[RCRequest alloc] initWithURLRequest:URLRequest];
+CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 __block CMResponse *localResponse = nil;
 
 dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
@@ -473,6 +512,29 @@ dispatch_semaphore_signal(request_sema);
 dispatch_release(request_sema);
 ```
 
-Take a look at RCRequest.h for more information.
+Take a look at CMRequest.h for more information.
 
 [Top &#x2191;][top]
+
+
+<a name="logging"/>
+
+#### Configuring Logging
+
+Logging is disabled by default unless the 'DEBUG' preprocessor macro is set to YES|true|1|foo in your build settings. Once that flag is defined, logging can then be turned on or off in one of two ways:
+
+1. Pass in CumulusLoggingOn=YES|true|foo in your builds settings, this will compile logging in.
+1. Set CumulusLoggingOn=YES|true|1 in the environment in the Run phase of your target's scheme to turn logging on, or NO|false|0 to turn it off (the default is off). This is wicked handy, because you can turn on logging even on an already compiled library, simply by changing the process environment. The environment is only checked once at startup, but this will result in a BOOL comparison for every log statement. Thankfully, Cumulus doesn't log much.
+
+[Top &#x2191;][top]
+
+
+<a name="troubleshooting"/>
+
+#### Troubleshooting Deadlocks
+
+Because Cumulus uses Grand Central Dispatch, it shares a few of the gotchas that GCD does, for example, dispatching synchronously (or asynchronously to a serial queue) from the same queue will produce deadlock. Cumulus runs some of the lifecyle blocks for a resource on the main queue, which is a serial queue. If you were to dispatch to the main queue again from inside of that block, you would see a deadlock.  Mostly, just know what your GCD environment is when dispatching, and you'll be fine. The Cumulus docs indicate how it dispatches the various blocks you provide. And, Apple's documentation on GCD is excellent.
+
+
+[Top &#x2191;][top]
+
