@@ -22,6 +22,6 @@ $appledoc \
 --ignore '.m' --ignore '*+Private.h' --ignore '*+Protected.h' \
 --index-desc "${SRCROOT}/Docs/API/index.md" --no-repeat-first-par --keep-undocumented-objects --keep-undocumented-members --print-information-block-titles  --crossref-format "#?%@" \
 --exit-threshold 2 \
- -o $docpath \
+--docset-install-path $docpath  -o $docpath \
 $srcpath
 

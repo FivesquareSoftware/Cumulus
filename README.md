@@ -1,4 +1,5 @@
 [GUIDE]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/Cumulus-Guide.md (Cumulus Programming Guide)
+[API]: https://github.com/FivesquareSoftware/Cumulus/blob/master/Docs/API/com.fivesquaresoftware.Cumulus.docset (Cumulus API Docset)
 [DEMO]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples (See Example Apps)
 [TESTS]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Tests#readme (Running the Tests)
 
@@ -166,6 +167,7 @@ Cumulus does even more, like direct from disk uploads, OAuth2 authentication, au
 ### Links
 
 [Cumulus Programming Guide][GUIDE]  
+[Xcode Docset][API]  
 [Example Apps][DEMO]  
 [Running the Tests][TESTS]  
 

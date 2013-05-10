@@ -533,7 +533,7 @@ Logging is disabled by default unless the 'DEBUG' preprocessor macro is set to Y
 
 #### Troubleshooting Deadlocks
 
-Because Cumulus uses Grand Central Dispatch, it shares a few of the gotchas that GCD does, for example, dispatching synchronously (or asynchronously to a serial queue) from the same queue will produce deadlock. Cumulus runs some of the lifecyle blocks for a resource on the main queue, which is a serial queue. If you were to dispatch to the main queue again from inside of that block, you would see a deadlock.  Mostly, just know what your GCD environment is when dispatching, and you'll be fine. The Cumulus docs indicate how it dispatches the various blocks you provide. And, Apple's documentation on GCD is excellent.
+Because Cumulus uses Grand Central Dispatch, it shares a few of the gotchas that GCD does, for example, dispatching synchronously (or asynchronously to a serial queue) from the same queue will produce deadlock. Cumulus runs some of the lifecyle blocks for a resource on the main queue, which is a serial queue. If you were to dispatch to the main queue again from inside of that block, you would see a deadlock.  Mostly, just know what your GCD environment is when dispatching, and you'll be fine. The Cumulus docs indicate how it dispatches the various blocks you provide. And, [Apple's documentation on GCD](http://developer.apple.com/library/ios/#documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1) is excellent.
 
 
 [Top &#x2191;][top]
