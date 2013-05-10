@@ -160,14 +160,14 @@ posts.contentType = CMContentTypeJSON;
 ```
 
 
-Cumulus does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
+Cumulus does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [Cumulus Programming Guide][GUIDE].
 
 
 ### Documentation
 
 You can install the Cumulus Xcode docset by running the "Install Cumulus Docs" scheme in Xcode.
 
-[Cumulus Programming Guide][GUIDE]
+[Cumulus Programming Guide][GUIDE]  
 [Example Apps][DEMO]  
 [Running the Tests][TESTS]  
 
