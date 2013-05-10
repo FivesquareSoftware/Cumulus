@@ -165,7 +165,7 @@ Cumulus does even more, like direct from disk uploads, OAuth2 authentication, au
 
 ### Links
 
-[Cumulus Programming Guide][GUIDE]
+[Cumulus Programming Guide][GUIDE]  
 [Example Apps][DEMO]  
 [Running the Tests][TESTS]  
 
