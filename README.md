@@ -2,7 +2,7 @@
 [Example Apps]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples (Example Apps)
 [Running the Tests]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Tests#readme (Running the Tests)
 
-### About
+## About
 
 Cumulus for Objective C provides a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a remote resource. It is so simple to use that it makes connecting an iOS or Mac app to a Web service stupidly easy. 
 
@@ -41,7 +41,7 @@ The best way to include Cumulus is to drag the project into your workspace, then
 
 If you are using the Mac OS framework, the headers are automatically in your header search path. To add them for iOS, add "${SRCROOT}/relative/path/to/Cumulus/Source" to your HEADER_SEARCH_PATHS build setting and check the recursive box.
 
-#### Using
+### Using
 
 On Mac OS, import Cumulus like this in your source:
 
@@ -57,7 +57,7 @@ On iOS, use:
 
 #### Linking Dependencies
 
-Make sure you link the Security framework (to handle certificate based auth) and MobileCoreServices framework (for iOS), or CoreServices framework (for Mac OS).
+Make sure you link the _Security_ framework (to handle certificate based auth) and _MobileCoreServices_ framework (for iOS), or _CoreServices_ framework (for Mac OS).
 
 You must use the -ObjC linker flag (at least, you could also use -force_load="${BUILT_PRODUCTS_DIR}/libCumulus.a" or -all_load if you wanted to be more agressive) in order to link in the categories defined in Cumulus.
 
@@ -71,7 +71,7 @@ That's it. There is detailed help in the [Cumulus Programming Guide][] if you ne
 
 
 
-### Basic Usage
+## Basic Usage
 
 The most common way to use Cumulus is to set up a base resource and some children, define a couple blocks and start making requests. 
 
@@ -174,7 +174,7 @@ posts.contentType = CMContentTypeJSON;
 Cumulus does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [Cumulus Programming Guide][Cumulus Programming Guide].
 
 
-### Documentation
+## Documentation
 
 You can install the Cumulus Xcode docset by running the "Install Cumulus Docs" scheme in Xcode.
 
@@ -183,19 +183,19 @@ You can install the Cumulus Xcode docset by running the "Install Cumulus Docs" s
 [Running the Tests][]  
 
 
-### License
+## License
 
 Cumulus is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause)
 
 
-### Contributors
+## Contributors
 
 John Clayton <Cumulus@fivesquaresoftware.com>  
 
 Patches are welcome, pull requests make us all excited.
 
 
-### Acknowledgements
+## Acknowledgements
 
 Lots of inspiration in the interface design of Cumulus was taken from Ruby's [rest-client](https://github.com/rest-client/rest-client/commits/master)  
 Cumulus uses [Appledoc](https://github.com/tomaz/appledoc) for generating API documentation 
