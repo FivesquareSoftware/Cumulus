@@ -2,7 +2,7 @@
 [DEMO]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Examples (See Example Apps)
 [TESTS]: https://github.com/FivesquareSoftware/Cumulus/tree/master/Tests#readme (Running the Tests)
 
-## About
+### About
 
 Cumulus for Objective C provides a simple, low-level interface to REST services through methods that mirror the HTTP requests associated with creating, fetching, updating, and deleting a remote resource. It is so simple to use that it makes connecting an iOS or Mac app to a Web service stupidly easy. 
 
@@ -31,7 +31,7 @@ Cumulus handles the most common cases for you, but provides well defined interfa
 Cumulus was implemented with automatic reference counting (ARC) and uses weak references, as well as new NSURLConnection APIs, so it requires iOS 5 and/or Mac OS 10.7.
 
 
-## Including in Your Project
+### Including in Your Project
 
 The simplest way to use Cumulus in your Xcode project is to just copy the files in "Source" to your own project.
 
@@ -60,7 +60,7 @@ That's it. There is detailed help in the [FAQ][] if you need more information ab
 
 
 
-## Basic Usage
+### Basic Usage
 
 The most common way to use Cumulus is to set up a base resource and some children, define a couple blocks and start making requests. 
 
@@ -163,26 +163,26 @@ posts.contentType = CMContentTypeJSON;
 Cumulus does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [How Tos][HOWTO].
 
 
-## Links
+### Links
 
 [Cumulus Programming Guide][GUIDE]
 [Example Apps][DEMO]  
 [Running the Tests][TESTS]  
 
 
-## License
+### License
 
 Cumulus is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause)
 
 
-## Contributor
+### Contributors
 
 John Clayton <Cumulus@fivesquaresoftware.com>  
 
 Patches are welcome, pull requests make us all excited.
 
 
-## Acknowledgements
+### Acknowledgements
 
 Lots of inspiration in the interface design of Cumulus was taken from Ruby's [rest-client](https://github.com/rest-client/rest-client/commits/master)
 
