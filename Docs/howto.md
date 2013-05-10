@@ -349,6 +349,8 @@ pictures.postProcessorBlock = ^(id result) {
 }];
 ```
 
+//TODO: show an example of chaining post processors
+
 [Top &#x2191;][top]
 
 
