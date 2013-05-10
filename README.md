@@ -8,15 +8,15 @@ Cumulus for Objective C provides a simple, low-level interface to REST services 
 
 #### Designed for Speed
 
-Cumulus was designed from the ground up to use Grand Central Dispatch (CGD) allowing for massive concurrency—how fast and how wide you can go is limited by nothing but the hardware and system.
+Cumulus was imagined from the ground up to use Grand Central Dispatch (CGD), allowing for massive concurrency—how fast and how wide you can go is limited by nothing but the hardware and system.
 
 #### Plays Well With Others
 
-It was designed to do one thing only, and one thing well: interact with REST resources and encode/decode the data coming across the wire to/from native, generic types automatically. Because of this, you can drop Cumulus in to any system and it can fill this role without requiring a whole lot of changes to your existing code. It does not provide any kind of caching or persistence layer, no higher-level interface to resources and no UI, but it's so interoperable (via the ubiquitous use of blocks) that you can connect it to these services in a few minutes; in this context, blocks are used much as you would use UNIX pipes to connect different tools. Because Cumulus is so easy to integrate with, it is also an excellent foundation to build higher-level frameworks on top of.
+By design, Cumulus does one thing only, and one thing well: interact with REST resources and encode/decode the data coming across the wire to/from native, generic types automatically. Because of this, you can drop Cumulus in to any system and it can fill this role without requiring a whole lot of changes to your existing code. It does not provide any kind of caching or persistence layer, no higher-level interface to resources and no UI, but it's so interoperable (via the ubiquitous use of blocks) that you can connect it to these services in a few minutes; in this context, blocks are used much as you would use UNIX pipes to connect different tools. Because Cumulus is so easy to integrate with, it is also an excellent foundation to build higher-level frameworks on top of.
 
 #### Lives in the Moment
 
-Cumulus was also designed to be a joy to use. The primary interfaces are all implemented with blocks, so you can just forget about writing a thousand implementations of a delegate protocol or adding pointers to everything everywhere—define your intentions in a block—where you intend them—and enjoy the rest of your day. All the blocks used in the public interface are typed, so you can define them once and reuse them if you find that convenient.
+Cumulus was also created to be a joy to use. The primary interfaces are all implemented with blocks, so you can just forget about writing a thousand implementations of a delegate protocol or adding pointers to everything everywhere—define your intentions in a block—where you intend them and enjoy the rest of your day. All the blocks used in the public interface are typed, so you can define them once and reuse them if you find that convenient.
 
 #### Easy On The I's
 
@@ -65,7 +65,9 @@ You must use the -ObjC linker flag (at least, you could also use -force_load="${
 
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding Cumulus as a submodule, `git submodule update --recursive`) to be sure to fetch Cumulus's own externals as these are required for the specs to run.
 
-That's it. There is detailed help in the [FAQ][] if you need more information about how to set up your workspace.
+
+
+That's it. There is detailed help in the [Cumulus Programming Guide][] if you need more information about how to set up your workspace.
 
 
 
