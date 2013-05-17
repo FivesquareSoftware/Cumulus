@@ -197,7 +197,6 @@ static NSUInteger requestCount = 0;
 @synthesize originalURLRequest=_originalURLRequest;
 @synthesize timeoutTimer=_timeoutTimer;
 @synthesize requestConfigured = _requestConfigured;
-@synthesize responseInternal = _responseInternal;
 
 @dynamic fileExtension;
 - (NSString *) fileExtension {
@@ -206,12 +205,12 @@ static NSUInteger requestCount = 0;
 
 @dynamic canStart;
 - (BOOL) canStart {
-	return (NO == self.started && NO == self.finished && NO == self.wasCanceled);
+	return (NO == self.started && NO == self.finished/* && NO == self.wasCanceled*/);
 }
 
 @dynamic canCancel;
 - (BOOL) canCancel {
-	return (YES == self.isStarted && NO == self.isFinished && NO == self.wasCanceled);
+	return (/*YES == self.isStarted && */NO == self.isFinished && NO == self.wasCanceled);
 }
 
 @dynamic canAbort;
@@ -219,6 +218,13 @@ static NSUInteger requestCount = 0;
 	return (NO == self.started && NO == self.finished && NO == self.wasCanceled);
 }
 
+@synthesize responseInternal = _responseInternal;
+- (CMResponse *) responseInternal {
+	if (nil == _responseInternal) {
+		_responseInternal = [[CMResponse alloc] initWithRequest:self];
+	}
+	return _responseInternal;
+}
 
 
 // Overrides
@@ -384,8 +390,14 @@ static NSUInteger requestCount = 0;
 
 
 - (void) start {
-	NSAssert(NO == self.started, @"Attempting to start a request that has already been started, canceled or finished");
+	NSAssert(NO == self.started, @"Attempting to start a request that has already been started or has finished");
 	if (NO == self.canStart) {
+		return;
+	}
+	
+	// If a request was asked to cancel before it was completely set up, we will handle that now and bail
+	if (self.wasCanceled) {
+		[self handleConnectionFinished];
 		return;
 	}
 	
@@ -420,15 +432,16 @@ static NSUInteger requestCount = 0;
 
 - (void) cancel {
     if (NO == self.canCancel) {
-		RCLog(@"Attempting to cancel a request that has not been started, has already been canceled or has finished ");
+		RCLog(@"Attempting to cancel a request that has already been canceled or has finished ");
         return;
     }
     self.canceled = YES;
-
-//	[self.connection cancel];
-	// strangely, *NOT* calling this on the main thread will cause other calls to dispatch on the main thread (like to completion block) to deadlock, freakish, something about the connection needing to be canceled on the same runloop it was canceled on?
-	[self.connection performSelectorOnMainThread:@selector(cancel) withObject:nil waitUntilDone:NO];
-    [self handleConnectionFinished];
+	if (self.started) {
+		//	[self.connection cancel];
+		// strangely, *NOT* calling this on the main thread will cause other calls to dispatch on the main thread (like to completion block) to deadlock, freakish, something about the connection needing to be canceled on the same runloop it was canceled on?
+		[self.connection performSelectorOnMainThread:@selector(cancel) withObject:nil waitUntilDone:NO];
+		[self handleConnectionFinished];
+	}
 }
 
 
@@ -505,27 +518,10 @@ static NSUInteger requestCount = 0;
         return;
     }
 	self.connectionFinished = YES;
-
-	if (nil == self.responseInternal) {
-		self.responseInternal = [[CMResponse alloc] initWithRequest:self];
-	}
 	
 	// Make sure processing the results doesn't stop us from calling our completion block
 	@try {
-//		dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-//
-//		dispatch_semaphore_t process_sema = dispatch_semaphore_create(1);
-//		dispatch_semaphore_wait(process_sema, DISPATCH_TIME_FOREVER);
-//		dispatch_async(q, ^{
-//			[self processResponse:response];
-//			dispatch_semaphore_signal(process_sema);
-//		});
-//		dispatch_semaphore_wait(process_sema, DISPATCH_TIME_FOREVER);
-//		dispatch_semaphore_signal(process_sema);
-//		dispatch_release(process_sema);
 		dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-//		dispatch_queue_t q_current = dispatch_get_current_queue();
-//		NSAssert(q != q_current, @"Tried to run response processing on the current queue! ** DEADLOCK **");
 		dispatch_sync(q, ^{
 			[self postProcessResponse:self.responseInternal];
 		});
@@ -677,7 +673,6 @@ static NSUInteger requestCount = 0;
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.URLResponse = (NSHTTPURLResponse *)response;
 //	RCLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
-	self.responseInternal = [[CMResponse alloc] initWithRequest:self];
 //	self.expectedContentLength = [response expectedContentLength]; // fails when there is no content length header, often in a range request this is true
 	// Works for simple requests as well as range requests
 	self.expectedContentLength = self.responseInternal.expectedContentLength;

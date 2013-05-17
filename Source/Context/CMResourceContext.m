@@ -20,6 +20,7 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 @interface CMResourceContext () {
 	dispatch_queue_t _dispatchQueue;
 }
+@property (nonatomic, strong) NSMutableDictionary *groupsByIdentifier;
 @end
 
 @implementation CMResourceContext
@@ -49,6 +50,7 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 		_name = name;
 		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.Cumulus.CMResourceContext.%@.%p",_name,self];
 		_dispatchQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+		_groupsByIdentifier = [NSMutableDictionary new];
     }
     return self;
 }
@@ -63,9 +65,11 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 #pragma mark - Public
 
 
-- (void) performRequestsAndWait:(void(^)())work withCompletionBlock:(void(^)(BOOL success, NSSet *responses))completionBlock {
+- (id) performRequestsAndWait:(void(^)())work withCompletionBlock:(void(^)(BOOL success, NSSet *responses))completionBlock {
+	
+	CMResourceContextGroup *group = [CMResourceContextGroup new];
+	[_groupsByIdentifier setObject:group forKey:group.identifier];
 	dispatch_async(_dispatchQueue, ^{
-		CMResourceContextGroup *group = [CMResourceContextGroup new];
 		dispatch_queue_set_specific(_dispatchQueue, &kCMResourceContextKey, (__bridge void *)(group), NULL);
 
 		// dispatch the work, resources check their current q for a group before dispatching requests
@@ -76,7 +80,7 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 		// Wait for the group to complete
 		[group wait];
 		
-		// Collect our success rate
+		// Collect our overall success
 		__block BOOL success = YES;
 		[group.responses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
 			if (success) {
@@ -84,11 +88,20 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 			}
 		}];
 		
+		// Clean up group
+		[_groupsByIdentifier removeObjectForKey:group.identifier];
+		
 		// Fire off the completion block
 		dispatch_async(dispatch_get_main_queue(), ^{
 			 completionBlock(success,group.responses);
 		});
-	});	
+	});
+	return group.identifier;
+}
+
+- (void) cancelRequestsForIdentifier:(id)identifier {
+	CMResourceContextGroup *group = [_groupsByIdentifier objectForKey:identifier];
+	[group cancel];
 }
 
 - (void) performRequests:(void(^)())work inScope:(id)scope {

@@ -786,7 +786,7 @@
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 	[self.requestsInternal addObject:request];
 	if ([context isKindOfClass:[CMResourceContextGroup class]]) {
-		[context enter];
+		[context enterWithRequest:request];
 	}
 	else if ([context isKindOfClass:[CMResourceContextScope class]]) {
 		CMResourceContextScope *scope = context;		

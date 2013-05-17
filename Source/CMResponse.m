@@ -150,7 +150,7 @@
 	if (nil == _error) {
 		if (NO == _request.wasCanceled && NO == [self HTTPSuccessful] && nil == _request.error) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSString stringWithFormat:@"Received %@ HTTP Status code",@(_status)], NSLocalizedDescriptionKey
+								  [NSString stringWithFormat:@"Received HTTP Status code %@",@(_status)], NSLocalizedDescriptionKey
 								  , _request.responseBody, NSLocalizedFailureReasonErrorKey
 								  , [_request.URLResponse URL], NSURLErrorFailingURLErrorKey
 								  , @(_status), kCumulusHTTPStatusCodeErrorKey

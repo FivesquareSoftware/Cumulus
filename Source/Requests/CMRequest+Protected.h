@@ -1,5 +1,5 @@
 //
-//  CMRequest+Private.h
+//  CMRequest+Protected.h
 //  Cumulus
 //
 //  Created by John Clayton on 11/23/11.

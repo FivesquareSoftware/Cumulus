@@ -136,7 +136,7 @@
 /** This block gets called every time connection:didReceiveData: delegate method is invoked. */
 @property (copy) CMProgressBlock didReceiveDataBlock;
 /** This block gets a chance to modify the value of #result before the response is passed to the completion block. */
-@property (strong) CMPostProcessorBlock postProcessorBlock;
+@property (copy) CMPostProcessorBlock postProcessorBlock;
 /** Runs when a request is aborted or when the receiver fails before starting to make the request. */
 @property (copy) CMAbortBlock abortBlock;
 /** Gets a chance to handle the value of #response when the entire request is complete. Should not raise an exception as a mechanism for controlling execution, since it won't be seen outside the block. */

@@ -75,6 +75,7 @@
 #import "CMResponse.h"
 #import "CMCoder.h"
 #import "CMDownloadInfo.h"
+#import "NSObject+Cumulus.h"
 
 
 /** Cumulus.h is the main header for the Cumulus HTTP client—include it in your project to use Cumulus. The Cumulus class interface provides global configuration options, some static methods for making one-off or non-conforming requests, and fixture configuration and usage. In general, however, the main point of usage for the Cumulus HTTP client is CMResource, which allows for simple configuration and resusability of response processing across any number of requests.

@@ -9,14 +9,18 @@
 #import <Foundation/Foundation.h>
 
 @class CMResponse;
+@class CMRequest;
 
 @interface CMResourceContextGroup : NSObject
 
 @property (nonatomic, copy) id identifier;
+@property (readonly) BOOL wasCanceled;
+@property (nonatomic, readonly) NSSet *runningRequests;
 @property (nonatomic, readonly) NSSet *responses;
 
-- (void) enter;
+- (void) enterWithRequest:(CMRequest *)request;
 - (void) leaveWithResponse:(CMResponse *)response;
 - (void) wait;
+- (void) cancel;
 
 @end

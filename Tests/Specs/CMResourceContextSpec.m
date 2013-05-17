@@ -85,13 +85,74 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 
 
 - (void) shouldPerformSomeWorkAndRunCompletionBlock {
-	[self runGroupAndAssert];
+	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+	
+	//	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	__block BOOL localSuccess = NO;
+	__block NSSet *localResponses = nil;
+	__block BOOL completionBlockRan = NO;
+	
+	[context performRequestsAndWait:^() {
+		CMResource *index = [self.service resource:@"index"];
+		[index get];
+		
+		CMResource *item = [self.service resource:@"test/get/item"];
+		[item getWithCompletionBlock:^(CMResponse *response) {
+			completionBlockRan = YES;
+		}];
+		
+	} withCompletionBlock:^(BOOL success, NSSet *responses) {
+		localSuccess = success;
+		localResponses = responses;
+		dispatch_semaphore_signal(group_semaphore);
+	}];
+	
+	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(group_semaphore);
+	
+	STAssertTrue(localSuccess, @"Group should have succeeded");
+	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
+	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
 }
 
 - (void) shouldRunMultipleWorkBlocksConcurrentlyWithoutMixingThemUp {
+	
+	dispatch_group_t group = dispatch_group_create();
+
+	__block BOOL localSuccess = YES;
+	__block BOOL localResponseCountCorrect = YES;
+	
 	for (int i = 0; i < 10; i++) {
-		[self runGroupAndAssert];
+		dispatch_group_enter(group);
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+			
+			//	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+			[context performRequestsAndWait:^() {
+				CMResource *index = [self.service resource:@"index"];
+				[index get];
+				
+				CMResource *item = [self.service resource:@"test/get/item"];
+				[item getWithCompletionBlock:nil];
+				
+			} withCompletionBlock:^(BOOL success, NSSet *responses) {
+				if (localSuccess) {
+					localSuccess = success;
+				}
+				if (localResponseCountCorrect) {
+					localResponseCountCorrect = (responses.count == 2);
+				}
+
+				dispatch_group_leave(group);
+			}];
+		});
 	}
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	
+	STAssertTrue(localSuccess, @"Groups should have succeeded");
+	STAssertTrue(localResponseCountCorrect, @"Groups should have passed along contained responses");
 }
 
 - (void) shouldNotExistLongerThanGroupWorkWhenNotRetained {
@@ -123,6 +184,40 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 		dispatch_release(context_semaphore);
 		STAssertNil(context, @"Context should no longer exist!");
 	}];
+}
+
+- (void) shouldCancelGroupWorkForIdentifier {
+	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+	
+	//	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	__block BOOL anyRequestWasCanceled = NO;
+	__block NSSet *localResponses = nil;
+	
+	id groupIdentifier = [context performRequestsAndWait:^() {
+		CMResource *item = [self.service resource:@"index"];
+		for (int i = 0; i < 10; i++) {
+			[item getWithCompletionBlock:nil];
+		}
+	} withCompletionBlock:^(BOOL success, NSSet *responses) {
+		localResponses = responses;
+		dispatch_semaphore_signal(group_semaphore);
+	}];
+	
+	[context cancelRequestsForIdentifier:groupIdentifier];
+	
+	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(group_semaphore);
+	
+	[localResponses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
+		anyRequestWasCanceled = response.request.wasCanceled;
+		if (anyRequestWasCanceled) {
+			*stop = YES;
+			return;
+		}
+	}];
+	
+	STAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled: %@",localResponses);
 }
 
 - (void) shouldCancelRequestsWhenTheirScopeDisappears {
@@ -245,37 +340,21 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 #pragma mark - Helpers
 
 
-- (void) runGroupAndAssert {
-	CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
-	
-	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
-	__block BOOL localSuccess = NO;
-	__block NSSet *localResponses = nil;
-	__block BOOL completionBlockRan = NO;
-	
-	[context performRequestsAndWait:^() {
-		CMResource *index = [self.service resource:@"index"];
-		[index get];
-		
-		CMResource *item = [self.service resource:@"test/get/item"];
-		[item getWithCompletionBlock:^(CMResponse *response) {
-			completionBlockRan = YES;
-		}];
-		
-	} withCompletionBlock:^(BOOL success, NSSet *responses) {
-		localSuccess = success;
-		localResponses = responses;
-		dispatch_semaphore_signal(group_semaphore);
-	}];
-	
-	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(group_semaphore);
-	
-	STAssertTrue(localSuccess, @"Group should have succeeded");
-	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
-	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
-}
-
+//- (void) runGroupWithCompletionBlock:((void)(^)(BOOL success, NSSet *responses))completionBlock {
+//	CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+//	
+////	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+//	[context performRequestsAndWait:^() {
+//		CMResource *index = [self.service resource:@"index"];
+//		[index get];
+//		
+//		CMResource *item = [self.service resource:@"test/get/item"];
+//		[item getWithCompletionBlock:nil];
+//		
+//	} withCompletionBlock:completionBlock];
+//	
+//}
+//
 
 
 
