@@ -220,6 +220,10 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	STAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled: %@",localResponses);
 }
 
+- (void) shouldCancelAllGroupWork {
+	STAssertTrue(NO, @"Unimplemented");
+}
+
 - (void) shouldCancelRequestsWhenTheirScopeDisappears {
 
 	dispatch_semaphore_t scope_semaphore = dispatch_semaphore_create(0);

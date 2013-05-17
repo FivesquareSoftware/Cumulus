@@ -34,6 +34,9 @@ extern NSString *kCMResourceContextKey;
  */
 - (void) cancelRequestsForIdentifier:(id)identifier;
 
+/** Cancels all requests for all currently running groups. */
+- (void) cancelAllRequests;
+
 /** Performs a block of requests in the scope of the receiver: when the receiver is deallocated, any remaining requests are canceled.
  *  @param work A block containing a series of requests made with CMResource objects that you wish to scope to the lifetime of the scope parameter.
  *  @param scope An object whose lifetime will define the scope of any requests launched at the top level of the work block; when scope is deallocated, any running requests are canceled.

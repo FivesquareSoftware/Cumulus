@@ -104,6 +104,12 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 	[group cancel];
 }
 
+- (void) cancelAllRequests {
+	[_groupsByIdentifier enumerateKeysAndObjectsUsingBlock:^(id key, CMResourceContextGroup *group, BOOL *stop) {
+		[group cancel];
+	}];
+}
+
 - (void) performRequests:(void(^)())work inScope:(id)scope {
 	__weak id weakScope = scope;
 	dispatch_async(_dispatchQueue, ^{
