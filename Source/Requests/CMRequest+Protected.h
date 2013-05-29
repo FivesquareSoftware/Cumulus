@@ -63,6 +63,7 @@
 @property (readonly) BOOL canStart;
 @property (readonly) BOOL canCancel;
 @property (readonly) BOOL canAbort;
+@property (readonly) NSString *cacheIdentifier;
 
 // Helpers
 

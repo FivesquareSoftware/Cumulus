@@ -94,7 +94,7 @@
 	}
 	BOOL canResume = NO;
 	if (_shouldResume) {
-		CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForURL:self.URL];
+		CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForCacheIdentifier:self.cacheIdentifier];
 		NSString *ETag = downloadInfo.ETag;
 		NSString *lastModifiedDate = downloadInfo.lastModifiedDate;
 		NSURL *tempFileURL = downloadInfo.downloadedFileTempURL;
@@ -117,7 +117,7 @@
 	}
 	_shouldResume = canResume;
 	if (NO == _shouldResume) {
-		[CMDownloadInfo resetDownloadInfoForURL:self.URL];
+		[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
 	}
 }
 
@@ -132,7 +132,7 @@
 	[super handleConnectionFinished];
 
 	if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful)) {
-		[CMDownloadInfo resetDownloadInfoForURL:self.URLRequest.URL];
+		[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
 		// Remove the file on the main Q so we know the completion block has had a chance to run
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSFileManager *fm = [NSFileManager new];
@@ -169,7 +169,7 @@
 		_shouldResume = NO;
 	}
 	
-	CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForURL:self.URLRequest.URL];
+	CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForCacheIdentifier:self.cacheIdentifier];
 	if (downloadInfo.downloadedFileTempURL) {
 		self.downloadedFileTempURL = downloadInfo.downloadedFileTempURL;
 	}

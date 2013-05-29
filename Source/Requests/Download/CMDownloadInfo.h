@@ -11,8 +11,8 @@
 @interface CMDownloadInfo : NSObject <NSCoding>
 
 + (NSMutableDictionary *) downloadInfo;
-+ (CMDownloadInfo *) downloadInfoForURL:(NSURL *)URL;
-+ (BOOL) resetDownloadInfoForURL:(NSURL *)URL;
++ (CMDownloadInfo *) downloadInfoForCacheIdentifier:(id)identifier;
++ (BOOL) resetDownloadInfoForCacheIdentifier:(id)identifier;
 + (BOOL) saveDownloadInfo;
 
 

@@ -43,19 +43,19 @@
 	return _downloadInfo;
 }
 
-+ (CMDownloadInfo *) downloadInfoForURL:(NSURL *)URL {
-	CMDownloadInfo *info = [self downloadInfo][URL];
++ (CMDownloadInfo *) downloadInfoForCacheIdentifier:(id)identifier {
+	CMDownloadInfo *info = [self downloadInfo][identifier];
 	if (nil == info) {
 		info = [CMDownloadInfo new];
-		[self downloadInfo][URL] = info;
+		[self downloadInfo][identifier] = info;
 	}
 	return info;
 }
 
-+ (BOOL) resetDownloadInfoForURL:(NSURL *)URL {
++ (BOOL) resetDownloadInfoForCacheIdentifier:(id)identifier {
 	NSMutableDictionary *info = [self downloadInfo];
-	if ([info objectForKey:URL]) {
-		[info removeObjectForKey:URL];
+	if ([info objectForKey:identifier]) {
+		[info removeObjectForKey:identifier];
 		return [self saveDownloadInfo];
 	}
 	return YES;

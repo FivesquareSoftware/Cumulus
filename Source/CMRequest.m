@@ -38,10 +38,6 @@
 
 #import "Cumulus.h"
 
-@interface CMRequest()
-
-@end
-
 
 
 @implementation CMRequest
@@ -216,6 +212,15 @@ static NSUInteger requestCount = 0;
 @dynamic canAbort;
 - (BOOL) canAbort {
 	return (NO == self.started && NO == self.finished && NO == self.wasCanceled);
+}
+
+@dynamic cacheIdentifier;
+- (id) cacheIdentifier {
+	NSMutableString *identifier = [NSMutableString stringWithString:self.URL.absoluteString];
+	if (self.range.location != kCFNotFound) {
+		[identifier appendFormat:@", bytes=%lld-%lld",self.range.location,CMContentRangeLastByte(self.range)];
+	}
+	return identifier;
 }
 
 @synthesize responseInternal = _responseInternal;
