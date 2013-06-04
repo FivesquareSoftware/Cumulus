@@ -205,7 +205,7 @@
 		if (response.error) {
 			chunk.error = response.error;
 		}
-		else {
+		else if (response.wasSuccessful) {
 			CMProgressInfo *result = response.result;
 			NSURL *chunkTempURL = result.tempFileURL;
 			NSURL *chunkNewURL = [_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@",@(idx),[chunkTempURL lastPathComponent]]];
