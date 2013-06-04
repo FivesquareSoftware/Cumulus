@@ -286,6 +286,9 @@
 		_requestsInternal = [NSMutableSet new];
 		
 		_requests_semaphore = dispatch_semaphore_create(1);
+		
+		_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
+		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
 	}
 	return self;
 }
@@ -648,6 +651,8 @@
 	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
 	CMChunkedDownloadRequest *request = [[CMChunkedDownloadRequest alloc] initWithURLRequest:URLRequest];
 	[request setCachesDir:self.cachesDir];
+	request.maxConcurrentChunks = self.maxConcurrentChunks;
+	request.chunkSize = self.chunkSize;;
 	[self configureRequest:request];
 	return request;
 }

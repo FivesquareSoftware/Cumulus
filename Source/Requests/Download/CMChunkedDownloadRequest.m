@@ -12,9 +12,6 @@
 #import "CMDownloadRequest.h"
 #import "Cumulus.h"
 
-#define kCMChunkedDownloadRequestChunkSize (1024*1024)
-#define kCMChunkedDownloadRequestMaxConcurrentChunks 4
-
 
 @interface CMDownloadChunk : NSObject
 @property (nonatomic) NSUInteger sequence;
@@ -80,6 +77,19 @@
 }
 
 
+- (id)initWithURLRequest:(NSURLRequest *)URLRequest {
+    self = [super initWithURLRequest:URLRequest];
+    if (self) {
+		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
+		_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
+		_waitingChunks = [NSMutableSet new];
+		_runningChunks = [NSMutableSet new];
+		_completedChunks = [NSMutableSet new];
+		_chunksSemaphore = dispatch_semaphore_create(1);
+    }
+    return self;
+}
+
 
 // ========================================================================== //
 
@@ -138,17 +148,6 @@
 			RCLog(@"Could not create chunks dir: %@ %@ (%@)", _chunksDirURL, [error localizedDescription], [error userInfo]);
 		}
 	}
-	
-//	_chunks = [NSMutableArray new];
-//	_chunkErrors = [NSMutableSet new];
-//	_chunkFiles = [NSMutableArray new];
-	
-	
-	_waitingChunks = [NSMutableSet new];
-	_runningChunks = [NSMutableSet new];
-	_completedChunks = [NSMutableSet new];
-	
-	_chunksSemaphore = dispatch_semaphore_create(1);
 }
 
 - (void) handleConnectionDidReceiveData {
@@ -171,8 +170,8 @@
 	_baseChunkRequest = baseChunkRequest;
 	
 	NSUInteger idx = 0;
-	for (long long i = 0; i < self.expectedContentLength; i+=kCMChunkedDownloadRequestChunkSize) {
-		long long len = kCMChunkedDownloadRequestChunkSize;
+	for (long long i = 0; i < self.expectedContentLength; i+=_chunkSize) {
+		long long len = _chunkSize;
 		if (i+len > self.expectedAggregatedContentLength) {
 			len = self.expectedAggregatedContentLength - i;
 		}
@@ -258,7 +257,7 @@
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	NSUInteger runningChunkCount = self.runningChunks.count;
 	NSLog(@"runningChunkCount: %@",@(runningChunkCount));
-	if (runningChunkCount < kCMChunkedDownloadRequestMaxConcurrentChunks) {
+	if (runningChunkCount < self.maxConcurrentChunks) {
 		CMDownloadChunk *nextChunk = [self.waitingChunks anyObject];
 		if (nextChunk) {
 			[self.runningChunks addObject:nextChunk];

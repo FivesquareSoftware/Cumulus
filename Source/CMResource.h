@@ -199,6 +199,11 @@
 
 /// The path to a subdirectory of NSCachesDirectory where direct to disk file downloads will be temporarily located. This directory is created on demand as needed. Defaults to Cumulus#cachesDir.
 @property (nonatomic, strong) NSString *cachesDir;
+/// The number of concurrent chunks allowed for chunked downloads. Default is 4.
+@property NSUInteger maxConcurrentChunks;
+/// The ideal chunk size when breaking a large download into parts. Default is 1MB.
+@property (nonatomic) long long chunkSize;
+
 
 /// If #authProviders is nil and #username and #password are not empty, an CMBasicAuthProvider is created on demand and added to #authProviders
 @property (nonatomic, strong) NSString *username;

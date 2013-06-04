@@ -13,5 +13,7 @@
 @interface CMChunkedDownloadRequest : CMRequest
 
 @property (nonatomic, strong) NSString *cachesDir;
+@property NSUInteger maxConcurrentChunks;
+@property (nonatomic) long long chunkSize;
 
 @end

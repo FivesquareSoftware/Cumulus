@@ -68,6 +68,10 @@
 	#define dispatch_release(object)
 #endif
 
+#define kCMChunkedDownloadRequestDefaultChunkSize (1024*1024)
+#define kCMChunkedDownloadRequestDefaultMaxConcurrentChunks 4
+
+
 extern NSString *kCumulusErrorDomain;
 extern NSString *kCumulusHTTPStatusCodeErrorKey;
 
