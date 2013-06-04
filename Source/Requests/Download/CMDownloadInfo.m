@@ -10,7 +10,41 @@
 
 #import "Cumulus.h"
 
+static dispatch_semaphore_t _downloadInfoSemphore = nil;
+
+/// Private, bitches
+static NSMutableDictionary *_downloadInfo = nil;
+
 @implementation CMDownloadInfo
+
++ (void) initialize {
+	@autoreleasepool {
+		if (self == [CMDownloadInfo class]) {
+			_downloadInfoSemphore = dispatch_semaphore_create(1);
+
+			static dispatch_once_t onceToken;
+			dispatch_once(&onceToken, ^{
+				if (nil == _downloadInfo) {
+					NSURL *stateDataURL = [self downloadInfoURL];
+					NSFileManager *fm = [NSFileManager new];
+					if ([fm fileExistsAtPath:[stateDataURL path]]) {
+						@try {
+							_downloadInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[stateDataURL path]];
+						}
+						@catch (NSException *exception) {
+							RCLog(@"Exception while unarchiving download data: %@",exception);
+						}
+						NSAssert(_downloadInfo, @"Could not load state data from URL %@",stateDataURL);
+					}					
+					if (nil == _downloadInfo) {
+						_downloadInfo = [NSMutableDictionary new];
+					}
+				}
+
+			});
+		}
+	}
+}
 
 + (NSURL *) downloadInfoURL {
 	NSURL *downloadInfoURL = [[NSURL fileURLWithPath:[Cumulus cachesDir]] URLByAppendingPathComponent:@"Downloads.plist"];
@@ -18,69 +52,45 @@
 }
 
 + (NSMutableDictionary *) downloadInfo {
-	static NSMutableDictionary *_downloadInfo = nil;
-	if (nil == _downloadInfo) {
-		NSURL *stateDataURL = [self downloadInfoURL];
-		NSFileManager *fm = [NSFileManager new];
-		if ([fm fileExistsAtPath:[stateDataURL path]]) {
-			NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
-			__block NSError *error = nil;
-			[coordinator coordinateReadingItemAtURL:stateDataURL options:NSFileCoordinatorReadingWithoutChanges error:&error byAccessor:^(NSURL *newURL) {
-				@try {
-					_downloadInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[stateDataURL path]];
-				}
-				@catch (NSException *exception) {
-					RCLog(@"Exception while unarchiving download data: %@",exception);
-				}
-			}];
-			NSAssert2(_downloadInfo || error == nil, @"Could not load state data from URL %@ (%@)",stateDataURL,error);
-		}
-		
-		if (nil == _downloadInfo) {
-			_downloadInfo = [NSMutableDictionary new];
-		}
-	}
 	return _downloadInfo;
 }
 
 + (CMDownloadInfo *) downloadInfoForCacheIdentifier:(id)identifier {
+	dispatch_semaphore_wait(_downloadInfoSemphore, DISPATCH_TIME_FOREVER);
 	CMDownloadInfo *info = [self downloadInfo][identifier];
 	if (nil == info) {
 		info = [CMDownloadInfo new];
 		[self downloadInfo][identifier] = info;
 	}
+	dispatch_semaphore_signal(_downloadInfoSemphore);
 	return info;
 }
 
-+ (BOOL) resetDownloadInfoForCacheIdentifier:(id)identifier {
++ (void) resetDownloadInfoForCacheIdentifier:(id)identifier {
+	dispatch_semaphore_wait(_downloadInfoSemphore, DISPATCH_TIME_FOREVER);
 	NSMutableDictionary *info = [self downloadInfo];
 	if ([info objectForKey:identifier]) {
 		[info removeObjectForKey:identifier];
-		return [self saveDownloadInfo];
 	}
-	return YES;
+	dispatch_semaphore_signal(_downloadInfoSemphore);
 }
 
 + (BOOL) saveDownloadInfo {
 	NSURL *stateDataURL = [self downloadInfoURL];
 	
-	NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
-	__block NSError *error = nil;
-	__block BOOL success = NO;
-	[coordinator coordinateWritingItemAtURL:stateDataURL options:NSFileCoordinatorWritingForReplacing error:&error byAccessor:^(NSURL *newURL) {
-		@try {
-			success = [NSKeyedArchiver archiveRootObject:[self downloadInfo] toFile:[[self downloadInfoURL] path]];
-		}
-		@catch (NSException *exception) {
-			RCLog(@"Exception while archiving download data: %@",exception);
-		}
+	BOOL success = NO;
+	@try {
+		dispatch_semaphore_wait(_downloadInfoSemphore, DISPATCH_TIME_FOREVER);
+		success = [NSKeyedArchiver archiveRootObject:_downloadInfo toFile:[stateDataURL path]];
+		dispatch_semaphore_signal(_downloadInfoSemphore);
+	}
+	@catch (NSException *exception) {
+		RCLog(@"Exception while archiving download data: %@",exception);
+	}
 
-	}];
-	
-	NSAssert1(success, @"Failed to write download state! %@",error);
+	NSAssert(success, @"Failed to write download state!");
 	return success;
 }
-
 
 - (id)initWithCoder:(NSCoder *)coder {
 	_downloadedFileTempURL = [coder decodeObjectForKey:@"_downloadedFileTempURL"];

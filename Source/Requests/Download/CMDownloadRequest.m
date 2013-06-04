@@ -118,6 +118,7 @@
 	_shouldResume = canResume;
 	if (NO == _shouldResume) {
 		[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
+		[CMDownloadInfo saveDownloadInfo];
 	}
 }
 
@@ -133,6 +134,7 @@
 
 	if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful)) {
 		[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
+		[CMDownloadInfo saveDownloadInfo];
 		// Remove the file on the main Q so we know the completion block has had a chance to run
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSFileManager *fm = [NSFileManager new];

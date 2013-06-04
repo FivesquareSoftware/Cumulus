@@ -39,6 +39,7 @@
 @property (copy) NSString *downloadedFilename;
 @property (nonatomic, strong) NSURL *chunksDirURL;
 
+@property (nonatomic, strong) NSOperationQueue *chunkLaunchQueue;
 @property (nonatomic, strong) NSMutableSet *runningChunks;
 @property (nonatomic, strong) NSMutableSet *completedChunks;
 @property (nonatomic, readonly) NSSet *chunkErrors;
@@ -81,6 +82,7 @@
 		[chunk.request cancel];
 	}];
 	dispatch_semaphore_signal(_chunksSemaphore);
+	[_chunkLaunchQueue cancelAllOperations];
 
 }
 
@@ -136,6 +138,8 @@
 	_completedChunks = [NSMutableSet new];
 	
 	_chunksSemaphore = dispatch_semaphore_create(1);
+	_chunkLaunchQueue = [[NSOperationQueue alloc] init];
+	_chunkLaunchQueue.maxConcurrentOperationCount = 4;
 }
 
 - (void) handleConnectionDidReceiveData {
@@ -237,8 +241,12 @@
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	[_runningChunks addObject:chunk];
 	dispatch_semaphore_signal(_chunksSemaphore);
-	[chunkRequest start];
+	NSBlockOperation *launchOp = [NSBlockOperation blockOperationWithBlock:^{
+		[chunkRequest start];
+	}];
+	[_chunkLaunchQueue addOperation:launchOp];
 	chunk.request = chunkRequest;
+	
 }
 
 

@@ -12,7 +12,7 @@
 
 + (NSMutableDictionary *) downloadInfo;
 + (CMDownloadInfo *) downloadInfoForCacheIdentifier:(id)identifier;
-+ (BOOL) resetDownloadInfoForCacheIdentifier:(id)identifier;
++ (void) resetDownloadInfoForCacheIdentifier:(id)identifier;
 + (BOOL) saveDownloadInfo;
 
 
