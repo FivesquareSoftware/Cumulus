@@ -13,6 +13,7 @@
 #import "Cumulus.h"
 
 #define kCMChunkedDownloadRequestChunkSize (1024*1024)
+#define kCMChunkedDownloadRequestMaxConcurrentChunks 4
 
 
 @interface CMDownloadChunk : NSObject
@@ -256,7 +257,8 @@
 - (void) dispatchNextChunk {
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	NSUInteger runningChunkCount = self.runningChunks.count;
-	if (runningChunkCount < 4) {
+	NSLog(@"runningChunkCount: %@",@(runningChunkCount));
+	if (runningChunkCount < kCMChunkedDownloadRequestMaxConcurrentChunks) {
 		CMDownloadChunk *nextChunk = [self.waitingChunks anyObject];
 		if (nextChunk) {
 			[self.runningChunks addObject:nextChunk];
