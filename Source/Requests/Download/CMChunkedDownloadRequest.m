@@ -197,6 +197,7 @@
 	chunkRequest.shouldResume = YES;
 	
 	__weak typeof(self) self_ = self;
+	__weak typeof(chunk) chunk_ = chunk;
 	chunkRequest.didReceiveDataBlock = ^(CMProgressInfo *progressInfo) {
 		long long chunkSize = [progressInfo.chunkSize longLongValue];
 		self_.receivedAggregatedContentLength += chunkSize;
@@ -207,16 +208,16 @@
 	};
 	chunkRequest.completionBlock = ^(CMResponse *response) {
 		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
-		[self_.completedChunks addObject:chunk];
-		[self_.runningChunks removeObject:chunk];
+		[self_.completedChunks addObject:chunk_];
+		[self_.runningChunks removeObject:chunk_];
 		dispatch_semaphore_signal(_chunksSemaphore);
 
 		
-		chunk.response = response;
-		chunk.request = nil;
+		chunk_.response = response;
+		chunk_.request = nil;
 		
 		if (response.error) {
-			chunk.error = response.error;
+			chunk_.error = response.error;
 		}
 		else if (response.wasSuccessful) {
 			CMProgressInfo *result = response.result;
@@ -232,10 +233,10 @@
 			NSError *moveError = nil;
 			if (NO == [fm moveItemAtURL:chunkTempURL toURL:chunkNewURL error:&moveError]) {
 				RCLog(@"Error moving completed chunk into place! %@ (%@)",[moveError localizedDescription],[moveError userInfo]);
-				chunk.error = moveError;
+				chunk_.error = moveError;
 			}
 			else {
-				chunk.file = chunkNewURL;
+				chunk_.file = chunkNewURL;
 			}
 		}
 		if (NO == self_.isDownloadingChunks) {
