@@ -73,6 +73,26 @@
 	STAssertEqualObjects(@"key=value&foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
+- (void) shouldUseMergedQuery {
+	CMResource *parent = [self.service resource:@"test"];
+	[parent setValue:@"pong" forQueryKey:@"ping"];
+	
+	CMResource *resource = [parent resource:@"query"];
+	[resource setValue:@"bar" forQueryKey:@"foo"];
+	
+	NSDictionary *query = @{ @"ping": @"pong", @"foo" : @"bar" };
+	
+	STAssertTrue([resource.mergedQuery isEqualToDictionary:query], @"Resource should use merged headers for requests");
+	
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should succeed");
+	STAssertEqualObjects(resource.mergedQuery, response.result, @"Result should equal sent params:%@",response.result);
+	NSString *queryString = [[response.request.URLRequest URL] query];
+//	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	STAssertTrue([queryString rangeOfString:@"foo=bar"].location != NSNotFound, @"Request URL should contain child params");
+	STAssertTrue([queryString rangeOfString:@"ping=pong"].location != NSNotFound, @"Request URL should contain parent params");
+}
+
 - (void) shouldGetWithQueryAttribute {
 	CMResource *resource = [self.service resource:@"test/query"];
 	[resource setValue:@"bar" forQueryKey:@"foo"];

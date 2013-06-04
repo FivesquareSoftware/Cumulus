@@ -670,7 +670,7 @@
 }
 
 - (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(NSDictionary *)query {
-	NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionaryWithDictionary:self.query];
+	NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionaryWithDictionary:self.mergedQuery];
 	[queryDictionary addEntriesFromDictionary:query];
 	
 	NSString *queryString = nil;

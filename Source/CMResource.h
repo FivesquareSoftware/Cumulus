@@ -352,8 +352,6 @@
  */
 - (id) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-
-
 /** Allows for uploading files directly from disk rather than keeping them in memory, which is particularly useful for large files. The progress block is called each time a chunk of data is sent to the server. The content type sent to the server is inferred from the UTI of the file on disk and overrides any content type set on the receiver.
  *  
  *  @note Currently implemented using HTTP PUT rather than Multipart POST, which may not be supported by your server. 
