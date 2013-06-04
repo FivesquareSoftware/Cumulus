@@ -79,7 +79,8 @@ enum  {
 	kCumulusErrorCodeErrorProcessingResponse	= 1000,
 	kCumulusErrorCodeErrorCreatingTempFile		= 1001,
 	kCumulusErrorCodeErrorMismatchedChunkSize	= 1002,
-	kCumulusErrorCodeErrorOutOfOrderChunks		= 1003
+	kCumulusErrorCodeErrorOutOfOrderChunks		= 1003,
+	kCumulusErrorCodeErrorWritingToTempFile		= 1004
 };
 
 extern NSString *kCumulusHTTPMethodGET;

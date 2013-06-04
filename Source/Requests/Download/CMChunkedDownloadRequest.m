@@ -256,7 +256,6 @@
 - (void) dispatchNextChunk {
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	NSUInteger runningChunkCount = self.runningChunks.count;
-	NSLog(@"runningChunkCount: %@",@(runningChunkCount));
 	if (runningChunkCount < self.maxConcurrentChunks) {
 		CMDownloadChunk *nextChunk = [self.waitingChunks anyObject];
 		if (nextChunk) {
@@ -302,12 +301,24 @@
 						long long movedChunkDataLength = 0;
 						NSFileHandle *chunkReadHandle = [NSFileHandle fileHandleForReadingFromURL:chunk.file error:&readError];
 						if (chunkReadHandle) {
-							NSData *readData = nil;
-							while ( [(readData = [chunkReadHandle readDataOfLength:1024]) length] > 0 ) {
-								[outHandle writeData:readData];
-								NSInteger length = [readData length];
-								movedChunkDataLength += length;
-								self.assembledAggregatedContentLength += length;
+							NSData *readData = [chunkReadHandle readDataOfLength:1024];
+							NSUInteger length = [readData length];
+							while ( length > 0 ) {
+								@try {
+									[outHandle writeData:readData];
+									movedChunkDataLength += length;
+									self.assembledAggregatedContentLength += length;
+									readData = [chunkReadHandle readDataOfLength:1024];
+									length = [readData length];
+								}
+								@catch (NSException *exception) {
+									*stop = YES;
+									NSError *readWriteError = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorWritingToTempFile userInfo:[exception userInfo]];
+									self.error = readWriteError;
+									RCLog(@"Error moving data from chunk to aggregate file: %@->%@ %@ (%@)", chunk.file, self.downloadedFileTempURL, [readWriteError localizedDescription], [readWriteError userInfo]);
+									length = 0;
+									return;
+								}
 							}
 						}
 						else {
