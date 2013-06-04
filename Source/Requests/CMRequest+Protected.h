@@ -44,6 +44,8 @@
 @property (readwrite) BOOL finished;
 @property (readwrite) BOOL canceled;
 @property (readonly, getter = didComplete) BOOL completed;
+@property (readwrite, strong) NSDate *startedAt;
+@property (readwrite, strong) NSDate *endedAt;
 
 
 @property (readwrite, strong) NSHTTPURLResponse *URLResponse;

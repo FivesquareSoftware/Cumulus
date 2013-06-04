@@ -76,6 +76,9 @@
 @property (readonly, getter = isStarted) BOOL started;
 @property (readonly, getter = isFinished) BOOL finished;
 @property (readonly, getter = wasCanceled) BOOL canceled;
+@property (readonly, strong) NSDate *startedAt;
+@property (readonly, strong) NSDate *endedAt;
+@property (nonatomic, readonly) NSTimeInterval elapsed;
 
 
 // ========================================================================== //

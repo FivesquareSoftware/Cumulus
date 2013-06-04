@@ -91,6 +91,13 @@ static NSUInteger requestCount = 0;
 @synthesize started=_started;
 @synthesize finished=_finished;
 @synthesize canceled=_canceled;
+@synthesize startedAt = _startedAt;
+@synthesize endedAt = _endedAt;
+
+@dynamic elapsed;
+- (NSTimeInterval) elapsed {
+	return [self.endedAt timeIntervalSinceDate:self.startedAt];
+}
 
 @dynamic completed;
 - (BOOL) didComplete {
@@ -103,6 +110,8 @@ static NSUInteger requestCount = 0;
 	// #responseInternal.contentLength captures both of these cases
 	return self.responseInternal.expectedContentLength == self.receivedContentLength;
 }
+
+
 
 #pragma mark - -Lifecycle
 
@@ -410,6 +419,7 @@ static NSUInteger requestCount = 0;
 	[self handleConnectionWillStart];
 	
     self.started = YES;
+	self.startedAt = [NSDate date];
 
 	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
@@ -551,6 +561,7 @@ static NSUInteger requestCount = 0;
 		}
 		self.timeoutTimer = nil;
 		self.finished = YES;
+		self.endedAt = [NSDate date];
 	}
 }
 
