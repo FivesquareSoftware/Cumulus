@@ -27,7 +27,9 @@
 @end
 
 
-@interface CMChunkedDownloadRequest ()
+@interface CMChunkedDownloadRequest () {
+	dispatch_semaphore_t _chunksSemaphore;
+}
 @property BOOL sentInitialProgress;
 @property (nonatomic) long long expectedAggregatedContentLength;
 @property long long receivedAggregatedContentLength;
@@ -57,6 +59,14 @@
 	return self.expectedAggregatedContentLength == self.assembledAggregatedContentLength;
 }
 
+// ========================================================================== //
+
+#pragma mark - Object
+
+- (void)dealloc {
+    dispatch_release(_chunksSemaphore);
+}
+
 
 
 // ========================================================================== //
@@ -66,9 +76,12 @@
 
 - (void) cancel {
 	[super cancel];
+	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	[_runningChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
 		[chunk.request cancel];
 	}];
+	dispatch_semaphore_signal(_chunksSemaphore);
+
 }
 
 - (CMProgressInfo *) progressReceivedInfo {
@@ -121,6 +134,8 @@
 	
 	_runningChunks = [NSMutableSet new];
 	_completedChunks = [NSMutableSet new];
+	
+	_chunksSemaphore = dispatch_semaphore_create(1);
 }
 
 - (void) handleConnectionDidReceiveData {
@@ -179,8 +194,12 @@
 		}
 	};
 	chunkRequest.completionBlock = ^(CMResponse *response) {
+		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 		[self_.completedChunks addObject:chunk];
 		[self_.runningChunks removeObject:chunk];
+		dispatch_semaphore_signal(_chunksSemaphore);
+
+		
 		chunk.response = response;
 		
 		if (response.error) {
@@ -206,12 +225,18 @@
 				chunk.file = chunkNewURL;
 			}
 		}
-		if (self_.runningChunks.count < 1) {
+		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
+		NSUInteger runningCount = self_.runningChunks.count;
+		dispatch_semaphore_signal(_chunksSemaphore);
+		if (runningCount < 1) {
 			[self_ reallyHandleConnectionFinished];
 		}
+
 	};
 	
+	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	[_runningChunks addObject:chunk];
+	dispatch_semaphore_signal(_chunksSemaphore);
 	[chunkRequest start];
 	chunk.request = chunkRequest;
 }
@@ -227,8 +252,10 @@
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
 		if (self.chunkErrors.count < 1) {
 			
+			dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 			NSArray *sortedChunks = [_completedChunks sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES]]];
-			
+			dispatch_semaphore_signal(_chunksSemaphore);
+
 			NSFileManager *fm = [NSFileManager new];
 			if ([fm createFileAtPath:[self.downloadedFileTempURL path] contents:nil attributes:nil]) {
 				NSError *writeError = nil;

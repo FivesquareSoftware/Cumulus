@@ -324,6 +324,10 @@
 	STAssertTrue(NO, @"Unimplemented");
 }
 
+- (void)shouldProperlyCancelAChunkedDownload {
+	STAssertTrue(NO, @"Unimplemented");
+}
+
 
 
 
