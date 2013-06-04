@@ -183,12 +183,12 @@
 /** The headers specific to the receiver. 
  *  @note Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors' headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. 
  */
-@property (nonatomic, strong) NSMutableDictionary *headers;
+@property (nonatomic, copy) NSDictionary *headers;
 
 /** A query dictionary for the receiver that will be appended to every request as a query string. This attribute is best avoided avoided except to accomodate those circumstances where a non-conforming service requires data more correctly placed in headers (access keys, service versions, etc.) to be in a query string.
  *  @note When building a request, the receiver's query string will be merged with all of its ancestors' query strings with any conflicts resolved in favor of the resource farthest down the inheriticance chain. If one of the request methods that takes a query string was also used, the resulting dictionary will be merged again with the supplied query object.
  */
-@property (nonatomic, strong) NSMutableDictionary *query;
+@property (nonatomic, copy) NSDictionary *query;
 
 
 /** If non-zero will cancel a request for the receiver if no response has been received by the time #timeout elapses. The underlying URL request also has this value set for #timeoutInterval, which means that (except in the case of POST requests for which the system overrides #timeoutInterval) the request will quit if it has been idle for this length of time. */

@@ -61,12 +61,19 @@
 
 // Private Properties
 
+/// The mutable headers collection for internal use
+@property (nonatomic, strong) NSMutableDictionary *headersInternal;
+/// The mutable querty dictionary for internal use
+@property (nonatomic, strong) NSMutableDictionary *queryInternal;
+
+
 /// All headers from all ancestors and the receiver merged into one dictionary
 @property (nonatomic, readonly) NSMutableDictionary *mergedHeaders;
 /// All queries from all ancestors and the receiver merged into one dictionary
 @property (nonatomic, readonly) NSMutableDictionary *mergedQuery;
 /// All #authProviders from all ancestors and the receiver merged into one array
 @property (nonatomic, readonly) NSMutableArray *mergedAuthProviders;
+
 /// The internal property for directly accessing request objects
 @property (nonatomic, strong) NSMutableSet *requestsInternal;
 @property (nonatomic, strong) NSMutableDictionary *fixtures;
@@ -96,7 +103,8 @@
 @synthesize parent=_parent;
 @synthesize relativePath=_relativePath;
 @synthesize URL=_URL;
-@synthesize headers=_headers;
+@synthesize headersInternal=_headersInternal;
+@synthesize queryInternal = _queryInternal;
 @synthesize timeout=_timeout;
 @synthesize cachePolicy=_cachePolicy;
 @synthesize cachesDir=_cachesDir;
@@ -112,18 +120,36 @@
 	return [self.URL query];
 }
 
-- (NSMutableDictionary *) headers {
-    if (nil == _headers) {
-        _headers = [NSMutableDictionary dictionary];
-    }
-    return _headers;
+@dynamic headers;
+- (NSDictionary *) headers {
+	return [self.headersInternal copy];
 }
 
-- (NSMutableDictionary *) query {
-    if (nil == _query) {
-        _query = [NSMutableDictionary dictionary];
+- (void) setHeaders:(NSDictionary *)headers {
+	self.headersInternal = [headers mutableCopy];
+}
+
+- (NSMutableDictionary *) headersInternal {
+    if (nil == _headersInternal) {
+        _headersInternal = [NSMutableDictionary dictionary];
     }
-    return _query;
+    return _headersInternal;
+}
+
+@dynamic query;
+- (NSDictionary *) query {
+	return [self.queryInternal copy];
+}
+
+- (void) setQuery:(NSDictionary *)query {
+	self.queryInternal = [query mutableCopy];
+}
+
+- (NSMutableDictionary *) queryInternal {
+    if (nil == _queryInternal) {
+        _queryInternal = [NSMutableDictionary dictionary];
+    }
+    return _queryInternal;
 }
 
 - (NSTimeInterval) timeout {
@@ -201,7 +227,7 @@
 - (NSMutableDictionary *) mergedHeaders {
 	NSMutableDictionary *mergedHeaders = [NSMutableDictionary dictionary];	
 	[mergedHeaders addEntriesFromDictionary:_parent.mergedHeaders];
-	[mergedHeaders addEntriesFromDictionary:_headers];
+	[mergedHeaders addEntriesFromDictionary:_headersInternal];
 	return mergedHeaders;
 }
 
@@ -209,7 +235,7 @@
 - (NSMutableDictionary *) mergedQuery {
 	NSMutableDictionary *mergedQuery = [NSMutableDictionary dictionary];
 	[mergedQuery addEntriesFromDictionary:_parent.mergedQuery];
-	[mergedQuery addEntriesFromDictionary:_query];
+	[mergedQuery addEntriesFromDictionary:_queryInternal];
 	return mergedQuery;
 }
 
@@ -334,9 +360,9 @@
 		if (NO == [value isKindOfClass:[NSString class]]) {
 			value = [value description];
 		}
-		[self.headers setObject:value forKey:key];
+		[self.headersInternal setObject:value forKey:key];
 	} else {
-		[self.headers removeObjectForKey:key];
+		[self.headersInternal removeObjectForKey:key];
 	}
 }
 
@@ -346,9 +372,9 @@
 
 - (void) setValue:(id)value forQueryKey:(NSString *)key {
 	if (value) {
-		[self.query setObject:value forKey:key];
+		[self.queryInternal setObject:value forKey:key];
 	} else {
-		[self.query removeObjectForKey:key];
+		[self.queryInternal removeObjectForKey:key];
 	}
 }
 
@@ -645,24 +671,24 @@
 - (void) setHeadersForContentType:(CMContentType)contentType {
 	switch (contentType) {
 		case CMContentTypeJSON:
-			[self.headers setObject:@"application/json" forKey:kCumulusHTTPHeaderContentType];
-			[self.headers setObject:@"application/json" forKey:kCumulusHTTPHeaderAccept];
+			[self.headersInternal setObject:@"application/json" forKey:kCumulusHTTPHeaderContentType];
+			[self.headersInternal setObject:@"application/json" forKey:kCumulusHTTPHeaderAccept];
 			break;
 		case CMContentTypeXML:
-			[self.headers setObject:@"application/xml" forKey:kCumulusHTTPHeaderContentType];
-			[self.headers setObject:@"application/xml" forKey:kCumulusHTTPHeaderAccept];
+			[self.headersInternal setObject:@"application/xml" forKey:kCumulusHTTPHeaderContentType];
+			[self.headersInternal setObject:@"application/xml" forKey:kCumulusHTTPHeaderAccept];
 			break;
 		case CMContentTypeHTML:
-			[self.headers setObject:@"text/html" forKey:kCumulusHTTPHeaderContentType];
-			[self.headers setObject:@"text/html" forKey:kCumulusHTTPHeaderAccept];
+			[self.headersInternal setObject:@"text/html" forKey:kCumulusHTTPHeaderContentType];
+			[self.headersInternal setObject:@"text/html" forKey:kCumulusHTTPHeaderAccept];
 			break;			
 		case CMContentTypeText:
-			[self.headers setObject:@"text/plain" forKey:kCumulusHTTPHeaderContentType];
-			[self.headers setObject:@"text/plain" forKey:kCumulusHTTPHeaderAccept];
+			[self.headersInternal setObject:@"text/plain" forKey:kCumulusHTTPHeaderContentType];
+			[self.headersInternal setObject:@"text/plain" forKey:kCumulusHTTPHeaderAccept];
 			break;			
 		case CMContentTypePNG:
-			[self.headers setObject:@"image/png" forKey:kCumulusHTTPHeaderContentType];
-			[self.headers setObject:@"image/png" forKey:kCumulusHTTPHeaderAccept];
+			[self.headersInternal setObject:@"image/png" forKey:kCumulusHTTPHeaderContentType];
+			[self.headersInternal setObject:@"image/png" forKey:kCumulusHTTPHeaderAccept];
 			break;			
 		default:
 			break;
