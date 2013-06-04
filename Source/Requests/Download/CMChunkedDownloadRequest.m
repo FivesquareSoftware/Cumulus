@@ -18,7 +18,7 @@
 @interface CMDownloadChunk : NSObject
 @property (nonatomic) NSUInteger sequence;
 @property (nonatomic) long long size;
-@property (nonatomic, weak) CMRequest *request;
+@property (nonatomic, strong) CMRequest *request;
 @property (nonatomic, strong) CMResponse *response;
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, strong) NSURL *file;
@@ -39,9 +39,10 @@
 @property (copy) NSString *downloadedFilename;
 @property (nonatomic, strong) NSURL *chunksDirURL;
 
-@property (nonatomic, strong) NSOperationQueue *chunkLaunchQueue;
-@property (nonatomic, strong) NSMutableSet *runningChunks;
-@property (nonatomic, strong) NSMutableSet *completedChunks;
+@property (readonly, getter = isDownloadingChunks) BOOL downloadingChunks;
+@property (strong) NSMutableSet *waitingChunks;
+@property (strong) NSMutableSet *runningChunks;
+@property (strong) NSMutableSet *completedChunks;
 @property (nonatomic, readonly) NSSet *chunkErrors;
 @end
 
@@ -58,6 +59,15 @@
 @dynamic completed;
 - (BOOL) didComplete {
 	return self.expectedAggregatedContentLength == self.assembledAggregatedContentLength;
+}
+
+@dynamic downloadingChunks;
+- (BOOL) isDownloadingChunks {
+	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
+	NSUInteger waitingCount = self.waitingChunks.count;
+	NSUInteger runningCount = self.runningChunks.count;
+	dispatch_semaphore_signal(_chunksSemaphore);
+	return (waitingCount > 0 || runningCount > 0);
 }
 
 // ========================================================================== //
@@ -82,7 +92,6 @@
 		[chunk.request cancel];
 	}];
 	dispatch_semaphore_signal(_chunksSemaphore);
-	[_chunkLaunchQueue cancelAllOperations];
 
 }
 
@@ -134,12 +143,11 @@
 //	_chunkFiles = [NSMutableArray new];
 	
 	
+	_waitingChunks = [NSMutableSet new];
 	_runningChunks = [NSMutableSet new];
 	_completedChunks = [NSMutableSet new];
 	
 	_chunksSemaphore = dispatch_semaphore_create(1);
-	_chunkLaunchQueue = [[NSOperationQueue alloc] init];
-	_chunkLaunchQueue.maxConcurrentOperationCount = 4;
 }
 
 - (void) handleConnectionDidReceiveData {
@@ -205,6 +213,7 @@
 
 		
 		chunk.response = response;
+		chunk.request = nil;
 		
 		if (response.error) {
 			chunk.error = response.error;
@@ -229,24 +238,33 @@
 				chunk.file = chunkNewURL;
 			}
 		}
-		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
-		NSUInteger runningCount = self_.runningChunks.count;
-		dispatch_semaphore_signal(_chunksSemaphore);
-		if (runningCount < 1) {
+		if (NO == self_.isDownloadingChunks) {
 			[self_ reallyHandleConnectionFinished];
 		}
-
+		else {
+			[self_ dispatchNextChunk];
+		}
 	};
 	
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
-	[_runningChunks addObject:chunk];
+	[_waitingChunks addObject:chunk];
 	dispatch_semaphore_signal(_chunksSemaphore);
-	NSBlockOperation *launchOp = [NSBlockOperation blockOperationWithBlock:^{
-		[chunkRequest start];
-	}];
-	[_chunkLaunchQueue addOperation:launchOp];
 	chunk.request = chunkRequest;
-	
+	[self dispatchNextChunk];
+}
+
+- (void) dispatchNextChunk {
+	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
+	NSUInteger runningChunkCount = self.runningChunks.count;
+	if (runningChunkCount < 4) {
+		CMDownloadChunk *nextChunk = [self.waitingChunks anyObject];
+		if (nextChunk) {
+			[self.runningChunks addObject:nextChunk];
+			[self.waitingChunks removeObject:nextChunk];
+			[nextChunk.request start];
+		}
+	}
+	dispatch_semaphore_signal(_chunksSemaphore);
 }
 
 
