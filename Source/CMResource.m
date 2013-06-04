@@ -294,11 +294,21 @@
 	NSURL *resourceURL = [_URL URLByAppendingPathComponent:relativePath];
 	resourceURL = [resourceURL standardizedURL];
 	
+	NSMutableDictionary *query = nil;
 	if (queryString.length) {
-		resourceURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",[resourceURL absoluteString],queryString]];
+//		resourceURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",[resourceURL absoluteString],queryString]];
+		query = [NSMutableDictionary new];
+		NSArray *pairs = [queryString componentsSeparatedByString:@"&"];
+		[pairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
+			NSArray *keyValue = [pair componentsSeparatedByString:@"="];
+			if (keyValue.count == 2) {
+				[query setObject:keyValue[1] forKey:keyValue[0]];
+			}
+		}];		
 	}
 	
 	CMResource *resource = [CMResource withURL:[resourceURL absoluteString]];
+	resource.query = query;
 	
 	resource.parent = self;
 	
@@ -543,6 +553,12 @@
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
+- (id) downloadChunksWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMChunkedDownloadRequest *request = [self chunkedDownloadRequestWithQuery:nil];
+	request.didReceiveDataBlock = progressBlock;
+	return [self launchRequest:request withCompletionBlock:completionBlock];
+}
+
 - (id) resumeOrBeginDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
@@ -598,6 +614,14 @@
 		request = [[CMDownloadRequest alloc] initWithURLRequest:URLRequest];
 	}
 	[(CMDownloadRequest *)request setCachesDir:self.cachesDir];
+	[self configureRequest:request];
+	return request;
+}
+
+- (CMChunkedDownloadRequest *) chunkedDownloadRequestWithQuery:query {
+	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
+	CMChunkedDownloadRequest *request = [[CMChunkedDownloadRequest alloc] initWithURLRequest:URLRequest];
+	[request setCachesDir:self.cachesDir];
 	[self configureRequest:request];
 	return request;
 }

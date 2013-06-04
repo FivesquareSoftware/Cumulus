@@ -20,6 +20,7 @@
 
 @property (nonatomic, strong) CMResource *service;
 @property (strong) NSURL *downloadedFileURL;
+@property (strong) NSURL *copiedFileURL;
 @property (nonatomic, strong) NSString *cachesDir;
 
 @end

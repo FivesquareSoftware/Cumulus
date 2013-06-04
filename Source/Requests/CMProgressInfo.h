@@ -32,4 +32,8 @@
  */
 @property (nonatomic, strong) NSNumber *progress;
 
+/** A long long as an NSNumber representing the size of the chunk of data received which caused the receiver to be posted. */
+@property (nonatomic, strong) NSNumber *chunkSize;
+
+
 @end

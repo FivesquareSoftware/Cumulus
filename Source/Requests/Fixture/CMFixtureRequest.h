@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 #import "CMRequest.h"
 
 @interface CMFixtureRequest : CMRequest

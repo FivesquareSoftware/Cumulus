@@ -71,6 +71,7 @@
 #import "CMResource.h"
 #import "CMRequest.h"
 #import "CMDownloadRequest.h"
+#import "CMChunkedDownloadRequest.h"
 #import "CMUploadRequest.h"
 #import "CMResponse.h"
 #import "CMCoder.h"

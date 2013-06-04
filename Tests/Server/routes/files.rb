@@ -5,15 +5,17 @@ require 'time'
 
 before '/test/*/massive*' do
 	@massive_filepath = 'resources/hs-2006-01-c-full_tif.png'
+	@massive_filesize = File.size(@massive_filepath)
 	@massive_etag = Digest.hexencode(@massive_filepath)
 end
 
 helpers do
 	def download_massive(range = nil, etag = @massive_etag, date = Time.now.httpdate)
 		filepath = @massive_filepath#'resources/hs-2006-01-c-full_tif.png'
-		file_size = File.size(filepath)
+		file_size = @massive_filesize
 
 		Log.debug("range: #{range}")
+		Log.debug("file_size: #{file_size}")
 
 		length = file_size
 		if range =~ /bytes=(\d+)-(\d+)?/
@@ -79,6 +81,10 @@ get '/test/stream/massive' do
 	filepath = @massive_filepath#'resources/hs-2006-01-c-full_tif.png'
 	content_type('image/png')
 	send_file(filepath, :filename => File.basename(filepath))
+end
+
+head '/test/download/massive' do
+	headers('Content-Length' => "#{@massive_filesize}")
 end
 
 get '/test/download/massive' do

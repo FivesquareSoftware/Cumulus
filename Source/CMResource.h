@@ -339,6 +339,8 @@
  */
 - (id) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
+- (id) downloadChunksWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
 /** Behaves like downloadWithProgressBlock:completionBlock: with the exception that it will resume the download if the temp download file already existes on disk.
  *  @see downloadWithProgressBlock:completionBlock:. 
  */
@@ -349,6 +351,7 @@
  *  @see downloadWithProgressBlock:completionBlock:
  */
 - (id) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
 
 
 /** Allows for uploading files directly from disk rather than keeping them in memory, which is particularly useful for large files. The progress block is called each time a chunk of data is sent to the server. The content type sent to the server is inferred from the UTI of the file on disk and overrides any content type set on the receiver.

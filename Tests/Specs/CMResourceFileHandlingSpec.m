@@ -15,6 +15,15 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "OCMock.h"
 
+
+@interface CMRequest (Specs)
+@property (nonatomic, readonly) id cacheIdentifier;
+@end
+@implementation CMRequest (Specs)
+@end
+
+
+
 @interface CMResourceFileHandlingSpec ()
 @end
 
@@ -55,14 +64,14 @@
 
 - (void)afterAll {
     // tear down common resources here
-	[self.specHelper cleanCaches];
+//	[self.specHelper cleanCaches];
 }
 
 // ========================================================================== //
 
 #pragma mark - Specs
 
-
+/*
 - (void)shouldDownloadAFileToDisk {
 	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
 	[self assertDownloadResourceToDisk:heroDownload];
@@ -295,6 +304,26 @@
 
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
+*/
+- (void)shouldDownloadAFileInChunks {
+	CMResource *massive = [self.service resource:@"test/download/massive"];
+	[self assertDownloadResourceToDisk:massive chunked:YES];
+
+	NSFileManager *fm = [NSFileManager new];
+	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
+	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
+
+}
+
+- (void)shouldCompleteChunkedDownloadWhenTheFileIsEmpty {
+	STAssertTrue(NO, @"Unimplemented");
+}
+
+- (void)shouldReturnEmptyResultsWhenRemoteFileIsEmpty {
+	STAssertTrue(NO, @"Unimplemented");
+}
+
+
 
 
 // ========================================================================== //
@@ -302,6 +331,10 @@
 #pragma mark - Helpers
 
 - (void) assertDownloadResourceToDisk:(CMResource *)resource {
+	[self assertDownloadResourceToDisk:resource chunked:NO];
+}
+
+- (void) assertDownloadResourceToDisk:(CMResource *)resource chunked:(BOOL)chunked {
 	
 	if (self.cachesDir) {
 		resource.cachesDir = self.cachesDir;
@@ -339,11 +372,23 @@
 		self.downloadedFileURL = [localResponse.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
 		NSFileManager *fm = [[NSFileManager alloc] init];
 		fileExistedAtCompletion = [fm fileExistsAtPath:[self.downloadedFileURL path]];
+		
+		CMProgressInfo *result = response.result;
+		self.copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
+		
+		NSError *error = nil;
+		[fm moveItemAtURL:result.tempFileURL toURL:self.copiedFileURL error:&error];
+
 		dispatch_semaphore_signal(request_sema);
 	};
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	if (chunked) {
+		[resource downloadChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
+	}
+	else {
+		[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	}
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
@@ -382,15 +427,17 @@
 	
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
+	__block id massiveCacheIdentifier = nil;
 	CMCompletionBlock completionBlock = ^(CMResponse *response) {
 		localResponse = response;
+		massiveCacheIdentifier = response.request.cacheIdentifier;
 		dispatch_semaphore_signal(request_sema);
 	};
 	[massive downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	NSDictionary *downloadState = [CMDownloadInfo downloadInfo];
-	CMDownloadInfo *massiveInfo = [downloadState objectForKey:[massive URL]];
+	CMDownloadInfo *massiveInfo = [downloadState objectForKey:massiveCacheIdentifier];
 	NSURL *tempFileURL = massiveInfo.downloadedFileTempURL;
 	
 	STAssertNotNil(tempFileURL, @"Download state for partial download should include a temp file URL");
@@ -408,7 +455,6 @@
 	__block float firstProgress = -1.f;
 	__block BOOL hadRangeHeader = NO;
 	__block BOOL writesToSameTempFile = NO;
-	__block NSURL *copiedFileURL = nil;
 	__block BOOL sentPartialContent = NO;
 	progressBlock = ^(CMProgressInfo *progressInfo){
 		if (NO == hadRangeHeader) {
@@ -423,11 +469,11 @@
 	completionBlock = ^(CMResponse *response) {
 		localResponse = response;
 		CMProgressInfo *result = response.result;
-		copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
+		self.copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
 		
 		NSFileManager *fm = [NSFileManager new];
 		NSError *error = nil;
-		[fm moveItemAtURL:result.tempFileURL toURL:copiedFileURL error:&error];
+		[fm moveItemAtURL:result.tempFileURL toURL:self.copiedFileURL error:&error];
 		
 		sentPartialContent = response.HTTPPartialContent;
 		
@@ -451,7 +497,7 @@
 	
 	
 	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
-	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[copiedFileURL path]], @"Completed file should be the same as if it were downloaded without interruption.");
+	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without interruption.");
 }
 
 

@@ -166,6 +166,7 @@ static NSUInteger requestCount = 0;
 	else {
 		progressReceivedInfo.progress = @(0);
 	}
+	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
 	return progressReceivedInfo;
 }
 
@@ -492,6 +493,10 @@ static NSUInteger requestCount = 0;
 	// Generally used by subclasses to effect request customization
 }
 
+- (void) handleConnectionDidReceiveResponse {
+	// Generally used by subclasses to make adjustments based on initial information from the server
+}
+
 - (void) handleConnectionDidReceiveData {
 	if (self.canceled || self.connectionFinished) {
 		return;
@@ -681,6 +686,7 @@ static NSUInteger requestCount = 0;
 //	self.expectedContentLength = [response expectedContentLength]; // fails when there is no content length header, often in a range request this is true
 	// Works for simple requests as well as range requests
 	self.expectedContentLength = self.responseInternal.expectedContentLength;
+	[self handleConnectionDidReceiveResponse];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -688,6 +694,7 @@ static NSUInteger requestCount = 0;
 
 	NSUInteger dataLength = [data length];
 	self.receivedContentLength += dataLength;
+	self.lastChunkSize = dataLength;
 	[self handleConnectionDidReceiveData];
 }
 

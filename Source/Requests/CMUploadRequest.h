@@ -33,6 +33,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import <Foundation/Foundation.h>
+
 #import "CMRequest.h"
 
 @interface CMUploadRequest : CMRequest

@@ -520,10 +520,10 @@
 		A458078E1756A2FD0066D045 /* Download */ = {
 			isa = PBXGroup;
 			children = (
-				A45807A11756B4C90066D045 /* CMChunkedDownloadRequest.h */,
-				A45807A21756B4C90066D045 /* CMChunkedDownloadRequest.m */,
 				A45807911756A2FD0066D045 /* CMDownloadRequest.h */,
 				A45807921756A2FD0066D045 /* CMDownloadRequest.m */,
+				A45807A11756B4C90066D045 /* CMChunkedDownloadRequest.h */,
+				A45807A21756B4C90066D045 /* CMChunkedDownloadRequest.m */,
 				A458078F1756A2FD0066D045 /* CMDownloadInfo.h */,
 				A45807901756A2FD0066D045 /* CMDownloadInfo.m */,
 			);

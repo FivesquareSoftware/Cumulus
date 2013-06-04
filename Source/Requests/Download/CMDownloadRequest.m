@@ -223,6 +223,8 @@
 	}
 	NSUInteger dataLength = [data length];
 	self.receivedContentLength += dataLength;
+	self.lastChunkSize = dataLength;
+
 	[super handleConnectionDidReceiveData];
 #endif	
 }

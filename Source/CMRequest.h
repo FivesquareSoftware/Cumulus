@@ -54,7 +54,7 @@
  *
  *  - didSendData, which is passed a progress dictionary
  *  - didreceiveData, which is also passed a progress dictionary
- *  - postprocess, which sets the request's results to the return value of the block, which is passed the existing results as an argument
+ *  - postprocess, which is passed the existing result as an argument and whose return value then replaces the request's result in turn
  *  - completion, which runs when a request completes, regardless of success or failure
  *  - abort, which runs when a request is canceled before its url connection is started
  *

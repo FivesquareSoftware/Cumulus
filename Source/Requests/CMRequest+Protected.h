@@ -63,7 +63,8 @@
 @property (readonly) BOOL canStart;
 @property (readonly) BOOL canCancel;
 @property (readonly) BOOL canAbort;
-@property (readonly) NSString *cacheIdentifier;
+@property (nonatomic, readonly) NSString *cacheIdentifier;
+@property long long lastChunkSize;
 
 // Helpers
 
@@ -74,6 +75,7 @@
 
 - (void) handleConnectionWillStart;
 - (void) handleConnectionFinished;
+- (void) handleConnectionDidReceiveResponse;
 - (void) handleConnectionDidReceiveData;
 - (void) handleConnectionDidSendData;
 
