@@ -264,7 +264,7 @@
 						}
 						if (movedChunkDataLength != chunk.size) {
 							*stop = YES;
-							NSDictionary *info = @{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Actual chunk size did not match expected chunk size %@ != %@",@(movedChunkDataLength), @(chunk.size)] };
+							NSDictionary *info = @{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Actual chunk size did not match expected chunk size %@ != %@ (%@)",@(movedChunkDataLength), @(chunk.size),[chunk.file lastPathComponent]] };
 							self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorMismatchedChunkSize userInfo:info];
 							RCLog(info[NSLocalizedDescriptionKey]);
 						}
