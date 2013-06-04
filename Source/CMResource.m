@@ -553,7 +553,7 @@
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
-- (id) downloadChunksWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+- (id) chunkedDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMChunkedDownloadRequest *request = [self chunkedDownloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];

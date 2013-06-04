@@ -384,7 +384,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	if (chunked) {
-		[resource downloadChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
+		[resource chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	}
 	else {
 		[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];

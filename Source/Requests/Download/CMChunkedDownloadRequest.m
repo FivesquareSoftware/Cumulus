@@ -189,7 +189,7 @@
 		else {
 			CMProgressInfo *result = response.result;
 			NSURL *chunkTempURL = result.tempFileURL;
-			NSURL *chunkNewURL = [_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",@(idx),[chunkTempURL lastPathComponent]]];
+			NSURL *chunkNewURL = [_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@",@(idx),[chunkTempURL lastPathComponent]]];
 			
 			if (nil == self.downloadedFilename) {
 				self.downloadedFilename = result.filename;
