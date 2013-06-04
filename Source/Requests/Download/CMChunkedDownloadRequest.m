@@ -250,7 +250,7 @@
 
 - (void) reallyHandleConnectionFinished {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-		if (self.chunkErrors.count < 1) {
+		if (self.chunkErrors.count < 1 && NO == self.wasCanceled) {
 			
 			dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 			NSArray *sortedChunks = [_completedChunks sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES]]];
