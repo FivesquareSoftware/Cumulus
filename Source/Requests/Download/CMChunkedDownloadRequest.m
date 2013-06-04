@@ -267,6 +267,8 @@
 							NSDictionary *info = @{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Actual chunk size did not match expected chunk size %@ != %@ (%@)",@(movedChunkDataLength), @(chunk.size),[chunk.file lastPathComponent]] };
 							self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorMismatchedChunkSize userInfo:info];
 							RCLog(info[NSLocalizedDescriptionKey]);
+							RCLog(@"chunk.request.headers: %@",chunk.request.headers);
+							RCLog(@"chunk.response.headers: %@",chunk.response.headers);
 						}
 					}];
 				}
@@ -284,6 +286,8 @@
 		else {
 			self.error = [self.chunkErrors anyObject];
 		}
+		
+		self.receivedContentLength = self.assembledAggregatedContentLength;
 		
 		CMProgressInfo *progressInfo = [CMProgressInfo new];
 		progressInfo.progress = @(1.f);

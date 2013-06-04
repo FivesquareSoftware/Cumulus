@@ -44,8 +44,6 @@
 		A416122A14411A800008A235 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A416122914411A800008A235 /* libOCMock.a */; };
 		A41C901114F2ED4800E16A9E /* NSString+Cumulus.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+Cumulus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A41C901214F2ED4800E16A9E /* NSString+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+Cumulus.m */; };
-		A425F4E1175D9FE300F38C8A /* CMResourceQuerySpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* CMResourceQuerySpec.m */; };
-		A425F4E2175D9FEF00F38C8A /* CMResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* CMResourceNestingSpec.m */; };
 		A432B46E149D0B56006582DB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B3991408F193003495BA /* Security.framework */; };
 		A43E63B6152A60FA006AEBCD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A43E63B4152A60FA006AEBCD /* InfoPlist.strings */; };
 		A43E63BB152A6185006AEBCD /* CMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* CMConstants.m */; };
@@ -179,6 +177,7 @@
 		A4EFF212155334D200868358 /* CMFixtureHTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF20F155334D200868358 /* CMFixtureHTTPResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4EFF213155334D200868358 /* CMFixtureHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF210155334D200868358 /* CMFixtureHTTPResponse.m */; };
 		A4EFF214155334D200868358 /* CMFixtureHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF210155334D200868358 /* CMFixtureHTTPResponse.m */; };
+		A4FC6C65175E6ED50082D52C /* CMResourceFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* CMResourceFileHandlingSpec.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1185,8 +1184,7 @@
 			files = (
 				A4626A4D14199082005544D6 /* main.m in Sources */,
 				A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */,
-				A425F4E1175D9FE300F38C8A /* CMResourceQuerySpec.m in Sources */,
-				A425F4E2175D9FEF00F38C8A /* CMResourceNestingSpec.m in Sources */,
+				A4FC6C65175E6ED50082D52C /* CMResourceFileHandlingSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

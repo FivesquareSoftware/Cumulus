@@ -20,6 +20,7 @@
 @property (nonatomic, readonly) id cacheIdentifier;
 @end
 @implementation CMRequest (Specs)
+@dynamic cacheIdentifier;
 @end
 
 
@@ -378,7 +379,7 @@
 		
 		NSError *error = nil;
 		[fm moveItemAtURL:result.tempFileURL toURL:self.copiedFileURL error:&error];
-
+		
 		dispatch_semaphore_signal(request_sema);
 	};
 	
@@ -400,6 +401,7 @@
 	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	STAssertTrue(localResponse.wasComplete, @"Response should have been complete: %@", localResponse);
 	
 	STAssertNotNil(filename, @"Filename should not be nil");
 	STAssertNotNil(URL, @"URL should not be nil");	
