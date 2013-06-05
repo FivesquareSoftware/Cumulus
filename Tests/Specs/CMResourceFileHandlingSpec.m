@@ -366,7 +366,7 @@
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 
 	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
-	STAssertTrue(firstProgress >= 0, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
+	STAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
 		
 	NSFileManager *fm = [NSFileManager new];
 	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];

@@ -211,7 +211,6 @@
 	chunk.sequence = idx;
 	chunk.size = range.length;
 
-	
 	CMDownloadRequest *chunkRequest = [[CMDownloadRequest alloc] initWithURLRequest:_baseChunkRequest];
 	
 	chunkRequest.timeout = self.timeout;
