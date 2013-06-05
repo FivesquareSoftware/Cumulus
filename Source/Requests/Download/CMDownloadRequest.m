@@ -69,7 +69,7 @@
 
 - (CMProgressInfo *) progressReceivedInfo {
 	CMProgressInfo *progressReceivedInfo = [super progressReceivedInfo];
-	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
+//	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
 	if (_shouldResume && self.responseInternal.totalContentLength > 0) { // in the case of resumes, we report progress a little differently, against the content total rather than the range
 		long long fileOffset = self.responseInternal.expectedContentRange.location+self.receivedContentLength;
 		progressReceivedInfo.progress = @((float)(fileOffset) / (float)self.responseInternal.totalContentLength);
@@ -127,10 +127,13 @@
 - (void) handleConnectionFinished {
 	CMProgressInfo *progressInfo = [CMProgressInfo new];
 	progressInfo.progress = @(1.f);
-	progressInfo.tempFileURL = self.downloadedFileTempURL;
 	progressInfo.URL = [self.URLRequest URL];
 	progressInfo.filename = self.downloadedFilename;
 	progressInfo.fileOffset = @(self.responseInternal.totalContentLength);
+	
+	if (self.responseInternal.wasSuccessful && self.didComplete) {
+		progressInfo.tempFileURL = self.downloadedFileTempURL;
+	}
 	
 	self.result = progressInfo;
 	[super handleConnectionFinished];
@@ -160,7 +163,7 @@
 	// If the delegate calls are broken (do not actually point to a valid file on download) then we need to create a filename ourselves and use that
 	NSString *filename = nil;
 	NSDictionary *responseHeaders = [self.URLResponse allHeaderFields];
-	NSString *contentDisposition = [responseHeaders objectForKey:@"Content-Disposition"];
+	NSString *contentDisposition = [responseHeaders objectForKey:kCumulusHTTPHeaderContentDisposition];
 	if (contentDisposition.length) {
 		NSRange filenameRange = [contentDisposition rangeOfString:@"filename="];
 		if (filenameRange.location != NSNotFound) {

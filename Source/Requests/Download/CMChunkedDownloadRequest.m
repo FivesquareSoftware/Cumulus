@@ -63,23 +63,8 @@
 	return totalAggregatedContentLength;
 }
 
-//@dynamic allChunks;
-//- (NSSet *) allChunks {
-//	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
-//	NSMutableSet *allChunks = [NSMutableSet setWithSet:_waitingChunks];
-//	[allChunks unionSet:_runningChunks];
-//	[allChunks unionSet:_completedChunks];
-//	dispatch_semaphore_signal(_chunksSemaphore);
-//	return allChunks;
-//}
-
 - (NSSet *) chunkErrors {
 	return [_completedChunks valueForKey:@"error"];
-}
-
-@dynamic completed;
-- (BOOL) didComplete {
-	return self.expectedAggregatedContentLength == self.assembledAggregatedContentLength;
 }
 
 @dynamic downloadingChunks;
@@ -90,6 +75,29 @@
 	dispatch_semaphore_signal(_chunksSemaphore);
 	return (waitingCount > 0 || runningCount > 0);
 }
+
+- (BOOL) didComplete {
+	return self.expectedAggregatedContentLength == self.assembledAggregatedContentLength;
+}
+
+- (CMProgressInfo *) progressReceivedInfo {
+	CMProgressInfo *progressReceivedInfo = [CMProgressInfo new];
+	progressReceivedInfo.request = self;
+	progressReceivedInfo.URL = [self.URLRequest URL];
+	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
+	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
+	float progress = 0;
+	long long totalAggregatedContentLength = 0;
+	if (self.expectedAggregatedContentLength > 0) {
+		totalAggregatedContentLength = self.totalAggregatedContentLength;
+		progress = (float)totalAggregatedContentLength / (float)self.expectedAggregatedContentLength;
+	}
+	progressReceivedInfo.progress = @(progress);
+	progressReceivedInfo.fileOffset = @(totalAggregatedContentLength);
+	return progressReceivedInfo;
+}
+
+
 
 // ========================================================================== //
 
@@ -121,32 +129,21 @@
 
 
 - (void) cancel {
-	[super cancel];
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	[_runningChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
 		[chunk.request cancel];
+		if (chunk.file) {
+			NSFileManager *fm = [NSFileManager new];
+			NSString *filePath = [self.cachesDir stringByAppendingPathComponent:[chunk.file lastPathComponent]];
+			NSURL *oldChunkURL = [NSURL fileURLWithPath:filePath];
+			NSError *moveError = nil;
+			if (NO == [fm moveItemAtURL:chunk.file toURL:oldChunkURL error:&moveError]) {
+				RCLog(@"Error moving canceled chunk back into place! %@ (%@)",[moveError localizedDescription],[moveError userInfo]);
+			}
+		}
 	}];
 	dispatch_semaphore_signal(_chunksSemaphore);
-
-}
-
-- (CMProgressInfo *) progressReceivedInfo {
-	CMProgressInfo *progressReceivedInfo = [CMProgressInfo new];
-	progressReceivedInfo.request = self;
-	progressReceivedInfo.URL = [self.URLRequest URL];
-	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
-	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
-	float progress = 0;
-	if (self.expectedAggregatedContentLength > 0) {
-		long long totalAggregatedContentLength = self.totalAggregatedContentLength;
-		progress = (float)totalAggregatedContentLength / (float)self.expectedAggregatedContentLength;
-		progressReceivedInfo.progress = @(progress);
-		progressReceivedInfo.fileOffset = @(totalAggregatedContentLength);
-	}
-	else {
-		progressReceivedInfo.progress = @(0);
-	}
-	return progressReceivedInfo;
+	[super cancel];
 }
 
 - (void) handleConnectionWillStart {
@@ -159,13 +156,31 @@
 			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
 		}
 	}
+		
 	
-	CFUUIDRef UUID = CFUUIDCreate(NULL);
-	NSString *tempFilename = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, UUID);
-	CFRelease(UUID);
-	
-	NSString *filePath = [self.cachesDir stringByAppendingPathComponent:tempFilename];
-	self.downloadedFileTempURL = [NSURL fileURLWithPath:filePath];
+	CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForCacheIdentifier:self.cacheIdentifier];
+	NSURL *tempFileURL = downloadInfo.downloadedFileTempURL;
+	if (tempFileURL) {
+		self.downloadedFileTempURL = tempFileURL;
+	}
+	else {
+		CFUUIDRef UUID = CFUUIDCreate(NULL);
+		NSString *tempFilename = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, UUID);
+		CFRelease(UUID);
+		
+		NSString *filePath = [self.cachesDir stringByAppendingPathComponent:tempFilename];
+		self.downloadedFileTempURL = [NSURL fileURLWithPath:filePath];
+		
+		downloadInfo.downloadedFileTempURL = self.downloadedFileTempURL;
+		// Record addition info for possible future resumes
+		downloadInfo.totalContentLength = self.responseInternal.totalContentLength;
+
+		NSDictionary *responseHeaders = [self.URLResponse allHeaderFields];
+		downloadInfo.ETag = [responseHeaders valueForKey:kCumulusHTTPHeaderETag];
+		downloadInfo.lastModifiedDate = [responseHeaders valueForKey:kCumulusHTTPHeaderLastModified];
+		
+		[CMDownloadInfo saveDownloadInfo];
+	}
 	
 	_chunksDirURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@-%@",[self.downloadedFileTempURL path],@"chunks"] isDirectory:YES];
 	if (NO == [fm fileExistsAtPath:[_chunksDirURL path]]) {
@@ -184,13 +199,27 @@
 	// do nothing here, see #reallyHandleConnectionDidReceiveData which is called when chunk requests get data
 }
 
+/// All we do here is set up for requesting chunks, see #reallyHandleConnectionFinished which gets called when all chunks are done, including when they are canceled
 - (void) handleConnectionFinished {
+	// Since we override super, we must check for cancelation ourselves
+	if (self.canceled) {
+		return;
+	}
+
+	// If we failed to get a good response from the initial HEAD request, go no further
+	if (self.responseInternal.wasUnsuccessful) {
+		[self reallyHandleConnectionFinished];
+		return;
+	}
+	
+	// If we got a zero content length we are done
 	self.expectedAggregatedContentLength = self.expectedContentLength;
 	if (self.expectedAggregatedContentLength < 1LL) {
 		[self reallyHandleConnectionFinished];
 		return;
 	}
 	
+	// Ok, good to request chunks	
 	NSMutableURLRequest *baseChunkRequest = [self.originalURLRequest mutableCopy];
 	baseChunkRequest.HTTPMethod = kCumulusHTTPMethodGET;
 	_baseChunkRequest = baseChunkRequest;
@@ -207,12 +236,14 @@
 }
 
 - (void) startChunkForRange:(CMContentRange)range sequence:(NSUInteger)idx {
+	NSLog(@"%@.startChunkForRange:%@ sequence:%@",self,[NSString stringWithFormat:@"(%lld,%lld)",range.location,range.length],@(idx));
 	CMDownloadChunk *chunk = [CMDownloadChunk new];
 	chunk.sequence = idx;
 	chunk.size = range.length;
 
 	CMDownloadRequest *chunkRequest = [[CMDownloadRequest alloc] initWithURLRequest:_baseChunkRequest];
-	
+	chunk.request = chunkRequest;
+
 	chunkRequest.timeout = self.timeout;
 	[chunkRequest.authProviders addObjectsFromArray:self.authProviders];
 	chunkRequest.cachePolicy = self.cachePolicy;
@@ -242,13 +273,15 @@
 		chunk_.response = response;
 		chunk_.request = nil;
 		
+		CMProgressInfo *result = response.result;
+
 		if (response.error) {
 			chunk_.error = response.error;
 		}
-		else if (response.wasSuccessful) {
+		else if (result.tempFileURL && NO == self.wasCanceled) {
 			CMProgressInfo *result = response.result;
 			NSURL *chunkTempURL = result.tempFileURL;
-			NSURL *chunkNewURL = [_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@",@(idx),[chunkTempURL lastPathComponent]]];
+			NSURL *chunkNewURL = [_chunksDirURL URLByAppendingPathComponent:/*[NSString stringWithFormat:@"%@.%@",@(idx),*/[chunkTempURL lastPathComponent]/*]*/];
 			
 			if (nil == self.downloadedFilename) {
 				self.downloadedFilename = result.filename;
@@ -277,7 +310,6 @@
 	[_waitingChunks addObject:chunk];
 	[_allChunks addObject:chunk];
 	dispatch_semaphore_signal(_chunksSemaphore);
-	chunk.request = chunkRequest;
 	[self dispatchNextChunk];
 }
 
@@ -392,8 +424,11 @@
 		self.result = progressInfo;
 
 		[super handleConnectionFinished];
+		[self removeTempFiles];
+		// If we have merely canceled, leave chunk files in place so they can be resumed
 		if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful)) {
-			[self removeTempFiles];
+			[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
+			[CMDownloadInfo saveDownloadInfo];
 		}
 	});
 }
@@ -402,10 +437,10 @@
 	dispatch_async(dispatch_get_main_queue(), ^{
 		NSFileManager *fm = [NSFileManager new];
 		NSError *error = nil;
-		if (NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
+		if ([fm fileExistsAtPath:[self.downloadedFileTempURL path]] && NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
 			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 		}
-		if (NO == [fm removeItemAtURL:self.chunksDirURL error:&error]) {
+		if ([fm fileExistsAtPath:[self.chunksDirURL path]] && NO == [fm removeItemAtURL:self.chunksDirURL error:&error]) {
 			RCLog(@"Could not remove chunks dir: %@ %@ (%@)", self.chunksDirURL, [error localizedDescription], [error userInfo]);
 		}
 	});
