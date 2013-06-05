@@ -176,6 +176,7 @@ static NSUInteger requestCount = 0;
 		progressReceivedInfo.progress = @(0);
 	}
 	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
+	progressReceivedInfo.fileOffset = @(self.receivedContentLength);
 	return progressReceivedInfo;
 }
 

@@ -68,13 +68,15 @@
 @synthesize downloadedFilename=_downloadedFilename;
 
 - (CMProgressInfo *) progressReceivedInfo {
-	CMProgressInfo *progressInfo = [super progressReceivedInfo];
-	progressInfo.tempFileURL = self.downloadedFileTempURL;
+	CMProgressInfo *progressReceivedInfo = [super progressReceivedInfo];
+	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
 	if (_shouldResume && self.responseInternal.totalContentLength > 0) { // in the case of resumes, we report progress a little differently, against the content total rather than the range
-		progressInfo.progress = @((float)(self.responseInternal.expectedContentRange.location+self.receivedContentLength) / (float)self.responseInternal.totalContentLength);
+		long long fileOffset = self.responseInternal.expectedContentRange.location+self.receivedContentLength;
+		progressReceivedInfo.progress = @((float)(fileOffset) / (float)self.responseInternal.totalContentLength);
+		progressReceivedInfo.fileOffset = @(fileOffset);
 	}
 
-	return progressInfo;
+	return progressReceivedInfo;
 }
 
 
@@ -128,6 +130,7 @@
 	progressInfo.tempFileURL = self.downloadedFileTempURL;
 	progressInfo.URL = [self.URLRequest URL];
 	progressInfo.filename = self.downloadedFilename;
+	progressInfo.fileOffset = @(self.responseInternal.totalContentLength);
 	
 	self.result = progressInfo;
 	[super handleConnectionFinished];

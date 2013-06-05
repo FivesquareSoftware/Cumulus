@@ -20,6 +20,7 @@
 @property (nonatomic, strong) CMResponse *response;
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, strong) NSURL *file;
+@property (nonatomic) long long fileOffset;
 @end
 @implementation CMDownloadChunk
 @end
@@ -31,6 +32,7 @@
 @property BOOL sentInitialProgress;
 @property (nonatomic) long long expectedAggregatedContentLength;
 @property long long receivedAggregatedContentLength;
+@property (readonly) long long totalAggregatedContentLength;
 @property long long assembledAggregatedContentLength;
 @property (nonatomic, strong) NSURLRequest *baseChunkRequest;
 @property (copy) NSURL *downloadedFileTempURL;
@@ -41,6 +43,7 @@
 @property (strong) NSMutableSet *waitingChunks;
 @property (strong) NSMutableSet *runningChunks;
 @property (strong) NSMutableSet *completedChunks;
+@property (strong) NSMutableSet *allChunks;
 @property (nonatomic, readonly) NSSet *chunkErrors;
 @end
 
@@ -49,6 +52,26 @@
 // ========================================================================== //
 
 #pragma mark - Properties
+
+- (long long) totalAggregatedContentLength {
+	__block long long totalAggregatedContentLength = 0;
+	[_allChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
+//		RCLog(@"** totalAggregatedContentLength: %lld",totalAggregatedContentLength);
+//		RCLog(@"** chunk.fileOffset: %lld",chunk.fileOffset);
+		totalAggregatedContentLength += chunk.fileOffset;
+	}];
+	return totalAggregatedContentLength;
+}
+
+//@dynamic allChunks;
+//- (NSSet *) allChunks {
+//	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
+//	NSMutableSet *allChunks = [NSMutableSet setWithSet:_waitingChunks];
+//	[allChunks unionSet:_runningChunks];
+//	[allChunks unionSet:_completedChunks];
+//	dispatch_semaphore_signal(_chunksSemaphore);
+//	return allChunks;
+//}
 
 - (NSSet *) chunkErrors {
 	return [_completedChunks valueForKey:@"error"];
@@ -85,6 +108,7 @@
 		_waitingChunks = [NSMutableSet new];
 		_runningChunks = [NSMutableSet new];
 		_completedChunks = [NSMutableSet new];
+		_allChunks = [NSMutableSet new];
 		_chunksSemaphore = dispatch_semaphore_create(1);
     }
     return self;
@@ -114,8 +138,10 @@
 	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
 	float progress = 0;
 	if (self.expectedAggregatedContentLength > 0) {
-		progress = (float)self.receivedAggregatedContentLength / (float)self.expectedAggregatedContentLength;
+		long long totalAggregatedContentLength = self.totalAggregatedContentLength;
+		progress = (float)totalAggregatedContentLength / (float)self.expectedAggregatedContentLength;
 		progressReceivedInfo.progress = @(progress);
+		progressReceivedInfo.fileOffset = @(totalAggregatedContentLength);
 	}
 	else {
 		progressReceivedInfo.progress = @(0);
@@ -201,6 +227,7 @@
 	chunkRequest.didReceiveDataBlock = ^(CMProgressInfo *progressInfo) {
 		long long chunkSize = [progressInfo.chunkSize longLongValue];
 		self_.receivedAggregatedContentLength += chunkSize;
+		chunk_.fileOffset = [progressInfo.fileOffset longLongValue];
 		if (chunkSize > 0LL) {
 			[self_ setLastChunkSize:chunkSize];
 			[self_ reallyHandleConnectionDidReceiveData];
@@ -249,6 +276,7 @@
 	
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	[_waitingChunks addObject:chunk];
+	[_allChunks addObject:chunk];
 	dispatch_semaphore_signal(_chunksSemaphore);
 	chunk.request = chunkRequest;
 	[self dispatchNextChunk];

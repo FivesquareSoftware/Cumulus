@@ -32,6 +32,9 @@
  */
 @property (nonatomic, strong) NSNumber *progress;
 
+/** A long long as an NSNumber representing the offset in bytes that the current progress represents. Useful when a dowload is resuming and you want to know the actual size of the local temp file. */
+@property (nonatomic, strong) NSNumber *fileOffset;
+
 /** A long long as an NSNumber representing the size of the chunk of data received which caused the receiver to be posted. */
 @property (nonatomic, strong) NSNumber *chunkSize;
 

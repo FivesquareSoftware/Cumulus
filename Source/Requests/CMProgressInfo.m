@@ -15,9 +15,11 @@
 @synthesize tempFileURL=_tempFileURL;
 @synthesize filename=_filename;
 @synthesize progress=_progress;
+@synthesize fileOffset = _fileOffset;
+
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ { URL: %@, progress: %@, chunk: %@ }",[super description],_URL,_progress,_chunkSize];
+	return [NSString stringWithFormat:@"%@ { URL: %@, progress: %@, chunk: %@, fileOffset: %@ }",[super description],_URL,_progress,_chunkSize,_fileOffset];
 }
 
 @end
