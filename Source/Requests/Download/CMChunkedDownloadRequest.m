@@ -338,6 +338,7 @@
 									self.assembledAggregatedContentLength += length;
 									readData = [chunkReadHandle readDataOfLength:1024];
 									length = [readData length];
+									RCLog(@"Read chunk data: %@",@(length));
 								}
 								@catch (NSException *exception) {
 									*stop = YES;
@@ -376,7 +377,7 @@
 				RCLog(info[NSLocalizedDescriptionKey]);
 			}
 		}
-		else {
+		else if (self.chunkErrors.count > 0) {
 			self.error = [self.chunkErrors anyObject];
 		}
 		
