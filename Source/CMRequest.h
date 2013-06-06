@@ -79,6 +79,7 @@
 @property (readonly, strong) NSDate *startedAt;
 @property (readonly, strong) NSDate *endedAt;
 @property (nonatomic, readonly) NSTimeInterval elapsed;
+@property (nonatomic, readonly) NSUInteger bytesPerSecond;
 
 
 // ========================================================================== //
