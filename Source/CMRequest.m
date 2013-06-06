@@ -96,7 +96,22 @@ static NSUInteger requestCount = 0;
 
 @dynamic elapsed;
 - (NSTimeInterval) elapsed {
-	return [self.endedAt timeIntervalSinceDate:self.startedAt];
+	NSDate *endDate = self.endedAt;
+	if (nil == endDate) {
+		endDate = [NSDate date];
+	}
+	return [endDate timeIntervalSinceDate:self.startedAt];
+}
+
+@dynamic bytesPerSecond;
+- (NSUInteger) bytesPerSecond {
+	NSUInteger bytesPerSecond = 0;
+	NSTimeInterval elapsed = self.elapsed;
+	if (elapsed > 0) {
+		long long receivedBytes = self.receivedContentLength;
+		bytesPerSecond = receivedBytes/elapsed;
+	}
+	return bytesPerSecond;
 }
 
 @dynamic completed;
@@ -177,6 +192,9 @@ static NSUInteger requestCount = 0;
 	}
 	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
 	progressReceivedInfo.fileOffset = @(self.receivedContentLength);
+	progressReceivedInfo.bytesPerSecond = @(self.bytesPerSecond);
+	progressReceivedInfo.elapsedTime = @(self.elapsed);
+	progressReceivedInfo.contentLength = @(self.responseInternal.expectedContentLength);
 	return progressReceivedInfo;
 }
 

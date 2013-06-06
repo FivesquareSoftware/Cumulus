@@ -36,7 +36,7 @@
 #import <Foundation/Foundation.h>
 
 
-#ifdef DEBUG
+#if DEBUG
 	#ifdef CumulusLoggingOn
 		#define RCLog(fmt,...) NSLog(fmt, ##__VA_ARGS__ )
 	#else

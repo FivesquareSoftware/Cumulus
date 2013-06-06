@@ -76,14 +76,24 @@
 	return (waitingCount > 0 || runningCount > 0);
 }
 
+@dynamic bytesPerSecond;
+- (NSUInteger) bytesPerSecond {
+	NSUInteger bytesPerSecond = 0;
+	NSTimeInterval elapsed = self.elapsed;
+	if (elapsed > 0) {
+		long long receivedBytes = self.receivedAggregatedContentLength;
+		bytesPerSecond = receivedBytes/elapsed;
+	}
+	return bytesPerSecond;
+}
+
+@dynamic completed;
 - (BOOL) didComplete {
 	return self.expectedAggregatedContentLength == self.assembledAggregatedContentLength;
 }
 
 - (CMProgressInfo *) progressReceivedInfo {
-	CMProgressInfo *progressReceivedInfo = [CMProgressInfo new];
-	progressReceivedInfo.request = self;
-	progressReceivedInfo.URL = [self.URLRequest URL];
+	CMProgressInfo *progressReceivedInfo = [super progressReceivedInfo];
 	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
 	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
 	float progress = 0;
@@ -94,6 +104,7 @@
 	}
 	progressReceivedInfo.progress = @(progress);
 	progressReceivedInfo.fileOffset = @(totalAggregatedContentLength);
+	
 	return progressReceivedInfo;
 }
 
@@ -213,7 +224,7 @@
 	}
 	
 	// If we got a zero content length we are done
-	self.expectedAggregatedContentLength = self.expectedContentLength;
+	self.expectedAggregatedContentLength = self.responseInternal.expectedContentLength;
 	if (self.expectedAggregatedContentLength < 1LL) {
 		[self reallyHandleConnectionFinished];
 		return;
@@ -316,6 +327,7 @@
 - (void) dispatchNextChunk {
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	NSUInteger runningChunkCount = self.runningChunks.count;
+	RCLog(@"Current chunk workers: %@",@(runningChunkCount));
 	if (runningChunkCount < self.maxConcurrentChunks) {
 		CMDownloadChunk *nextChunk = [self.waitingChunks anyObject];
 		if (nextChunk) {
@@ -344,63 +356,76 @@
 
 			NSFileManager *fm = [NSFileManager new];
 			if ([fm createFileAtPath:[self.downloadedFileTempURL path] contents:nil attributes:nil]) {
-				NSError *writeError = nil;
-				NSFileHandle *outHandle = [NSFileHandle fileHandleForWritingToURL:self.downloadedFileTempURL error:&writeError];
-				if (outHandle) {
-					[sortedChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, NSUInteger idx, BOOL *stop) {
-						NSAssert(idx == chunk.sequence, @"Chunks must be sequential");
-						if (idx != chunk.sequence) {
-							*stop = YES;
-							NSDictionary *info = @{ NSLocalizedDescriptionKey : @"Chunk order not sane" };
-							self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorOutOfOrderChunks userInfo:info];
-							RCLog(info[NSLocalizedDescriptionKey]);
-							return;
-						}
-						
-						NSError *readError = nil;
-						long long movedChunkDataLength = 0;
-						NSFileHandle *chunkReadHandle = [NSFileHandle fileHandleForReadingFromURL:chunk.file error:&readError];
-						if (chunkReadHandle) {
-							NSData *readData = [chunkReadHandle readDataOfLength:1024];
-							NSUInteger length = [readData length];
-							while ( length > 0 ) {
-								@try {
-									[outHandle writeData:readData];
-									movedChunkDataLength += length;
-									self.assembledAggregatedContentLength += length;
-									readData = [chunkReadHandle readDataOfLength:1024];
-									length = [readData length];
-									RCLog(@"Read chunk data: %@",@(length));
+				@autoreleasepool {
+					NSError *writeError = nil;
+					NSFileHandle *outHandle = [NSFileHandle fileHandleForWritingToURL:self.downloadedFileTempURL error:&writeError];
+					if (outHandle) {
+						[sortedChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, NSUInteger idx, BOOL *stop) {
+							NSAssert(idx == chunk.sequence, @"Chunks must be sequential");
+							if (idx != chunk.sequence) {
+								*stop = YES;
+								NSDictionary *info = @{ NSLocalizedDescriptionKey : @"Chunk order not sane" };
+								self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorOutOfOrderChunks userInfo:info];
+								RCLog(info[NSLocalizedDescriptionKey]);
+								return;
+							}
+							NSError *readError = nil;
+							long long movedChunkDataLength = 0;
+							@autoreleasepool {
+								NSUInteger readBufferLength = (1024*1024);
+								NSFileHandle *chunkReadHandle = [NSFileHandle fileHandleForReadingFromURL:chunk.file error:&readError];
+								if (chunkReadHandle) {
+									NSData *readData = [chunkReadHandle readDataOfLength:readBufferLength];
+									NSUInteger length = [readData length];
+									while ( length > 0 ) {
+										@autoreleasepool {
+											@try {
+												[outHandle writeData:readData];
+												movedChunkDataLength += length;
+												self.assembledAggregatedContentLength += length;
+												readData = [chunkReadHandle readDataOfLength:readBufferLength];
+												length = [readData length];
+												if (length < 1) {
+													RCLog(@"Read end of chunk: %@ assembled: %@",@(movedChunkDataLength),@(self.assembledAggregatedContentLength));
+												}
+											}
+											@catch (NSException *exception) {
+												*stop = YES;
+												NSError *readWriteError = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorWritingToTempFile userInfo:[exception userInfo]];
+												self.error = readWriteError;
+												RCLog(@"Error moving data from chunk to aggregate file: %@->%@ %@ (%@)", chunk.file, self.downloadedFileTempURL, [readWriteError localizedDescription], [readWriteError userInfo]);
+												length = 0;
+												return;
+											}
+										}
+									}
+									readData = nil;
+									[chunkReadHandle closeFile];
+									chunkReadHandle = nil;
 								}
-								@catch (NSException *exception) {
+								else {
 									*stop = YES;
-									NSError *readWriteError = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorWritingToTempFile userInfo:[exception userInfo]];
-									self.error = readWriteError;
-									RCLog(@"Error moving data from chunk to aggregate file: %@->%@ %@ (%@)", chunk.file, self.downloadedFileTempURL, [readWriteError localizedDescription], [readWriteError userInfo]);
-									length = 0;
+									self.error = readError;
+									RCLog(@"Could not create file handle to read chunk file: %@ %@ (%@)", chunk.file, [readError localizedDescription], [readError userInfo]);
 									return;
 								}
 							}
-						}
-						else {
-							*stop = YES;
-							self.error = readError;
-							RCLog(@"Could not create file handle to read chunk file: %@ %@ (%@)", chunk.file, [readError localizedDescription], [readError userInfo]);
-							return;
-						}
-						if (movedChunkDataLength != chunk.size) {
-							*stop = YES;
-							NSDictionary *info = @{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Actual chunk size did not match expected chunk size %@ != %@ (%@)",@(movedChunkDataLength), @(chunk.size),[chunk.file lastPathComponent]] };
-							self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorMismatchedChunkSize userInfo:info];
-							RCLog(info[NSLocalizedDescriptionKey]);
-							RCLog(@"chunk.request.headers: %@",chunk.request.headers);
-							RCLog(@"chunk.response.headers: %@",chunk.response.headers);
-						}
-					}];
-				}
-				else {
-					self.error = writeError;
-					RCLog(@"Could not create file handle to aggregated file: %@ %@ (%@)", self.downloadedFileTempURL, [writeError localizedDescription], [writeError userInfo]);
+							if (movedChunkDataLength != chunk.size) {
+								*stop = YES;
+								NSDictionary *info = @{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Actual chunk size did not match expected chunk size %@ != %@ (%@)",@(movedChunkDataLength), @(chunk.size),[chunk.file lastPathComponent]] };
+								self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorMismatchedChunkSize userInfo:info];
+								RCLog(info[NSLocalizedDescriptionKey]);
+								RCLog(@"chunk.request.headers: %@",chunk.request.headers);
+								RCLog(@"chunk.response.headers: %@",chunk.response.headers);
+							}
+						}];
+						[outHandle closeFile];
+						outHandle = nil;
+					}
+					else {
+						self.error = writeError;
+						RCLog(@"Could not create file handle to aggregated file: %@ %@ (%@)", self.downloadedFileTempURL, [writeError localizedDescription], [writeError userInfo]);
+					}
 				}
 			}
 			else {
