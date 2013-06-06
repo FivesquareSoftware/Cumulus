@@ -143,15 +143,6 @@
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	[_runningChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
 		[chunk.request cancel];
-		if (chunk.file) {
-			NSFileManager *fm = [NSFileManager new];
-			NSString *filePath = [self.cachesDir stringByAppendingPathComponent:[chunk.file lastPathComponent]];
-			NSURL *oldChunkURL = [NSURL fileURLWithPath:filePath];
-			NSError *moveError = nil;
-			if (NO == [fm moveItemAtURL:chunk.file toURL:oldChunkURL error:&moveError]) {
-				RCLog(@"Error moving canceled chunk back into place! %@ (%@)",[moveError localizedDescription],[moveError userInfo]);
-			}
-		}
 	}];
 	dispatch_semaphore_signal(_chunksSemaphore);
 	[super cancel];
@@ -244,6 +235,8 @@
 		CMContentRange range = CMContentRangeMake(i, len, 0);
 		[self startChunkForRange:range sequence:idx++];
 	}
+	
+	//???: What if all the chunks were actually done?
 }
 
 - (void) startChunkForRange:(CMContentRange)range sequence:(NSUInteger)idx {
@@ -251,77 +244,95 @@
 	CMDownloadChunk *chunk = [CMDownloadChunk new];
 	chunk.sequence = idx;
 	chunk.size = range.length;
-
-	CMDownloadRequest *chunkRequest = [[CMDownloadRequest alloc] initWithURLRequest:_baseChunkRequest];
-	chunk.request = chunkRequest;
-
-	chunkRequest.timeout = self.timeout;
-	[chunkRequest.authProviders addObjectsFromArray:self.authProviders];
-	chunkRequest.cachePolicy = self.cachePolicy;
-	[chunkRequest.headers addEntriesFromDictionary:self.headers];
-	chunkRequest.cachesDir = self.cachesDir;
-	chunkRequest.range = range;
-	chunkRequest.shouldResume = YES;
 	
-	__weak typeof(self) self_ = self;
-	__weak typeof(chunk) chunk_ = chunk;
-	chunkRequest.didReceiveDataBlock = ^(CMProgressInfo *progressInfo) {
-		long long chunkSize = [progressInfo.chunkSize longLongValue];
-		self_.receivedAggregatedContentLength += chunkSize;
-		chunk_.fileOffset = [progressInfo.fileOffset longLongValue];
-		if (chunkSize > 0LL) {
-			[self_ setLastChunkSize:chunkSize];
-			[self_ reallyHandleConnectionDidReceiveData];
-		}
-	};
-	chunkRequest.completionBlock = ^(CMResponse *response) {
+	// Check if the chunk is complete before starting a request
+	NSFileManager *fm = [NSFileManager new];
+	NSURL *completedChunkURL = [self completedChunkFileURLForRange:range];
+	if ([fm fileExistsAtPath:[completedChunkURL path]]) {
+		chunk.file = completedChunkURL;
 		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
-		[self_.completedChunks addObject:chunk_];
-		[self_.runningChunks removeObject:chunk_];
+		[_completedChunks addObject:chunk];
+		[_allChunks addObject:chunk];
 		dispatch_semaphore_signal(_chunksSemaphore);
-
+	}
+	else {
+		CMDownloadRequest *chunkRequest = [[CMDownloadRequest alloc] initWithURLRequest:_baseChunkRequest];
+		chunk.request = chunkRequest;
 		
-		chunk_.response = response;
-		chunk_.request = nil;
+		chunkRequest.timeout = self.timeout;
+		[chunkRequest.authProviders addObjectsFromArray:self.authProviders];
+		chunkRequest.cachePolicy = self.cachePolicy;
+		[chunkRequest.headers addEntriesFromDictionary:self.headers];
+		chunkRequest.cachesDir = self.cachesDir;
+		chunkRequest.range = range;
+		chunkRequest.shouldResume = YES;
 		
-		CMProgressInfo *result = response.result;
-
-		if (response.error) {
-			chunk_.error = response.error;
-		}
-		else if (result.tempFileURL && NO == self.wasCanceled) {
-			CMProgressInfo *result = response.result;
-			NSURL *chunkTempURL = result.tempFileURL;
-			NSURL *chunkNewURL = [_chunksDirURL URLByAppendingPathComponent:/*[NSString stringWithFormat:@"%@.%@",@(idx),*/[chunkTempURL lastPathComponent]/*]*/];
-			
-			if (nil == self.downloadedFilename) {
-				self.downloadedFilename = result.filename;
+		__weak typeof(self) self_ = self;
+		__weak typeof(chunk) chunk_ = chunk;
+		chunkRequest.didReceiveDataBlock = ^(CMProgressInfo *progressInfo) {
+			long long chunkSize = [progressInfo.chunkSize longLongValue];
+			self_.receivedAggregatedContentLength += chunkSize;
+			chunk_.fileOffset = [progressInfo.fileOffset longLongValue];
+			if (chunkSize > 0LL) {
+				[self_ setLastChunkSize:chunkSize];
+				[self_ reallyHandleConnectionDidReceiveData];
 			}
+		};
+		chunkRequest.completionBlock = ^(CMResponse *response) {
+			dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
+			[self_.completedChunks addObject:chunk_];
+			[self_.runningChunks removeObject:chunk_];
+			dispatch_semaphore_signal(_chunksSemaphore);
 			
-			NSFileManager *fm = [NSFileManager new];
 			
-			NSError *moveError = nil;
-			if (NO == [fm moveItemAtURL:chunkTempURL toURL:chunkNewURL error:&moveError]) {
-				RCLog(@"Error moving completed chunk into place! %@ (%@)",[moveError localizedDescription],[moveError userInfo]);
-				chunk_.error = moveError;
+			chunk_.response = response;
+			chunk_.request = nil;
+			
+			CMProgressInfo *result = response.result;
+			
+			if (response.error) {
+				chunk_.error = response.error;
+			}
+			else if (result.tempFileURL && NO == self.wasCanceled) {
+				CMProgressInfo *result = response.result;
+				NSURL *chunkTempURL = result.tempFileURL;
+				CMContentRange range = response.request.range;
+				NSURL *chunkNewURL = [self completedChunkFileURLForRange:range];//[_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@,bytes=%lld-%lld",[chunkTempURL lastPathComponent],range.location,CMContentRangeLastByte(range)]];
+				
+				if (nil == self.downloadedFilename) {
+					self.downloadedFilename = result.filename;
+				}
+				
+				NSFileManager *fm = [NSFileManager new];
+				
+				NSError *moveError = nil;
+				if (NO == [fm moveItemAtURL:chunkTempURL toURL:chunkNewURL error:&moveError]) {
+					RCLog(@"Error moving completed chunk into place! %@ (%@)",[moveError localizedDescription],[moveError userInfo]);
+					chunk_.error = moveError;
+				}
+				else {
+					chunk_.file = chunkNewURL;
+				}
+			}
+			if (NO == self_.isDownloadingChunks) {
+				[self_ reallyHandleConnectionFinished];
 			}
 			else {
-				chunk_.file = chunkNewURL;
+				[self_ dispatchNextChunk];
 			}
-		}
-		if (NO == self_.isDownloadingChunks) {
-			[self_ reallyHandleConnectionFinished];
-		}
-		else {
-			[self_ dispatchNextChunk];
-		}
-	};
-	
-	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
-	[_waitingChunks addObject:chunk];
-	[_allChunks addObject:chunk];
-	dispatch_semaphore_signal(_chunksSemaphore);
-	[self dispatchNextChunk];
+		};
+		
+		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
+		[_waitingChunks addObject:chunk];
+		[_allChunks addObject:chunk];
+		dispatch_semaphore_signal(_chunksSemaphore);
+		[self dispatchNextChunk];
+	}
+}
+
+- (NSURL *) completedChunkFileURLForRange:(CMContentRange)range {
+	NSURL *completedChunkURL = [_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@,bytes=%lld-%lld",[self.downloadedFileTempURL lastPathComponent],range.location,CMContentRangeLastByte(range)]];
+	return completedChunkURL;
 }
 
 - (void) dispatchNextChunk {
@@ -449,11 +460,23 @@
 		self.result = progressInfo;
 
 		[super handleConnectionFinished];
-		[self removeTempFiles];
+		// even in the case of a pause we remove this file because we assemble at the end from chunks
+		[self removeAggregateFile];
 		// If we have merely canceled, leave chunk files in place so they can be resumed
 		if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful)) {
+			[self removeTempFiles];
 			[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
 			[CMDownloadInfo saveDownloadInfo];
+		}
+	});
+}
+
+- (void) removeAggregateFile {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSFileManager *fm = [NSFileManager new];
+		NSError *error = nil;
+		if ([fm fileExistsAtPath:[self.downloadedFileTempURL path]] && NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
+			RCLog(@"Could not remove aggregate file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 		}
 	});
 }
@@ -462,9 +485,6 @@
 	dispatch_async(dispatch_get_main_queue(), ^{
 		NSFileManager *fm = [NSFileManager new];
 		NSError *error = nil;
-		if ([fm fileExistsAtPath:[self.downloadedFileTempURL path]] && NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
-			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
-		}
 		if ([fm fileExistsAtPath:[self.chunksDirURL path]] && NO == [fm removeItemAtURL:self.chunksDirURL error:&error]) {
 			RCLog(@"Could not remove chunks dir: %@ %@ (%@)", self.chunksDirURL, [error localizedDescription], [error userInfo]);
 		}

@@ -306,72 +306,72 @@
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 */
-- (void)shouldDownloadAFileInChunks {
-	CMResource *massive = [self.service resource:@"test/download/massive"];
-	[self assertDownloadResourceToDisk:massive chunked:YES];
-
-	NSFileManager *fm = [NSFileManager new];
-	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
-	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
-
-}
-
-//- (void) shouldResumeDownloadingAChunkedFileToDisk {
+//- (void)shouldDownloadAFileInChunks {
 //	CMResource *massive = [self.service resource:@"test/download/massive"];
+//	[self assertDownloadResourceToDisk:massive chunked:YES];
 //
-//	__block long long currentOffset = 0;
-//	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
-//		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
-//		if (progress > 0.f) {
-//			currentOffset = [progressInfo.fileOffset longLongValue];
-//			[progressInfo.request cancel];
-//		}
-//	};
-//	
-//	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
-//	__block CMResponse *localResponse = nil;
-//	__block id massiveCacheIdentifier = nil;
-//	CMCompletionBlock completionBlock = ^(CMResponse *response) {
-//		localResponse = response;
-//		massiveCacheIdentifier = response.request.cacheIdentifier;
-//		dispatch_semaphore_signal(request_sema);
-//	};
-//	[massive chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
-//	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-//			
-//	__block float firstProgress = -1.f;
-//	progressBlock = ^(CMProgressInfo *progressInfo){
-//		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
-//		if (firstProgress == -1.f && progress > 0.f && progress < 1.f) {
-//			firstProgress = progress;
-//		}
-//	};
-//	completionBlock = ^(CMResponse *response) {
-//		localResponse = response;
-//		CMProgressInfo *result = response.result;
-//		self.copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
-//		
-//		NSFileManager *fm = [NSFileManager new];
-//		NSError *error = nil;
-//		[fm moveItemAtURL:result.tempFileURL toURL:self.copiedFileURL error:&error];
-//		
-//		dispatch_semaphore_signal(request_sema);
-//	};
-//
-//	[massive chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
-//
-//	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-//	dispatch_release(request_sema);
-//	
-//	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
-//
-//	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
-//	STAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
-//		
 //	NSFileManager *fm = [NSFileManager new];
 //	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
 //	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
+//
 //}
+
+- (void) shouldResumeDownloadingAChunkedFileToDisk {
+	CMResource *massive = [self.service resource:@"test/download/massive"];
+
+	__block long long currentOffset = 0;
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (progress > 0.f) {
+			currentOffset = [progressInfo.fileOffset longLongValue];
+			[progressInfo.request cancel];
+		}
+	};
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	__block id massiveCacheIdentifier = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		massiveCacheIdentifier = response.request.cacheIdentifier;
+		dispatch_semaphore_signal(request_sema);
+	};
+	[massive chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+			
+	__block float firstProgress = -1.f;
+	progressBlock = ^(CMProgressInfo *progressInfo){
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (firstProgress == -1.f && progress > 0.f && progress < 1.f) {
+			firstProgress = progress;
+		}
+	};
+	completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		CMProgressInfo *result = response.result;
+		self.copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
+		
+		NSFileManager *fm = [NSFileManager new];
+		NSError *error = nil;
+		[fm moveItemAtURL:result.tempFileURL toURL:self.copiedFileURL error:&error];
+		
+		dispatch_semaphore_signal(request_sema);
+	};
+
+	[massive chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+
+	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
+	STAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
+		
+	NSFileManager *fm = [NSFileManager new];
+	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
+	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
+}
 
 
 //- (void)shouldCompleteChunkedDownloadWhenTheFileIsEmpty {
