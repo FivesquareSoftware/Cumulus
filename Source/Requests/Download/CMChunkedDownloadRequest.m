@@ -236,7 +236,7 @@
 }
 
 - (void) startChunkForRange:(CMContentRange)range sequence:(NSUInteger)idx {
-	NSLog(@"%@.startChunkForRange:%@ sequence:%@",self,[NSString stringWithFormat:@"(%lld,%lld)",range.location,range.length],@(idx));
+	RCLog(@"%@.startChunkForRange:%@ sequence:%@",self,[NSString stringWithFormat:@"(%lld,%lld)",range.location,range.length],@(idx));
 	CMDownloadChunk *chunk = [CMDownloadChunk new];
 	chunk.sequence = idx;
 	chunk.size = range.length;
