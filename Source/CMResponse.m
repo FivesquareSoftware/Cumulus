@@ -195,6 +195,11 @@
 	return !self.wasSuccessful;
 }
 
+@dynamic shouldRetry;
+- (BOOL) shouldRetry {
+	return self.ErrorTimedOut || self.ErrorCannotConnectToHost || self.ErrorNetworkConnectionLost || self.ErrorDNSLookupFailed || self.ErrorResourceUnavailable || self.ErrorNotConnectedToInternet || self.ErrorSecureConnectionFailed;
+}
+
 
 // ========================================================================== //
 

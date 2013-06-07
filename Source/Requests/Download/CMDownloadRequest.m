@@ -148,7 +148,8 @@
 	self.result = progressInfo;
 	[super handleConnectionFinished];
 
-	if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful)) {
+	// If this was merely a cancel and not an error (except lost connection)
+	if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful && NO == self.responseInternal.shouldRetry)) {
 		[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
 		[CMDownloadInfo saveDownloadInfo];
 		// Remove the file on the main Q so we know the completion block has had a chance to run
