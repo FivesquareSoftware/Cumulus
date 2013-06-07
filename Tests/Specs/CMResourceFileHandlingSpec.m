@@ -271,6 +271,9 @@
 	STAssertEquals(fileSize, contentRange.length, @"Downloaded file size should have equaled request range length");
 }
 
+- (void)shouldResumeArangeAndDownloadJustTheRange {
+	STAssertTrue(NO, @"Unimplemented");
+}
 
 - (void)shouldUploadAFileFromDisk {
 	CMResource *hero = [self.service resource:@"test/upload/hero"];
