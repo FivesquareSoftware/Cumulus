@@ -155,7 +155,7 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSFileManager *fm = [NSFileManager new];
 			NSError *error = nil;
-			if (NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
+			if ([fm fileExistsAtPath:[self.downloadedFileTempURL path]] && NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
 				RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 			}
 		});

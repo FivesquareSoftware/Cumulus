@@ -178,5 +178,18 @@ get '/test/download/massive/resume/fail' do
 end
 
 
+## Empty
+
+get '/test/download/empty' do
+	content_type('image/png')
+	headers('Content-Disposition' => 'attachment; filename="hero.png"')
+	headers('Content-Length' => "0")
+end
+
+
+head '/test/download/fail' do
+	bad_request("Failed HEAD request")
+end
+
 
 

@@ -72,7 +72,31 @@
 
 #pragma mark - Specs
 
-/*
+
+- (void)shouldReturnResultWithNoTempFileURLWhenDownloadIsIncomplete {
+	CMResource *massive = [self.service resource:@"test/download/massive"];
+
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (progress > 0.f) {
+			[progressInfo.request cancel];
+		}
+	};
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	};
+	[massive downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	CMProgressInfo *result = localResponse.result;
+	
+	STAssertNil(result.tempFileURL, @"When a download is canceled the result should not contain a temp file URL");	
+}
+
 - (void)shouldDownloadAFileToDisk {
 	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
 	[self assertDownloadResourceToDisk:heroDownload];
@@ -237,7 +261,8 @@
 
 - (void) shouldDownloadARangeAndBeComplete {
 	CMResource *massive = [self.service resource:@"resources/hs-2006-01-c-full_tif.png"];
-	
+//	CMResource *massive = [self.service resource:@"test/download/massive"];
+
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	__block NSURL *copiedFileURL = nil;
@@ -271,9 +296,10 @@
 	STAssertEquals(fileSize, contentRange.length, @"Downloaded file size should have equaled request range length");
 }
 
-- (void)shouldResumeArangeAndDownloadJustTheRange {
-	STAssertTrue(NO, @"Unimplemented");
-}
+// This isnt' really exposed at the resource level, but the chunking tests exercise this
+//- (void)shouldResumeARangeAndDownloadJustTheIncompletePortion {
+//	STAssertTrue(NO, @"Unimplemented");
+//}
 
 - (void)shouldUploadAFileFromDisk {
 	CMResource *hero = [self.service resource:@"test/upload/hero"];
@@ -308,16 +334,15 @@
 
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
-*/
-//- (void)shouldDownloadAFileInChunks {
-//	CMResource *massive = [self.service resource:@"test/download/massive"];
-//	[self assertDownloadResourceToDisk:massive chunked:YES];
-//
-//	NSFileManager *fm = [NSFileManager new];
-//	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
-//	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
-//
-//}
+
+- (void)shouldDownloadAFileInChunks {
+	CMResource *massive = [self.service resource:@"test/download/massive"];
+	[self assertDownloadResourceToDisk:massive chunked:YES];
+
+	NSFileManager *fm = [NSFileManager new];
+	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
+	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
+}
 
 - (void) shouldResumeDownloadingAChunkedFileToDisk {
 	CMResource *massive = [self.service resource:@"test/download/massive"];
@@ -376,22 +401,44 @@
 	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
 }
 
+- (void)shouldCompleteChunkedDownloadWhenRemoteFileIsEmpty {
+	CMResource *empty = [self.service resource:@"test/download/empty"];
+	__block CMResponse *localResponse = nil;
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	[empty chunkedDownloadWithProgressBlock:nil completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+}
 
-//- (void)shouldCompleteChunkedDownloadWhenTheFileIsEmpty {
-//	STAssertTrue(NO, @"Unimplemented");
-//}
-//
-//- (void)shouldReturnEmptyResultsWhenRemoteFileIsEmpty {
-//	STAssertTrue(NO, @"Unimplemented");
-//}
-//
+// This is exercised by the resume chunks spec
 //- (void)shouldProperlyCancelAChunkedDownload {
 //	STAssertTrue(NO, @"Unimplemented");
 //}
-//
-//- (void)shouldNotRequestChunksWhenInitialHeadFails {
-//	STAssertTrue(NO, @"Unimplemented");
-//}
+
+- (void)shouldNotRequestChunksWhenInitialHeadFails {
+	CMResource *empty = [self.service resource:@"test/download/fail"];
+	
+	__block float firstProgress = -1;
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo) {
+		if (firstProgress == -1) {
+			firstProgress = [progressInfo.progress floatValue];
+		}
+	};
+	
+	__block CMResponse *localResponse = nil;
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	[empty chunkedDownloadWithProgressBlock:progressBlock completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+
+	STAssertTrue(localResponse.wasUnsuccessful, @"Response should have failed: %@", localResponse);
+	STAssertTrue(firstProgress == 0, @"No chunk progress shoud have been reported for a failed HEAD");
+}
 
 
 
@@ -529,7 +576,6 @@
 		if (NO == hadRangeHeader) {
 			hadRangeHeader = ([progressInfo.request.headers objectForKey:kCumulusHTTPHeaderRange] != nil);
 		}
-		writesToSameTempFile = [progressInfo.tempFileURL isEqual:tempFileURL];
 		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
 		if (firstProgress == -1.f && progress > 0.f && progress < 1.f) {
 			firstProgress = progress;
@@ -539,7 +585,8 @@
 		localResponse = response;
 		CMProgressInfo *result = response.result;
 		self.copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
-		
+		writesToSameTempFile = [result.tempFileURL isEqual:tempFileURL];
+
 		NSFileManager *fm = [NSFileManager new];
 		NSError *error = nil;
 		[fm moveItemAtURL:result.tempFileURL toURL:self.copiedFileURL error:&error];
