@@ -31,7 +31,7 @@
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ { URL: %@, elapsedTime: %@, progress: %@, chunk: %@, fileOffset: %@, bytesPerSecond: %@, timeRemaining: %@ }",[super description],_URL,_elapsedTime,_progress,_chunkSize,_fileOffset,_bytesPerSecond,@(self.timeRemaining)];
+	return [NSString stringWithFormat:@"%@ { URL: %@, elapsedTime: %@, progress: %@, contentLength: %@, chunk: %@, fileOffset: %@, bytesPerSecond: %@, timeRemaining: %@ }",[super description],_URL,_elapsedTime,_progress,_contentLength,_chunkSize,_fileOffset,_bytesPerSecond,@(self.timeRemaining)];
 }
 
 @end

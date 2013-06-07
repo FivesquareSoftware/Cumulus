@@ -240,7 +240,7 @@
 }
 
 - (void) startChunkForRange:(CMContentRange)range sequence:(NSUInteger)idx {
-	RCLog(@"%@.startChunkForRange:%@ sequence:%@",self,[NSString stringWithFormat:@"(%lld,%lld)",range.location,range.length],@(idx));
+	RCLog(@"%@.startChunkForRange:%@ sequence:%@",self.URL,[NSString stringWithFormat:@"(%lld,%lld)",range.location,range.length],@(idx));
 	CMDownloadChunk *chunk = [CMDownloadChunk new];
 	chunk.sequence = idx;
 	chunk.size = range.length;
@@ -249,7 +249,9 @@
 	NSFileManager *fm = [NSFileManager new];
 	NSURL *completedChunkURL = [self completedChunkFileURLForRange:range];
 	if ([fm fileExistsAtPath:[completedChunkURL path]]) {
+		RCLog(@"Found completed chunk: %@",completedChunkURL);
 		chunk.file = completedChunkURL;
+		chunk.fileOffset = chunk.size;
 		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 		[_completedChunks addObject:chunk];
 		[_allChunks addObject:chunk];
@@ -296,7 +298,7 @@
 			else if (result.tempFileURL && NO == self.wasCanceled) {
 				CMProgressInfo *result = response.result;
 				NSURL *chunkTempURL = result.tempFileURL;
-				CMContentRange range = response.request.range;
+//				CMContentRange range = response.request.range;
 				NSURL *chunkNewURL = [self completedChunkFileURLForRange:range];//[_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@,bytes=%lld-%lld",[chunkTempURL lastPathComponent],range.location,CMContentRangeLastByte(range)]];
 				
 				if (nil == self.downloadedFilename) {
@@ -321,7 +323,6 @@
 				[self_ dispatchNextChunk];
 			}
 		};
-		
 		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 		[_waitingChunks addObject:chunk];
 		[_allChunks addObject:chunk];
@@ -345,6 +346,7 @@
 			[self.runningChunks addObject:nextChunk];
 			[self.waitingChunks removeObject:nextChunk];
 			[nextChunk.request start];
+			RCLog(@"Launched chunk request: %@",nextChunk.request);
 		}
 	}
 	dispatch_semaphore_signal(_chunksSemaphore);

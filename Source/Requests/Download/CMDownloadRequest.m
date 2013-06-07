@@ -70,8 +70,9 @@
 - (CMProgressInfo *) progressReceivedInfo {
 	CMProgressInfo *progressReceivedInfo = [super progressReceivedInfo];
 //	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
-	if (_shouldResume && self.responseInternal.totalContentLength > 0) { // in the case of resumes, we report progress a little differently, against the content total rather than the range
-		long long fileOffset = self.responseInternal.expectedContentRange.location+self.receivedContentLength;
+	if (_shouldResume && self.responseInternal.totalContentLength > 0) { // in the case of resumes, we report progress a little differently, against the content total rather than the range		
+		long long startingOffset = self.range.location != kCFNotFound ? self.range.location : 0;
+		long long fileOffset = (self.responseInternal.expectedContentRange.location+self.receivedContentLength)-startingOffset;
 		progressReceivedInfo.progress = @((float)(fileOffset) / (float)self.responseInternal.totalContentLength);
 		progressReceivedInfo.fileOffset = @(fileOffset);
 	}
@@ -112,7 +113,16 @@
 				else {
 					[self.URLRequest addValue:lastModifiedDate forHTTPHeaderField:kCumulusHTTPHeaderIfRange];
 				}
-				[self.URLRequest addValue:[NSString stringWithFormat:@"bytes=%@-",@(currentOffset)] forHTTPHeaderField:kCumulusHTTPHeaderRange];
+				NSString *byteRangeString;
+				long long bytesOffset = self.range.location+currentOffset;
+				if (self.range.location != kCFNotFound && bytesOffset < CMContentRangeLastByte(self.range)) {
+					byteRangeString = [NSString stringWithFormat:@"bytes=%@-%@",@(bytesOffset),@(CMContentRangeLastByte(self.range))];
+				}
+				else {
+					byteRangeString = [NSString stringWithFormat:@"bytes=%@-",@(currentOffset)];
+				}
+				
+				[self.URLRequest setValue:byteRangeString forHTTPHeaderField:kCumulusHTTPHeaderRange];
 				canResume = YES;
 			}
 		}
