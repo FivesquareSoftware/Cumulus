@@ -465,7 +465,7 @@
 		// even in the case of a pause we remove this file because we assemble at the end from chunks
 		[self removeAggregateFile];
 		// If we have merely canceled, leave chunk files in place so they can be resumed
-		if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful)) {
+		if (self.didComplete || (NO == self.wasCanceled && self.responseInternal.wasUnsuccessful && NO == self.responseInternal.shouldRetry)) {
 			[self removeTempFiles];
 			[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
 			[CMDownloadInfo saveDownloadInfo];
