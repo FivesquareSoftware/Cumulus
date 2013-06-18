@@ -69,7 +69,7 @@
 
 - (CMProgressInfo *) progressReceivedInfo {
 	CMProgressInfo *progressReceivedInfo = [super progressReceivedInfo];
-//	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
+	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
 	if (_shouldResume && self.responseInternal.totalContentLength > 0) { // in the case of resumes, we report progress a little differently, against the content total rather than the range		
 		long long startingOffset = self.range.location != kCFNotFound ? self.range.location : 0;
 		long long fileOffset = (self.responseInternal.expectedContentRange.location+self.receivedContentLength)-startingOffset;
