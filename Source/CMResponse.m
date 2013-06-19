@@ -200,6 +200,11 @@
 	return self.ErrorTimedOut || self.ErrorCannotConnectToHost || self.ErrorNetworkConnectionLost || self.ErrorDNSLookupFailed || self.ErrorResourceUnavailable || self.ErrorNotConnectedToInternet || self.ErrorSecureConnectionFailed;
 }
 
+@dynamic wasNotModified;
+- (BOOL) wasNotModified {
+	return self.HTTPNotModified;
+}
+
 
 // ========================================================================== //
 
@@ -225,7 +230,7 @@
 		_totalContentLength = kCFNotFound;
 		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
+		[dateFormatter setDateFormat:kHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
     }
     return self;

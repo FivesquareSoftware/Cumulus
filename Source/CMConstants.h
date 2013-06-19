@@ -96,6 +96,7 @@ extern NSString *kCumulusHTTPHeaderAuthorization;
 extern NSString *kCumulusHTTPHeaderContentDisposition;
 extern NSString *kCumulusHTTPHeaderETag;
 extern NSString *kCumulusHTTPHeaderLastModified;
+extern NSString *kCumulusHTTPHeaderIfModifiedSince;
 extern NSString *kCumulusHTTPHeaderRange;
 extern NSString *kCumulusHTTPHeaderIfRange;
 extern NSString *kCumulusHTTPHeaderContentRange;
@@ -106,6 +107,8 @@ extern NSString *kCumulusProgressInfoKeyFilename;
 extern NSString *kCumulusProgressInfoKeyProgress;
 
 extern NSString *kCumulusCachesDirectoryName;
+
+extern NSString *kHTTPDateFormat;
 
 
 

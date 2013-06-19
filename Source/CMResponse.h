@@ -108,6 +108,10 @@
 /** If the response contains an error that is considered transient (connection lost, DNS failed, bad gateway, etc) then this propery can be used to determine if another request would be useful. */
 @property (nonatomic, readonly) BOOL shouldRetry;
 
+/** @see HTTPNotModified */
+@property (nonatomic, readonly) BOOL wasNotModified;
+
+
 /** @name Creating requests. */
 
 
