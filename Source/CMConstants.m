@@ -51,6 +51,7 @@ NSString *kCumulusHTTPHeaderAuthorization = @"Authorization";
 NSString *kCumulusHTTPHeaderContentDisposition = @"Content-Disposition";
 NSString *kCumulusHTTPHeaderETag = @"ETag";
 NSString *kCumulusHTTPHeaderLastModified = @"Last-Modified";
+NSString *kCumulusHTTPHeaderIfModifiedSince = @"If-Modified-Since";
 NSString *kCumulusHTTPHeaderRange = @"Range";
 NSString *kCumulusHTTPHeaderIfRange = @"If-Range";
 NSString *kCumulusHTTPHeaderContentRange = @"Content-Range";
@@ -61,4 +62,6 @@ NSString *kCumulusProgressInfoKeyFilename = @"filename";
 NSString *kCumulusProgressInfoKeyProgress = @"progress";
 
 NSString *kCumulusCachesDirectoryName = @"Cumulus";
+
+NSString *kHTTPDateFormat = @"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz";
 

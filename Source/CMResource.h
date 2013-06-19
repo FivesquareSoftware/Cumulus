@@ -215,6 +215,11 @@
 /// When set, will set 'Content-Type' and 'Accept' headers appropriately
 @property (nonatomic) CMContentType contentType;
 
+/// When set will set the 'If-Modified-Since' header. If automaticallyTracksLastModified ise YES, then responses will automatically update this value.
+@property (strong) NSDate *lastModified;
+/// When set to YES, responses will automatically update lastModified, which will in turn cause future requests to send an 'If-Modified-Since' header. Defaults to NO.
+@property (nonatomic) BOOL automaticallyTracksLastModified;
+
 
 /** Convenience method for setting a single header.
  *  @param value A string or any object that responds to #description. May be nil.

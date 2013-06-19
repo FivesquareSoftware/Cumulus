@@ -78,6 +78,8 @@
 @property (nonatomic, strong) NSMutableSet *requestsInternal;
 @property (nonatomic, strong) NSMutableDictionary *fixtures;
 
+@property (nonatomic) NSDateFormatter *httpDateFormatter;
+
 
 @end
 
@@ -112,6 +114,8 @@
 @synthesize password=_password;
 @synthesize authProviders=_authProviders;
 @synthesize contentType=_contentType;
+@synthesize lastModified = _lastModified;
+@synthesize automaticallyTracksLastModified = _automaticallyTracksLastModified;
 @synthesize preflightBlock=_preflightBlock;
 @synthesize postProcessorBlock=_postprocessorBlock;
 
@@ -192,6 +196,13 @@
         _contentType = contentType;  
         [self setHeadersForContentType:_contentType];
     }
+}
+
+- (void) setLastModified:(NSDate *)lastModified {
+	if (_lastModified != lastModified) {
+		_lastModified = lastModified;
+		[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
+	}
 }
 
 - (CMPreflightBlock) preflightBlock {
@@ -289,6 +300,11 @@
 		
 		_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
+		
+		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+		[dateFormatter setDateFormat:kHTTPDateFormat];
+		_httpDateFormatter = dateFormatter;
+
 	}
 	return self;
 }
@@ -827,6 +843,9 @@
 	dispatch_queue_t request_queue = [CMResource dispatchQueue];
 	dispatch_async(request_queue, ^{
 		[request startWithCompletionBlock:^(CMResponse *response){
+			if (self.automaticallyTracksLastModified && response.lastModified) {
+				self.lastModified = response.lastModified;
+			}
 			if (completionBlock) {
 				completionBlock(response);
 			}
