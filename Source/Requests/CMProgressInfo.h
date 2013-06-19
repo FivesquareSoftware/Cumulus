@@ -24,6 +24,9 @@
 /** If a file is being downloaded, representes the location of the temporary file. */
 @property (nonatomic, strong) NSURL *tempFileURL;
 
+/** If a file is being downloaded in chunks, representes the location of the temporary directory where chunks are stored. */
+@property (nonatomic, strong) NSURL *tempDirURL;
+
 /** If a file is being downloaded, represents the filename the server may have sent in the Content-Disposition header. Can be nil. */
 @property (nonatomic, strong) NSString *filename;
 

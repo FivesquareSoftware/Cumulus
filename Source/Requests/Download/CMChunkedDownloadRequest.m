@@ -95,6 +95,7 @@
 - (CMProgressInfo *) progressReceivedInfo {
 	CMProgressInfo *progressReceivedInfo = [super progressReceivedInfo];
 	progressReceivedInfo.tempFileURL = self.downloadedFileTempURL;
+	progressReceivedInfo.tempDirURL = self.chunksDirURL;
 	progressReceivedInfo.chunkSize = @(self.lastChunkSize);
 	float progress = 0;
 	long long totalAggregatedContentLength = 0;
@@ -265,7 +266,8 @@
 		[chunkRequest.authProviders addObjectsFromArray:self.authProviders];
 		chunkRequest.cachePolicy = self.cachePolicy;
 		[chunkRequest.headers addEntriesFromDictionary:self.headers];
-		chunkRequest.cachesDir = self.cachesDir;
+//		chunkRequest.cachesDir = self.cachesDir;
+		chunkRequest.cachesDir = [self.chunksDirURL path];
 		chunkRequest.range = range;
 		chunkRequest.shouldResume = YES;
 		
@@ -456,6 +458,7 @@
 		CMProgressInfo *progressInfo = [CMProgressInfo new];
 		progressInfo.progress = @(1.f);
 		progressInfo.tempFileURL = self.downloadedFileTempURL;
+		progressInfo.tempDirURL = self.chunksDirURL;
 		progressInfo.URL = [self.URLRequest URL];
 		progressInfo.filename = self.downloadedFilename;
 
