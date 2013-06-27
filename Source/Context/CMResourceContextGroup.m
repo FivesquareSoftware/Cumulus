@@ -45,7 +45,15 @@
 - (id)init {
     self = [super init];
     if (self) {
-		_identifier = [NSUUID new];
+		Class UUIDClass = NSClassFromString(@"NSUUID");
+		if (UUIDClass) {
+			_identifier = [NSUUID new];
+		}
+		else {
+			CFUUIDRef UUID = CFUUIDCreate(NULL);
+			_identifier = CFBridgingRelease(CFUUIDCreateString(NULL, UUID));
+			CFRelease(UUID);
+		}
 		_dispatchGroup = dispatch_group_create();
 //		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.Cumulus.CMResourceContextGroup.%@",_identifier];
 //		_dispatchQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
