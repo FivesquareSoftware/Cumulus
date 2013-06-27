@@ -130,6 +130,7 @@
 		_completedChunks = [NSMutableSet new];
 		_allChunks = [NSMutableSet new];
 		_chunksSemaphore = dispatch_semaphore_create(1);
+		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
     }
     return self;
 }
@@ -387,10 +388,10 @@
 							NSError *readError = nil;
 							long long movedChunkDataLength = 0;
 							@autoreleasepool {
-								NSUInteger readBufferLength = (1024*1024);
+//								NSUInteger readBufferLength = (1024*1024);
 								NSFileHandle *chunkReadHandle = [NSFileHandle fileHandleForReadingFromURL:chunk.file error:&readError];
 								if (chunkReadHandle) {
-									NSData *readData = [chunkReadHandle readDataOfLength:readBufferLength];
+									NSData *readData = [chunkReadHandle readDataOfLength:_readBufferLength];
 									NSUInteger length = [readData length];
 									while ( length > 0 ) {
 										@autoreleasepool {
@@ -398,7 +399,7 @@
 												[outHandle writeData:readData];
 												movedChunkDataLength += length;
 												self.assembledAggregatedContentLength += length;
-												readData = [chunkReadHandle readDataOfLength:readBufferLength];
+												readData = [chunkReadHandle readDataOfLength:_readBufferLength];
 												length = [readData length];
 												if (length < 1) {
 													RCLog(@"Read end of chunk: %@ assembled: %@",@(movedChunkDataLength),@(self.assembledAggregatedContentLength));

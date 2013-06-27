@@ -203,6 +203,9 @@
 @property NSUInteger maxConcurrentChunks;
 /// The ideal chunk size when breaking a large download into parts. Default is 1MB.
 @property (nonatomic) long long chunkSize;
+/// The ideal read buffer when aggregating chunks. Default is 1K.
+@property (nonatomic) NSUInteger readBufferLength;
+
 
 
 /// If #authProviders is nil and #username and #password are not empty, an CMBasicAuthProvider is created on demand and added to #authProviders

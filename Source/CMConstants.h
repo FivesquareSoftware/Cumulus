@@ -70,6 +70,7 @@
 
 #define kCMChunkedDownloadRequestDefaultChunkSize (1024*1024)
 #define kCMChunkedDownloadRequestDefaultMaxConcurrentChunks 4
+#define kCMChunkedDownloadRequestDefaultBufferSize (1024)
 
 
 extern NSString *kCumulusErrorDomain;

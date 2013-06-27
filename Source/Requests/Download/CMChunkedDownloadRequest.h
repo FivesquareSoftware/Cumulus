@@ -15,5 +15,6 @@
 @property (nonatomic, strong) NSString *cachesDir;
 @property NSUInteger maxConcurrentChunks;
 @property (nonatomic) long long chunkSize;
+@property (nonatomic) NSUInteger readBufferLength;
 
 @end

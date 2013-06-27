@@ -300,6 +300,7 @@
 		
 		_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
+		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
 		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:kHTTPDateFormat];
@@ -668,7 +669,8 @@
 	CMChunkedDownloadRequest *request = [[CMChunkedDownloadRequest alloc] initWithURLRequest:URLRequest];
 	[request setCachesDir:self.cachesDir];
 	request.maxConcurrentChunks = self.maxConcurrentChunks;
-	request.chunkSize = self.chunkSize;;
+	request.chunkSize = self.chunkSize;
+	request.readBufferLength = self.readBufferLength;
 	[self configureRequest:request];
 	return request;
 }
