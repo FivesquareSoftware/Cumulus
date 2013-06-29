@@ -12,6 +12,8 @@
 #import "CMDownloadRequest.h"
 #import "Cumulus.h"
 
+#define kCMChunkedDownloadRequestMinUpdateInterval 0.5
+
 
 @interface CMDownloadChunk : NSObject
 @property (nonatomic) NSUInteger sequence;
@@ -30,6 +32,8 @@
 	dispatch_semaphore_t _chunksSemaphore;
 }
 @property BOOL sentInitialProgress;
+@property (strong) NSDate *lastProgressUpdateSentAt;
+@property (readonly) NSTimeInterval timeSinceLastProgressUpdate;
 @property (nonatomic) long long expectedAggregatedContentLength;
 @property long long receivedAggregatedContentLength;
 @property (readonly) long long totalAggregatedContentLength;
@@ -52,6 +56,14 @@
 // ========================================================================== //
 
 #pragma mark - Properties
+
+- (NSTimeInterval) timeSinceLastProgressUpdate {
+	if (nil == _lastProgressUpdateSentAt) {
+		return 0;
+	}
+	NSTimeInterval interval = fabs([_lastProgressUpdateSentAt timeIntervalSinceNow]);
+	return interval;
+}
 
 - (long long) totalAggregatedContentLength {
 	__block long long totalAggregatedContentLength = 0;
@@ -198,6 +210,7 @@
 - (void) handleConnectionDidReceiveData {
 	if (NO == _sentInitialProgress) {
 		_sentInitialProgress = YES;
+		_lastProgressUpdateSentAt = [NSDate date];
 		[super handleConnectionDidReceiveData];
 	}
 	// do nothing here, see #reallyHandleConnectionDidReceiveData which is called when chunk requests get data
@@ -498,7 +511,12 @@
 }
 
 - (void) reallyHandleConnectionDidReceiveData {
-	[super handleConnectionDidReceiveData];
+	// rate limit these updates since we can have multiple workers all hammering away we really don't need many updates per-second
+	NSTimeInterval sinceLastUpdate = self.timeSinceLastProgressUpdate;
+	if (sinceLastUpdate >= kCMChunkedDownloadRequestMinUpdateInterval) {
+		_lastProgressUpdateSentAt = [NSDate date];
+		[super handleConnectionDidReceiveData];
+	}
 }
 
 
