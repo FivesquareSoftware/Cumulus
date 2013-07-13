@@ -88,7 +88,7 @@ static NSMutableDictionary *_downloadInfo = nil;
 		RCLog(@"Exception while archiving download data: %@",exception);
 	}
 
-	NSAssert(success, @"Failed to write download state!");
+//	NSAssert(success, @"Failed to write download state!");
 	return success;
 }
 

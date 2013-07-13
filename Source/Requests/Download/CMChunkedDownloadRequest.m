@@ -420,7 +420,14 @@
 											}
 											@catch (NSException *exception) {
 												*stop = YES;
-												NSError *readWriteError = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorWritingToTempFile userInfo:[exception userInfo]];
+												NSMutableDictionary *info = [NSMutableDictionary new];
+												if ([exception reason]) {
+													info[NSLocalizedDescriptionKey] = [exception reason];
+												}
+												if ([exception userInfo]) {
+													[info addEntriesFromDictionary:[exception userInfo]];
+												}
+												NSError *readWriteError = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorWritingToTempFile userInfo:info];
 												self.error = readWriteError;
 												RCLog(@"Error moving data from chunk to aggregate file: %@->%@ %@ (%@)", chunk.file, self.downloadedFileTempURL, [readWriteError localizedDescription], [readWriteError userInfo]);
 												length = 0;
