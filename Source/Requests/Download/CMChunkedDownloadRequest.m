@@ -136,7 +136,7 @@
     self = [super initWithURLRequest:URLRequest];
     if (self) {
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
-		_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
+		_chunkSize = 0;
 		_waitingChunks = [NSMutableSet new];
 		_runningChunks = [NSMutableSet new];
 		_completedChunks = [NSMutableSet new];
@@ -240,6 +240,15 @@
 	NSMutableURLRequest *baseChunkRequest = [self.originalURLRequest mutableCopy];
 	baseChunkRequest.HTTPMethod = kCumulusHTTPMethodGET;
 	_baseChunkRequest = baseChunkRequest;
+	
+	if (_chunkSize == 0) {
+		if (_maxConcurrentChunks > 0) {
+			_chunkSize = self.expectedAggregatedContentLength/(long long)_maxConcurrentChunks;
+		}
+		else {
+			_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
+		}
+	}
 	
 	NSUInteger idx = 0;
 	for (long long i = 0; i < self.expectedContentLength; i+=_chunkSize) {

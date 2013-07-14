@@ -201,7 +201,7 @@
 @property (nonatomic, strong) NSString *cachesDir;
 /// The number of concurrent chunks allowed for chunked downloads. Default is 4.
 @property NSUInteger maxConcurrentChunks;
-/// The ideal chunk size when breaking a large download into parts. Default is 1MB.
+/// The ideal chunk size when breaking a large download into parts. Default is 0, which means it is determined by maxConcurrentChunks.
 @property (nonatomic) long long chunkSize;
 /// The ideal read buffer when aggregating chunks. Default is 1K.
 @property (nonatomic) NSUInteger readBufferLength;

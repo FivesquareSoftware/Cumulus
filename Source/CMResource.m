@@ -298,7 +298,7 @@
 		
 		_requests_semaphore = dispatch_semaphore_create(1);
 		
-		_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
+		_chunkSize = 0;
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
 		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
 		
