@@ -1,30 +1,30 @@
 //
-//  CMResource.m
-//  Cumulus
+//	CMResource.m
+//	Cumulus
 //
-//  Created by John Clayton on 7/23/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 7/23/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 
+ *	  notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
+ *	  this list of conditions and the following disclaimer in the documentation
+ *	  and/or other materials provided with the distribution.
+ *
  * 3. Neither the name of Fivesquare Software nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- * 
+ *	  be used to endorse or promote products derived from this software without
+ *	  specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL FIVESQUARE SOFTWARE BE LIABLE FOR ANY DIRECT,
  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -134,10 +134,10 @@
 }
 
 - (NSMutableDictionary *) headersInternal {
-    if (nil == _headersInternal) {
-        _headersInternal = [NSMutableDictionary dictionary];
-    }
-    return _headersInternal;
+	if (nil == _headersInternal) {
+		_headersInternal = [NSMutableDictionary dictionary];
+	}
+	return _headersInternal;
 }
 
 @dynamic query;
@@ -150,10 +150,10 @@
 }
 
 - (NSMutableDictionary *) queryInternal {
-    if (nil == _queryInternal) {
-        _queryInternal = [NSMutableDictionary dictionary];
-    }
-    return _queryInternal;
+	if (nil == _queryInternal) {
+		_queryInternal = [NSMutableDictionary dictionary];
+	}
+	return _queryInternal;
 }
 
 - (NSTimeInterval) timeout {
@@ -192,10 +192,10 @@
 }
 
 - (void) setContentType:(CMContentType)contentType {
-    if (_contentType != contentType) {
-        _contentType = contentType;  
-        [self setHeadersForContentType:_contentType];
-    }
+	if (_contentType != contentType) {
+		_contentType = contentType;
+		[self setHeadersForContentType:_contentType];
+	}
 }
 
 - (void) setLastModified:(NSDate *)lastModified {
@@ -236,7 +236,7 @@
 
 @dynamic mergedHeaders;
 - (NSMutableDictionary *) mergedHeaders {
-	NSMutableDictionary *mergedHeaders = [NSMutableDictionary dictionary];	
+	NSMutableDictionary *mergedHeaders = [NSMutableDictionary dictionary];
 	[mergedHeaders addEntriesFromDictionary:_parent.mergedHeaders];
 	[mergedHeaders addEntriesFromDictionary:_headersInternal];
 	return mergedHeaders;
@@ -305,7 +305,7 @@
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:kHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
-
+		
 	}
 	return self;
 }
@@ -342,7 +342,7 @@
 	
 	NSMutableDictionary *query = nil;
 	if (queryString.length) {
-//		resourceURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",[resourceURL absoluteString],queryString]];
+		//		resourceURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",[resourceURL absoluteString],queryString]];
 		query = [NSMutableDictionary new];
 		NSArray *pairs = [queryString componentsSeparatedByString:@"&"];
 		[pairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
@@ -350,7 +350,7 @@
 			if (keyValue.count == 2) {
 				[query setObject:keyValue[1] forKey:keyValue[0]];
 			}
-		}];		
+		}];
 	}
 	
 	CMResource *resource = [CMResource withURL:[resourceURL absoluteString]];
@@ -365,8 +365,8 @@
 	va_list args;
 	va_start(args,relativePathFormat);
 	NSString *relativePath = [[NSString alloc] initWithFormat:relativePathFormat arguments:args];
-	va_end(args);        
-
+	va_end(args);
+	
 	return [self resource:relativePath];
 }
 
@@ -442,16 +442,16 @@
 
 - (void) cancelRequestsWithBlock:(void (^)(void))block {
 	dispatch_queue_t request_cancel_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-
+	
 	dispatch_async(request_cancel_queue, ^{
 		dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
-
-		for (CMRequest *request in self.requestsInternal) {			
+		
+		for (CMRequest *request in self.requestsInternal) {
 			[request cancel];
 		}
-
+		
 		dispatch_semaphore_signal(_requests_semaphore);
-
+		
 		if (block) {
 			dispatch_async(dispatch_get_main_queue(), block);
 		}
@@ -478,9 +478,9 @@
 
 
 
-- (CMResponse *) get {        
+- (CMResponse *) get {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET];
-    return [self runBlockingRequest:request];	
+	return [self runBlockingRequest:request];
 }
 
 - (id) getWithCompletionBlock:(CMCompletionBlock)completionBlock {
@@ -495,7 +495,7 @@
 
 - (CMResponse *) getWithQuery:(NSDictionary *)query {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET query:query];
-    return [self runBlockingRequest:request];	
+	return [self runBlockingRequest:request];
 }
 
 - (id) getWithQuery:(NSDictionary *)query completionBlock:(CMCompletionBlock)completionBlock {
@@ -513,8 +513,8 @@
 
 
 - (CMResponse *) head {
-    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD];
-    return [self runBlockingRequest:request];	
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD];
+	return [self runBlockingRequest:request];
 }
 
 - (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock {
@@ -524,7 +524,7 @@
 
 - (CMResponse *) headWithQuery:(NSDictionary *)query {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
-    return [self runBlockingRequest:request];	
+	return [self runBlockingRequest:request];
 }
 
 - (id) headWithQuery:(NSDictionary *)query completionBlock:(CMCompletionBlock)completionBlock {
@@ -537,8 +537,8 @@
 
 
 - (CMResponse *) delete {
-    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE];
-    return [self runBlockingRequest:request];	
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE];
+	return [self runBlockingRequest:request];
 }
 
 - (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock {
@@ -551,9 +551,9 @@
 
 
 - (CMResponse *) post:(id)payload {
-    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
-    request.payload = payload;
-    return [self runBlockingRequest:request];	
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
+	request.payload = payload;
+	return [self runBlockingRequest:request];
 }
 
 - (id) post:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
@@ -562,7 +562,7 @@
 
 - (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
-    request.payload = payload;
+	request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
@@ -572,9 +572,9 @@
 
 
 - (CMResponse *) put:(id)payload {
-    CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
-    request.payload = payload;
-    return [self runBlockingRequest:request];	
+	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
+	request.payload = payload;
+	return [self runBlockingRequest:request];
 }
 
 - (id) put:(id)payload withCompletionBlock:(CMCompletionBlock)completionBlock {
@@ -583,7 +583,7 @@
 
 - (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
-    request.payload = payload;
+	request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
@@ -704,15 +704,15 @@
 		case CMContentTypeHTML:
 			[self.headersInternal setObject:@"text/html" forKey:kCumulusHTTPHeaderContentType];
 			[self.headersInternal setObject:@"text/html" forKey:kCumulusHTTPHeaderAccept];
-			break;			
+			break;
 		case CMContentTypeText:
 			[self.headersInternal setObject:@"text/plain" forKey:kCumulusHTTPHeaderContentType];
 			[self.headersInternal setObject:@"text/plain" forKey:kCumulusHTTPHeaderAccept];
-			break;			
+			break;
 		case CMContentTypePNG:
 			[self.headersInternal setObject:@"image/png" forKey:kCumulusHTTPHeaderContentType];
 			[self.headersInternal setObject:@"image/png" forKey:kCumulusHTTPHeaderAccept];
-			break;			
+			break;
 		default:
 			break;
 	}
@@ -752,7 +752,7 @@
 	[request.headers addEntriesFromDictionary:self.mergedHeaders];
 	
 	NSUUID *UUID = [NSUUID new];
-	request.identifier = [UUID UUIDString];	
+	request.identifier = [UUID UUIDString];
 }
 
 - (NSString *) requestSignatureForHTTPMethod:(NSString *)method {
@@ -768,9 +768,9 @@
 
 
 
-- (CMResponse *) runBlockingRequest:(CMRequest *)request {	
+- (CMResponse *) runBlockingRequest:(CMRequest *)request {
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
-    __block CMResponse *localResponse = nil;
+	__block CMResponse *localResponse = nil;
 	
 	CMCompletionBlock completionBlock = ^(CMResponse *response){
 		localResponse = response;
@@ -780,9 +780,9 @@
 	CMAbortBlock abortBlock = ^(CMRequest *request) {
 		dispatch_semaphore_signal(request_sema);
 	};
-
+	
 	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
-
+	
 	if ([NSThread isMainThread]) {
 		do {
 			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
@@ -792,7 +792,7 @@
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	}
 	dispatch_release(request_sema);
-    return localResponse;
+	return localResponse;
 }
 
 - (id) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
@@ -800,15 +800,15 @@
 }
 
 - (id) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock {
-
+	
 	id context = (__bridge id)(dispatch_get_specific(&kCMResourceContextKey));
 	if (context) {
 		RCLog(@"Dispatching request with context: %@",context);
 	}
 	
-
+	
 	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
-
+	
 	CMPreflightBlock preflightBlock = self.preflightBlock;
 	if (preflightBlock) {
 		void(^dispatchPreflightBlock)(void) = ^{
@@ -840,7 +840,7 @@
 - (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launch_semaphore context:(id)context {
 	[self addRequest:request context:context];
 	dispatch_semaphore_signal(launch_semaphore);
-
+	
 	__weak id weakContext = context;
 	dispatch_queue_t request_queue = [CMResource dispatchQueue];
 	dispatch_async(request_queue, ^{
@@ -865,7 +865,7 @@
 		[context enterWithRequest:request];
 	}
 	else if ([context isKindOfClass:[CMResourceContextScope class]]) {
-		CMResourceContextScope *scope = context;		
+		CMResourceContextScope *scope = context;
 		request.scope = scope;
 		__weak CMRequest *weakRequest = request;
 		scope.shutdownHook = ^{
