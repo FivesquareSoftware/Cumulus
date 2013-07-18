@@ -243,7 +243,8 @@
 	
 	if (_chunkSize == 0) {
 		if (_maxConcurrentChunks > 0) {
-			_chunkSize = self.expectedAggregatedContentLength/(long long)_maxConcurrentChunks;
+			long long bytesRangeLength = (self.expectedAggregatedContentLength+1);// remember, byte ranges are zero indexed
+			_chunkSize = bytesRangeLength/(long long)_maxConcurrentChunks;
 		}
 		else {
 			_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
