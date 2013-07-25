@@ -109,8 +109,7 @@
 
 - (void) authorizeRequest:(NSMutableURLRequest *)URLRequest {
 	if (_credentialsProvider && (nil == _credentials || NO == _credentials.valid)) {
-		dispatch_semaphore_t credentialsSemaphore = dispatch_semaphore_create(1);
-		dispatch_semaphore_wait(credentialsSemaphore, DISPATCH_TIME_FOREVER);
+		dispatch_semaphore_t credentialsSemaphore = dispatch_semaphore_create(0);
 		[_credentialsProvider getWithCompletionBlock:^(CMResponse *response) {
             if (response.wasSuccessful) {
                 self.credentials = (id<CMAmazonCredentials>)response.result;//The service provider must have a postProcessing block that makes response#result a credentials object
@@ -120,7 +119,6 @@
 		}];
 
 		dispatch_semaphore_wait(credentialsSemaphore, DISPATCH_TIME_FOREVER);
-		dispatch_semaphore_signal(credentialsSemaphore);
 		dispatch_release(credentialsSemaphore);
 	} else {
 		[self signRequest:URLRequest];
