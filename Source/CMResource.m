@@ -121,7 +121,14 @@
 
 @dynamic queryString;
 - (NSString *) queryString {
-	return [self.URL query];
+	NSMutableDictionary *queryDictionary = self.mergedQuery;
+	
+	NSString *queryString = nil;
+	if ([queryDictionary count] > 0) {
+		queryString = [queryDictionary toQueryString];
+	}
+
+	return queryString;
 }
 
 @dynamic headers;
@@ -718,27 +725,21 @@
 	}
 }
 
-- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(NSDictionary *)query {
-	NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionaryWithDictionary:self.mergedQuery];
-	[queryDictionary addEntriesFromDictionary:query];
+- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(NSDictionary *)query {	
+	NSMutableDictionary *requestQuery = [NSMutableDictionary dictionaryWithDictionary:self.mergedQuery];
+	[requestQuery addEntriesFromDictionary:query];
 	
-	NSString *queryString = nil;
-	if ([queryDictionary count] > 0) {
-		queryString = [queryDictionary toQueryString];
-	}
 	
 	NSURL *requestURL;
-	if (queryString.length) {
-		if (self.queryString) {
-			requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@&%@",self.URL,queryString]];
-		}
-		else {
-			requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",self.URL,queryString]];
-		}
+
+	if ([requestQuery count] > 0) {
+		NSString *requestQueryString = [requestQuery toQueryString];
+		requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",self.URL,requestQueryString]];
 	}
 	else {
 		requestURL = self.URL;
 	}
+
 	NSMutableURLRequest *URLRequest = [[NSMutableURLRequest alloc] initWithURL:requestURL];
 	[URLRequest setHTTPMethod:method];
 	return URLRequest;
