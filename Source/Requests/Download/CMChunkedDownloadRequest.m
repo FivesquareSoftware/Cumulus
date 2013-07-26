@@ -12,7 +12,7 @@
 #import "CMDownloadRequest.h"
 #import "Cumulus.h"
 
-#define kCMChunkedDownloadRequestMinUpdateInterval 0.5
+#define kCMChunkedDownloadRequestMinUpdateInterval 0.1
 
 
 @interface CMDownloadChunk : NSObject
@@ -143,6 +143,7 @@
 		_allChunks = [NSMutableSet new];
 		_chunksSemaphore = dispatch_semaphore_create(1);
 		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
+		_minumumProgressUpdateInterval = kCMChunkedDownloadRequestMinUpdateInterval;
     }
     return self;
 }
@@ -294,6 +295,18 @@
 		chunkRequest.cachesDir = [self.chunksDirURL path];
 		chunkRequest.range = range;
 		chunkRequest.shouldResume = YES;
+		
+		CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForCacheIdentifier:chunkRequest.cacheIdentifier];
+		NSURL *tempFileURL = downloadInfo.downloadedFileTempURL;
+		if (tempFileURL) {
+			NSFileManager *fm = [NSFileManager new];
+			if ([fm fileExistsAtPath:[tempFileURL path]]) {
+				NSError *error = nil;
+				NSDictionary *attributes = [fm attributesOfItemAtPath:[tempFileURL path] error:&error];
+				unsigned long long chunkOffset = [attributes fileSize];
+				chunk.fileOffset = chunkOffset;
+			}
+		}
 		
 		__weak typeof(self) self_ = self;
 		__weak typeof(chunk) chunk_ = chunk;
@@ -533,7 +546,7 @@
 - (void) reallyHandleConnectionDidReceiveData {
 	// rate limit these updates since we can have multiple workers all hammering away we really don't need many updates per-second
 	NSTimeInterval sinceLastUpdate = self.timeSinceLastProgressUpdate;
-	if (sinceLastUpdate >= kCMChunkedDownloadRequestMinUpdateInterval) {
+	if (sinceLastUpdate >= _minumumProgressUpdateInterval) {
 		_lastProgressUpdateSentAt = [NSDate date];
 		[super handleConnectionDidReceiveData];
 	}

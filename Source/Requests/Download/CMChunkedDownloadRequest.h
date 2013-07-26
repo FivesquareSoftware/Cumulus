@@ -43,5 +43,6 @@
 @property NSUInteger maxConcurrentChunks;
 @property (nonatomic) long long chunkSize;
 @property (nonatomic) NSUInteger readBufferLength;
-
+// Progress updates won't be sent unless this value has elapsed since the last one. Defaults to 0.1.
+@property (nonatomic) NSTimeInterval minumumProgressUpdateInterval;
 @end
