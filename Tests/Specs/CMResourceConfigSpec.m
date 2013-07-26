@@ -134,9 +134,7 @@
 	CMResource *resource = [self.service resource:@"resource"];
 	CMResource *childWithQueryString = [resource resource:@"child?foo=bar"];
 	
-	NSString *baseString = [[resource URL] absoluteString];
-	NSURL *fullURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/child?foo=bar",baseString]];
-	STAssertEqualObjects([fullURL absoluteString], [childWithQueryString.URL absoluteString], @"Should properly append a query string");
+	STAssertEqualObjects(@"foo=bar", childWithQueryString.queryString, @"Should properly append a query string");
 }
 
 - (void) shouldConvertNonStringHeaderFieldValuesToStrings {

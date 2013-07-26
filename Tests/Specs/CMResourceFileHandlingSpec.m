@@ -346,12 +346,20 @@
 
 - (void) shouldResumeDownloadingAChunkedFileToDisk {
 	CMResource *massive = [self.service resource:@"test/download/massive"];
+	
+	massive.preflightBlock = ^(CMRequest *request) {
+		CMChunkedDownloadRequest *chunkedRequest = (CMChunkedDownloadRequest *)request;
+		chunkedRequest.minumumProgressUpdateInterval = 0;
+		return YES;
+	};
 
 	__block long long currentOffset = 0;
+	__block float initialProgress;
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
 		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
 		if (progress > 0.f) {
 			currentOffset = [progressInfo.fileOffset longLongValue];
+			initialProgress = progress;
 			[progressInfo.request cancel];
 		}
 	};
@@ -375,6 +383,9 @@
 		}
 	};
 	completionBlock = ^(CMResponse *response) {
+//		if (firstProgress == -1) {
+//			firstProgress = [response.request.progressReceivedInfo.progress floatValue];
+//		}
 		localResponse = response;
 		CMProgressInfo *result = response.result;
 		self.copiedFileURL = [result.tempFileURL URLByAppendingPathExtension:@"png"];
@@ -393,7 +404,7 @@
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 
-	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
+//	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
 	STAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
 		
 	NSFileManager *fm = [NSFileManager new];
