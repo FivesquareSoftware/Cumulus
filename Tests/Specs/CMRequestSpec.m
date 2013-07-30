@@ -197,7 +197,8 @@
 	while (NO == request.isFinished) {
 		[NSThread sleepForTimeInterval:.001];
 	}
-	STAssertNil([request valueForKey:@"responseInternal"], @"Internal response pointer should be nil on finish");
+	id responseInternal = [request valueForKey:@"responseInternal"];
+	STAssertNil(responseInternal, @"Internal response pointer should be nil on finish");
 }
 
 - (void) shouldZeroOutResponseInternalAfterCompletionBlockRuns {
@@ -216,7 +217,8 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
 	
-	STAssertNil([request valueForKey:@"responseInternal"], @"Internal response pointer should be nil after completion block runs");
+	id responseInternal = [request valueForKey:@"responseInternal"];
+	STAssertNil(responseInternal, @"Internal response pointer should be nil after completion block runs");
 }
 
 - (void) shouldZeroOutResponseInternalWhenCanceled {	
@@ -236,7 +238,8 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
 	
-	STAssertNil([request valueForKey:@"responseInternal"], @"Internal response pointer should be nil after cancelation");
+	id responseInternal = [request valueForKey:@"responseInternal"];
+	STAssertNil(responseInternal, @"Internal response pointer should be nil after cancelation");
 }
 
 - (void) shouldReportCompleteForACompletedRequest {
