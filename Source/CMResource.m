@@ -47,16 +47,12 @@
 #import "NSString+Cumulus.h"
 
 
-#define kCMDispatchQueueRequestQueue "com.fivesquaresoftware.CMResource.dispatchQueue"
-#define kCMDispatchQueueLastModifiedQueue "com.fivesquaresoftware.CMResource.lastModifiedQueue"
-
-
 @interface CMResource() {
 	dispatch_semaphore_t _requests_semaphore;
 }
 
 + (dispatch_queue_t) dispatchQueue;
-+ (dispatch_queue_t) lastModifiedQueue;
+- (dispatch_queue_t) lastModifiedQueue;
 
 // Readwrite Versions of Public Properties
 
@@ -85,6 +81,7 @@
 
 @property (nonatomic) NSDateFormatter *httpDateFormatter;
 
+
 @end
 
 
@@ -94,16 +91,18 @@
 	static dispatch_queue_t _dispatchQueue = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		_dispatchQueue = dispatch_queue_create(kCMDispatchQueueRequestQueue, DISPATCH_QUEUE_CONCURRENT);
+		_dispatchQueue = dispatch_queue_create("com.fivesquaresoftware.CMResource.dispatchQueue", DISPATCH_QUEUE_CONCURRENT);
 	});
 	return _dispatchQueue;
 }
 
-+ (dispatch_queue_t) lastModifiedQueue {
+- (dispatch_queue_t) lastModifiedQueue {
 	static dispatch_queue_t _lastModifiedQueue = nil;
 	static dispatch_once_t onceToken;
+	NSString *prefix = @"com.fivesquaresoftware.CMResource";
+	NSString *queueName = [NSString stringWithFormat:@"%@.%p", prefix, self];
 	dispatch_once(&onceToken, ^{
-		_lastModifiedQueue = dispatch_queue_create(kCMDispatchQueueLastModifiedQueue, DISPATCH_QUEUE_CONCURRENT);
+		_lastModifiedQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 	});
 	return _lastModifiedQueue;
 }
@@ -221,22 +220,23 @@
 
 - (void) setLastModified:(NSDate *)lastModified {
 	if (_lastModified != lastModified) {
-        dispatch_queue_t lastModifiedQueue = [CMResource lastModifiedQueue];
-        dispatch_barrier_async(lastModifiedQueue, ^{
-            _lastModified = lastModified;
-            [self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
-        });
+		dispatch_queue_t lastModifiedQueue = [self lastModifiedQueue];
+		dispatch_barrier_async(lastModifiedQueue, ^{
+			_lastModified = lastModified;
+			[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
+		});
 	}
 }
 
 - (NSDate *)lastModified {
-    __block NSDate *lastModifiedValue;
-    dispatch_queue_t lastModifiedQueue = [CMResource lastModifiedQueue];
-    dispatch_async(lastModifiedQueue, ^{
-        lastModifiedValue = _lastModified;
-    });
-    return lastModifiedValue;
+	__block NSDate *lastModifiedValue;
+	dispatch_queue_t lastModifiedQueue = [self lastModifiedQueue];
+	dispatch_async(lastModifiedQueue, ^{
+		lastModifiedValue = _lastModified;
+	});
+	return lastModifiedValue;
 }
+
 
 - (CMPreflightBlock) preflightBlock {
 	if (nil == _preflightBlock && _parent.preflightBlock != nil) {
