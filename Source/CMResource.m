@@ -52,6 +52,7 @@
 }
 
 + (dispatch_queue_t) dispatchQueue;
+- (dispatch_queue_t) lastModifiedQueue;
 
 // Readwrite Versions of Public Properties
 
@@ -94,6 +95,18 @@
 	});
 	return _dispatchQueue;
 }
+
+- (dispatch_queue_t) lastModifiedQueue {
+	static dispatch_queue_t _lastModifiedQueue = nil;
+	static dispatch_once_t onceToken;
+	NSString *prefix = @"com.fivesquaresoftware.CMResource.lastModifiedQueue";
+	NSString *queueName = [NSString stringWithFormat:@"%@.%p", prefix, self];
+	dispatch_once(&onceToken, ^{
+		_lastModifiedQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+	});
+	return _lastModifiedQueue;
+}
+
 
 // ========================================================================== //
 
@@ -207,10 +220,23 @@
 
 - (void) setLastModified:(NSDate *)lastModified {
 	if (_lastModified != lastModified) {
-		_lastModified = lastModified;
-		[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
+		dispatch_queue_t lastModifiedQueue = [self lastModifiedQueue];
+		dispatch_barrier_async(lastModifiedQueue, ^{
+			_lastModified = lastModified;
+			[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
+		});
 	}
 }
+
+- (NSDate *)lastModified {
+	__block NSDate *lastModifiedValue;
+	dispatch_queue_t lastModifiedQueue = [self lastModifiedQueue];
+	dispatch_async(lastModifiedQueue, ^{
+		lastModifiedValue = _lastModified;
+	});
+	return lastModifiedValue;
+}
+
 
 - (CMPreflightBlock) preflightBlock {
 	if (nil == _preflightBlock && _parent.preflightBlock != nil) {
