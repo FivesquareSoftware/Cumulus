@@ -352,7 +352,7 @@
  */
 - (id) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
-- (id) chunkedDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+- (id) downloadChunksWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
 /** Behaves like downloadWithProgressBlock:completionBlock: with the exception that it will resume the download if the temp download file already existes on disk.
  *  @see downloadWithProgressBlock:completionBlock:. 
