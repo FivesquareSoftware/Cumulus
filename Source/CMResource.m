@@ -606,7 +606,7 @@
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
-- (id) chunkedDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+- (id) downloadChunksWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMChunkedDownloadRequest *request = [self chunkedDownloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
@@ -845,7 +845,7 @@
 	__weak id weakContext = context;
 	dispatch_queue_t request_queue = [CMResource dispatchQueue];
 	dispatch_async(request_queue, ^{
-		[request startWithCompletionBlock:^(CMResponse *response){
+		[request startWithCompletionBlock:^(CMResponse *response){http://www.backblaze.com/pics/how-online-backup-works.jpg
 			if (self.automaticallyTracksLastModified && response.lastModified) {
 				self.lastModified = response.lastModified;
 			}
@@ -881,7 +881,9 @@
 - (void) removeResponse:(CMResponse *)response context:(id)context {
 	CMRequest *request = response.request;
 	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
-	[self.requestsInternal removeObject:request];
+	if (request) {
+		[self.requestsInternal removeObject:request];
+	}
 	if (context && [context isKindOfClass:[CMResourceContextGroup class]]) {
 		[context leaveWithResponse:response];
 	}
