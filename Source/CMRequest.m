@@ -556,13 +556,14 @@ static NSUInteger requestCount = 0;
     if (self.connectionFinished) {
         return;
     }
+	CMResponse *blockResponse = self.responseInternal;
 	self.connectionFinished = YES;
 	
 	// Make sure processing the results doesn't stop us from calling our completion block
 	@try {
 		dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 		dispatch_sync(q, ^{
-			[self postProcessResponse:self.responseInternal];
+			[self postProcessResponse:blockResponse];
 		});
 	}
 	@catch (NSException *exception) {
@@ -571,7 +572,7 @@ static NSUInteger requestCount = 0;
 	@finally {
 		if (self.completionBlock) {
 			dispatch_async(dispatch_get_main_queue(), ^{
-				self.completionBlock(self.responseInternal);
+				self.completionBlock(blockResponse);
 				self.responseInternal = nil;
 			});
 		}
