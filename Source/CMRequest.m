@@ -254,7 +254,7 @@ static NSUInteger requestCount = 0;
 
 @synthesize responseInternal = _responseInternal;
 - (CMResponse *) responseInternal {
-	if (nil == _responseInternal) {
+	if (nil == _responseInternal && NO == self.connectionFinished) {
 		_responseInternal = [[CMResponse alloc] initWithRequest:self];
 	}
 	return _responseInternal;
