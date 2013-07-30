@@ -80,6 +80,10 @@
 
 @property (nonatomic) NSDateFormatter *httpDateFormatter;
 
+/// Queue for controlling write access to the lastModified value
+@property (nonatomic, assign) dispatch_queue_t lastModifiedQueue;
+
+
 
 @end
 
@@ -207,10 +211,21 @@
 
 - (void) setLastModified:(NSDate *)lastModified {
 	if (_lastModified != lastModified) {
-		_lastModified = lastModified;
-		[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
+		dispatch_barrier_async(self.lastModifiedQueue, ^{
+			_lastModified = lastModified;
+			[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
+		});
 	}
 }
+
+- (NSDate *)lastModified {
+	__block NSDate *lastModifiedValue;
+	dispatch_async(self.lastModifiedQueue, ^{
+		lastModifiedValue = _lastModified;
+	});
+	return lastModifiedValue;
+}
+
 
 - (CMPreflightBlock) preflightBlock {
 	if (nil == _preflightBlock && _parent.preflightBlock != nil) {
@@ -312,6 +327,9 @@
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:kHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
+		
+		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.lastModifiedQueue.%p", self];
+		_lastModifiedQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 		
 	}
 	return self;
