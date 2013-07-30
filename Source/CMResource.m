@@ -99,7 +99,7 @@
 - (dispatch_queue_t) lastModifiedQueue {
 	static dispatch_queue_t _lastModifiedQueue = nil;
 	static dispatch_once_t onceToken;
-	NSString *prefix = @"com.fivesquaresoftware.CMResource";
+	NSString *prefix = @"com.fivesquaresoftware.CMResource.lastModifiedQueue";
 	NSString *queueName = [NSString stringWithFormat:@"%@.%p", prefix, self];
 	dispatch_once(&onceToken, ^{
 		_lastModifiedQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
