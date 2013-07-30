@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL FIVESQUARE SOFTWARE BE LIABLE FOR ANY DIRECT,
  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -109,8 +109,7 @@
 
 - (void) authorizeRequest:(NSMutableURLRequest *)URLRequest {
 	if (_credentialsProvider && (nil == _credentials || NO == _credentials.valid)) {
-		dispatch_semaphore_t credentialsSemaphore = dispatch_semaphore_create(1);
-		dispatch_semaphore_wait(credentialsSemaphore, DISPATCH_TIME_FOREVER);
+		dispatch_semaphore_t credentialsSemaphore = dispatch_semaphore_create(0);
 		[_credentialsProvider getWithCompletionBlock:^(CMResponse *response) {
             if (response.wasSuccessful) {
                 self.credentials = (id<CMAmazonCredentials>)response.result;//The service provider must have a postProcessing block that makes response#result a credentials object
@@ -120,7 +119,6 @@
 		}];
 
 		dispatch_semaphore_wait(credentialsSemaphore, DISPATCH_TIME_FOREVER);
-		dispatch_semaphore_signal(credentialsSemaphore);
 		dispatch_release(credentialsSemaphore);
 	} else {
 		[self signRequest:URLRequest];

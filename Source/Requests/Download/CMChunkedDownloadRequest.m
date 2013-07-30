@@ -12,7 +12,7 @@
 #import "CMDownloadRequest.h"
 #import "Cumulus.h"
 
-#define kCMChunkedDownloadRequestMinUpdateInterval 0.5
+#define kCMChunkedDownloadRequestMinUpdateInterval 0.1
 
 
 @interface CMDownloadChunk : NSObject
@@ -136,13 +136,14 @@
     self = [super initWithURLRequest:URLRequest];
     if (self) {
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
-		_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
+		_chunkSize = 0;
 		_waitingChunks = [NSMutableSet new];
 		_runningChunks = [NSMutableSet new];
 		_completedChunks = [NSMutableSet new];
 		_allChunks = [NSMutableSet new];
 		_chunksSemaphore = dispatch_semaphore_create(1);
 		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
+		_minumumProgressUpdateInterval = kCMChunkedDownloadRequestMinUpdateInterval;
     }
     return self;
 }
@@ -155,7 +156,7 @@
 
 - (void) cancel {
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
-	[_runningChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
+	[_allChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
 		[chunk.request cancel];
 	}];
 	dispatch_semaphore_signal(_chunksSemaphore);
@@ -241,6 +242,16 @@
 	baseChunkRequest.HTTPMethod = kCumulusHTTPMethodGET;
 	_baseChunkRequest = baseChunkRequest;
 	
+	if (_chunkSize == 0) {
+		if (_maxConcurrentChunks > 0) {
+			long long bytesRangeLength = (self.expectedAggregatedContentLength+1);// remember, byte ranges are zero indexed
+			_chunkSize = bytesRangeLength/(long long)_maxConcurrentChunks;
+		}
+		else {
+			_chunkSize = kCMChunkedDownloadRequestDefaultChunkSize;
+		}
+	}
+	
 	NSUInteger idx = 0;
 	for (long long i = 0; i < self.expectedContentLength; i+=_chunkSize) {
 		long long len = _chunkSize;
@@ -284,6 +295,18 @@
 		chunkRequest.cachesDir = [self.chunksDirURL path];
 		chunkRequest.range = range;
 		chunkRequest.shouldResume = YES;
+		
+		CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForCacheIdentifier:chunkRequest.cacheIdentifier];
+		NSURL *tempFileURL = downloadInfo.downloadedFileTempURL;
+		if (tempFileURL) {
+			NSFileManager *fm = [NSFileManager new];
+			if ([fm fileExistsAtPath:[tempFileURL path]]) {
+				NSError *error = nil;
+				NSDictionary *attributes = [fm attributesOfItemAtPath:[tempFileURL path] error:&error];
+				unsigned long long chunkOffset = [attributes fileSize];
+				chunk.fileOffset = chunkOffset;
+			}
+		}
 		
 		__weak typeof(self) self_ = self;
 		__weak typeof(chunk) chunk_ = chunk;
@@ -476,6 +499,9 @@
 		
 		self.receivedContentLength = self.assembledAggregatedContentLength;
 		
+		// Make sure that even though we are limiting the rate of these updates we send one last one
+		[super handleConnectionDidReceiveData];
+
 		CMProgressInfo *progressInfo = [CMProgressInfo new];
 		progressInfo.progress = @(1.f);
 		progressInfo.tempFileURL = self.downloadedFileTempURL;
@@ -484,8 +510,8 @@
 		progressInfo.filename = self.downloadedFilename;
 
 		self.result = progressInfo;
-
 		[super handleConnectionFinished];
+		
 		// even in the case of a pause we remove this file because we assemble at the end from chunks
 		[self removeAggregateFile];
 		// If we have merely canceled, leave chunk files in place so they can be resumed
@@ -520,7 +546,7 @@
 - (void) reallyHandleConnectionDidReceiveData {
 	// rate limit these updates since we can have multiple workers all hammering away we really don't need many updates per-second
 	NSTimeInterval sinceLastUpdate = self.timeSinceLastProgressUpdate;
-	if (sinceLastUpdate >= kCMChunkedDownloadRequestMinUpdateInterval) {
+	if (sinceLastUpdate >= _minumumProgressUpdateInterval) {
 		_lastProgressUpdateSentAt = [NSDate date];
 		[super handleConnectionDidReceiveData];
 	}

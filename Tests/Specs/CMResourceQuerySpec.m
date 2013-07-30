@@ -86,7 +86,7 @@
 	
 	CMResponse *response = [resource get];
 	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(resource.mergedQuery, response.result, @"Result should equal sent params:%@",response.result);
+	STAssertTrue([resource.mergedQuery isEqualToDictionary:response.result], @"Result should equal sent params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
 //	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 	STAssertTrue([queryString rangeOfString:@"foo=bar"].location != NSNotFound, @"Request URL should contain child params");
