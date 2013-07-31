@@ -144,6 +144,8 @@
 	if (self.responseInternal.wasSuccessful && self.didComplete) {
 		progressInfo.tempFileURL = self.downloadedFileTempURL;
 	}
+	progressInfo.didComplete = self.didComplete;
+	progressInfo.request = self;
 	
 	self.result = progressInfo;
 	[super handleConnectionFinished];
