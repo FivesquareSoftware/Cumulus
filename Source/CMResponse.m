@@ -97,8 +97,7 @@
 }
 
 - (long long) expectedContentLength {
-	if (_expectedContentLength == kCFNotFound) {
-		_expectedContentLength = NSURLResponseUnknownLength;
+	if (_expectedContentLength == NSURLResponseUnknownLength) {
 		NSString *contentLengthHeaderValue = self.headers[kCumulusHTTPHeaderContentLength];
 		if (contentLengthHeaderValue) {
 			_expectedContentLength = [contentLengthHeaderValue longLongValue];
@@ -131,8 +130,8 @@
 }
 
 - (long long) totalContentLength {
-	if (_totalContentLength == kCFNotFound) {
-		if (self.expectedContentRange.location != kCFNotFound) {
+	if (_totalContentLength == NSURLResponseUnknownLength) {
+		if (self.expectedContentRange.location != NSURLResponseUnknownLength) {
 			_totalContentLength = self.expectedContentRange.contentLength;
 		}
 		else {
@@ -225,9 +224,9 @@
 //			_status = [request.URLResponse statusCode];
 //		}
 		_status = kCFNotFound;
-		_expectedContentLength = kCFNotFound;
+		_expectedContentLength = NSURLResponseUnknownLength;
 		_expectedContentRange = (CMContentRange){ kCFNotFound , 0, 0 };
-		_totalContentLength = kCFNotFound;
+		_totalContentLength = NSURLResponseUnknownLength;
 		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:kHTTPDateFormat];
