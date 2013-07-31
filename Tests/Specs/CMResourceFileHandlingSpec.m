@@ -30,9 +30,6 @@
 
 @implementation CMResourceFileHandlingSpec
 
-@synthesize service;
-@synthesize downloadedFileURL;
-@synthesize cachesDir;
 
 + (NSString *)description {
 	return @"File Handling";
@@ -305,7 +302,7 @@
 	CMResource *hero = [self.service resource:@"test/upload/hero"];
 	
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 //		NSLog(@"progress: %@",progress);
 //		[mockProgressObject setValue:progress forKey:@"Progress"];
 //		if ([progress floatValue] < 1.f) {

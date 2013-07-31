@@ -50,15 +50,9 @@
 
 
 
-@synthesize request=_request;
+
+
 @synthesize status=_status;
-@synthesize error = _error;
-@synthesize expectedContentLength = _expectedContentLength;
-@synthesize expectedContentRange = _expectedContentRange;
-@synthesize totalContentLength = _totalContentLength;
-@synthesize httpDateFormatter = _httpDateFormatter;
-
-
 - (NSInteger) status {
 	if (_status == kCFNotFound) {
 		// If user canceled auth, we need to help a bit and set the right status code
@@ -96,6 +90,7 @@
 	return lastModified;
 }
 
+@synthesize expectedContentLength = _expectedContentLength;
 - (long long) expectedContentLength {
 	if (_expectedContentLength == NSURLResponseUnknownLength) {
 		NSString *contentLengthHeaderValue = self.headers[kCumulusHTTPHeaderContentLength];
@@ -109,6 +104,7 @@
 	return _expectedContentLength;
 }
 
+@synthesize expectedContentRange = _expectedContentRange;
 - (CMContentRange) expectedContentRange {
 	if (_expectedContentRange.location == kCFNotFound) {
 		NSString *contentRangeHeaderValue = self.headers[kCumulusHTTPHeaderContentRange];
@@ -129,6 +125,7 @@
 	return _expectedContentRange;
 }
 
+@synthesize totalContentLength = _totalContentLength;
 - (long long) totalContentLength {
 	if (_totalContentLength == NSURLResponseUnknownLength) {
 		if (self.expectedContentRange.location != NSURLResponseUnknownLength) {
@@ -145,6 +142,7 @@
 	return _request.responseBody;
 }
 
+@synthesize error = _error;
 - (NSError *) error {
 	if (nil == _error) {
 		if (NO == _request.wasCanceled && NO == [self HTTPSuccessful] && nil == _request.error) {

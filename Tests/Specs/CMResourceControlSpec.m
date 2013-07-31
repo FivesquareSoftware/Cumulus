@@ -28,7 +28,6 @@
 
 @implementation CMResourceControlSpec
 
-@synthesize service;
 
 + (NSString *)description {
 	return @"Resource Control";

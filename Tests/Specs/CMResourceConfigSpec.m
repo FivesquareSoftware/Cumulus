@@ -17,7 +17,6 @@
 
 @implementation CMResourceConfigSpec
 
-@synthesize service;
 
 + (NSString *)description {
 	return @"Resource Configuration";

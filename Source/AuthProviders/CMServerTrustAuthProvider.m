@@ -47,8 +47,6 @@
 #pragma mark - Properties
 
 
-@synthesize insecure=_insecure;
-@synthesize certificates=_certificates;
 
 
 // ========================================================================== //

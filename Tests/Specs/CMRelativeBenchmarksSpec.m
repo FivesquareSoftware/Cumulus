@@ -21,10 +21,6 @@
 
 @implementation CMRelativeBenchmarksSpec
 
-@synthesize service;
-@synthesize benchmarks;
-@synthesize largeList;
-@synthesize complicatedList;
 
 + (NSString *)description {
 	return @"Relative Benchmarks"; // Just to make sure we don't drastically degrade performance when changing things

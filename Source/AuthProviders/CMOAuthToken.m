@@ -37,10 +37,6 @@
 
 @implementation CMOAuthToken
 
-@synthesize accessToken=_accessToken;
-@synthesize refreshToken=_refreshToken;
-@synthesize accessExpires=_accessExpires;
-@synthesize scope=_scope;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
 	[aCoder encodeObject:self.accessToken forKey:@"accessToken"];

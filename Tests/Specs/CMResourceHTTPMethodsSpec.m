@@ -16,7 +16,6 @@
 
 @implementation CMResourceHTTPMethodsSpec
 
-@synthesize service;
 
 
 + (NSString *)description {

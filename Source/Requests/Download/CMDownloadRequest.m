@@ -64,8 +64,6 @@
 
 // Private
 
-@synthesize downloadedFileTempURL=_downloadedFileTempURL;
-@synthesize downloadedFilename=_downloadedFilename;
 
 - (CMProgressInfo *) progressReceivedInfo {
 	CMProgressInfo *progressReceivedInfo = [super progressReceivedInfo];

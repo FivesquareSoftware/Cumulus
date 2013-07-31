@@ -41,7 +41,6 @@
 
 @implementation CMUploadRequest
 
-@synthesize fileToUploadURL=_fileToUploadURL;
 
 - (void) configureURLRequest:(NSMutableURLRequest *)URLRequest {
 	[super configureURLRequest:URLRequest];

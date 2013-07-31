@@ -14,11 +14,8 @@ NSString *kTestServerHostSSL = CumulusTestServerSSL;
 
 @implementation SpecHelper
 
-@synthesize item=_item;
-@synthesize list=_list;
-@synthesize largeList=_largeList;
-@synthesize complicatedList=_complicatedList;
 
+@synthesize item=_item;
 - (NSDictionary *) item {
 	if (nil == _item) {
 		NSString *itemPath = [[NSBundle mainBundle] pathForResource:@"Item" ofType:@"plist"];
@@ -27,6 +24,7 @@ NSString *kTestServerHostSSL = CumulusTestServerSSL;
 	return _item;
 }
 
+@synthesize list=_list;
 - (NSArray *) list {
 	if (nil == _list) {
 		_list = [NSMutableArray array];
@@ -37,6 +35,7 @@ NSString *kTestServerHostSSL = CumulusTestServerSSL;
 	return _list;
 }
 
+@synthesize largeList=_largeList;
 - (NSArray *) largeList {
 	if (nil == _largeList) {
 		_largeList = [NSMutableArray arrayWithCapacity:10000];
@@ -47,7 +46,8 @@ NSString *kTestServerHostSSL = CumulusTestServerSSL;
 	return _largeList;
 }
 
-- (NSArray *) complicatedList {	
+@synthesize complicatedList=_complicatedList;
+- (NSArray *) complicatedList {
 	if (nil == _complicatedList) {
 		
 		NSMutableDictionary *deepItem = [NSMutableDictionary dictionaryWithDictionary:self.item];

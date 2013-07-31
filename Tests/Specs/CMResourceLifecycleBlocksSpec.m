@@ -18,7 +18,6 @@
 
 @implementation CMResourceLifecycleBlocksSpec
 
-@synthesize service;
 
 + (NSString *)description {
 	return @"Resource Blocks";

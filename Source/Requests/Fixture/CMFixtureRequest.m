@@ -17,10 +17,8 @@
 
 @implementation CMFixtureRequest
 
-@synthesize fixture=_fixture;
-@synthesize fixtureData=_fixtureData;
-@synthesize expectedContentType=_expectedContentType;
 
+@synthesize fixtureData=_fixtureData;
 - (NSData *) fixtureData {
 	if (_fixture == nil) {
 		return nil;

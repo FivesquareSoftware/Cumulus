@@ -17,7 +17,6 @@
 
 @implementation CMCodingSpec
 
-@synthesize service;
 
 + (NSString *)description {
 	return @"Data Encoding and Decoding";

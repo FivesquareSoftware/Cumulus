@@ -10,16 +10,6 @@
 
 @implementation CMProgressInfo
 
-@synthesize request = _request;
-@synthesize URL=_URL;
-@synthesize tempFileURL=_tempFileURL;
-@synthesize filename=_filename;
-@synthesize elapsedTime = _elapsedTime;
-@synthesize progress=_progress;
-@synthesize contentLength = _contentLength;
-@synthesize fileOffset = _fileOffset;
-@synthesize chunkSize = _chunkSize;
-@synthesize bytesPerSecond = _bytesPerSecond;
 
 
 - (NSTimeInterval) timeRemaining {

@@ -19,7 +19,6 @@
 
 @implementation CMFixtureSpec
 
-@synthesize service;
 
 
 + (NSString *)description {

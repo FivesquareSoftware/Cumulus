@@ -102,22 +102,6 @@
 
 // Public
 
-@synthesize parent=_parent;
-@synthesize relativePath=_relativePath;
-@synthesize URL=_URL;
-@synthesize headersInternal=_headersInternal;
-@synthesize queryInternal = _queryInternal;
-@synthesize timeout=_timeout;
-@synthesize cachePolicy=_cachePolicy;
-@synthesize cachesDir=_cachesDir;
-@synthesize username=_username;
-@synthesize password=_password;
-@synthesize authProviders=_authProviders;
-@synthesize contentType=_contentType;
-@synthesize lastModified = _lastModified;
-@synthesize automaticallyTracksLastModified = _automaticallyTracksLastModified;
-@synthesize preflightBlock=_preflightBlock;
-@synthesize postProcessorBlock=_postprocessorBlock;
 
 @dynamic queryString;
 - (NSString *) queryString {
@@ -191,6 +175,7 @@
 	return _authProviders;
 }
 
+@synthesize contentType=_contentType;
 - (CMContentType) contentType {
 	if (_contentType == CMContentTypeNone && _parent.contentType > CMContentTypeNone) {
 		return _parent.contentType;
@@ -219,6 +204,7 @@
 	return _preflightBlock;
 }
 
+@synthesize postProcessorBlock=_postprocessorBlock;
 - (CMPostProcessorBlock) postProcessorBlock {
 	if (nil == _postprocessorBlock && _parent.postProcessorBlock != nil) {
 		return _parent.postProcessorBlock;
@@ -237,8 +223,6 @@
 
 // Private
 
-@synthesize requestsInternal=_requestsInternal;
-@synthesize fixtures=_fixtures;
 
 
 @dynamic mergedHeaders;

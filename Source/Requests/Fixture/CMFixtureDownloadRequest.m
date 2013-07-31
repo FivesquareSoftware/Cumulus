@@ -26,9 +26,9 @@
 // Private
 
 @synthesize expectedContentType=_expectedContentType;
+
+
 @synthesize downloadedFileTempURL=_downloadedFileTempURL;
-
-
 - (NSURL *) downloadedFileTempURL {
 	if (_downloadedFileTempURL == nil) {
 		CFUUIDRef UUID = CFUUIDCreate(NULL);

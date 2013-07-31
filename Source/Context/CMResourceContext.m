@@ -29,7 +29,6 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 
 #pragma mark - Properties
 
-@synthesize name = _name;
 
 
 // ========================================================================== //

@@ -17,7 +17,6 @@
 
 @implementation CMResourceQuerySpec
 
-@synthesize service;
 
 + (NSString *)description {
 	return @"Query Handling";

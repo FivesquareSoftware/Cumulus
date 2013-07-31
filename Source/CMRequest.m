@@ -88,11 +88,6 @@ static NSUInteger requestCount = 0;
 #pragma mark - -Request State
 
 
-@synthesize started=_started;
-@synthesize finished=_finished;
-@synthesize canceled=_canceled;
-@synthesize startedAt = _startedAt;
-@synthesize endedAt = _endedAt;
 
 @dynamic elapsed;
 - (NSTimeInterval) elapsed {
@@ -131,29 +126,14 @@ static NSUInteger requestCount = 0;
 #pragma mark - -Lifecycle
 
 
-@synthesize didSendDataBlock=_didSendDataBlock;
-@synthesize didReceiveDataBlock=_didReceiveDataBlock;
-@synthesize postProcessorBlock=_resultProcessor;
-@synthesize abortBlock=_abortBlock;
-@synthesize completionBlock=_completionBlock;
 
 
 #pragma mark - -Content Encoding/Decoding
 
-@synthesize payloadEncoder=_payloadEncoder;
-@synthesize responseDecoder=_responseDecoder;
 
 
 #pragma mark - -Configuration
 
-@synthesize identifier = _identifier;
-@synthesize headers=_headers;
-@synthesize timeout=_timeout;
-@synthesize cachePolicy=_cachePolicy;
-@synthesize authProviders=_authProviders;
-@synthesize maxAuthRetries=_maxAuthRequests;
-@synthesize payload=_payload;
-@synthesize range = _range;
 
 @dynamic URL;
 - (NSURL *) URL {
@@ -164,17 +144,6 @@ static NSUInteger requestCount = 0;
 #pragma mark - -Execution Context
 
 
-@synthesize URLRequest=_URLRequest;
-@synthesize URLResponse=_URLResponse;
-@synthesize bodyContentLength=_bodyContentLength;
-@synthesize sentContentLength=_sentContentLength;
-@synthesize expectedContentLength=_expectedContentLength;
-@synthesize receivedContentLength=_receivedContentLength;
-@synthesize data=_data;
-@synthesize response = _response;
-@synthesize result=_result;
-@synthesize responseBody=_responseBody;
-@synthesize error=_error;
 
 
 @dynamic progressReceivedInfo;
@@ -217,11 +186,6 @@ static NSUInteger requestCount = 0;
 
 // Private
 
-@synthesize connectionFinished=_connectionFinished;
-@synthesize connection=_connection;
-@synthesize originalURLRequest=_originalURLRequest;
-@synthesize timeoutTimer=_timeoutTimer;
-@synthesize requestConfigured = _requestConfigured;
 
 @dynamic fileExtension;
 - (NSString *) fileExtension {
@@ -252,7 +216,6 @@ static NSUInteger requestCount = 0;
 	return identifier;
 }
 
-@synthesize responseInternal = _responseInternal;
 - (CMResponse *) responseInternal {
 	if (nil == _responseInternal && NO == self.connectionFinished) {
 		_responseInternal = [[CMResponse alloc] initWithRequest:self];
@@ -263,6 +226,7 @@ static NSUInteger requestCount = 0;
 
 // Overrides
 
+@synthesize URLRequest=_URLRequest;
 - (NSURLRequest *) URLRequest {
 	if (_URLRequest == nil) {
 		_URLRequest = [_originalURLRequest mutableCopy];
@@ -271,6 +235,7 @@ static NSUInteger requestCount = 0;
 	return _URLRequest;
 }
 
+@synthesize headers=_headers;
 - (NSMutableDictionary *) headers {
 	if (_headers == nil) {
 		_headers = [NSMutableDictionary new];
@@ -293,6 +258,7 @@ static NSUInteger requestCount = 0;
 	return [self.headers objectForKey:kCumulusHTTPHeaderContentType];
 }
 
+@synthesize authProviders=_authProviders;
 - (NSMutableArray *) authProviders {
 	if (nil == _authProviders) {
 		_authProviders = [NSMutableArray new];
@@ -300,6 +266,7 @@ static NSUInteger requestCount = 0;
 	return _authProviders;
 }
 
+@synthesize data=_data;
 - (NSMutableData *) data {
 	if (_data == nil) {
 		_data = [NSMutableData new];
@@ -520,7 +487,7 @@ static NSUInteger requestCount = 0;
 
 - (void) handleConnectionWillStart {
 	// Generally used by subclasses to effect request customization
-	[[self class] incrementRequestCount];
+//	[[self class] incrementRequestCount];
 }
 
 - (void) handleConnectionDidReceiveResponse {
@@ -558,7 +525,7 @@ static NSUInteger requestCount = 0;
 		return;
 	}
 	
-	[[self class] decrementRequestCount];
+//	[[self class] decrementRequestCount];
 	
 	CMResponse *blockResponse = self.responseInternal;
 	self.connectionFinished = YES;

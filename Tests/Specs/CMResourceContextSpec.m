@@ -19,11 +19,14 @@
 @property (nonatomic, copy) void(^shutdownHook)();
 @end
 @implementation CMResourceContext (Specs)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 - (void)dealloc {
 	if (self.shutdownHook) {
 		self.shutdownHook();
 	}
 }
+#pragma clang diagnostic pop
 static const NSString *kNSObject_CMResourceContext_shutdownHook;
 @dynamic shutdownHook;
 - (void(^)()) shutdownHook {

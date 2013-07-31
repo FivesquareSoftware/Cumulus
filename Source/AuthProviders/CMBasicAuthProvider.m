@@ -51,8 +51,6 @@
 
 
 
-@synthesize username=_username;
-@synthesize password=_password;
 
 
 // ========================================================================== //

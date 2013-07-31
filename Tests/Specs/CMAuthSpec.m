@@ -19,10 +19,6 @@
 
 @implementation CMAuthSpec
 
-@synthesize service;
-@synthesize SSLService;
-@synthesize protectedResource;
-@synthesize SSLProtectedResource;
 
 + (NSString *)description {
 	return @"BASIC Auth Handling";

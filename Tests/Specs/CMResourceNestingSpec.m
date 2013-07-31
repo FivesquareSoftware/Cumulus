@@ -17,10 +17,6 @@
 
 @implementation CMResourceNestingSpec
 
-@synthesize service;
-@synthesize ancestor;
-@synthesize parent;
-@synthesize child;
 
 + (NSString *)description {
 	return @"Resource Nesting";

@@ -77,17 +77,15 @@
 - (void)shouldGetWithCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[Cumulus get:endpoint withCompletionBlock:^(CMResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -96,13 +94,12 @@
 - (void)shouldGetWithProgressBlockAndCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		//		NSLog(@"progress: %@",progress);
 	};
 	
@@ -114,7 +111,6 @@
 	[Cumulus get:endpoint withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -129,17 +125,15 @@
 - (void)shouldHeadWithCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[Cumulus head:endpoint withCompletionBlock:^(CMResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -154,17 +148,15 @@
 - (void)shouldDeleteWithCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[Cumulus delete:endpoint withCompletionBlock:^(CMResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -179,17 +171,15 @@
 - (void)shouldPostWithCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[Cumulus post:endpoint payload:self.specHelper.item withCompletionBlock:^(CMResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -198,13 +188,12 @@
 - (void)shouldPostWithProgressBlockAndCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		//		NSLog(@"progress: %@",progress);
 	};
 	
@@ -216,7 +205,6 @@
 	[Cumulus post:endpoint payload:self.specHelper.item withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -231,17 +219,15 @@
 - (void)shouldPutWithCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[Cumulus put:endpoint payload:self.specHelper.item withCompletionBlock:^(CMResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -250,13 +236,12 @@
 - (void)shouldPutWithProgressBlockAndCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		//		NSLog(@"progress: %@",progress);
 	};
 	
@@ -268,7 +253,6 @@
 	[Cumulus put:endpoint payload:self.specHelper.item withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
@@ -278,21 +262,20 @@
 	NSString *endpoint = [NSString stringWithFormat:@"%@/test/download/hero",kTestServerHost];
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		//		NSLog(@"progress: %@",progress);
 	};
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	CMCompletionBlock completionBlock = ^(CMResponse *response) {
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	};
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[Cumulus download:endpoint withProgressBlock:progressBlock completionBlock:completionBlock];
+
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
 	
@@ -304,19 +287,18 @@
 	
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
+//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
 		//		NSLog(@"progress: %@",progress);
 	};
 	
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	CMCompletionBlock completionBlock = ^(CMResponse *response) {
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	};
 	
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
 	NSString *filePath = [[NSBundle mainBundle] pathForResource:@"t_hero" ofType:@"png"];
 	NSURL *fileURL = [NSURL fileURLWithPath:filePath];
@@ -324,7 +306,6 @@
 	
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);

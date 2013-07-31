@@ -10,13 +10,6 @@
 
 @implementation CMFixtureHTTPResponse
 
-@synthesize URL=_URL;
-@synthesize MIMEType=_MIMEType;
-@synthesize expectedContentLength=_expectedContentLength;
-@synthesize textEncodingName=_textEncodingName;
-@synthesize suggestedFilename=_suggestedFilename;
-@synthesize statusCode=_statusCode;
-@synthesize allHeaderFields=_allHeaderFields;
 
 
 - (id)initWithURL:(NSURL *)URL MIMEType:(NSString *)MIMEType expectedContentLength:(NSInteger)length textEncodingName:(NSString *)name {

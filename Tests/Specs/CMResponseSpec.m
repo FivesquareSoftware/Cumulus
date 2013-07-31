@@ -17,8 +17,6 @@
 
 @implementation CMResponseSpec
 
-@synthesize service;
-@synthesize endpoint;
 
 + (NSString *)description {
 	return @"Response Internals";

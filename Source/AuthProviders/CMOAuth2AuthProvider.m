@@ -47,9 +47,6 @@
 
 @implementation CMOAuth2AuthProvider
 
-@synthesize authorizationURL=_authorizationURL;
-@synthesize tokenService=_tokenService;
-@synthesize token=_token;
 
 + (id) withAuthorizationURL:(NSURL *)authorizationURL tokenService:(CMResource *)tokenService {
 	CMOAuth2AuthProvider *provider = [self new];
