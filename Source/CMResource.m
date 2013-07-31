@@ -194,6 +194,7 @@
 	}
 }
 
+@synthesize lastModified = _lastModified;
 - (void) setLastModified:(NSDate *)lastModified {
 	if (_lastModified != lastModified) {
 		dispatch_barrier_async(self.lastModifiedQueue, ^{

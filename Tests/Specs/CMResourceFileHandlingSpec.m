@@ -332,6 +332,8 @@
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
+
+
 - (void)shouldDownloadAFileInChunks {
 	CMResource *massive = [self.service resource:@"test/download/massive"];
 	[self assertDownloadResourceToDisk:massive chunked:YES];
