@@ -66,7 +66,6 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 
 
 - (id) performRequestsAndWait:(void(^)())work withCompletionBlock:(void(^)(BOOL success, NSSet *responses))completionBlock {
-	
 	CMResourceContextGroup *group = [CMResourceContextGroup new];
 	[_groupsByIdentifier setObject:group forKey:group.identifier];
 	dispatch_async(_dispatchQueue, ^{
