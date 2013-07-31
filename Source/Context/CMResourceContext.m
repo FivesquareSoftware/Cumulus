@@ -81,19 +81,20 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 		[group wait];
 		
 		// Collect our overall success
-		__block BOOL success = YES;
-		[group.responses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
+		BOOL success = YES;
+		NSSet *responses = group.responses;
+		for (CMResponse *response in responses) {
 			if (success) {
 				success = response.wasSuccessful;
 			}
-		}];
+		}
 		
 		// Clean up group
 		[_groupsByIdentifier removeObjectForKey:group.identifier];
 		
 		// Fire off the completion block
 		dispatch_async(dispatch_get_main_queue(), ^{
-			 completionBlock(success,group.responses);
+			 completionBlock(success,responses);
 		});
 	});
 	return group.identifier;
