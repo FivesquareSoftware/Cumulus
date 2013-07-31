@@ -1,9 +1,9 @@
 //
-//  CMAmazonCredentials.m
-//  Cumulus
+//	CMAmazonCredentials.m
+//	Cumulus
 //
-//  Created by John Clayton on 8/16/12.
-//  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 8/16/12.
+//	Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMAmazonCredentials.h"
@@ -35,7 +35,7 @@
 	_secretKey = [decoder decodeObjectForKey:@"_secretKey"];
 	_securityToken = [decoder decodeObjectForKey:@"_securityToken"];
 	_expirationDate = [decoder decodeObjectForKey:@"_expirationDate"];
-    return self;
+	return self;
 }
 
 - (void) encodeWithCoder:(NSCoder *)encoder {

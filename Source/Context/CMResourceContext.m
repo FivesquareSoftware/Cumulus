@@ -1,10 +1,10 @@
 
 //
-//  CMResourceContext.m
-//  Cumulus
+//	CMResourceContext.m
+//	Cumulus
 //
-//  Created by John Clayton on 8/28/12.
-//  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 8/28/12.
+//	Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMResourceContext.h"
@@ -45,14 +45,14 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 }
 
 - (id)initWithName:(NSString *)name {
-    self = [super init];
-    if (self) {
+	self = [super init];
+	if (self) {
 		_name = name;
 		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.Cumulus.CMResourceContext.%@.%p",_name,self];
 		_dispatchQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 		_groupsByIdentifier = [NSMutableDictionary new];
-    }
-    return self;
+	}
+	return self;
 }
 
 - (NSString *) description {
@@ -70,12 +70,12 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 	[_groupsByIdentifier setObject:group forKey:group.identifier];
 	dispatch_async(_dispatchQueue, ^{
 		dispatch_queue_set_specific(_dispatchQueue, &kCMResourceContextKey, (__bridge void *)(group), NULL);
-
+		
 		// dispatch the work, resources check their current q for a group before dispatching requests
 		work(self);
 		
 		dispatch_queue_set_specific(_dispatchQueue, &kCMResourceContextKey, NULL, NULL);
-
+		
 		// Wait for the group to complete
 		[group wait];
 		
@@ -93,7 +93,7 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 		
 		// Fire off the completion block
 		dispatch_async(dispatch_get_main_queue(), ^{
-			 completionBlock(success,responses);
+			completionBlock(success,responses);
 		});
 	});
 	return group.identifier;
@@ -115,7 +115,7 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 	dispatch_async(_dispatchQueue, ^{
 		CMResourceContextScope *contextScope = [CMResourceContextScope withScopeObject:weakScope];
 		dispatch_queue_set_specific(_dispatchQueue, &kCMResourceContextKey, (__bridge void *)(contextScope), NULL);
-
+		
 		// dispatch the work, resources check their current q for a scope before dispatching requests
 		work(self);
 		

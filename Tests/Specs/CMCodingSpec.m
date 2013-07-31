@@ -20,7 +20,7 @@
 @synthesize service;
 
 + (NSString *)description {
-    return @"Data Encoding and Decoding";
+	return @"Data Encoding and Decoding";
 }
 
 // ========================================================================== //
@@ -29,21 +29,21 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here 
 	self.service = [CMResource withURL:kTestServerHost];
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //

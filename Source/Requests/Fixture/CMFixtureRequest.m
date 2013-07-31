@@ -1,9 +1,9 @@
 //
-//  CMFixtureRequest.m
-//  Cumulus
+//	CMFixtureRequest.m
+//	Cumulus
 //
-//  Created by John Clayton on 5/2/12.
-//  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 5/2/12.
+//	Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMFixtureRequest.h"
@@ -82,19 +82,19 @@
 					case 0x4D:
 						_expectedContentType = @"image/tiff";
 						break;
-				}		
+				}
 			}
 		}
-	}	
+	}
 	return _fixtureData;
 }
 
 - (id)initWithURLRequest:(NSURLRequest *)URLRequest fixture:(id)fixture {
-    self = [super initWithURLRequest:URLRequest];
-    if (self) {
-        _fixture = fixture;
-    }
-    return self;
+	self = [super initWithURLRequest:URLRequest];
+	if (self) {
+		_fixture = fixture;
+	}
+	return self;
 }
 
 - (void) start {
@@ -103,7 +103,7 @@
 		return;
 	}
 	
-    self.started = YES;
+	self.started = YES;
 	
 	RCLog(@"%@", self);
 	
@@ -113,12 +113,12 @@
 	
 	if (self.timeout > 0) {
 		NSTimer *timeoutTimer = [NSTimer timerWithTimeInterval:self.timeout target:self selector:@selector(timeoutFired:) userInfo:nil repeats:NO];
-		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];		
+		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];
 		self.timeoutTimer = timeoutTimer;
-	}	
+	}
 	
 	[self.data appendData:self.fixtureData];
-
+	
 	
 	id fakeResponse = [[CMFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:_expectedContentType expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
 	[fakeResponse setStatusCode:200];

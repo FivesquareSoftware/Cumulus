@@ -18,7 +18,7 @@
 @implementation CMRequestSpec
 
 + (NSString *)description {
-    return @"Request Internals";
+	return @"Request Internals";
 }
 
 // ========================================================================== //
@@ -27,20 +27,20 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here 
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //
@@ -318,7 +318,7 @@
 	__block BOOL complete = NO;
 	__weak CMRequest *weakRequest = request;
 	request.didReceiveDataBlock = ^(CMProgressInfo *progressInfo) {
-		NSLog(@"progress: %@",progressInfo.progress);
+//		NSLog(@"progress: %@",progressInfo.progress);
 		if (progressInfo.progress.floatValue > 0.f) {
 			[weakRequest cancel];
 		}
@@ -343,7 +343,7 @@
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	NSDictionary *query = @{ @"foo" : @"bar" };
 	
-    STAssertTrue([query isEqualToDictionary:request.queryDictionary], @"Request query dictionary should equal sent dictionary");
+	STAssertTrue([query isEqualToDictionary:request.queryDictionary], @"Request query dictionary should equal sent dictionary");
 }
 
 

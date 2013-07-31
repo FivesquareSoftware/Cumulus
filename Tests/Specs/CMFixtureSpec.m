@@ -1,9 +1,9 @@
 //
-//  CMFixtureSpec.m
-//  Cumulus
+//	CMFixtureSpec.m
+//	Cumulus
 //
-//  Created by John Clayton on 5/3/12.
-//  Copyright 2012 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 5/3/12.
+//	Copyright 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMFixtureSpec.h"
@@ -23,7 +23,7 @@
 
 
 + (NSString *)description {
-    return @"Fixtures";
+	return @"Fixtures";
 }
 
 // ========================================================================== //
@@ -32,11 +32,11 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here
 	
 	self.service = [CMResource withURL:kTestServerHost];
 	[Cumulus setFixtures:nil];
@@ -44,12 +44,12 @@
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //
@@ -61,38 +61,38 @@
 	CMResource *resource = [self.service resource:@"anything"];
 	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodGET];
 	resource.contentType = CMContentTypeText;
-    CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
 }
 
 - (void) shouldGetADataFixture {
 	CMResource *resource = [self.service resource:@"anything"];
 	NSData *data = [@"FOO" dataUsingEncoding:NSUTF8StringEncoding];
 	[resource setFixture:data forHTTPMethod:kCumulusHTTPMethodGET];
-    CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, data, @"Result did not equal data");
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, data, @"Result did not equal data");
 }
 
 - (void) shouldGetAnItemFixture {
 	CMResource *resource = [self.service resource:@"anything"];
 	resource.contentType = CMContentTypeJSON;
 	[resource setFixture:self.specHelper.item forHTTPMethod:kCumulusHTTPMethodGET];
-
-    CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
+	
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
 }
 
 - (void) shouldGetAListFixture {
 	CMResource *resource = [self.service resource:@"anything"];
 	resource.contentType = CMContentTypeJSON;
 	[resource setFixture:self.specHelper.list forHTTPMethod:kCumulusHTTPMethodGET];
-
-    CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");	
+	
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");
 }
 
 - (void) shouldGetAnImageFixture {
@@ -100,10 +100,10 @@
 	UIImage *image = [UIImage imageNamed:@"t_hero.png"];
 	NSData *imageData = UIImagePNGRepresentation(image);
 	[resource setFixture:image forHTTPMethod:kCumulusHTTPMethodGET];
-
-    CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
+	
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
 }
 
 - (void) shouldGetAnFixtureSuppliedAsURL {
@@ -111,12 +111,12 @@
 	NSURL *imageURL = [[NSBundle mainBundle] URLForResource:@"t_hero" withExtension:@"png"];
 	UIImage *image = [UIImage imageNamed:@"t_hero.png"];
 	NSData *imageData = UIImagePNGRepresentation(image);
-
+	
 	[resource setFixture:imageURL forHTTPMethod:kCumulusHTTPMethodGET];
 	
-    CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
 }
 
 - (void) shouldDownloadFixture {
@@ -131,34 +131,34 @@
 	CMResource *resource = [self.service resource:@"index"];
 	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodPOST];
 	resource.contentType = CMContentTypeText;
-    CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
+	CMResponse *response = [resource get];
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
 }
 
 - (void) shouldUseAGlobalFixture {
 	CMResource *resource = [self.service resource:@"anything"];
 	resource.contentType = CMContentTypeText;
-
+	
 	[Cumulus addFixture:@"FOO" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kCumulusHTTPMethodGET,[resource.URL absoluteString]]];
 	[Cumulus useFixtures:YES];
-
+	
 	CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
 }
 
 - (void) shouldNotUseAGlobalFixtureWhenThereIsALocalFixture {
 	CMResource *resource = [self.service resource:@"index"];
 	resource.contentType = CMContentTypeText;
 	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodGET];
-
+	
 	[Cumulus addFixture:@"BAR" forRequestSignature:[NSString stringWithFormat:@"%@ %@", kCumulusHTTPMethodGET,[resource.URL absoluteString]]];
 	[Cumulus useFixtures:YES];
 	
 	CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
 }
 
 - (void) shouldNotUseAGlobalFixtureWhenNotUsingFixtures {
@@ -169,8 +169,8 @@
 	[Cumulus useFixtures:NO];
 	
 	CMResponse *response = [resource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-    STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
 }
 
 // ========================================================================== //
@@ -185,10 +185,10 @@
 	NSURL *imageURL = [[NSBundle mainBundle] URLForResource:@"t_hero" withExtension:@"png"];
 	UIImage *image = [UIImage imageNamed:@"t_hero.png"];
 	NSData *imageData = asURL ? [NSData dataWithContentsOfURL:imageURL] : UIImagePNGRepresentation(image);
-
+	
 	id fixture = asURL ? imageURL : image;
 	[resource setFixture:fixture forHTTPMethod:kCumulusHTTPMethodGET];
-
+	
 	// Set up a mock to receive progress blocks
 	__block id mockProgressObject = [OCMockObject mockForClass:[NSObject class]];
 	
@@ -252,7 +252,7 @@
 	
 	
 	STAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",downloadedFileURL);
-    STAssertEqualObjects(resultData, imageData, @"Result did not equal image");
+	STAssertEqualObjects(resultData, imageData, @"Result did not equal image");
 	
 	__block BOOL tempFileWasRemovedAfterCompletion = NO;
 	dispatch_sync(dispatch_get_main_queue(), ^{

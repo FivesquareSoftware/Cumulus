@@ -1,9 +1,9 @@
 //
-//  CMFixtureDownloadRequest.m
-//  Cumulus
+//	CMFixtureDownloadRequest.m
+//	Cumulus
 //
-//  Created by John Clayton on 5/4/12.
-//  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 5/4/12.
+//	Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMFixtureDownloadRequest.h"
@@ -67,7 +67,7 @@
 	
 	[self handleConnectionWillStart];
 	
-    self.started = YES;
+	self.started = YES;
 	
 	RCLog(@"%@", self);
 	
@@ -77,9 +77,9 @@
 	
 	if (self.timeout > 0) {
 		NSTimer *timeoutTimer = [NSTimer timerWithTimeInterval:self.timeout target:self selector:@selector(timeoutFired:) userInfo:nil repeats:NO];
-		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];		
+		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];
 		self.timeoutTimer = timeoutTimer;
-	}	
+	}
 	
 	id fakeResponse = [[CMFixtureHTTPResponse alloc] initWithURL:[self.URLRequest URL] MIMEType:_expectedContentType expectedContentLength:(NSInteger)[self.data length] textEncodingName:@"NSUTF8StringEncoding"];
 	[fakeResponse setStatusCode:200];
@@ -88,13 +88,13 @@
 	}
 	self.URLResponse = fakeResponse;
 	
-
-
+	
+	
 	NSError *writeError= nil;
 	NSFileManager *fm = [[NSFileManager alloc] init];
 	
 	// If  fixture is a URL we're just going to copy the file over, not load it into memory, to more closely mimic how a real download request works
-
+	
 	if ([self.fixture isKindOfClass:[NSURL class]] && [self.fixture isFileURL]) {
 		// set expected length from file
 		// set type from file
@@ -142,12 +142,12 @@
 		self.receivedContentLength = (self.expectedContentLength * ((float)i/50.f));
 		[self handleConnectionDidReceiveData];
 	}
-
 	
-
+	
+	
 	self.receivedContentLength = self.expectedContentLength;
 	[self handleConnectionDidReceiveData];
-
+	
 	CMProgressInfo *progressInfo = [CMProgressInfo new];
 	progressInfo.progress = [NSNumber numberWithFloat:1.f];
 	progressInfo.tempFileURL = self.downloadedFileTempURL;
@@ -155,7 +155,7 @@
 	progressInfo.filename = [self.downloadedFileTempURL lastPathComponent];
 	
 	self.result = progressInfo;
-
+	
 	
 	[self handleConnectionFinished];
 	
@@ -167,7 +167,7 @@
 			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 		}
 	});
-
+	
 }
 
 @end

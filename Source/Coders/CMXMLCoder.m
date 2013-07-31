@@ -1,26 +1,26 @@
 //
-//  CMXMLCoder.m
-//  Cumulus
+//	CMXMLCoder.m
+//	Cumulus
 //
-//  Created by John Clayton on 9/7/11.
-//  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 9/7/11.
+//	Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 
+ *	  notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
+ *	  this list of conditions and the following disclaimer in the documentation
+ *	  and/or other materials provided with the distribution.
+ *
  * 3. Neither the name of Fivesquare Software nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- * 
+ *	  be used to endorse or promote products derived from this software without
+ *	  specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -47,7 +47,7 @@
 	}
 }
 
-- (NSData *) encodeObject:(id)payload {	
+- (NSData *) encodeObject:(id)payload {
 	NSData *data = nil;
 	@try {
 		NSError *error = nil;
@@ -59,7 +59,7 @@
 	@catch (NSException *exception) {
 		RCLog(@"XML coding error: %@",[exception reason]);
 	}
-    return data;
+	return data;
 }
 
 - (id) decodeData:(NSData *)data {
@@ -71,7 +71,7 @@
 	@catch (NSException *exception) {
 		RCLog(@"XML coding error: %@",[exception reason]);
 	}
-    return object;
+	return object;
 }
 
 @end

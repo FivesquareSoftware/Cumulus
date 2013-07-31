@@ -1,9 +1,9 @@
 //
-//  CMResourceContextGroup.m
-//  Cumulus
+//	CMResourceContextGroup.m
+//	Cumulus
 //
-//  Created by John Clayton on 5/6/13.
-//  Copyright (c) 2013 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 5/6/13.
+//	Copyright (c) 2013 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMResourceContextGroup.h"
@@ -38,13 +38,13 @@
 
 - (void)dealloc {
 	dispatch_group_wait(_dispatchGroup, DISPATCH_TIME_FOREVER);
-    dispatch_release(_dispatchGroup);
+	dispatch_release(_dispatchGroup);
 	dispatch_release(_dispatchSemaphore);
 }
 
 - (id)init {
-    self = [super init];
-    if (self) {
+	self = [super init];
+	if (self) {
 		Class UUIDClass = NSClassFromString(@"NSUUID");
 		if (UUIDClass) {
 			_identifier = [NSUUID new];
@@ -55,13 +55,13 @@
 			CFRelease(UUID);
 		}
 		_dispatchGroup = dispatch_group_create();
-//		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.Cumulus.CMResourceContextGroup.%@",_identifier];
-//		_dispatchQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+		//		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.Cumulus.CMResourceContextGroup.%@",_identifier];
+		//		_dispatchQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 		_dispatchSemaphore = dispatch_semaphore_create(1);
 		_requestsInternal = [NSMutableSet new];
 		_responsesInternal = [NSMutableSet new];
-    }
-    return self;
+	}
+	return self;
 }
 
 - (NSString *) debugDescription {

@@ -1,9 +1,9 @@
 //
-//  CMS3AuthProvider.m
-//  Cumulus
+//	CMS3AuthProvider.m
+//	Cumulus
 //
-//  Created by John Clayton on 8/16/12.
-//  Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 8/16/12.
+//	Copyright (c) 2012 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
@@ -11,15 +11,15 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *	  notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ *	  this list of conditions and the following disclaimer in the documentation
+ *	  and/or other materials provided with the distribution.
  *
  * 3. Neither the name of Fivesquare Software, LLC nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
+ *	  be used to endorse or promote products derived from this software without
+ *	  specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -83,19 +83,19 @@
 
 
 - (id)initWithCredentials:(id<CMAmazonCredentials>)credentials {
-    self = [super init];
-    if (self) {
-        _credentials = credentials;
-    }
-    return self;
+	self = [super init];
+	if (self) {
+		_credentials = credentials;
+	}
+	return self;
 }
 
 - (id)initWithCredentialsProvider:(CMResource *)credentialsProvider {
-    self = [super init];
-    if (self) {
-        _credentialsProvider = credentialsProvider;
-    }
-    return self;
+	self = [super init];
+	if (self) {
+		_credentialsProvider = credentialsProvider;
+	}
+	return self;
 }
 
 
@@ -111,13 +111,13 @@
 	if (_credentialsProvider && (nil == _credentials || NO == _credentials.valid)) {
 		dispatch_semaphore_t credentialsSemaphore = dispatch_semaphore_create(0);
 		[_credentialsProvider getWithCompletionBlock:^(CMResponse *response) {
-            if (response.wasSuccessful) {
-                self.credentials = (id<CMAmazonCredentials>)response.result;//The service provider must have a postProcessing block that makes response#result a credentials object
-                [self signRequest:URLRequest];
-            }
+			if (response.wasSuccessful) {
+				self.credentials = (id<CMAmazonCredentials>)response.result;//The service provider must have a postProcessing block that makes response#result a credentials object
+				[self signRequest:URLRequest];
+			}
 			dispatch_semaphore_signal(credentialsSemaphore);
 		}];
-
+		
 		dispatch_semaphore_wait(credentialsSemaphore, DISPATCH_TIME_FOREVER);
 		dispatch_release(credentialsSemaphore);
 	} else {
@@ -137,8 +137,8 @@
 
 
 - (void) signRequest:(NSMutableURLRequest *)URLRequest {
-    NSString *contentType = [URLRequest valueForHTTPHeaderField:@"Content-Type"];
-    NSString *amazonDate = [URLRequest valueForHTTPHeaderField:@"Date"];
+	NSString *contentType = [URLRequest valueForHTTPHeaderField:@"Content-Type"];
+	NSString *amazonDate = [URLRequest valueForHTTPHeaderField:@"Date"];
 	
 	if (nil == contentType) {
 		contentType = @"";
@@ -148,38 +148,38 @@
 	}
 	
 	// add @"x-amz-security-token" header if we have one
-    NSString *securityToken = [NSString stringWithFormat:@"x-amz-security-token:%@", self.credentials.securityToken];
+	NSString *securityToken = [NSString stringWithFormat:@"x-amz-security-token:%@", self.credentials.securityToken];
 	
 	// build canonical string
 	NSString *stringToSign = [NSString stringWithFormat:@"%@\n\n%@\n%@\n%@\n%@",[URLRequest HTTPMethod], contentType, amazonDate, securityToken, [URLRequest canonicalName]];
-
+	
 	// sign it
 	
-    NSString *signature = signature = [self HMACSign:[stringToSign dataUsingEncoding:NSUTF8StringEncoding] withKey:_credentials.secretKey usingAlgorithm:kCCHmacAlgSHA1];
+	NSString *signature = signature = [self HMACSign:[stringToSign dataUsingEncoding:NSUTF8StringEncoding] withKey:_credentials.secretKey usingAlgorithm:kCCHmacAlgSHA1];
 	
 	// Set it to the Auth header
 	if (signature && signature.length) {
 		NSString *authHeader = [NSString stringWithFormat:@"AWS %@:%@", self.credentials.accessKey, signature];
-        [URLRequest setValue:authHeader forHTTPHeaderField:kCumulusHTTPHeaderAuthorization];
-        [URLRequest setValue:self.credentials.securityToken forHTTPHeaderField:@"x-amz-security-token"];
-        [URLRequest setValue:amazonDate forHTTPHeaderField:@"Date"];
+		[URLRequest setValue:authHeader forHTTPHeaderField:kCumulusHTTPHeaderAuthorization];
+		[URLRequest setValue:self.credentials.securityToken forHTTPHeaderField:@"x-amz-security-token"];
+		[URLRequest setValue:amazonDate forHTTPHeaderField:@"Date"];
 	}
 	
 }
 
 - (NSString *) HMACSign:(NSData *)data withKey:(NSString *)key usingAlgorithm:(CCHmacAlgorithm)algorithm {
-    CCHmacContext context;
+	CCHmacContext context;
 	NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
 	
-    CCHmacInit(&context, algorithm, keyData.bytes, keyData.length);
-    CCHmacUpdate(&context, [data bytes], [data length]);
+	CCHmacInit(&context, algorithm, keyData.bytes, keyData.length);
+	CCHmacUpdate(&context, [data bytes], [data length]);
 	
-    // Both SHA1 and SHA256 will fit in here
-    unsigned char digestRaw[CC_SHA256_DIGEST_LENGTH];
+	// Both SHA1 and SHA256 will fit in here
+	unsigned char digestRaw[CC_SHA256_DIGEST_LENGTH];
 	
-    NSInteger digestLength;
+	NSInteger digestLength;
 	
-    switch (algorithm) {
+	switch (algorithm) {
 		case kCCHmacAlgSHA1:
 			digestLength = CC_SHA1_DIGEST_LENGTH;
 			break;
@@ -191,19 +191,19 @@
 		default:
 			digestLength = -1;
 			break;
-    }
+	}
 	
-    if (digestLength < 0) {
+	if (digestLength < 0) {
 		RCLog(@"Invalid hash algorithm: %d",algorithm);
 		return nil;
-    }
+	}
 	
-    CCHmacFinal(&context, digestRaw);
+	CCHmacFinal(&context, digestRaw);
 	
-    NSData *digestData = [NSData dataWithBytes:digestRaw length:(NSUInteger)digestLength];
+	NSData *digestData = [NSData dataWithBytes:digestRaw length:(NSUInteger)digestLength];
 	NSString *base64String = [digestData cm_base64EncodedStringWithLineBreaks:NO];
-
-    return base64String;
+	
+	return base64String;
 }
 
 

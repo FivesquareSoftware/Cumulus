@@ -1,26 +1,26 @@
 //
-//  CMTypes.h
-//  Cumulus
+//	CMTypes.h
+//	Cumulus
 //
-//  Created by John Clayton on 8/20/11.
-//  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 8/20/11.
+//	Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 
+ *	  notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
+ *	  this list of conditions and the following disclaimer in the documentation
+ *	  and/or other materials provided with the distribution.
+ *
  * 3. Neither the name of Fivesquare Software nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- * 
+ *	  be used to endorse or promote products derived from this software without
+ *	  specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -36,17 +36,17 @@
 @class CMRequest;
 @class CMResponse;
 
-/** A block that is called after the request is marshalled but before the connection is started. You can use this block to do things like modify request headers or cause a request to abort. 
- *  @returns YES if the request should run.
- *  @note Runs on the main thread.
+/** A block that is called after the request is marshalled but before the connection is started. You can use this block to do things like modify request headers or cause a request to abort.
+ *	@returns YES if the request should run.
+ *	@note Runs on the main thread.
  */
 typedef BOOL (^CMPreflightBlock)(CMRequest *request);
 
-/** A block that is called once when a request begins, and subsequently whenever a request receives more data from the server. 
+/** A block that is called once when a request begins, and subsequently whenever a request receives more data from the server.
  *
  * @param progressInfo is an CMProgressInfo instance that responds to the following keys:
- *   - kCumulusProgressInfoKeyURL (URL)
- *   - kCumulusProgressInfoKeyProgress (progress)
+ *	 - kCumulusProgressInfoKeyURL (URL)
+ *	 - kCumulusProgressInfoKeyProgress (progress)
  */
 typedef void (^CMProgressBlock)(id progressInfo);
 
@@ -70,17 +70,17 @@ typedef enum {
 
 /** A content range represents an HTTP content range by setting location to the initial byte, length to the difference between the first byte and last byte and contentLength to the total length of the content for which a range is being requested. */
 typedef struct {
-    long long location;
-    long long length;
+	long long location;
+	long long length;
 	long long contentLength;
 } CMContentRange;
 
 static inline CMContentRange CMContentRangeMake(long long loc, long long len, long long clen) {
-    CMContentRange range;
-    range.location = loc;
-    range.length = len;
+	CMContentRange range;
+	range.location = loc;
+	range.length = len;
 	range.contentLength = clen;
-    return range;
+	return range;
 }
 
 static inline long long CMContentRangeLastByte(CMContentRange range) {

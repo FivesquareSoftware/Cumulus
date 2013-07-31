@@ -51,7 +51,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 @implementation CMResourceContextSpec
 
 + (NSString *)description {
-    return @"Resource groups";
+	return @"Resource groups";
 }
 
 // ========================================================================== //
@@ -60,7 +60,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
@@ -70,12 +70,12 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //
@@ -194,16 +194,21 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	__block BOOL anyRequestWasCanceled = NO;
 	__block NSSet *localResponses = nil;
 	
+	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
+
 	id groupIdentifier = [context performRequestsAndWait:^() {
 		CMResource *item = [self.service resource:@"index"];
 		for (int i = 0; i < 10; i++) {
 			[item getWithCompletionBlock:nil];
 		}
+		dispatch_semaphore_signal(launch_semaphore);
 	} withCompletionBlock:^(BOOL success, NSSet *responses) {
 		localResponses = responses;
 		dispatch_semaphore_signal(group_semaphore);
 	}];
 	
+	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(launch_semaphore);
 	[context cancelRequestsForIdentifier:groupIdentifier];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
@@ -220,8 +225,44 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	STAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled: %@",localResponses);
 }
 
+
 - (void) shouldCancelAllGroupWork {
-	STAssertTrue(NO, @"Unimplemented");
+	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+	
+	//	dispatch_semaphore_t group_semaphore = dispatch_semaphore_create(0);
+	__block BOOL anyRequestWasCanceled = NO;
+	__block NSSet *localResponses = nil;
+	
+	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
+
+	[context performRequestsAndWait:^() {
+		CMResource *item = [self.service resource:@"index"];
+		for (int i = 0; i < 10; i++) {
+			[item getWithCompletionBlock:nil];
+		}
+		dispatch_semaphore_signal(launch_semaphore);
+	} withCompletionBlock:^(BOOL success, NSSet *responses) {
+		localResponses = responses;
+		dispatch_semaphore_signal(group_semaphore);
+	}];
+	
+	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(launch_semaphore);
+	[context cancelAllRequests];
+	
+	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(group_semaphore);
+	
+	[localResponses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
+		anyRequestWasCanceled = response.request.wasCanceled;
+		if (anyRequestWasCanceled) {
+			*stop = YES;
+			return;
+		}
+	}];
+	
+	STAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled: %@",localResponses);
 }
 
 - (void) shouldCancelRequestsWhenTheirScopeDisappears {
@@ -239,9 +280,9 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	NSMutableSet *requests = [NSMutableSet new];
 	NSMutableArray *requestIDs = [NSMutableArray new];
 
-	CMResource *smallResource = [self.service resource:@"crazyslow"];
-	smallResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-	smallResource.preflightBlock = ^(CMRequest *request) {
+	CMResource *resource = [self.service resource:@"index"];
+	resource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	resource.preflightBlock = ^(CMRequest *request) {
 		[requestIDs addObject:request.identifier];
 		[requests addObject:request];
 		return YES;
@@ -250,9 +291,9 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
 	
 	[context performRequests:^{
-//		for (int i = 0; i < 25; i++) {
-			[smallResource getWithCompletionBlock:nil];
-//		}
+		for (int i = 0; i < 50; i++) {
+			[resource getWithCompletionBlock:nil];
+		}
 		dispatch_semaphore_signal(launch_semaphore);
 	} inScope:scope];
 	
@@ -271,34 +312,34 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 //		CMRequest *anyRequest = [requests anyObject];
 		
 		__block BOOL anyRequestCanceled = NO;
-		__block BOOL running = NO;
+//		__block BOOL running = NO;
 		do {
 			[requests enumerateObjectsUsingBlock:^(CMRequest *obj, BOOL *stop) {
 				if (anyRequestCanceled == NO && obj.wasCanceled) {
 					anyRequestCanceled = YES;
+					*stop = YES;
+					return;
 				}
 				if (NO == obj.isFinished) {
 					*stop = YES;
-					running = YES;
+//					running = YES;
 					return;
 				}
-				else {
-					running = NO;
-				}
+//				else {
+//					running = NO;
+//				}
 			}];
-			if (running) {
-				[NSThread sleepForTimeInterval:.01];
-			}
+//			if (running) {
+//				[NSThread sleepForTimeInterval:.01];
+//			}
 			
-		} while (running == YES);
-
-		
+		} while (anyRequestCanceled == NO);
+				
 		dispatch_release(scope_semaphore);
 //		STAssertTrue(lastRequest.wasCanceled, @"Request should have been canceled: %@",lastRequest);
 		STAssertTrue(anyRequestCanceled, @"At least one request should have been canceled: %@",requests);
 	}];
 }
-
 
 
 /* No, does not behave like this

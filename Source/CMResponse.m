@@ -1,26 +1,26 @@
 //
-//  CMResponse.m
-//  Cumulus
+//	CMResponse.m
+//	Cumulus
 //
-//  Created by John Clayton on 7/23/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 7/23/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 
+ *	  notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
+ *	  this list of conditions and the following disclaimer in the documentation
+ *	  and/or other materials provided with the distribution.
+ *
  * 3. Neither the name of Fivesquare Software nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- * 
+ *	  be used to endorse or promote products derived from this software without
+ *	  specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -69,7 +69,7 @@
 		else if (_request.wasCanceled) { // sometimes a request can cancel even before there is an HTTP response, so just to be safe, set this
 			_status = kHTTPStatusCanceled;
 		}
-        else if (_request.URLResponse) {
+		else if (_request.URLResponse) {
 			_status = [_request.URLResponse statusCode];
 		}
 	}
@@ -143,7 +143,7 @@
 
 - (NSString *) body {
 	return _request.responseBody;
-} 
+}
 
 - (NSError *) error {
 	if (nil == _error) {
@@ -212,17 +212,17 @@
 
 
 - (id)initWithRequest:(CMRequest *)request {
-    self = [super init];
-    if (self) {
-        _request = request;
+	self = [super init];
+	if (self) {
+		_request = request;
 		// If user canceled auth, we need to help a bit and set the right status code
-//		NSError *error = request.error;
-//		if(error.code == NSURLErrorUserCancelledAuthentication) {
-//			_status = 401;
-//		}
-//        else {
-//			_status = [request.URLResponse statusCode];
-//		}
+		//		NSError *error = request.error;
+		//		if(error.code == NSURLErrorUserCancelledAuthentication) {
+		//			_status = 401;
+		//		}
+		//		  else {
+		//			_status = [request.URLResponse statusCode];
+		//		}
 		_status = kCFNotFound;
 		_expectedContentLength = NSURLResponseUnknownLength;
 		_expectedContentRange = (CMContentRange){ kCFNotFound , 0, 0 };
@@ -231,8 +231,8 @@
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:kHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
-    }
-    return self;
+	}
+	return self;
 }
 
 - (NSString *) description {
@@ -428,11 +428,11 @@
 #pragma mark - Status Codes
 
 - (BOOL) HTTPCanceled {
-    return self.status == kHTTPStatusCanceled;
+	return self.status == kHTTPStatusCanceled;
 }
 
 
-#pragma mark -  -100's
+#pragma mark -	-100's
 
 - (BOOL) HTTPContinue {
 	return self.status == kHTTPStatusContinue;
@@ -444,7 +444,7 @@
 
 
 
-#pragma mark -  -200's
+#pragma mark -	-200's
 
 - (BOOL) HTTPOk {
 	return self.status == kHTTPStatusOk;
@@ -475,7 +475,7 @@
 }
 
 
-#pragma mark -  -300's
+#pragma mark -	-300's
 
 
 - (BOOL) HTTPMultipleChoices {
@@ -515,7 +515,7 @@
 }
 
 
-#pragma mark -  -400's
+#pragma mark -	-400's
 
 - (BOOL) HTTPBadRequest {
 	return self.status == kHTTPStatusBadRequest;
@@ -594,7 +594,7 @@
 }
 
 
-#pragma mark -  -500's
+#pragma mark -	-500's
 
 - (BOOL) HTTPInternalServerError {
 	return self.status == kHTTPStatusInternalServerError;

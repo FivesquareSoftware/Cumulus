@@ -18,7 +18,7 @@
 @implementation CMStaticMethodsSpec
 
 + (NSString *)description {
-    return @"Static Routes";
+	return @"Static Routes";
 }
 
 // ========================================================================== //
@@ -27,27 +27,27 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here
 	[Cumulus setHeaders:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-							@"application/json", kCumulusHTTPHeaderContentType
-							, @"application/json", kCumulusHTTPHeaderAccept
-							, nil]];
+						 @"application/json", kCumulusHTTPHeaderContentType
+						 , @"application/json", kCumulusHTTPHeaderAccept
+						 , nil]];
 	[Cumulus setAuthProviders:nil];
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 	[self.specHelper cleanCaches];
-
+	
 }
 
 // ========================================================================== //
@@ -76,7 +76,7 @@
 
 - (void)shouldGetWithCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
-
+	
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
 	__block CMResponse *localResponse = nil;
 	
@@ -89,7 +89,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -103,9 +103,9 @@
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-		NSLog(@"progress: %@",progress);
+		//		NSLog(@"progress: %@",progress);
 	};
-
+	
 	CMCompletionBlock completionBlock = ^(CMResponse *response){
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
@@ -116,7 +116,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -141,7 +141,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -166,7 +166,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -191,7 +191,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -205,7 +205,7 @@
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-		NSLog(@"progress: %@",progress);
+		//		NSLog(@"progress: %@",progress);
 	};
 	
 	CMCompletionBlock completionBlock = ^(CMResponse *response){
@@ -218,7 +218,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -243,7 +243,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -257,7 +257,7 @@
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-		NSLog(@"progress: %@",progress);
+		//		NSLog(@"progress: %@",progress);
 	};
 	
 	CMCompletionBlock completionBlock = ^(CMResponse *response){
@@ -270,16 +270,16 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldDownloadWithProgressBlockAndCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/test/download/hero",kTestServerHost];
-
+	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-		NSLog(@"progress: %@",progress);
+		//		NSLog(@"progress: %@",progress);
 	};
 	
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
@@ -294,18 +294,18 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 }
 
 - (void)shouldUploadWithProgressBlockAndCompletionBlock {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/test/upload/hero",kTestServerHost];
-
+	
 	
 	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-		NSLog(@"progress: %@",progress);
+		//		NSLog(@"progress: %@",progress);
 	};
 	
 	
@@ -326,7 +326,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 

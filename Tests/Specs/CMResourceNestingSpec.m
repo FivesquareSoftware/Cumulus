@@ -23,7 +23,7 @@
 @synthesize child;
 
 + (NSString *)description {
-    return @"Resource Nesting";
+	return @"Resource Nesting";
 }
 
 // ========================================================================== //
@@ -32,11 +32,11 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here 
 	self.service = [CMResource withURL:kTestServerHost];
 	
 	self.ancestor = [self.service resource:@"ancestor"];
@@ -46,12 +46,12 @@
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //

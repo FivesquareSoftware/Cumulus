@@ -1,9 +1,9 @@
 //
-//  CMResourceConfigSpec.m
-//  Cumulus
+//	CMResourceConfigSpec.m
+//	Cumulus
 //
-//  Created by John Clayton on 10/8/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 10/8/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMResourceConfigSpec.h"
@@ -20,7 +20,7 @@
 @synthesize service;
 
 + (NSString *)description {
-    return @"Resource Configuration";
+	return @"Resource Configuration";
 }
 
 // ========================================================================== //
@@ -29,21 +29,21 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here
 	self.service = [CMResource withURL:kTestServerHost];
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //
@@ -52,19 +52,19 @@
 
 - (void) shouldConstructResourcesUsingStrings {
 	CMResource *resource = [self.service resource:@"abc123"];
-	NSURL *URL = [[self.service  URL] URLByAppendingPathComponent:@"abc123"];
+	NSURL *URL = [[self.service	 URL] URLByAppendingPathComponent:@"abc123"];
 	STAssertEqualObjects(resource.URL, URL, @"URL should contain string arg");
 }
 
 - (void) shouldConstructResourcesUsingNumbers {
 	CMResource *resource = [self.service resource:[NSNumber numberWithInt:123]];
-	NSURL *URL = [[self.service  URL] URLByAppendingPathComponent:@"123"];
+	NSURL *URL = [[self.service	 URL] URLByAppendingPathComponent:@"123"];
 	STAssertEqualObjects(resource.URL, URL, @"URL should contain resource number");
 }
 
 - (void) shouldConstructResourcesUsingFormatStrings {
 	CMResource *resource = [self.service resourceWithFormat:@"abc%@",[NSNumber numberWithInt:123]];
-	NSURL *URL = [[self.service  URL] URLByAppendingPathComponent:@"abc123"];
+	NSURL *URL = [[self.service	 URL] URLByAppendingPathComponent:@"abc123"];
 	STAssertEqualObjects(resource.URL, URL, @"URL should contain resource format and arguments");
 }
 
@@ -93,24 +93,24 @@
 - (void)shouldStandardizeURLsWithLeadingSlashes {
 	CMResource *childOne = [self.service resource:@"child"];
 	CMResource *childTwo = [self.service resource:@"/child"];
-
-	STAssertEqualObjects([childOne.URL absoluteString], [childTwo.URL absoluteString], @"Should standardize URLs with leading slashes");	
+	
+	STAssertEqualObjects([childOne.URL absoluteString], [childTwo.URL absoluteString], @"Should standardize URLs with leading slashes");
 }
 
 - (void)shouldStandardizeURLsWithMultipleLeadingSlashes {
 	CMResource *childOne = [self.service resource:@"child"];
 	CMResource *childTwo = [self.service resource:@"///child"];
 	
-	STAssertEqualObjects([childOne.URL absoluteString], [childTwo.URL absoluteString], @"Should standardize URLs with mutliple leading slashes");	
+	STAssertEqualObjects([childOne.URL absoluteString], [childTwo.URL absoluteString], @"Should standardize URLs with mutliple leading slashes");
 }
 
 - (void)shouldStandardizeURLsWithExtraSlashes {
 	CMResource *ancestor = [self.service resource:@"ancestor"];
 	CMResource *parent = [ancestor resource:@"parent"];
 	CMResource *child = [parent resource:@"/child"];
-
 	
-	NSURL *fullURL = [[self.service  URL] URLByAppendingPathComponent:@"ancestor/parent/child"];
+	
+	NSURL *fullURL = [[self.service	 URL] URLByAppendingPathComponent:@"ancestor/parent/child"];
 	STAssertEqualObjects([fullURL absoluteString], [child.URL absoluteString], @"Should standardize URLs with extra slashes");
 }
 
@@ -120,7 +120,7 @@
 	CMResource *child = [parent resource:@"/../child"];
 	
 	
-	NSURL *fullURL = [[self.service  URL] URLByAppendingPathComponent:@"ancestor/child"];
+	NSURL *fullURL = [[self.service	 URL] URLByAppendingPathComponent:@"ancestor/child"];
 	STAssertEqualObjects([fullURL absoluteString], [child.URL absoluteString], @"Should standardize URLs with extra dots");
 }
 

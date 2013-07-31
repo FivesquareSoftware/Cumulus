@@ -1,9 +1,9 @@
 //
-//  CMDownloadInfo.m
-//  Cumulus
+//	CMDownloadInfo.m
+//	Cumulus
 //
-//  Created by John Clayton on 4/16/13.
-//  Copyright (c) 2013 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 4/16/13.
+//	Copyright (c) 2013 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMDownloadInfo.h"
@@ -21,7 +21,7 @@ static NSMutableDictionary *_downloadInfo = nil;
 	@autoreleasepool {
 		if (self == [CMDownloadInfo class]) {
 			_downloadInfoSemphore = dispatch_semaphore_create(1);
-
+			
 			static dispatch_once_t onceToken;
 			dispatch_once(&onceToken, ^{
 				if (nil == _downloadInfo) {
@@ -35,12 +35,12 @@ static NSMutableDictionary *_downloadInfo = nil;
 							RCLog(@"Exception while unarchiving download data: %@",exception);
 						}
 						NSAssert(_downloadInfo, @"Could not load state data from URL %@",stateDataURL);
-					}					
+					}
 					if (nil == _downloadInfo) {
 						_downloadInfo = [NSMutableDictionary new];
 					}
 				}
-
+				
 			});
 		}
 	}
@@ -87,8 +87,8 @@ static NSMutableDictionary *_downloadInfo = nil;
 	@catch (NSException *exception) {
 		RCLog(@"Exception while archiving download data: %@",exception);
 	}
-
-//	NSAssert(success, @"Failed to write download state!");
+	
+	//	NSAssert(success, @"Failed to write download state!");
 	return success;
 }
 
@@ -97,7 +97,7 @@ static NSMutableDictionary *_downloadInfo = nil;
 	_totalContentLength = [[coder decodeObjectForKey:@"_totalContentLength"] longLongValue];
 	_ETag = [coder decodeObjectForKey:@"_ETag"];
 	_lastModifiedDate = [coder decodeObjectForKey:@"_lastModifiedDate"];
-    
+	
 	return self;
 }
 

@@ -35,7 +35,7 @@
 @synthesize cachesDir;
 
 + (NSString *)description {
-    return @"File Handling";
+	return @"File Handling";
 }
 
 // ========================================================================== //
@@ -44,19 +44,19 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 	[self.specHelper cleanCaches];
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here 
 
 	self.service = [CMResource withURL:kTestServerHost];
 	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 	
 //	NSFileManager *fm = [[NSFileManager alloc] init];
 //	__autoreleasing NSError *error = nil;
@@ -64,7 +64,7 @@
 }
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 //	[self.specHelper cleanCaches];
 }
 
@@ -306,7 +306,7 @@
 	
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
 		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-		NSLog(@"progress: %@",progress);
+//		NSLog(@"progress: %@",progress);
 //		[mockProgressObject setValue:progress forKey:@"Progress"];
 //		if ([progress floatValue] < 1.f) {
 //			[[mockProgressObject expect] setValue:[OCMArg checkWithBlock:someProgressBlock] forKey:@"Progress"];
@@ -372,7 +372,7 @@
 		massiveCacheIdentifier = response.request.cacheIdentifier;
 		dispatch_semaphore_signal(request_sema);
 	};
-	[massive chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	[massive downloadInChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 			
 	__block float firstProgress = -1.f;
@@ -397,7 +397,7 @@
 		dispatch_semaphore_signal(request_sema);
 	};
 
-	[massive chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+	[massive downloadInChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(request_sema);
@@ -416,7 +416,7 @@
 	CMResource *empty = [self.service resource:@"test/download/empty"];
 	__block CMResponse *localResponse = nil;
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
-	[empty chunkedDownloadWithProgressBlock:nil completionBlock:^(CMResponse *response) {
+	[empty downloadInChunksWithProgressBlock:nil completionBlock:^(CMResponse *response) {
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
@@ -441,7 +441,7 @@
 	
 	__block CMResponse *localResponse = nil;
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
-	[empty chunkedDownloadWithProgressBlock:progressBlock completionBlock:^(CMResponse *response) {
+	[empty downloadInChunksWithProgressBlock:progressBlock completionBlock:^(CMResponse *response) {
 		localResponse = response;
 		dispatch_semaphore_signal(request_sema);
 	}];
@@ -449,6 +449,41 @@
 
 	STAssertTrue(localResponse.wasUnsuccessful, @"Response should have failed: %@", localResponse);
 	STAssertTrue(firstProgress == 0, @"No chunk progress shoud have been reported for a failed HEAD");
+}
+
+- (void) shouldComputeChunkSizesBasedOnNumberOfWorkers {
+	CMResource *massive = [self.service resource:@"test/download/massive"];
+	
+	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
+	NSFileManager *fm = [NSFileManager new];
+	NSError *error = nil;
+	NSDictionary *fileAtts = [fm attributesOfItemAtPath:resourceImagePath error:&error];
+	STAssertNil(error, @"Error getting file size");
+	unsigned long long fileSize = [fileAtts fileSize];
+	unsigned long long chunkSize = (fileSize/2ULL)+1;
+	
+	__block unsigned long long computedChunkSize = 0;
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo) {
+		if (computedChunkSize == 0 && [progressInfo.progress floatValue] > 0.f) {
+			CMChunkedDownloadRequest *chunkedRequest = (CMChunkedDownloadRequest *)progressInfo.request;
+			computedChunkSize = (unsigned long long)chunkedRequest.chunkSize;
+			[chunkedRequest cancel];
+		}
+	};
+	
+	massive.maxConcurrentChunks = 2;
+	
+	__block CMResponse *localResponse = nil;
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	[massive downloadInChunksWithProgressBlock:progressBlock completionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	STAssertEquals(chunkSize, computedChunkSize, @"Chunk size should be computed based on number of workers");
+	
+	
 }
 
 
@@ -511,7 +546,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	if (chunked) {
-		[resource chunkedDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
+		[resource downloadInChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
 	}
 	else {
 		[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];

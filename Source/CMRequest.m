@@ -1,26 +1,26 @@
 //
-//  CMRequest.m
-//  Cumulus
+//	CMRequest.m
+//	Cumulus
 //
-//  Created by John Clayton on 7/23/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 7/23/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 
+ *	  notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
+ *	  this list of conditions and the following disclaimer in the documentation
+ *	  and/or other materials provided with the distribution.
+ *
  * 3. Neither the name of Fivesquare Software nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- * 
+ *	  be used to endorse or promote products derived from this software without
+ *	  specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -61,7 +61,7 @@ static NSUInteger requestCount = 0;
 		if (requestCount > 0) {
 			[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 		}
-#endif	
+#endif
 	}
 }
 
@@ -73,7 +73,7 @@ static NSUInteger requestCount = 0;
 			[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 		}
 #endif
-	}	
+	}
 }
 
 // ========================================================================== //
@@ -301,15 +301,15 @@ static NSUInteger requestCount = 0;
 }
 
 - (NSMutableData *) data {
-    if (_data == nil) {
-        _data = [NSMutableData new];
-    }
-    return _data;
+	if (_data == nil) {
+		_data = [NSMutableData new];
+	}
+	return _data;
 }
 
 - (id<CMCoder>) payloadEncoder {
 	NSString *contentType = @"Not set";
-    if (_payloadEncoder == nil) {
+	if (_payloadEncoder == nil) {
 		// First, check for obvious conversions of payload by class and file extension
 		_payloadEncoder = [CMCoder coderForObject:_payload];
 		
@@ -318,26 +318,26 @@ static NSUInteger requestCount = 0;
 		}
 		
 		contentType = [_URLRequest valueForHTTPHeaderField:kCumulusHTTPHeaderContentType];
-
-        if (nil == _payloadEncoder) { // we have an non-literal object type, figure out encoding based on content type
-            if (contentType && contentType.length > 0) {
-                _payloadEncoder = [CMCoder coderForMimeType:contentType];
-            }
-        }
-        
-    }
+		
+		if (nil == _payloadEncoder) { // we have an non-literal object type, figure out encoding based on content type
+			if (contentType && contentType.length > 0) {
+				_payloadEncoder = [CMCoder coderForMimeType:contentType];
+			}
+		}
+		
+	}
 	NSAssert2(_payloadEncoder != nil,  @"Unable to convert payload to HTTPBody using payload.class: %@, Content-Type: %@. Make sure you are using a compatible object type or file extension, or have set an appropriate Content-Type.", NSStringFromClass([_payload class]), contentType);
-    return _payloadEncoder;
+	return _payloadEncoder;
 }
 
 - (id<CMCoder>) responseDecoder {
-    if (_responseDecoder == nil) {
-        NSString *contentType = [[_URLResponse allHeaderFields] valueForKey:kCumulusHTTPHeaderContentType];
-        if (contentType.length > 0) { // First, let's try content type, because the server is telling us what it sent
-            _responseDecoder = [CMCoder coderForMimeType:contentType];
-        }
-        if (_responseDecoder == nil) { 
-            // If we didn't get a decoder from content type, we will try and build a decoder based on what we were expecting
+	if (_responseDecoder == nil) {
+		NSString *contentType = [[_URLResponse allHeaderFields] valueForKey:kCumulusHTTPHeaderContentType];
+		if (contentType.length > 0) { // First, let's try content type, because the server is telling us what it sent
+			_responseDecoder = [CMCoder coderForMimeType:contentType];
+		}
+		if (_responseDecoder == nil) {
+			// If we didn't get a decoder from content type, we will try and build a decoder based on what we were expecting
 			
 			_responseDecoder = [CMCoder coderForFileExtension:self.fileExtension];
 			
@@ -348,30 +348,30 @@ static NSUInteger requestCount = 0;
 				}
 			}
 			
-        }
-        if (_responseDecoder == nil) { // We will essentially just pass set the NSData as the result and downstream users will have to figure out what to do with it
-            _responseDecoder = [CMIdentityCoder new];
-        }
-    }
-    return _responseDecoder;
+		}
+		if (_responseDecoder == nil) { // We will essentially just pass set the NSData as the result and downstream users will have to figure out what to do with it
+			_responseDecoder = [CMIdentityCoder new];
+		}
+	}
+	return _responseDecoder;
 }
 
 @dynamic queryDictionary;
 - (NSDictionary *) queryDictionary {
-    NSMutableDictionary *queryDictionary = [NSMutableDictionary new];
-    NSString *queryString = [[self.URLRequest URL] query];
-    if (queryString) {
-        NSArray *paramPairs = [queryString componentsSeparatedByString:@"&"];
-        [paramPairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
-            NSArray *params = [pair componentsSeparatedByString:@"="];
-            if (params.count == 2) {
-                id key = params[0];
-                id value = params[1];
-                [queryDictionary setObject:value forKey:key];
-            }
-        }];
-    }
-    return queryDictionary;
+	NSMutableDictionary *queryDictionary = [NSMutableDictionary new];
+	NSString *queryString = [[self.URLRequest URL] query];
+	if (queryString) {
+		NSArray *paramPairs = [queryString componentsSeparatedByString:@"&"];
+		[paramPairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
+			NSArray *params = [pair componentsSeparatedByString:@"="];
+			if (params.count == 2) {
+				id key = params[0];
+				id value = params[1];
+				[queryDictionary setObject:value forKey:key];
+			}
+		}];
+	}
+	return queryDictionary;
 }
 
 
@@ -380,23 +380,23 @@ static NSUInteger requestCount = 0;
 #pragma mark - Object
 
 - (void)dealloc {
-//    [self removeObserver:self forKeyPath:@"scope"];
+	//	  [self removeObserver:self forKeyPath:@"scope"];
 }
 
 - (id) initWithURLRequest:(NSURLRequest*)URLRequest {
-    self = [super init];
+	self = [super init];
 	NSAssert(URLRequest != nil, @"URLRequest cannot be nil!");
 	if (nil == URLRequest) {
 		self = nil;
 	}
-    if (self) {
+	if (self) {
 		self.originalURLRequest = URLRequest;
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
 		self.maxAuthRetries = 1;
 		self.range = (CMContentRange){ kCFNotFound , 0, 0 };
-    }
-    
-    return self;
+	}
+	
+	return self;
 }
 
 - (NSString *) description {
@@ -437,40 +437,40 @@ static NSUInteger requestCount = 0;
 	
 	[self handleConnectionWillStart];
 	
-    self.started = YES;
+	self.started = YES;
 	self.startedAt = [NSDate date];
-
+	
 	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
-    [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-//	[self.connection setDelegateQueue:[[self class] delegateQueue]];
-//	[self.connection setDelegateQueue:[NSOperationQueue mainQueue]];
-//	_queue = [NSOperationQueue new];
-//	[self.connection setDelegateQueue:_queue];
-    [self.connection start];
+	[self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+	//	[self.connection setDelegateQueue:[[self class] delegateQueue]];
+	//	[self.connection setDelegateQueue:[NSOperationQueue mainQueue]];
+	//	_queue = [NSOperationQueue new];
+	//	[self.connection setDelegateQueue:_queue];
+	[self.connection start];
 	RCLog(@"%@", self);
-
+	
 	[self handleConnectionDidSendData];
 	[self handleConnectionDidReceiveData];
 	
-
+	
 	if (self.timeout > 0) {
 		NSTimer *timeoutTimer = [NSTimer timerWithTimeInterval:self.timeout target:self selector:@selector(timeoutFired:) userInfo:nil repeats:NO];
-		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];		
+		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];
 		self.timeoutTimer = timeoutTimer;
 	}
 }
 
 - (void) startWithCompletionBlock:(CMCompletionBlock)block {
-    self.completionBlock = block;
-    [self start];
+	self.completionBlock = block;
+	[self start];
 }
 
 - (void) cancel {
-    if (NO == self.canCancel) {
+	if (NO == self.canCancel) {
 		RCLog(@"Attempting to cancel a request that has already been canceled or has finished ");
-        return;
-    }
-    self.canceled = YES;
+		return;
+	}
+	self.canceled = YES;
 	if (self.started) {
 		//	[self.connection cancel];
 		// strangely, *NOT* calling this on the main thread will cause other calls to dispatch on the main thread (like to completion block) to deadlock, freakish, something about the connection needing to be canceled on the same runloop it was canceled on?
@@ -485,11 +485,11 @@ static NSUInteger requestCount = 0;
 		RCLog(@"Attempting to abort a request that has already been started, canceled or finished ");
 		return;
 	}
-    if (self.abortBlock) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.abortBlock(self);
-        });
-    }
+	if (self.abortBlock) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.abortBlock(self);
+		});
+	}
 }
 
 - (void) abortWithBlock:(CMAbortBlock)abortBlock {
@@ -500,15 +500,15 @@ static NSUInteger requestCount = 0;
 - (void) timeoutFired:(NSTimer *)timer {
 	[self.timeoutTimer invalidate];
 	self.timeoutTimer = nil;
-    if (nil == self.URLResponse) {
+	if (nil == self.URLResponse) {
 		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
 							  [NSString stringWithFormat:@"Request did not receive a response before specified timeout (%f)",self.timeout], NSLocalizedDescriptionKey
 							  , self.URLRequest.URL, NSURLErrorFailingURLErrorKey
 							  , nil];
 		NSError *timeoutError = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorTimedOut userInfo:info];
 		self.error = timeoutError;
-        [self cancel];
-    }
+		[self cancel];
+	}
 }
 
 
@@ -554,10 +554,10 @@ static NSUInteger requestCount = 0;
 }
 
 - (void) handleConnectionFinished {
-    if (self.connectionFinished) {
-        return;
-    }
-
+	if (self.connectionFinished) {
+		return;
+	}
+	
 	[[self class] decrementRequestCount];
 	
 	CMResponse *blockResponse = self.responseInternal;
@@ -603,7 +603,7 @@ static NSUInteger requestCount = 0;
 	}
 	
 	URLRequest.cachePolicy = self.cachePolicy;
-    
+	
 	// if there is a payload, encode it
 	if (self.payload) {
 		URLRequest.HTTPBody = [self.payloadEncoder encodeObject:self.payload];
@@ -621,12 +621,12 @@ static NSUInteger requestCount = 0;
 }
 
 - (void) postProcessResponse:(CMResponse *)response {
-    
+	
 	// if there was a response body, decode it
-    if (self.data.length) {
-        NSString *responseString = [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding];
+	if (self.data.length) {
+		NSString *responseString = [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding];
 		self.responseBody = responseString;
-        
+		
 		if (self.responseDecoder) {
 			self.result = [self.responseDecoder decodeData:self.data];
 		}
@@ -634,17 +634,17 @@ static NSUInteger requestCount = 0;
 		if (self.postProcessorBlock) {
 			self.result = self.postProcessorBlock(response, self.result);
 		}
-    }
+	}
 }
 
 - (NSString *) mimeTypeForFileAtPath:(NSString *)filePath {
 	CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[filePath pathExtension], NULL);
-    NSString *MIMEType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
-    CFRelease(UTI);
+	NSString *MIMEType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
+	CFRelease(UTI);
 	
-    if (nil == MIMEType) {
-        MIMEType = @"text/plain";
-    }
+	if (nil == MIMEType) {
+		MIMEType = @"text/plain";
+	}
 	return MIMEType;
 }
 
@@ -674,21 +674,21 @@ static NSUInteger requestCount = 0;
 			break;
 		}
 	}
-
-	if (providerForMethod) {		
-		NSURLCredential *credential = [providerForMethod credentialForAuthenticationChallenge:challenge];	
+	
+	if (providerForMethod) {
+		NSURLCredential *credential = [providerForMethod credentialForAuthenticationChallenge:challenge];
 		if (credential) {
-            if ([challenge previousFailureCount] < self.maxAuthRetries) {
-                [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
-            } else {
-                [[challenge sender] cancelAuthenticationChallenge:challenge];
-            }
+			if ([challenge previousFailureCount] < self.maxAuthRetries) {
+				[[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+			} else {
+				[[challenge sender] cancelAuthenticationChallenge:challenge];
+			}
 		} else {
 			[[challenge sender] cancelAuthenticationChallenge:challenge];
 		}
 	} else {
 		[[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
-    }
+	}
 }
 
 
@@ -717,8 +717,8 @@ static NSUInteger requestCount = 0;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.URLResponse = (NSHTTPURLResponse *)response;
-//	RCLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
-//	self.expectedContentLength = [response expectedContentLength]; // fails when there is no content length header, often in a range request this is true
+	//	RCLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
+	//	self.expectedContentLength = [response expectedContentLength]; // fails when there is no content length header, often in a range request this is true
 	// Works for simple requests as well as range requests
 	self.expectedContentLength = self.responseInternal.expectedContentLength;
 	[self handleConnectionDidReceiveResponse];
@@ -726,7 +726,7 @@ static NSUInteger requestCount = 0;
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	[self.data appendData:data];
-
+	
 	NSUInteger dataLength = [data length];
 	self.receivedContentLength += dataLength;
 	self.lastChunkSize = dataLength;

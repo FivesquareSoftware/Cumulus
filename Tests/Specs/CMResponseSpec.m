@@ -1,9 +1,9 @@
 //
-//  CMResponseSpec.m
-//  Cumulus
+//	CMResponseSpec.m
+//	Cumulus
 //
-//  Created by John Clayton on 10/15/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 10/15/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMResponseSpec.h"
@@ -21,7 +21,7 @@
 @synthesize endpoint;
 
 + (NSString *)description {
-    return @"Response Internals";
+	return @"Response Internals";
 }
 
 // ========================================================================== //
@@ -30,7 +30,7 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"t_hero" ofType:@"png"];
 	
 	NSFileManager *fm = [NSFileManager new];
@@ -40,7 +40,7 @@
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here
 	self.service = [CMResource withURL:kTestServerHost];
 	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	
@@ -48,12 +48,12 @@
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //
@@ -74,15 +74,15 @@
 	CMResource *resource = [self.endpoint resource:@"informational"];
 	CMResponse *response = [resource get];
 	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for informational: %@",response);
-
+	
 	resource = [self.endpoint resource:@"redirect"];
 	response = [resource get];
 	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for redirect: %@",response);
-
+	
 	resource = [self.endpoint resource:@"clienterrror"];
 	response = [resource get];
 	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for clienterrror: %@",response);
-
+	
 	resource = [self.endpoint resource:@"servererror"];
 	response = [resource get];
 	STAssertTrue([response wasUnsuccessful], @"Response#wasUnsuccessful should be true for servererror: %@",response);
@@ -123,7 +123,7 @@
 	
 	CMResource *hero = [self.service resource:@"resources/t_hero.png"];
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
-
+	
 	__block CMResponse *localResponse = nil;
 	[hero downloadRange:CMContentRangeMake(0,(_heroBytes/2),0) progressBlock:nil completionBlock:^(CMResponse *response) {
 		localResponse = response;
@@ -241,39 +241,39 @@
 - (void) shouldNotCreateAnErrorForCanceledRequest {
 	CMResource *resource = [self.service resource:@"test/download/massive"];
 	__block CMResponse *localResponse = nil;
-    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
+	dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
 	[resource getWithProgressBlock:^(CMProgressInfo *progressInfo) {
 		if ([progressInfo.progress floatValue] > 0.f) {
 			[progressInfo.request cancel];
 		}
 	} completionBlock:^(CMResponse *response) {
-        localResponse = response;
+		localResponse = response;
 		dispatch_semaphore_signal(cancel_sema);
 	}];
-    [resource cancelRequests];
+	[resource cancelRequests];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(cancel_sema);
 	
 	NSError *error = localResponse.error;
-    STAssertNil(error, @"Status code error should have been nil: %@",error);
+	STAssertNil(error, @"Status code error should have been nil: %@",error);
 }
 
 - (void) shouldBeCanceled {
 	CMResource *resource = [self.service resource:@"test/download/massive"];
 	__block CMResponse *localResponse = nil;
-    dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
-//	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_t cancel_sema = dispatch_semaphore_create(0);
+	//	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
 	[resource getWithProgressBlock:^(CMProgressInfo *progressInfo) {
 		if ([progressInfo.progress floatValue] > 0.f) {
 			[progressInfo.request cancel];
 		}
 	} completionBlock:^(CMResponse *response) {
-        localResponse = response;
+		localResponse = response;
 		dispatch_semaphore_signal(cancel_sema);
 	}];
-//    [resource cancelRequestsWithBlock:^{
-//		dispatch_semaphore_signal(cancel_sema);
-//	}];
+	//	  [resource cancelRequestsWithBlock:^{
+	//		dispatch_semaphore_signal(cancel_sema);
+	//	}];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
 	dispatch_release(cancel_sema);
 	STAssertTrue([localResponse HTTPCanceled], @"Response#HTTPCanceled should be true: %@",localResponse);
@@ -289,15 +289,15 @@
 /* requests never quit with this range, have to figure out another way to test
  
  //- (void) shouldBeContinue {
- //	CMResource *resource = [self.endpoint resource:@"continue"];
- //	CMResponse *response = [resource get];
- //	STAssertTrue([response isContinue], @"Response#isContinue should be true: %@",response);
+ // CMResource *resource = [self.endpoint resource:@"continue"];
+ // CMResponse *response = [resource get];
+ // STAssertTrue([response isContinue], @"Response#isContinue should be true: %@",response);
  //}
  
  //- (void) shouldBeSwitchingProtocols {
- //	CMResource *resource = [self.endpoint resource:@"switchingprotocols"];
- //	CMResponse *response = [resource get];
- //	STAssertTrue([response isSwitchingProtocols], @"Response#isSwitchingProtocols should be true: %@",response);
+ // CMResource *resource = [self.endpoint resource:@"switchingprotocols"];
+ // CMResponse *response = [resource get];
+ // STAssertTrue([response isSwitchingProtocols], @"Response#isSwitchingProtocols should be true: %@",response);
  //}
  
  end */
@@ -511,18 +511,18 @@
 	CMResponse *response = [resource get];
 	STAssertTrue([response HTTPVersionNotSupported], @"Response#isHTTPVersionNotSupported should be true: %@",response);
 }
- 
- 
+
+
 
 /** Ranges of codes */
 
 /* requests never quit with this range
-
-//- (void) shouldBeInformational {
-//	CMResource *resource = [self.endpoint resource:@"informational"];
-//	CMResponse *response = [resource get];
-//	STAssertTrue([response wasInformational], @"Response#wasInformational should be true: %@",response);
-//}
+ 
+ //- (void) shouldBeInformational {
+ //	CMResource *resource = [self.endpoint resource:@"informational"];
+ //	CMResponse *response = [resource get];
+ //	STAssertTrue([response wasInformational], @"Response#wasInformational should be true: %@",response);
+ //}
  
  end */
 

@@ -1,9 +1,9 @@
 //
-//  CMAuthSpec.m
-//  Cumulus
+//	CMAuthSpec.m
+//	Cumulus
 //
-//  Created by John Clayton on 9/9/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 9/9/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMAuthSpec.h"
@@ -25,7 +25,7 @@
 @synthesize SSLProtectedResource;
 
 + (NSString *)description {
-    return @"BASIC Auth Handling";
+	return @"BASIC Auth Handling";
 }
 
 // ========================================================================== //
@@ -34,19 +34,19 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
-    self.service = [CMResource withURL:kTestServerHost];
-    self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+	// set up resources that need to be initialized before each example here
+	self.service = [CMResource withURL:kTestServerHost];
+	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	self.protectedResource = [self.service resource:@"test/protected"];
-
 	
-    self.SSLService = [CMResource withURL:kTestServerHostSSL];
+	
+	self.SSLService = [CMResource withURL:kTestServerHostSSL];
 	self.SSLService.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-    self.SSLProtectedResource = [self.SSLService resource:@"test/protected"];
+	self.SSLProtectedResource = [self.SSLService resource:@"test/protected"];
 	
 	
 	NSURLCredentialStorage *storage = [NSURLCredentialStorage sharedCredentialStorage];
@@ -57,16 +57,16 @@
 			NSURLCredential *credential = [credentialsForSpace objectForKey:username];
 			[storage removeCredential:credential forProtectionSpace:protectionSpace];
 		}
-	}	
+	}
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 }
 
 // ========================================================================== //
@@ -75,56 +75,56 @@
 
 - (void) shouldBeUnauthorized {
 	CMResponse *response = [self.protectedResource get];
-    STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
 }
 
 - (void) shouldFailAuthorizationWithBadCredentials {
-    CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"foo" password:@"bar"];
-    [self.service addAuthProvider:authProvider];
+	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"foo" password:@"bar"];
+	[self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
 }
 
 - (void) shouldBeAuthorized {
-    CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"test" password:@"test"];
-    [self.service addAuthProvider:authProvider];
+	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"test" password:@"test"];
+	[self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void) shouldBeAuthorizedWithAReallyLongUsernameAndPassword {
-    CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1" password:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1"];
-    [self.service addAuthProvider:authProvider];
+	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1" password:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1"];
+	[self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void) shouldContinueWhenProviderReturnsNilCredential {
 	OCMockObject<CMAuthProvider> *mockAuthProvider = [OCMockObject mockForProtocol:@protocol(CMAuthProvider)];
 	[[mockAuthProvider stub] authorizeRequest:[OCMArg any]];
-	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]  providedAuthenticationMethod];
+	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]	 providedAuthenticationMethod];
 	[[[mockAuthProvider expect] andReturn:nil] credentialForAuthenticationChallenge:[OCMArg any]];
 	
 	[self.protectedResource addAuthProvider:mockAuthProvider];
 	CMResponse *response = [self.protectedResource get];
-	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
 	
 	[mockAuthProvider verify];
 }
 
 - (void) shouldRetryAuthMaxAuthRetryTimes {
-    CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"foo" password:@"bar"];
-
+	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"foo" password:@"bar"];
+	
 	OCMockObject<CMAuthProvider> *mockAuthProvider = [OCMockObject mockForProtocol:@protocol(CMAuthProvider)];
 	
 	[[mockAuthProvider stub] authorizeRequest:[OCMArg any]];
-	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]  providedAuthenticationMethod];
+	[[[mockAuthProvider stub] andReturn:NSURLAuthenticationMethodHTTPBasic]	 providedAuthenticationMethod];
 	[[[mockAuthProvider expect] andReturn:[authProvider credentialForAuthenticationChallenge:[OCMArg any]]] credentialForAuthenticationChallenge:[OCMArg any]];
 	[[[mockAuthProvider expect] andReturn:[authProvider credentialForAuthenticationChallenge:[OCMArg any]]] credentialForAuthenticationChallenge:[OCMArg any]];
 	
-    [self.service addAuthProvider:mockAuthProvider];
+	[self.service addAuthProvider:mockAuthProvider];
 	CMResponse *response = [self.protectedResource get];
-	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response); 
+	STAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
 	
 	[mockAuthProvider verify];
 }
@@ -134,7 +134,7 @@
 	[self.SSLService addAuthProvider:authProvider];
 	CMResource *untrustedServer = [self.SSLService resource:@"index"];
 	CMResponse *response = [untrustedServer get];
-	STAssertTrue([response ErrorUserCancelledAuthentication], @"Response should be untrusted certificate: %@",response); 
+	STAssertTrue([response ErrorUserCancelledAuthentication], @"Response should be untrusted certificate: %@",response);
 }
 
 - (void) shouldAcceptSelfSignedCertWhenInsecure {
@@ -143,7 +143,7 @@
 	[self.SSLService addAuthProvider:authProvider];
 	CMResource *untrustedServer = [self.SSLService resource:@"index"];
 	CMResponse *response = [untrustedServer get];
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 @end

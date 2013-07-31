@@ -1,9 +1,9 @@
 //
-//  CMResourceLifecycleBlocksSpec.m
-//  Cumulus
+//	CMResourceLifecycleBlocksSpec.m
+//	Cumulus
 //
-//  Created by John Clayton on 10/8/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 10/8/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMResourceLifecycleBlocksSpec.h"
@@ -21,7 +21,7 @@
 @synthesize service;
 
 + (NSString *)description {
-    return @"Resource Blocks";
+	return @"Resource Blocks";
 }
 
 // ========================================================================== //
@@ -30,11 +30,11 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here
 	
 	self.service = [CMResource withURL:kTestServerHost];
 	self.service.contentType = CMContentTypeJSON;
@@ -42,12 +42,12 @@
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 	[self.specHelper cleanCaches];
 }
 
@@ -83,26 +83,26 @@
 	};
 	
 	CMResponse *response = [index get];
-
+	
 	STAssertTrue(touched, @"Should have run preflight block");
 	STAssertNil(response, @"Response should be nil when preflight aborts a request");
 }
 
 - (void) shouldRunRequestWhenPreflightPasses {
 	CMResource *index = [self.service resource:@"index"];
-
+	
 	__block BOOL touched = NO;
-
+	
 	index.preflightBlock = ^(CMRequest *request) {
 		touched = YES;
 		return YES;
 	};
 	
 	CMResponse *response = [index get];
-
+	
 	STAssertTrue(touched, @"Should have run preflight block");
 	STAssertNotNil(response, @"Response should not be nil when preflight allows a request to run");
-    STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void) shouldExecutePreflightBlockInNonBlockingMode {
@@ -144,12 +144,12 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	
 	STAssertTrue(touched, @"Should have run preflight block");
 	STAssertNotNil(localResponse, @"Response should not be nil when preflight allows a request to run");
-    STAssertTrue(localResponse.wasSuccessful, @"Response should be ok");
-
+	STAssertTrue(localResponse.wasSuccessful, @"Response should be ok");
+	
 }
 
 - (void) shouldExecutePreflightBlockOnMainThread {
@@ -160,13 +160,13 @@
 		mainThread = [NSThread isMainThread];
 		return NO;
 	};
-
+	
 	[index getWithCompletionBlock:NULL];
 	
 	dispatch_sync(dispatch_get_main_queue(), ^{
 		// just so we are on the main q after preflight block, to prove we ran it
 	});
-
+	
 	STAssertTrue(mainThread, @"Should have run preflight block on main thread");
 }
 
@@ -213,7 +213,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	
 	[mockProgressObject verify];
 }
@@ -223,7 +223,7 @@
 
 - (void) shouldExecutePostProcessorBlock {
 	CMResource *index = [self.service resource:@"index"];
-		
+	
 	index.postProcessorBlock = ^(CMResponse *response, id result) {
 		NSString *newResult = [NSString stringWithFormat:@"-- %@ --",result];
 		return newResult;
@@ -263,19 +263,19 @@
 		touched = YES;
 		dispatch_semaphore_signal(request_sema);
 	}];
-		
+	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
-    STAssertTrue(touched, @"Should have run completion block");
+	
+	STAssertTrue(touched, @"Should have run completion block");
 }
 
 - (void) shouldExecuteCompletionBlockOnMainThread {
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
-    __block CMResponse *localResponse = nil;
-	__block BOOL mainThread = NO;	
-
+	__block CMResponse *localResponse = nil;
+	__block BOOL mainThread = NO;
+	
 	CMResource *index = [self.service resource:@"index"];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
@@ -284,12 +284,12 @@
 		mainThread = [NSThread isMainThread];
 		dispatch_semaphore_signal(request_sema);
 	}];
-		
+	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
-    STAssertTrue(mainThread, @"Completion block should have run on main thread");
+	
+	STAssertTrue(mainThread, @"Completion block should have run on main thread");
 }
 
 

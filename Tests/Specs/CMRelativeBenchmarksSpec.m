@@ -1,9 +1,9 @@
 //
-//  CMRelativeBenchmarksSpec.m
-//  Cumulus
+//	CMRelativeBenchmarksSpec.m
+//	Cumulus
 //
-//  Created by John Clayton on 11/27/11.
-//  Copyright 2011 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 11/27/11.
+//	Copyright 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMRelativeBenchmarksSpec.h"
@@ -27,7 +27,7 @@
 @synthesize complicatedList;
 
 + (NSString *)description {
-    return @"Relative Benchmarks"; // Just to make sure we don't drastically degrade performance when changing things
+	return @"Relative Benchmarks"; // Just to make sure we don't drastically degrade performance when changing things
 }
 
 // ========================================================================== //
@@ -36,28 +36,28 @@
 
 
 - (void)beforeAll {
-    // set up resources common to all examples here
+	// set up resources common to all examples here
 	self.service = [CMResource withURL:kTestServerHost];
 	self.benchmarks = [self.service resource:@"test/benchmarks"];
-//    NSLog(@"item: %@",self.specHelper.item);
+	//	  NSLog(@"item: %@",self.specHelper.item);
 	self.largeList = self.specHelper.largeList;
-//    NSLog(@"largeList: %@",self.largeList);
+	//	  NSLog(@"largeList: %@",self.largeList);
 	self.complicatedList = self.specHelper.complicatedList;
-//    NSLog(@"complicatedList: %@",self.complicatedList);
+	//	  NSLog(@"complicatedList: %@",self.complicatedList);
 	[self warmUpServer];
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here 
+	// set up resources that need to be initialized before each example here
 }
 
 - (void)afterEach {
-    // tear down resources specific to each example here
+	// tear down resources specific to each example here
 }
 
 
 - (void)afterAll {
-    // tear down common resources here
+	// tear down common resources here
 	self.service = nil;
 	self.benchmarks = nil;
 	
@@ -67,20 +67,20 @@
 // Make each request once to give the server a chance to warm up
 - (void) warmUpServer {
 	self.benchmarks.contentType = CMContentTypeJSON;
-
-
+	
+	
 	CMResource *smallResource = [self.benchmarks resource:@"small-resource.json"];
 	CMResource *largeResource = [self.benchmarks resource:@"large-resource.json"];
 	CMResource *complicatedResource = [self.benchmarks resource:@"complicated-resource.json"];
 	CMResource *smallFile = [self.benchmarks resource:@"small-file.png"];
 	CMResource *largeFile = [self.benchmarks resource:@"large-file.png"];
-
+	
 	smallResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	largeResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	complicatedResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	smallFile.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	largeFile.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-
+	
 	[smallResource get];
 	[largeResource get];
 	[complicatedResource get];
@@ -107,7 +107,7 @@
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *smallResource = [self.benchmarks resource:@"small-resource.json"];
 	smallResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-
+	
 	__block BOOL success = YES;
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
@@ -118,7 +118,7 @@
 			success = NO;
 		}
 	});
-
+	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 3.f;
@@ -133,12 +133,12 @@
 	CMResource *smallResource = [self.benchmarks resource:@"small-resource.json"];
 	smallResource.cachePolicy = NSURLRequestReturnCacheDataElseLoad;
 	__block BOOL success = YES;
-
+	
 	// generate cache
 	[smallResource get];
-
+	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(1000, queue, ^(size_t i) {
 		CMResponse *response = [smallResource get];
@@ -152,7 +152,7 @@
 	CFTimeInterval expected = 1.f;
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -161,18 +161,18 @@
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *largeResource = [self.benchmarks resource:@"large-resource.json"];
 	largeResource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-
+	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	CMResponse *localResponse = [largeResource get];
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.f;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
-    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -184,16 +184,16 @@
 	[complicatedResource get];
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	CMResponse *localResponse = [complicatedResource get];
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .1;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
-    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -204,7 +204,7 @@
 	__block BOOL success = YES;
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(15, queue, ^(size_t i) {
 		CMResponse *response = [complicatedResource get];
@@ -212,14 +212,14 @@
 			success = NO;
 		}
 	});
-
+	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.f;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -229,12 +229,12 @@
 	CMResource *complicatedResource = [self.benchmarks resource:@"complicated-resource.json"];
 	complicatedResource.cachePolicy = NSURLRequestReturnCacheDataElseLoad;
 	__block BOOL success = YES;
-
+	
 	// generate cache
 	[complicatedResource get];
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(15, queue, ^(size_t i) {
 		CMResponse *response = [complicatedResource get];
@@ -246,9 +246,9 @@
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .5;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -259,7 +259,7 @@
 	__block BOOL success = YES;
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(1000, queue, ^(size_t i) {
 		CMResponse *response = [smallResource post:self.specHelper.item];
@@ -271,9 +271,9 @@
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 2.f;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -281,31 +281,31 @@
 - (void)shouldPostOneLargeResource {
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *largeResource = [self.benchmarks resource:@"large-resource.json"];
-//	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.largeList forKey:@"list"];  // our service likes hashes not arrays as the payload
-    NSDictionary  *payload = @{@"list" : self.largeList};
+	//	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.largeList forKey:@"list"];	 // our service likes hashes not arrays as the payload
+	NSDictionary  *payload = @{@"list" : self.largeList};
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	CMResponse *localResponse = [largeResource post:payload];
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 7.f;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
-    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
 - (void)shouldPostABunchOfComplicatedResources {
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *complicatedResource = [self.benchmarks resource:@"complicated-resource.json"];
-//	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.complicatedList forKey:@"list"];  // our service likes hashes not arrays as the payload
-    NSDictionary *payload = @{@"list" : self.complicatedList};
+	//	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.complicatedList forKey:@"list"];  // our service likes hashes not arrays as the payload
+	NSDictionary *payload = @{@"list" : self.complicatedList};
 	__block BOOL success = YES;
-
+	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(15, queue, ^(size_t i) {
 		CMResponse *response = [complicatedResource post:payload];
@@ -313,14 +313,14 @@
 			success = NO;
 		}
 	});
-
+	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .75;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -332,10 +332,10 @@
 	NSString *filePath = [[NSBundle mainBundle] pathForResource:@"t_hero" ofType:@"png"];
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_group_t group = dispatch_group_create();
 	dispatch_group_enter(group); // wait on the last completion block
-
+	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(100, queue, ^(size_t i) {
 		dispatch_group_async(group, dispatch_get_current_queue(), ^{
@@ -356,9 +356,9 @@
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 3.f;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -368,7 +368,7 @@
 	NSString *filePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
@@ -380,15 +380,15 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .5;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
-    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -398,14 +398,14 @@
 	__block BOOL success = YES;
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_group_t group = dispatch_group_create();
 	dispatch_group_enter(group); // wait on the last completion block
-
+	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(100, queue, ^(size_t i) {
 		dispatch_group_async(group, dispatch_get_current_queue(), ^{
-			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){			
+			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
 				if (NO == response.wasSuccessful) {
 					success = NO;
 				}
@@ -418,14 +418,14 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	dispatch_release(group);
-
-
+	
+	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.25;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -436,7 +436,7 @@
 	__block BOOL success = YES;
 	
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
-
+	
 	// generate cache
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
@@ -445,17 +445,17 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_group_t group = dispatch_group_create();
 	dispatch_group_enter(group); // wait on the last completion block
 	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(100, queue, ^(size_t i) {
 		dispatch_group_async(group, dispatch_get_current_queue(), ^{
-			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){			
+			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
 				if (NO == response.wasSuccessful) {
 					success = NO;
 				}
@@ -468,14 +468,14 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	dispatch_release(group);
-
+	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 1.1f;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
+	
 	STAssertTrue(success, @"Should have succeeded");
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
@@ -487,7 +487,7 @@
 	
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[largeFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
@@ -497,15 +497,15 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .5;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
-    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 
@@ -513,7 +513,7 @@
 	CMResource *largeFile = [self.benchmarks resource:@"large-file.png"];
 	largeFile.cachePolicy = NSURLRequestReturnCacheDataElseLoad;
 	__block CMResponse *localResponse = nil;
-
+	
 	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
 	// generate cache
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
@@ -524,7 +524,7 @@
 	dispatch_semaphore_signal(request_sema);
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-
+	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	[largeFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
 		localResponse = response;
@@ -533,14 +533,14 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
-
+	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .35;
-
+	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-
-    STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	
+	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 	STAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
 }
 

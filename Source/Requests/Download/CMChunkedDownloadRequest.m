@@ -1,9 +1,9 @@
 //
-//  CMChunkedDownloadRequest.m
-//  Cumulus
+//	CMChunkedDownloadRequest.m
+//	Cumulus
 //
-//  Created by John Clayton on 5/29/13.
-//  Copyright (c) 2013 Fivesquare Software, LLC. All rights reserved.
+//	Created by John Clayton on 5/29/13.
+//	Copyright (c) 2013 Fivesquare Software, LLC. All rights reserved.
 //
 
 #import "CMChunkedDownloadRequest.h"
@@ -68,8 +68,8 @@
 - (long long) totalAggregatedContentLength {
 	__block long long totalAggregatedContentLength = 0;
 	[_allChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
-//		RCLog(@"** totalAggregatedContentLength: %lld",totalAggregatedContentLength);
-//		RCLog(@"** chunk.fileOffset: %lld",chunk.fileOffset);
+		//		RCLog(@"** totalAggregatedContentLength: %lld",totalAggregatedContentLength);
+		//		RCLog(@"** chunk.fileOffset: %lld",chunk.fileOffset);
 		totalAggregatedContentLength += chunk.fileOffset;
 	}];
 	return totalAggregatedContentLength;
@@ -128,13 +128,13 @@
 #pragma mark - Object
 
 - (void)dealloc {
-    dispatch_release(_chunksSemaphore);
+	dispatch_release(_chunksSemaphore);
 }
 
 
 - (id)initWithURLRequest:(NSURLRequest *)URLRequest {
-    self = [super initWithURLRequest:URLRequest];
-    if (self) {
+	self = [super initWithURLRequest:URLRequest];
+	if (self) {
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
 		_chunkSize = 0;
 		_waitingChunks = [NSMutableSet new];
@@ -144,8 +144,8 @@
 		_chunksSemaphore = dispatch_semaphore_create(1);
 		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
 		_minumumProgressUpdateInterval = kCMChunkedDownloadRequestMinUpdateInterval;
-    }
-    return self;
+	}
+	return self;
 }
 
 
@@ -173,7 +173,7 @@
 			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
 		}
 	}
-		
+	
 	
 	CMDownloadInfo *downloadInfo = [CMDownloadInfo downloadInfoForCacheIdentifier:self.cacheIdentifier];
 	NSURL *tempFileURL = downloadInfo.downloadedFileTempURL;
@@ -191,7 +191,7 @@
 		downloadInfo.downloadedFileTempURL = self.downloadedFileTempURL;
 		// Record addition info for possible future resumes
 		downloadInfo.totalContentLength = self.responseInternal.totalContentLength;
-
+		
 		NSDictionary *responseHeaders = [self.URLResponse allHeaderFields];
 		downloadInfo.ETag = [responseHeaders valueForKey:kCumulusHTTPHeaderETag];
 		downloadInfo.lastModifiedDate = [responseHeaders valueForKey:kCumulusHTTPHeaderLastModified];
@@ -223,7 +223,7 @@
 	if (self.canceled) {
 		return;
 	}
-
+	
 	// If we failed to get a good response from the initial HEAD request, go no further
 	if (self.responseInternal.wasUnsuccessful) {
 		[self reallyHandleConnectionFinished];
@@ -237,7 +237,7 @@
 		return;
 	}
 	
-	// Ok, good to request chunks	
+	// Ok, good to request chunks
 	NSMutableURLRequest *baseChunkRequest = [self.originalURLRequest mutableCopy];
 	baseChunkRequest.HTTPMethod = kCumulusHTTPMethodGET;
 	_baseChunkRequest = baseChunkRequest;
@@ -291,7 +291,7 @@
 		[chunkRequest.authProviders addObjectsFromArray:self.authProviders];
 		chunkRequest.cachePolicy = self.cachePolicy;
 		[chunkRequest.headers addEntriesFromDictionary:self.headers];
-//		chunkRequest.cachesDir = self.cachesDir;
+		//		chunkRequest.cachesDir = self.cachesDir;
 		chunkRequest.cachesDir = [self.chunksDirURL path];
 		chunkRequest.range = range;
 		chunkRequest.shouldResume = YES;
@@ -337,7 +337,7 @@
 			else if (result.tempFileURL && NO == self.wasCanceled) {
 				CMProgressInfo *result = response.result;
 				NSURL *chunkTempURL = result.tempFileURL;
-//				CMContentRange range = response.request.range;
+				//				CMContentRange range = response.request.range;
 				NSURL *chunkNewURL = [self completedChunkFileURLForRange:range];//[_chunksDirURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@,bytes=%lld-%lld",[chunkTempURL lastPathComponent],range.location,CMContentRangeLastByte(range)]];
 				
 				if (nil == self.downloadedFilename) {
@@ -405,7 +405,7 @@
 			dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 			NSArray *sortedChunks = [_completedChunks sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES]]];
 			dispatch_semaphore_signal(_chunksSemaphore);
-
+			
 			NSFileManager *fm = [NSFileManager new];
 			if ([fm createFileAtPath:[self.downloadedFileTempURL path] contents:nil attributes:nil]) {
 				@autoreleasepool {
@@ -424,7 +424,7 @@
 							NSError *readError = nil;
 							long long movedChunkDataLength = 0;
 							@autoreleasepool {
-//								NSUInteger readBufferLength = (1024*1024);
+								//								NSUInteger readBufferLength = (1024*1024);
 								NSFileHandle *chunkReadHandle = [NSFileHandle fileHandleForReadingFromURL:chunk.file error:&readError];
 								if (chunkReadHandle) {
 									NSData *readData = [chunkReadHandle readDataOfLength:_readBufferLength];
@@ -501,14 +501,14 @@
 		
 		// Make sure that even though we are limiting the rate of these updates we send one last one
 		[super handleConnectionDidReceiveData];
-
+		
 		CMProgressInfo *progressInfo = [CMProgressInfo new];
 		progressInfo.progress = @(1.f);
 		progressInfo.tempFileURL = self.downloadedFileTempURL;
 		progressInfo.tempDirURL = self.chunksDirURL;
 		progressInfo.URL = [self.URLRequest URL];
 		progressInfo.filename = self.downloadedFilename;
-
+		
 		self.result = progressInfo;
 		[super handleConnectionFinished];
 		
