@@ -190,7 +190,9 @@ Cumulus is released under the [BSD license](http://opensource.org/licenses/BSD-3
 
 ## Contributors
 
-John Clayton <Cumulus@fivesquaresoftware.com>  
+Cumulus was originally created by and is maintained by John Clayton <Cumulus@fivesquaresoftware.com> 
+
+Check out the [contributors graph](https://github.com/FivesquareSoftware/Cumulus/contributors) to see all the great people making Cumulus work.
 
 Patches are welcome, pull requests make us all excited.
 
