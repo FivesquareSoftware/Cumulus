@@ -201,6 +201,9 @@
 /** @see [CMResource downloadWithProgressBlock:completionBlock:]. */
 + (id) download:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 
+/** @see [CMResource downloadInChunksWithProgressBlock:completionBlock:]. */
++ (id) downloadInChunks:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
+
 /** @see [CMResource resumeOrBeginDownloadWithProgressBlock:completionBlock:]. */
 + (id) resumeOrBeginDownload:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock;
 

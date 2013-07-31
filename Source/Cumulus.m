@@ -277,6 +277,11 @@ static BOOL _usingFixtures = NO;
 	return [resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 }
 
++ (id) downloadInChunks:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
+	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
+	return [resource downloadInChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
+}
+
 + (id) resumeOrBeginDownload:(id)URL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
 	CMResource *resource = [self configuredResourceForURL:URL method:kCumulusHTTPMethodGET];
 	return [resource resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
