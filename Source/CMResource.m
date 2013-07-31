@@ -197,7 +197,7 @@
 @synthesize lastModified = _lastModified;
 - (void) setLastModified:(NSDate *)lastModified {
 	if (_lastModified != lastModified) {
-		dispatch_barrier_async(self.lastModifiedQueue, ^{
+		dispatch_barrier_sync(self.lastModifiedQueue, ^{
 			_lastModified = lastModified;
 			[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
 		});
@@ -206,7 +206,7 @@
 
 - (NSDate *)lastModified {
 	__block NSDate *lastModifiedValue;
-	dispatch_async(self.lastModifiedQueue, ^{
+	dispatch_sync(self.lastModifiedQueue, ^{
 		lastModifiedValue = _lastModified;
 	});
 	return lastModifiedValue;
