@@ -520,6 +520,7 @@ static NSUInteger requestCount = 0;
 
 - (void) handleConnectionWillStart {
 	// Generally used by subclasses to effect request customization
+	[[self class] incrementRequestCount];
 }
 
 - (void) handleConnectionDidReceiveResponse {
@@ -556,6 +557,9 @@ static NSUInteger requestCount = 0;
     if (self.connectionFinished) {
         return;
     }
+
+	[[self class] decrementRequestCount];
+	
 	CMResponse *blockResponse = self.responseInternal;
 	self.connectionFinished = YES;
 	
