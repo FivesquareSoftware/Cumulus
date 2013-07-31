@@ -504,11 +504,19 @@
 		
 		CMProgressInfo *progressInfo = [CMProgressInfo new];
 		progressInfo.progress = @(1.f);
-		progressInfo.tempFileURL = self.downloadedFileTempURL;
+
+//		progressInfo.tempFileURL = self.downloadedFileTempURL;		
+		if (self.responseInternal.wasSuccessful && self.didComplete) {
+			progressInfo.tempFileURL = self.downloadedFileTempURL;
+		}
+		progressInfo.didComplete = self.didComplete;
+
 		progressInfo.tempDirURL = self.chunksDirURL;
 		progressInfo.URL = [self.URLRequest URL];
 		progressInfo.filename = self.downloadedFilename;
-		
+
+		progressInfo.request = self;
+
 		self.result = progressInfo;
 		[super handleConnectionFinished];
 		

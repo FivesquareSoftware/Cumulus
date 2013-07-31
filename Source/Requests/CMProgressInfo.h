@@ -80,5 +80,7 @@
 /** A convenience that calculates the remaining time until completion based on the expexted length and byte rate. */
 @property (nonatomic, readonly) NSTimeInterval timeRemaining;
 
+/** A convenience for checking whether a download was complete without querying the request. */
+@property (nonatomic) BOOL didComplete;
 
 @end

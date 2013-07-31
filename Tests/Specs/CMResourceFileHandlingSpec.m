@@ -94,6 +94,10 @@
 	STAssertNil(result.tempFileURL, @"When a download is canceled the result should not contain a temp file URL");	
 }
 
+- (void)shouldReturnResultWithNotCompleteWhenDownloadIsIncomplete {
+	STAssertTrue(NO,@"Unimplemented");
+}
+
 - (void)shouldDownloadAFileToDisk {
 	CMResource *heroDownload = [self.service resource:@"test/download/hero"];
 	[self assertDownloadResourceToDisk:heroDownload];
@@ -332,7 +336,13 @@
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
+- (void)shouldReturnChunkedResultWithNoTempFileURLWhenDownloadIsIncomplete {
+	STAssertTrue(NO,@"Unimplemented");
+}
 
+- (void)shouldReturnChunkedResultWithNotCompleteWhenDownloadIsIncomplete {
+	STAssertTrue(NO,@"Unimplemented");
+}
 
 - (void)shouldDownloadAFileInChunks {
 	CMResource *massive = [self.service resource:@"test/download/massive"];
