@@ -101,7 +101,8 @@
 
 @dynamic completed;
 - (BOOL) didComplete {
-	return self.expectedAggregatedContentLength == self.assembledAggregatedContentLength;
+	BOOL didComplete = self.expectedAggregatedContentLength == self.assembledAggregatedContentLength;
+	return didComplete;
 }
 
 - (CMProgressInfo *) progressReceivedInfo {
