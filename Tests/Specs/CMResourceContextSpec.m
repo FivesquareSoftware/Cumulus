@@ -283,7 +283,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	NSMutableSet *requests = [NSMutableSet new];
 	NSMutableArray *requestIDs = [NSMutableArray new];
 
-	CMResource *resource = [self.service resource:@"index"];
+	CMResource *resource = [self.service resource:@"slow"];
 	resource.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 	resource.preflightBlock = ^(CMRequest *request) {
 		[requestIDs addObject:request.identifier];
@@ -294,7 +294,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
 	
 	[context performRequests:^{
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 1; i++) {
 			[resource getWithCompletionBlock:nil];
 		}
 		dispatch_semaphore_signal(launch_semaphore);
