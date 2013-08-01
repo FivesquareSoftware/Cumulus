@@ -43,6 +43,21 @@
 		A406BD4017A9E5E6001070F0 /* CMCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A406BD3C17A9E5E6001070F0 /* CMCoder.m */; };
 		A406BD4217A9E5EB001070F0 /* CMAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A406BD4117A9E5EB001070F0 /* CMAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A406BD4317A9E5EB001070F0 /* CMAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A406BD4117A9E5EB001070F0 /* CMAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A406BD5217A9E7DF001070F0 /* CMResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* CMResourceConfigSpec.m */; };
+		A406BD5317A9E7DF001070F0 /* CMResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* CMResourceNestingSpec.m */; };
+		A406BD5417A9E7DF001070F0 /* CMResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* CMResourceControlSpec.m */; };
+		A406BD5517A9E7DF001070F0 /* CMResourceHTTPMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* CMResourceHTTPMethodsSpec.m */; };
+		A406BD5617A9E7DF001070F0 /* CMResourceQuerySpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* CMResourceQuerySpec.m */; };
+		A406BD5717A9E7DF001070F0 /* CMResourceLifecycleBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* CMResourceLifecycleBlocksSpec.m */; };
+		A406BD5817A9E7DF001070F0 /* CMResourceFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* CMResourceFileHandlingSpec.m */; };
+		A406BD5917A9E7DF001070F0 /* CMResourceIfModifiedSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A48A7F3D17724E8A005D9610 /* CMResourceIfModifiedSpec.m */; };
+		A406BD5A17A9E7DF001070F0 /* CMStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* CMStaticMethodsSpec.m */; };
+		A406BD5B17A9E7DF001070F0 /* CMAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* CMAuthSpec.m */; };
+		A406BD5C17A9E7DF001070F0 /* CMCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* CMCodingSpec.m */; };
+		A406BD5D17A9E7DF001070F0 /* CMRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* CMRequestSpec.m */; };
+		A406BD5E17A9E7DF001070F0 /* CMResponseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* CMResponseSpec.m */; };
+		A406BD5F17A9E7DF001070F0 /* CMRelativeBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* CMRelativeBenchmarksSpec.m */; };
+		A406BD6017A9E7DF001070F0 /* CMFixtureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17DF315533E880063B061 /* CMFixtureSpec.m */; };
 		A4092665149725F300C42E8B /* CMOAuth2AuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092663149725F300C42E8B /* CMOAuth2AuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4092666149725F300C42E8B /* CMOAuth2AuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A4092664149725F300C42E8B /* CMOAuth2AuthProvider.m */; };
 		A4092786149835FD00C42E8B /* CMServerTrustAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A4092784149835FC00C42E8B /* CMServerTrustAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -148,22 +163,7 @@
 		A4BA021315DDC94200042F1C /* CMAmazonCredentials.h in Headers */ = {isa = PBXBuildFile; fileRef = A4BA021015DDC94200042F1C /* CMAmazonCredentials.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4BA021415DDC94200042F1C /* CMAmazonCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BA021115DDC94200042F1C /* CMAmazonCredentials.m */; };
 		A4BA021515DDC94200042F1C /* CMAmazonCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BA021115DDC94200042F1C /* CMAmazonCredentials.m */; };
-		A4BECED917A9D7EB009E1733 /* CMStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* CMStaticMethodsSpec.m */; };
-		A4BECEDB17A9D8DE009E1733 /* CMResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* CMResourceNestingSpec.m */; };
-		A4BECEDC17A9D8DE009E1733 /* CMResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* CMResourceControlSpec.m */; };
-		A4BECEDD17A9D8DE009E1733 /* CMResourceHTTPMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* CMResourceHTTPMethodsSpec.m */; };
-		A4BECEDE17A9D8DE009E1733 /* CMResourceQuerySpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* CMResourceQuerySpec.m */; };
-		A4BECEDF17A9D8DE009E1733 /* CMResourceLifecycleBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* CMResourceLifecycleBlocksSpec.m */; };
-		A4BECEE017A9D8DE009E1733 /* CMResourceFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* CMResourceFileHandlingSpec.m */; };
 		A4BECEE117A9D8DE009E1733 /* CMResourceContextSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124415ED5D9100513F73 /* CMResourceContextSpec.m */; };
-		A4BECEE217A9D8DE009E1733 /* CMResourceIfModifiedSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A48A7F3D17724E8A005D9610 /* CMResourceIfModifiedSpec.m */; };
-		A4BECEE317A9D8DE009E1733 /* CMAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* CMAuthSpec.m */; };
-		A4BECEE417A9D8DE009E1733 /* CMCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* CMCodingSpec.m */; };
-		A4BECEE517A9D8DE009E1733 /* CMRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* CMRequestSpec.m */; };
-		A4BECEE617A9D8DE009E1733 /* CMResponseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* CMResponseSpec.m */; };
-		A4BECEE717A9D8DE009E1733 /* CMRelativeBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* CMRelativeBenchmarksSpec.m */; };
-		A4BECEE817A9D8DE009E1733 /* CMFixtureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17DF315533E880063B061 /* CMFixtureSpec.m */; };
-		A4BECEE917A9DA5C009E1733 /* CMResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* CMResourceConfigSpec.m */; };
 		A4C2085A141852F6003412BA /* CMXMLCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C20858141852F6003412BA /* CMXMLCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4C2085B141852F6003412BA /* CMXMLCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C20859141852F6003412BA /* CMXMLCoder.m */; };
 		A4C9D1D41482DE57004E9B72 /* Item.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4C9D1D31482DE57004E9B72 /* Item.plist */; };
@@ -1229,22 +1229,22 @@
 			files = (
 				A4626A4D14199082005544D6 /* main.m in Sources */,
 				A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */,
-				A4BECED917A9D7EB009E1733 /* CMStaticMethodsSpec.m in Sources */,
-				A4BECEDB17A9D8DE009E1733 /* CMResourceNestingSpec.m in Sources */,
-				A4BECEDC17A9D8DE009E1733 /* CMResourceControlSpec.m in Sources */,
-				A4BECEDD17A9D8DE009E1733 /* CMResourceHTTPMethodsSpec.m in Sources */,
-				A4BECEDE17A9D8DE009E1733 /* CMResourceQuerySpec.m in Sources */,
-				A4BECEDF17A9D8DE009E1733 /* CMResourceLifecycleBlocksSpec.m in Sources */,
-				A4BECEE017A9D8DE009E1733 /* CMResourceFileHandlingSpec.m in Sources */,
 				A4BECEE117A9D8DE009E1733 /* CMResourceContextSpec.m in Sources */,
-				A4BECEE217A9D8DE009E1733 /* CMResourceIfModifiedSpec.m in Sources */,
-				A4BECEE317A9D8DE009E1733 /* CMAuthSpec.m in Sources */,
-				A4BECEE417A9D8DE009E1733 /* CMCodingSpec.m in Sources */,
-				A4BECEE517A9D8DE009E1733 /* CMRequestSpec.m in Sources */,
-				A4BECEE617A9D8DE009E1733 /* CMResponseSpec.m in Sources */,
-				A4BECEE717A9D8DE009E1733 /* CMRelativeBenchmarksSpec.m in Sources */,
-				A4BECEE817A9D8DE009E1733 /* CMFixtureSpec.m in Sources */,
-				A4BECEE917A9DA5C009E1733 /* CMResourceConfigSpec.m in Sources */,
+				A406BD5217A9E7DF001070F0 /* CMResourceConfigSpec.m in Sources */,
+				A406BD5317A9E7DF001070F0 /* CMResourceNestingSpec.m in Sources */,
+				A406BD5417A9E7DF001070F0 /* CMResourceControlSpec.m in Sources */,
+				A406BD5517A9E7DF001070F0 /* CMResourceHTTPMethodsSpec.m in Sources */,
+				A406BD5617A9E7DF001070F0 /* CMResourceQuerySpec.m in Sources */,
+				A406BD5717A9E7DF001070F0 /* CMResourceLifecycleBlocksSpec.m in Sources */,
+				A406BD5817A9E7DF001070F0 /* CMResourceFileHandlingSpec.m in Sources */,
+				A406BD5917A9E7DF001070F0 /* CMResourceIfModifiedSpec.m in Sources */,
+				A406BD5A17A9E7DF001070F0 /* CMStaticMethodsSpec.m in Sources */,
+				A406BD5B17A9E7DF001070F0 /* CMAuthSpec.m in Sources */,
+				A406BD5C17A9E7DF001070F0 /* CMCodingSpec.m in Sources */,
+				A406BD5D17A9E7DF001070F0 /* CMRequestSpec.m in Sources */,
+				A406BD5E17A9E7DF001070F0 /* CMResponseSpec.m in Sources */,
+				A406BD5F17A9E7DF001070F0 /* CMRelativeBenchmarksSpec.m in Sources */,
+				A406BD6017A9E7DF001070F0 /* CMFixtureSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
