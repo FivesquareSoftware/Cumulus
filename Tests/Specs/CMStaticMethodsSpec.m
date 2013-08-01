@@ -286,9 +286,8 @@
 	NSString *endpoint = [NSString stringWithFormat:@"%@/test/upload/hero",kTestServerHost];
 	
 	
-	CMProgressBlock progressBlock = ^(NSDictionary *progressInfo){
-//		NSNumber *progress = [progressInfo valueForKey:kCumulusProgressInfoKeyProgress];
-		//		NSLog(@"progress: %@",progress);
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		NSLog(@"progress: %@",progressInfo.progress);
 	};
 	
 	

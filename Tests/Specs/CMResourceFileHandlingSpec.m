@@ -70,7 +70,7 @@
 #pragma mark - Specs
 
 
-- (void)shouldReturnResultWithNoTempFileURLWhenDownloadIsIncomplete {
+- (void)shouldReturnIncompleteResultWhenDownloadIsIncomplete {
 	CMResource *massive = [self.service resource:@"test/download/massive"];
 
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
@@ -91,11 +91,8 @@
 	
 	CMProgressInfo *result = localResponse.result;
 	
-	STAssertNil(result.tempFileURL, @"When a download is canceled the result should not contain a temp file URL");	
-}
-
-- (void)shouldReturnResultWithNotCompleteWhenDownloadIsIncomplete {
-	STAssertTrue(NO,@"Unimplemented");
+	STAssertNil(result.tempFileURL, @"When a download is canceled the result should not contain a temp file URL");
+	STAssertFalse(result.didComplete, @"When a download is canceled the result should not be complete");
 }
 
 - (void)shouldDownloadAFileToDisk {
@@ -336,12 +333,35 @@
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
-- (void)shouldReturnChunkedResultWithNoTempFileURLWhenDownloadIsIncomplete {
-	STAssertTrue(NO,@"Unimplemented");
-}
+- (void)shouldReturnIncompleteResultWhenChunkedDownloadIsIncomplete {
+	CMResource *massive = [self.service resource:@"test/download/massive"];
+	
+	massive.preflightBlock = ^(CMRequest *request) {
+		CMChunkedDownloadRequest *chunkedRequest = (CMChunkedDownloadRequest *)request;
+		chunkedRequest.minumumProgressUpdateInterval = 0;
+		return YES;
+	};
 
-- (void)shouldReturnChunkedResultWithNotCompleteWhenDownloadIsIncomplete {
-	STAssertTrue(NO,@"Unimplemented");
+	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
+		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
+		if (progress > 0.f) {
+			[progressInfo.request cancel];
+		}
+	};
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	__block CMResponse *localResponse = nil;
+	CMCompletionBlock completionBlock = ^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	};
+	[massive downloadInChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	
+	CMProgressInfo *result = localResponse.result;
+	
+	STAssertNil(result.tempFileURL, @"When a chunked download is canceled the result should not contain a temp file URL");
+	STAssertFalse(result.didComplete, @"When a chunked download is canceled the result should not be complete");
 }
 
 - (void)shouldDownloadAFileInChunks {

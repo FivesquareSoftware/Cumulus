@@ -315,29 +315,28 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 //		CMRequest *anyRequest = [requests anyObject];
 		
 		__block BOOL anyRequestCanceled = NO;
-//		__block BOOL running = NO;
+		__block BOOL running = NO;
 		do {
 			[requests enumerateObjectsUsingBlock:^(CMRequest *obj, BOOL *stop) {
 				if (anyRequestCanceled == NO && obj.wasCanceled) {
 					anyRequestCanceled = YES;
-					*stop = YES;
-					return;
 				}
 				if (NO == obj.isFinished) {
 					*stop = YES;
-//					running = YES;
+					running = YES;
 					return;
 				}
-//				else {
-//					running = NO;
-//				}
+				else {
+					running = NO;
+				}
 			}];
-//			if (running) {
-//				[NSThread sleepForTimeInterval:.01];
-//			}
+			if (running) {
+				[NSThread sleepForTimeInterval:.01];
+			}
 			
-		} while (anyRequestCanceled == NO);
-				
+		} while (running == YES);
+
+		
 		dispatch_release(scope_semaphore);
 //		STAssertTrue(lastRequest.wasCanceled, @"Request should have been canceled: %@",lastRequest);
 		STAssertTrue(anyRequestCanceled, @"At least one request should have been canceled: %@",requests);
