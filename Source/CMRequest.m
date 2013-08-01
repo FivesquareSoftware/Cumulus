@@ -174,7 +174,7 @@ static NSUInteger requestCount = 0;
 	progressSentInfo.URL = [self.URLRequest URL];
 	float progress = 0;
 	if (self.bodyContentLength > 0) {
-		progress = self.sentContentLength / self.bodyContentLength;
+		progress = (float)self.sentContentLength / (float)self.bodyContentLength;
 		progressSentInfo.progress = [NSNumber numberWithFloat:progress];
 	}
 	else {
@@ -487,7 +487,7 @@ static NSUInteger requestCount = 0;
 
 - (void) handleConnectionWillStart {
 	// Generally used by subclasses to effect request customization
-//	[[self class] incrementRequestCount];
+	[[self class] incrementRequestCount];
 }
 
 - (void) handleConnectionDidReceiveResponse {
@@ -525,7 +525,7 @@ static NSUInteger requestCount = 0;
 		return;
 	}
 	
-//	[[self class] decrementRequestCount];
+	[[self class] decrementRequestCount];
 	
 	CMResponse *blockResponse = self.responseInternal;
 	self.connectionFinished = YES;
