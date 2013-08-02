@@ -287,7 +287,7 @@
 	
 	
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
-		NSLog(@"progress: %@",progressInfo.progress);
+//		NSLog(@"progress: %@",progressInfo.progress);
 	};
 	
 	
