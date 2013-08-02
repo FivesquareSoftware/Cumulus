@@ -287,6 +287,134 @@
 	[self assertRunRequestWithBlockingProvider];
 }
 
+- (void) shouldRunABlockingRequestOnTheMainQueue {
+	CMResource *index = [self.service resource:@"index"];
+	index.requestDelegateQueue = [NSOperationQueue mainQueue];
+	CMResponse *response = [index get];
+	
+	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+}
+
+- (void) shouldRunABlockingRequestOnAPrivateQueue {
+	CMResource *index = [self.service resource:@"index"];
+	index.requestDelegateQueue = [NSOperationQueue new];
+	CMResponse *response = [index get];
+	
+	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+}
+
+- (void) shouldRunABlockingRequestFromTheMainThreadOnTheMainQueue {
+	if ([NSThread currentThread] != [NSThread mainThread]) {
+		[self performSelectorOnMainThread:_cmd withObject:nil waitUntilDone:YES];
+		return;
+	}
+
+	CMResource *index = [self.service resource:@"index"];
+	index.requestDelegateQueue = [NSOperationQueue mainQueue];
+	CMResponse *response = [index get];
+	
+	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+}
+
+- (void) shouldRunABlockingRequestFromTheMainThreadOnAPrivateQueue {
+	if ([NSThread currentThread] != [NSThread mainThread]) {
+		[self performSelectorOnMainThread:_cmd withObject:nil waitUntilDone:YES];
+		return;
+	}
+
+	CMResource *index = [self.service resource:@"index"];
+	index.requestDelegateQueue = [NSOperationQueue new];
+	CMResponse *response = [index get];
+	
+	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+}
+
+
+//- (void) shouldThrottleRequestsRunOnAPrivateQueueWithMaxConcurrentOperationsSet {
+//	
+//	NSOperationQueue *throttledQueue = [NSOperationQueue new];
+//	NSUInteger maxAllowedRequests = 1;
+//	throttledQueue.maxConcurrentOperationCount = maxAllowedRequests;
+//	
+//	
+//	CMResource *smallResource = [self.service resource:@"test/download/hero"];
+//	smallResource.requestQueue = throttledQueue;
+//
+//	__block NSUInteger runningRequests = 0;
+//	__block NSUInteger highwaterRequestCount = 0;
+//	__block BOOL success = YES;
+//	
+//	dispatch_group_t group = dispatch_group_create();
+//	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+//	__block NSUInteger runningCount = 50;
+//	dispatch_apply(runningCount, queue, ^(size_t i) {
+//		dispatch_group_enter(group);
+//		__block BOOL hasIncrementedRunningRequests = NO;
+//		[smallResource downloadWithProgressBlock:^(CMProgressInfo *progressInfo) {
+//			float progress = [progressInfo.progress floatValue];
+//			if (progress > 0 && NO == hasIncrementedRunningRequests) {
+//				hasIncrementedRunningRequests = YES;
+//				runningRequests++;
+//				if (runningRequests > highwaterRequestCount) {
+//					highwaterRequestCount = runningRequests;
+//				}
+//			}
+//			else if (progress == 1.) {
+//				runningRequests--;
+//			}
+//		} completionBlock:^(CMResponse *response) {
+//			runningRequests--;
+//			if (NO == response.wasSuccessful) {
+//				success = NO;
+//			}
+//			dispatch_group_leave(group);
+//		}];
+//	});
+//	
+//	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+//	dispatch_release(group);
+//	
+//	STAssertTrue(success, @"All requests should have succeeded");
+//	STAssertTrue(highwaterRequestCount <= maxAllowedRequests, @"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), @(maxAllowedRequests));
+//}
+
+- (void) shouldRunANonBlockingRequestOnTheMainQueue {
+	CMResource *index = [self.service resource:@"index"];
+	index.requestDelegateQueue = [NSOperationQueue mainQueue];
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block CMResponse *localResponse = nil;
+	[index getWithCompletionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
+}
+
+- (void) shouldRunANonBlockingRequestOnAPrivateQueue {
+	CMResource *index = [self.service resource:@"index"];
+	index.requestDelegateQueue = [NSOperationQueue new];
+	
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	
+	__block CMResponse *localResponse = nil;
+	[index getWithCompletionBlock:^(CMResponse *response) {
+		localResponse = response;
+		dispatch_semaphore_signal(request_sema);
+	}];
+	
+	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_release(request_sema);
+	
+	STAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
+}
+
+
 //- (void) shouldBeAbleToRunARequestFromAPreflightBlock {	
 //	CMResource *index = [self.service resource:@"index"];
 //
