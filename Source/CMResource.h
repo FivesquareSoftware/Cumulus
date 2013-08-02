@@ -180,6 +180,14 @@
 // ========================================================================== //
 
 
+
+
+/** When set, NSURLRequest delegate callbacks will be scheduled on this on this queue. Otherwise, they are schedule on the main run loop. Defaults to nil. 
+ *  @note It is generally not necessary to set this attribute, but it can be useful if you want to be able to control their delivery without affecting the main thread. Keep in mind that the value of this attribute has no affect on whether or not requests are started, only how their delegate callbacks are issued.
+ */
+@property (nonatomic, strong) NSOperationQueue *requestDelegateQueue;
+
+
 /** The headers specific to the receiver. 
  *  @note Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors' headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. 
  */
