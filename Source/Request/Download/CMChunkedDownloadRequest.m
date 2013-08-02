@@ -207,6 +207,8 @@
 			RCLog(@"Could not create chunks dir: %@ %@ (%@)", _chunksDirURL, [error localizedDescription], [error userInfo]);
 		}
 	}
+	
+	[CMRequest incrementRequestCountFor:self];
 }
 
 - (void) handleConnectionDidReceiveData {

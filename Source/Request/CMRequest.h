@@ -215,6 +215,7 @@
 
 - (void) start;
 - (void) startWithCompletionBlock:(CMCompletionBlock)completionBlock;
+- (void) startOnQueue:(NSOperationQueue *)delegateQueue withCompletionBlock:(CMCompletionBlock)completionBlock;
    
 
 /** Will cancel a connection if it has not finished. Creates the response object, sets the request to finished and runs #completionBlock if it was set. */

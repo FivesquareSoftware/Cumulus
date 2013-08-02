@@ -36,6 +36,10 @@
 /** Methods intended for subclasses to access and override. */
 @interface CMRequest()
 
++ (void) incrementRequestCountFor:(id)context;
++ (void) decrementRequestCountFor:(id)context;
+
+
 // Readwrite versions of readonly props
 
 @property (readwrite, strong) id result;

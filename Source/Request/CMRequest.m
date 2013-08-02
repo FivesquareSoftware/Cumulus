@@ -39,41 +39,48 @@
 #import "Cumulus.h"
 
 
+static dispatch_queue_t __activityQueue = nil;
 
 @implementation CMRequest
 
-+ (NSOperationQueue *) delegateQueue {
-	static NSOperationQueue *delegateQueue = nil;
-	@synchronized(self) {
-		if (nil == delegateQueue) {
-			delegateQueue = [NSOperationQueue new];
-		}
-	}
-	return delegateQueue;
+
++ (void) load {
+	static dispatch_once_t __activityQueueOnceToken;
+	dispatch_once(&__activityQueueOnceToken, ^{
+		__activityQueue = dispatch_queue_create("com.fivesquaresoftware.CMRequest.activityQueue", DISPATCH_QUEUE_SERIAL);
+	});
 }
 
 
-static NSUInteger requestCount = 0;
-+ (void) incrementRequestCount {
-	@synchronized(@"CMRequest.requestCount") {
-		requestCount++;
+static NSInteger __requestCount = 0;
+static BOOL __networkActivityIndicatorVisible = NO;
++ (void) incrementRequestCountFor:(id)context {
+	dispatch_sync(__activityQueue, ^{
+		__requestCount++;
+//		RCLog(@"__requestCount++: %@ ** %@ **",@(__requestCount),context);
 #if TARGET_OS_IPHONE
-		if (requestCount > 0) {
+		if (__requestCount > 0 && NO == __networkActivityIndicatorVisible) {
 			[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+			__networkActivityIndicatorVisible = YES;
 		}
 #endif
-	}
+	});
 }
 
-+ (void) decrementRequestCount {
-	@synchronized(@"CMRequest.requestCount") {
-		requestCount--;
++ (void) decrementRequestCountFor:(id)context {
+	dispatch_sync(__activityQueue, ^{
+		__requestCount--;
+//		RCLog(@"__requestCount--: %@ ** %@ **",@(__requestCount),context);
+		if (__requestCount < 0) {
+			RCLog(@"** Unbalanced calls to request count  ** %@)",context);
+		}
 #if TARGET_OS_IPHONE
-		if (requestCount < 1) {
+		if (__requestCount < 1 && __networkActivityIndicatorVisible) {
 			[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+			__networkActivityIndicatorVisible = NO;
 		}
 #endif
-	}
+	});
 }
 
 // ========================================================================== //
@@ -83,10 +90,6 @@ static NSUInteger requestCount = 0;
 
 
 // Public
-
-
-#pragma mark - -Request State
-
 
 
 @dynamic elapsed;
@@ -121,30 +124,10 @@ static NSUInteger requestCount = 0;
 	return self.responseInternal.expectedContentLength == self.receivedContentLength;
 }
 
-
-
-#pragma mark - -Lifecycle
-
-
-
-
-#pragma mark - -Content Encoding/Decoding
-
-
-
-#pragma mark - -Configuration
-
-
 @dynamic URL;
 - (NSURL *) URL {
 	return _originalURLRequest.URL;
 }
-
-
-#pragma mark - -Execution Context
-
-
-
 
 @dynamic progressReceivedInfo;
 - (CMProgressInfo *) progressReceivedInfo {
@@ -407,12 +390,14 @@ static NSUInteger requestCount = 0;
 	self.started = YES;
 	self.startedAt = [NSDate date];
 	
-	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
-	[self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-	//	[self.connection setDelegateQueue:[[self class] delegateQueue]];
-	//	[self.connection setDelegateQueue:[NSOperationQueue mainQueue]];
-	//	_queue = [NSOperationQueue new];
-	//	[self.connection setDelegateQueue:_queue];
+	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];\
+	if (nil == self.queue) {
+		[self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+	}
+	else {
+		[self.connection setDelegateQueue:self.queue];
+	}
+
 	[self.connection start];
 	RCLog(@"%@", self);
 	
@@ -430,6 +415,10 @@ static NSUInteger requestCount = 0;
 - (void) startWithCompletionBlock:(CMCompletionBlock)block {
 	self.completionBlock = block;
 	[self start];
+}
+
+- (void) startOnQueue:(NSOperationQueue *)delegateQueue withCompletionBlock:(CMCompletionBlock)completionBlock {
+	self.queue = delegateQueue;
 }
 
 - (void) cancel {
@@ -487,7 +476,7 @@ static NSUInteger requestCount = 0;
 
 - (void) handleConnectionWillStart {
 	// Generally used by subclasses to effect request customization
-	[[self class] incrementRequestCount];
+	[CMRequest incrementRequestCountFor:self];
 }
 
 - (void) handleConnectionDidReceiveResponse {
@@ -525,9 +514,9 @@ static NSUInteger requestCount = 0;
 		return;
 	}
 	
-	[[self class] decrementRequestCount];
+	[CMRequest decrementRequestCountFor:self];
 	
-	CMResponse *blockResponse = self.responseInternal;
+	CMResponse *blockResponse = self.responseInternal; // Make sure we create one if needed, because they can't be created once we pass connectionFinished = YES
 	self.connectionFinished = YES;
 	
 	// Make sure processing the results doesn't stop us from calling our completion block

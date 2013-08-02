@@ -130,6 +130,8 @@
 		[CMDownloadInfo resetDownloadInfoForCacheIdentifier:self.cacheIdentifier];
 		[CMDownloadInfo saveDownloadInfo];
 	}
+	
+	[CMRequest incrementRequestCountFor:self];
 }
 
 - (void) handleConnectionFinished {

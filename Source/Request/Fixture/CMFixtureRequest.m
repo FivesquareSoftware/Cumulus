@@ -103,6 +103,8 @@
 	
 	self.started = YES;
 	
+	[CMRequest incrementRequestCountFor:self];
+	
 	RCLog(@"%@", self);
 	
 	[self handleConnectionDidSendData];

@@ -57,6 +57,7 @@
 			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
 		}
 	}
+	[CMRequest incrementRequestCountFor:self];
 }
 
 - (void) start {
