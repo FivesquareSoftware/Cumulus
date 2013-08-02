@@ -12,7 +12,8 @@
 
 @interface CMResourceContextGroup () {
 	dispatch_group_t _dispatchGroup;
-	dispatch_semaphore_t _dispatchSemaphore;
+	dispatch_queue_t _requestsInternalQueue;
+	dispatch_queue_t _responsesInternalQueue;
 }
 @property (nonatomic, strong) NSMutableSet *requestsInternal;
 @property (nonatomic, strong) NSMutableSet *responsesInternal;
@@ -22,24 +23,27 @@
 
 @dynamic runningRequests;
 - (NSSet *) runningRequests {
-	dispatch_semaphore_wait(_dispatchSemaphore, DISPATCH_TIME_FOREVER);
-	NSSet *runningRequests = [_requestsInternal copy];
-	dispatch_semaphore_signal(_dispatchSemaphore);
+	__block NSSet *runningRequests = nil;
+	dispatch_sync(_requestsInternalQueue, ^{
+		runningRequests = [_requestsInternal copy];
+	});
 	return runningRequests;
 }
 
 @dynamic responses;
 - (NSSet *) responses {
-	dispatch_semaphore_wait(_dispatchSemaphore, DISPATCH_TIME_FOREVER);
-	NSSet *responses = [_responsesInternal copy];
-	dispatch_semaphore_signal(_dispatchSemaphore);
+	__block NSSet *responses = nil;
+	dispatch_sync(_responsesInternalQueue, ^{
+		responses = [_responsesInternal copy];
+	});
 	return responses;
 }
 
 - (void)dealloc {
 	dispatch_group_wait(_dispatchGroup, DISPATCH_TIME_FOREVER);
 	dispatch_release(_dispatchGroup);
-	dispatch_release(_dispatchSemaphore);
+	dispatch_release(_requestsInternalQueue);
+	dispatch_release(_responsesInternalQueue);
 }
 
 - (id)init {
@@ -55,9 +59,13 @@
 			CFRelease(UUID);
 		}
 		_dispatchGroup = dispatch_group_create();
-		//		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.Cumulus.CMResourceContextGroup.%@",_identifier];
-		//		_dispatchQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
-		_dispatchSemaphore = dispatch_semaphore_create(1);
+		
+		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResourceContextGroup.requestsInternalQueue.%p", self];
+		_requestsInternalQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+
+		queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResourceContextGroup.responsesInternalQueue.%p", self];
+		_responsesInternalQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+
 		_requestsInternal = [NSMutableSet new];
 		_responsesInternal = [NSMutableSet new];
 	}
@@ -71,9 +79,9 @@
 - (void) enterWithRequest:(CMRequest *)request {
 	RCLog(@"%@.enterWithRequest: ->",self);
 	if (request) {
-		dispatch_semaphore_wait(_dispatchSemaphore, DISPATCH_TIME_FOREVER);
-		[_requestsInternal addObject:request];
-		dispatch_semaphore_signal(_dispatchSemaphore);
+		dispatch_barrier_sync(_requestsInternalQueue, ^{
+			[_requestsInternal addObject:request];
+		});
 	}
 	if (_wasCanceled) {
 		[request cancel];
@@ -84,10 +92,12 @@
 - (void) leaveWithResponse:(CMResponse *)response {
 	RCLog(@"%@.leaveWithResponse: <-",self);
 	if (response) {
-		dispatch_semaphore_wait(_dispatchSemaphore, DISPATCH_TIME_FOREVER);
-		[_responsesInternal addObject:response];
-		[_requestsInternal removeObject:response.request];
-		dispatch_semaphore_signal(_dispatchSemaphore);
+		dispatch_barrier_sync(_responsesInternalQueue, ^{
+			[_responsesInternal addObject:response];
+		});
+		dispatch_barrier_sync(_requestsInternalQueue, ^{
+			[_requestsInternal removeObject:response.request];
+		});
 	}
 	dispatch_group_leave(_dispatchGroup);
 }
@@ -98,11 +108,11 @@
 
 - (void) cancel {
 	_wasCanceled = YES;
-	dispatch_semaphore_wait(_dispatchSemaphore, DISPATCH_TIME_FOREVER);
-	[_requestsInternal enumerateObjectsUsingBlock:^(CMRequest *request, BOOL *stop) {
-		[request cancel];
-	}];
-	dispatch_semaphore_signal(_dispatchSemaphore);
+	dispatch_sync(_requestsInternalQueue, ^{
+		for (CMRequest *request in _requestsInternal) {
+			[request cancel];
+		}
+	});
 }
 
 @end

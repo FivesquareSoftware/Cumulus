@@ -48,7 +48,10 @@
 
 
 @interface CMResource() {
-	dispatch_semaphore_t _requests_semaphore;
+	/// Queue for controlling access to the internal requests storage
+	dispatch_queue_t _requestsInternalQueue;
+	/// Queue for controlling access to the lastModified value
+	dispatch_queue_t _lastModifiedQueue;
 }
 
 + (dispatch_queue_t) dispatchQueue;
@@ -79,10 +82,6 @@
 @property (nonatomic, strong) NSMutableDictionary *fixtures;
 
 @property (nonatomic) NSDateFormatter *httpDateFormatter;
-
-/// Queue for controlling write access to the lastModified value
-@property (nonatomic, assign) dispatch_queue_t lastModifiedQueue;
-
 
 
 @end
@@ -197,7 +196,7 @@
 @synthesize lastModified = _lastModified;
 - (void) setLastModified:(NSDate *)lastModified {
 	if (_lastModified != lastModified) {
-		dispatch_barrier_sync(self.lastModifiedQueue, ^{
+		dispatch_barrier_sync(_lastModifiedQueue, ^{
 			_lastModified = lastModified;
 			[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
 		});
@@ -205,8 +204,8 @@
 }
 
 - (NSDate *)lastModified {
-	__block NSDate *lastModifiedValue;
-	dispatch_sync(self.lastModifiedQueue, ^{
+	__block NSDate *lastModifiedValue = nil;
+	dispatch_sync(_lastModifiedQueue, ^{
 		lastModifiedValue = _lastModified;
 	});
 	return lastModifiedValue;
@@ -230,9 +229,10 @@
 
 @dynamic requests;
 - (NSMutableSet *) requests {
-	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
-	NSMutableSet *requests = [NSMutableSet setWithSet:self.requestsInternal];
-	dispatch_semaphore_signal(_requests_semaphore);
+	__block NSMutableSet *requests = nil;
+	dispatch_sync(_requestsInternalQueue, ^{
+		requests = [NSMutableSet setWithSet:self.requestsInternal];
+	});
 	return requests;
 }
 
@@ -281,7 +281,8 @@
 #pragma mark - Object
 
 - (void)dealloc {
-	dispatch_release(_requests_semaphore);
+	dispatch_release(_requestsInternalQueue);
+	dispatch_release(_lastModifiedQueue);
 }
 
 + (id) withURL:(id)URL {
@@ -303,8 +304,9 @@
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
 		_requestsInternal = [NSMutableSet new];
 		
-		_requests_semaphore = dispatch_semaphore_create(1);
-		
+		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.requestsInternalQueue.%p", self];
+		_requestsInternalQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+
 		_chunkSize = 0;
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
 		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
@@ -313,7 +315,7 @@
 		[dateFormatter setDateFormat:kHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
 		
-		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.lastModifiedQueue.%p", self];
+		queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.lastModifiedQueue.%p", self];
 		_lastModifiedQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 		
 	}
@@ -438,11 +440,12 @@
 #pragma mark - Request Control
 
 - (CMRequest *) requestForIdentifier:(id)identifier {
-	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
-	CMRequest *request = [[self.requestsInternal objectsPassingTest:^BOOL(CMRequest *obj, BOOL *stop) {
-		return [obj.identifier isEqual:identifier];
-	}] anyObject];
-	dispatch_semaphore_signal(_requests_semaphore);
+	__block CMRequest *request = nil;
+	dispatch_sync(_requestsInternalQueue, ^{
+		request = [[self.requestsInternal objectsPassingTest:^BOOL(CMRequest *obj, BOOL *stop) {
+			return [obj.identifier isEqual:identifier];
+		}] anyObject];
+	});
 	return request;
 }
 
@@ -454,13 +457,16 @@
 	dispatch_queue_t request_cancel_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	
 	dispatch_async(request_cancel_queue, ^{
-		dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
+//		dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
 		
-		for (CMRequest *request in self.requestsInternal) {
-			[request cancel];
-		}
+		dispatch_sync(_requestsInternalQueue, ^{
+			for (CMRequest *request in self.requestsInternal) {
+				[request cancel];
+			}
+		});
 		
-		dispatch_semaphore_signal(_requests_semaphore);
+		
+//		dispatch_semaphore_signal(_requests_semaphore);
 		
 		if (block) {
 			dispatch_async(dispatch_get_main_queue(), block);
@@ -757,6 +763,8 @@
 	
 	NSUUID *UUID = [NSUUID new];
 	request.identifier = [UUID UUIDString];
+	
+	request.queue = self.requestDelegateQueue;
 }
 
 - (NSString *) requestSignatureForHTTPMethod:(NSString *)method {
@@ -773,16 +781,16 @@
 
 
 - (CMResponse *) runBlockingRequest:(CMRequest *)request {
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
+	dispatch_semaphore_t requestSema = dispatch_semaphore_create(0);
 	__block CMResponse *localResponse = nil;
 	
 	CMCompletionBlock completionBlock = ^(CMResponse *response){
 		localResponse = response;
-		dispatch_semaphore_signal(request_sema);
+		dispatch_semaphore_signal(requestSema);
 	};
 	
 	CMAbortBlock abortBlock = ^(CMRequest *request) {
-		dispatch_semaphore_signal(request_sema);
+		dispatch_semaphore_signal(requestSema);
 	};
 	
 	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
@@ -790,12 +798,12 @@
 	if ([NSThread isMainThread]) {
 		do {
 			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
-		} while (dispatch_semaphore_wait(request_sema, 0.01) != 0);
+		} while (dispatch_semaphore_wait(requestSema, 0.01) != 0);
 	}
 	else {
-		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+		dispatch_semaphore_wait(requestSema, DISPATCH_TIME_FOREVER);
 	}
-	dispatch_release(request_sema);
+	dispatch_release(requestSema);
 	return localResponse;
 }
 
@@ -811,18 +819,18 @@
 	}
 	
 	
-	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
+	dispatch_semaphore_t launchSemaphore = dispatch_semaphore_create(0);
 	
 	CMPreflightBlock preflightBlock = self.preflightBlock;
 	if (preflightBlock) {
 		void(^dispatchPreflightBlock)(void) = ^{
 			BOOL success = preflightBlock(request);
 			if(success) {
-				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_semaphore context:context];
+				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context];
 			}
 			else {
 				[request abortWithBlock:abortBlock];
-				dispatch_semaphore_signal(launch_semaphore);
+				dispatch_semaphore_signal(launchSemaphore);
 			}
 		};
 		
@@ -834,28 +842,28 @@
 		}
 	}
 	else {
-		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launch_semaphore context:context];
+		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context];
 	}
-	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(launch_semaphore);
+	dispatch_semaphore_wait(launchSemaphore, DISPATCH_TIME_FOREVER);
+	dispatch_release(launchSemaphore);
 	return request.identifier;
 }
 
-- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launch_semaphore context:(id)context {
+- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launchSemaphore context:(id)context {
 	[self addRequest:request context:context];
-	dispatch_semaphore_signal(launch_semaphore);
+	dispatch_semaphore_signal(launchSemaphore);
 	
 	__weak id weakContext = context;
-	dispatch_queue_t request_queue = [CMResource dispatchQueue];
-	dispatch_async(request_queue, ^{
-		[request startWithCompletionBlock:^(CMResponse *response){http://www.backblaze.com/pics/how-online-backup-works.jpg
+	dispatch_queue_t dispatchQueue = [CMResource dispatchQueue];
+	dispatch_async(dispatchQueue, ^{
+		[request startWithCompletionBlock:^(CMResponse *response) {
 			if (self.automaticallyTracksLastModified && response.lastModified) {
 				self.lastModified = response.lastModified;
 			}
 			if (completionBlock) {
 				completionBlock(response);
 			}
-			dispatch_async(request_queue, ^{
+			dispatch_async(dispatchQueue, ^{
 				[self removeResponse:response context:weakContext];
 			});
 		}];
@@ -863,8 +871,9 @@
 }
 
 - (void) addRequest:(CMRequest *)request context:(id)context {
-	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
-	[self.requestsInternal addObject:request];
+	dispatch_barrier_sync(_requestsInternalQueue, ^{
+		[self.requestsInternal addObject:request];
+	});
 	if ([context isKindOfClass:[CMResourceContextGroup class]]) {
 		[context enterWithRequest:request];
 	}
@@ -878,19 +887,18 @@
 			}
 		};
 	}
-	dispatch_semaphore_signal(_requests_semaphore);
 }
 
 - (void) removeResponse:(CMResponse *)response context:(id)context {
 	CMRequest *request = response.request;
-	dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
-	if (request) {
-		[self.requestsInternal removeObject:request];
-	}
+	dispatch_barrier_sync(_requestsInternalQueue, ^{
+		if (request) {
+			[self.requestsInternal removeObject:request];
+		}
+	});
 	if (context && [context isKindOfClass:[CMResourceContextGroup class]]) {
 		[context leaveWithResponse:response];
 	}
-	dispatch_semaphore_signal(_requests_semaphore);
 }
 
 
