@@ -472,48 +472,6 @@
 	
 	STAssertTrue(success, @"All requests should have succeeded");
 	STAssertTrue(highwaterRequestCount == [Cumulus maxConcurrentRequests], @"Should not have throttled concurrent requests (%@ == %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]);
-
-
-	
-//	CMResource *resource = [self.service resource:@"test/download/hero"];
-//	resource.maxConcurrentRequests = 0;
-//	
-//	CMRequestQueue *requestQueue = resource.requestQueue;
-//	STAssertNil(requestQueue, @"Should not have a request queue when maxConcurrentRequests is zero");
-//	
-//	__block NSUInteger highwaterRequestCount = 0;
-//	__block BOOL success = YES;
-//	
-//	dispatch_group_t group = dispatch_group_create();
-//	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-//	NSUInteger runningCount = 10;
-//	
-//	NSMutableSet *dispatchedRequests = [NSMutableSet new];
-//	dispatch_apply(runningCount, queue, ^(size_t i) {
-//		dispatch_group_enter(group);
-//		[resource downloadWithProgressBlock:^(CMProgressInfo *progressInfo) {
-//			[dispatchedRequests addObject:progressInfo.request];
-//			NSUInteger dispatchedRequestsCount = [dispatchedRequests count];
-//			//			NSLog(@"**** DISPATCHED: %@ ****",@(dispatchedRequestsCount));
-//			if (dispatchedRequestsCount > highwaterRequestCount) {
-//				highwaterRequestCount = dispatchedRequestsCount;
-//				//				NSLog(@"**** HIGHWATER: %@ ****",@(highwaterRequestCount));
-//			}
-//		} completionBlock:^(CMResponse *response) {
-//			[dispatchedRequests removeObject:response.request];
-//			if (NO == response.wasSuccessful) {
-//				success = NO;
-//			}
-//			dispatch_group_leave(group);
-//		}];
-//	});
-//	
-//	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-//	dispatch_release(group);
-//	
-//	STAssertTrue(success, @"All requests should have succeeded");
-//	STAssertTrue(highwaterRequestCount == runningCount, @"Should not have throttled requests (%@ == %@)",@(highwaterRequestCount), @(runningCount));
-
 }
 
 
