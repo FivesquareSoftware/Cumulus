@@ -197,6 +197,11 @@
 	return self.ErrorTimedOut || self.ErrorCannotConnectToHost || self.ErrorNetworkConnectionLost || self.ErrorDNSLookupFailed || self.ErrorResourceUnavailable || self.ErrorNotConnectedToInternet || self.ErrorSecureConnectionFailed;
 }
 
+@dynamic requestWasCanceled;
+- (BOOL) requestWasCanceled {
+	return _request.wasCanceled;
+}
+
 @dynamic wasNotModified;
 - (BOOL) wasNotModified {
 	return self.HTTPNotModified;
@@ -227,7 +232,7 @@
 		_totalContentLength = NSURLResponseUnknownLength;
 		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateFormat:kHTTPDateFormat];
+		[dateFormatter setDateFormat:kCumulusHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
 	}
 	return self;
