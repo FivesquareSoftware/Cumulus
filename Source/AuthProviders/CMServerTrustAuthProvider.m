@@ -70,7 +70,7 @@
 
 - (void) addCertificate:(id)certificate {
 	SecCertificateRef certRef = (__bridge SecCertificateRef)certificate;
-	BOOL isSecCertificateRef = CFGetTypeID(certRef) == SecCertificateGetTypeID()
+	BOOL isSecCertificateRef = CFGetTypeID(certRef) == SecCertificateGetTypeID();
 	NSAssert(isSecCertificateRef, @"Type of certificate was not SecCertificateRef");
 	if (isSecCertificateRef) {
 		[self.certificates addObject:certificate];
