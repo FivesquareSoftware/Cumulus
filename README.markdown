@@ -28,10 +28,12 @@ Cumulus handles the most common cases for you, but provides well defined interfa
 
 #### Seeking An OS For Long Walks On The Beach
 
-Cumulus was implemented with automatic reference counting (ARC) and uses weak references, as well as new NSURLConnection APIs, so it requires iOS 5 and/or Mac OS 10.7.
+Cumulus was implemented with automatic reference counting (ARC). It requires iOS 6 or greater and/or Mac OS 10.8 or greater.
 
 
 ## Including in Your Project
+
+#### Podspec
 
 #### Building
 

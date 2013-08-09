@@ -15,10 +15,10 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import <objc/runtime.h>
 
-@interface CMResourceContext (Specs)
+@interface CMResourceContext (CMResourceContextSpec)
 @property (nonatomic, copy) void(^shutdownHook)();
 @end
-@implementation CMResourceContext (Specs)
+@implementation CMResourceContext (CMResourceContextSpec)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 - (void)dealloc {
@@ -112,7 +112,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(group_semaphore);
+	//dispatch_release(group_semaphore);
 	
 	STAssertTrue(localSuccess, @"Group should have succeeded");
 	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
@@ -161,7 +161,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 - (void) shouldNotExistLongerThanGroupWorkWhenNotRetained {
 	dispatch_semaphore_t context_semaphore = dispatch_semaphore_create(0);
 
-	__weak CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
+	CMResourceContext *context = [CMResourceContext withName:@"Test Group"];
 	context.shutdownHook = ^{
 		dispatch_semaphore_signal(context_semaphore);
 	};
@@ -180,11 +180,13 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(group_semaphore);
+	//dispatch_release(group_semaphore);
+	
+	context = nil;
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(context_semaphore, DISPATCH_TIME_FOREVER);
-		dispatch_release(context_semaphore);
+		//dispatch_release(context_semaphore);
 		STAssertNil(context, @"Context should no longer exist!");
 	}];
 }
@@ -211,11 +213,11 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(launch_semaphore);
+	//dispatch_release(launch_semaphore);
 	[context cancelRequestsForIdentifier:groupIdentifier];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(group_semaphore);
+	//dispatch_release(group_semaphore);
 	
 	[localResponses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
 		anyRequestWasCanceled = response.request.wasCanceled;
@@ -251,11 +253,11 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(launch_semaphore);
+	//dispatch_release(launch_semaphore);
 	[context cancelAllRequests];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(group_semaphore);
+	//dispatch_release(group_semaphore);
 	
 	[localResponses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
 		anyRequestWasCanceled = response.request.wasCanceled;
@@ -301,7 +303,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	} inScope:scope];
 	
 	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(launch_semaphore);
+	//dispatch_release(launch_semaphore);
 	
 	scope = nil;
 	
@@ -337,7 +339,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 		} while (running == YES);
 
 		
-		dispatch_release(scope_semaphore);
+		//dispatch_release(scope_semaphore);
 //		STAssertTrue(lastRequest.wasCanceled, @"Request should have been canceled: %@",lastRequest);
 		STAssertTrue(anyRequestCanceled, @"At least one request should have been canceled: %@",requests);
 	}];
@@ -372,7 +374,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(group_semaphore);
+	//dispatch_release(group_semaphore);
 	
 	STAssertTrue(localSuccess, @"Group should have succeeded");
 	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);

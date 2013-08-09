@@ -62,7 +62,7 @@
 
 @property (nonatomic, readonly) NSString *fileExtension;
 @property BOOL connectionFinished;
-@property (readwrite, strong) NSURLConnection *connection;
+@property (readwrite, weak) NSURLConnection *connection;
 @property (nonatomic, strong) NSURLRequest *originalURLRequest;
 @property (weak) NSTimer *timeoutTimer;
 @property (getter = requestIsConfigured) BOOL requestConfigured;

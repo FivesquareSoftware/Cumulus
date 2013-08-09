@@ -67,14 +67,14 @@
 }
 
 - (void)shouldStronglyReferenceParentResource {
-	__weak CMResource *weakAncestor = [self.service resource:@"ancestor"];
-	__weak CMResource *weakParent = [weakAncestor resource:@"parent"];
-	CMResource *referencingChild = [weakParent resource:@"child"];
+	CMResource *ancestor = [self.service resource:@"ancestor"];
+	CMResource *parent = [ancestor resource:@"parent"];
+	CMResource *referencingChild = [parent resource:@"child"];
 
-	weakAncestor = nil;
-	STAssertNotNil(referencingChild.parent.parent, @"Ancetors should be strongly referenced by children");
+	ancestor = nil;
+	STAssertNotNil(referencingChild.parent.parent, @"Ancestors should be strongly referenced by children");
 
-	weakParent = nil;
+	parent = nil;
 	STAssertNotNil(referencingChild.parent, @"Parents should be strongly referenced by children");
 }
 

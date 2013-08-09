@@ -52,28 +52,6 @@
 	#define RCLog(fmt,...) 
 #endif
 
-#if TARGET_OS_IPHONE
-	#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
-		#define kCumulusARCHandlesDispatchObjects 1
-	#else
-		#define kCumulusARCHandlesDispatchObjects 0
-	#endif
-#else
-	#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1080
-		#define kCumulusARCHandlesDispatchObjects 1
-	#else
-		#define kCumulusARCHandlesDispatchObjects 0
-	#endif
-#endif
-
-
-#if kCumulusARCHandlesDispatchObjects
-	#ifdef dispatch_release
-		#undef dispatch_release
-	#endif
-	#define dispatch_release(object)
-#endif
-
 #define kCMChunkedDownloadRequestDefaultChunkSize (1024*1024)
 #define kCMChunkedDownloadRequestDefaultMaxConcurrentChunks 4
 #define kCMChunkedDownloadRequestDefaultBufferSize (1024)

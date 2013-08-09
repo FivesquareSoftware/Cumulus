@@ -41,9 +41,9 @@
 
 - (void)dealloc {
 	dispatch_group_wait(_dispatchGroup, DISPATCH_TIME_FOREVER);
-	dispatch_release(_dispatchGroup);
-	dispatch_release(_requestsInternalQueue);
-	dispatch_release(_responsesInternalQueue);
+	//dispatch_release(_dispatchGroup);
+	//dispatch_release(_requestsInternalQueue);
+	//dispatch_release(_responsesInternalQueue);
 }
 
 - (id)init {

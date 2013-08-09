@@ -13,6 +13,7 @@
 
 
 #import <SenTestingKit/SenTestingKit.h>
+#import <sys/sysctl.h>
 
 
 @interface CMRelativeBenchmarksSpec()
@@ -35,7 +36,21 @@
 	// set up resources common to all examples here
 	self.service = [CMResource withURL:kTestServerHost];
 	self.benchmarks = [self.service resource:@"test/benchmarks"];
-//	self.benchmarks.maxConcurrentRequests = 0;
+
+	
+	// We'll try and bump performance a bit on ios devices
+#if TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR
+	size_t len;
+    NSUInteger numberOfCPUs;
+	
+    len = sizeof(numberOfCPUs);
+    sysctlbyname ("hw.ncpu",&numberOfCPUs,&len,NULL,0);
+
+	if (numberOfCPUs > 0) {
+		self.benchmarks.maxConcurrentRequests = numberOfCPUs*4;
+	}
+#endif
+
 	//	  NSLog(@"item: %@",self.specHelper.item);
 	self.largeList = self.specHelper.largeList;
 	//	  NSLog(@"largeList: %@",self.largeList);
@@ -88,7 +103,7 @@
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 }
 
@@ -121,7 +136,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -166,7 +181,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -242,7 +257,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 
 	
 	
@@ -281,7 +296,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -315,7 +330,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 
 
 	
@@ -372,7 +387,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -406,7 +421,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -434,7 +449,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -468,7 +483,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 	
 
 	
@@ -497,7 +512,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
@@ -515,7 +530,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
+	//dispatch_release(group);
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -544,7 +559,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -580,7 +595,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);

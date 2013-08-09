@@ -119,7 +119,7 @@
 	
 	[heroDownload downloadWithProgressBlock:nil completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
 	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
@@ -200,7 +200,7 @@
 			
 	[massiveFailure resumeOrBeginDownloadWithProgressBlock:nil completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 		
 	downloadState = [CMDownloadInfo downloadInfo];
 	massiveInfo = [downloadState objectForKey:[massiveFailure URL]];
@@ -249,7 +249,7 @@
 	};
 	[massiveStream resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	STAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
@@ -279,7 +279,7 @@
 	CMContentRange contentRange = CMContentRangeMake(0, 100000, 0);
 	[massive downloadRange:contentRange progressBlock:nil completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 
 	NSDictionary *downloadInfo = [CMDownloadInfo downloadInfo];
 	CMDownloadInfo *downloadState = [downloadInfo objectForKey:[massive URL]];
@@ -328,7 +328,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
@@ -383,10 +383,10 @@
 	};
 
 	__block long long currentOffset = 0;
-	__block float initialProgress;
+	__block float initialProgress = -1;
 	CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo){
 		float progress = [[progressInfo valueForKey:kCumulusProgressInfoKeyProgress] floatValue];
-		if (progress > 0.f) {
+		if (initialProgress == -1 && progress > 0.f) {
 			currentOffset = [progressInfo.fileOffset longLongValue];
 			initialProgress = progress;
 			[progressInfo.request cancel];
@@ -429,7 +429,7 @@
 	[massive downloadInChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 
@@ -582,7 +582,7 @@
 	}
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	
 	[mockProgressObject verify];
@@ -672,7 +672,7 @@
 	};
 	[massive resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	STAssertTrue(hadRangeHeader, @"Request should have included a range header");

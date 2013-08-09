@@ -17,10 +17,9 @@
 NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 
 
-@interface CMResourceContext () {
-	dispatch_queue_t _dispatchQueue;
-}
+@interface CMResourceContext ()
 @property (nonatomic, strong) NSMutableDictionary *groupsByIdentifier;
+@property (nonatomic, strong) dispatch_queue_t dispatchQueue;
 @end
 
 @implementation CMResourceContext
@@ -36,7 +35,7 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 #pragma mark - Object
 
 - (void)dealloc {
-	dispatch_release(_dispatchQueue);
+	//dispatch_release(_dispatchQueue);
 }
 
 + (id) withName:(NSString *)name {

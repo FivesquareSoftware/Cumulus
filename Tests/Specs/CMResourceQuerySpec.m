@@ -117,7 +117,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should succeed");
 	STAssertEqualObjects(query, localResponse.result, @"Result should equal sent params:%@",localResponse.result);
@@ -158,7 +158,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should succeed");
 	NSString *queryString = [[localResponse.request.URLRequest URL] query];

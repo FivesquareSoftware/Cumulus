@@ -404,15 +404,16 @@ static BOOL __networkActivityIndicatorVisible = NO;
 	
 	[self handleConnectionWillStart];
 
-	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
+	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
 	if (nil == self.connectionDelegateQueue) {
-		[self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+		[connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 	}
 	else {
-		[self.connection setDelegateQueue:self.connectionDelegateQueue];
+		[connection setDelegateQueue:self.connectionDelegateQueue];
 	}
 
-	[self.connection start];
+	[connection start];
+	self.connection = connection;
 	RCLog(@"%@", self);
 	
 	[self handleConnectionDidSendData];

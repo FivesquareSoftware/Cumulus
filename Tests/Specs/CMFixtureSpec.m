@@ -233,7 +233,7 @@
 	[resource downloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	CMProgressInfo *resultObject = (CMProgressInfo *)localResponse.result;
 	

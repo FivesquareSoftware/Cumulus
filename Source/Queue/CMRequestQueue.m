@@ -21,11 +21,11 @@
 @property (nonatomic, strong) NSMutableDictionary *queuedDispatchBlocksByIdentifier;
 @property (nonatomic, strong) NSMutableSet *dispatchedIdentifiers;
 
+@property (nonatomic, strong) dispatch_queue_t dispatchAccessQueue;
+
 @end
 
-@implementation CMRequestQueue {
-	dispatch_queue_t _dispatchAccessQueue;
-}
+@implementation CMRequestQueue
 
 + (id) sharedRequestQueue {
 	static CMRequestQueue *__sharedQueue = nil;
@@ -54,7 +54,12 @@
 @dynamic optimalMaxConcurrentRequestsForEnvironment;
 - (NSUInteger) optimalMaxConcurrentRequestsForEnvironment {
 	// This could be more dynamic and consider factors such as the device capabilities, how many other running requests are happening, whether or not performance is degrading, etc. But for now, we will set some hard average limits based on number of cores and leave it at that.
+#if TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR
 	NSUInteger optimalMaxRequests = 2;
+#else
+	NSUInteger optimalMaxRequests = 10;
+#endif
+
 	NSUInteger numberOfCores = self.numberOfCores;
 	if (numberOfCores > 0) {
 		optimalMaxRequests = numberOfCores*2;

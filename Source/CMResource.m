@@ -50,12 +50,7 @@
 #import "NSString+Cumulus.h"
 
 
-@interface CMResource() {
-	/// Queue for controlling access to the internal requests storage
-	dispatch_queue_t _requestsInternalQueue;
-	/// Queue for controlling access to the lastModified value
-	dispatch_queue_t _lastModifiedQueue;
-}
+@interface CMResource()
 
 
 // Readwrite Versions of Public Properties
@@ -84,6 +79,11 @@
 @property (nonatomic, strong) NSMutableDictionary *fixtures;
 
 @property (nonatomic) NSDateFormatter *httpDateFormatter;
+
+/// Queue for controlling access to the internal requests storage
+@property (nonatomic, strong) dispatch_queue_t requestsInternalAccessQueue;
+/// Queue for controlling access to the lastModified value
+@property (nonatomic, strong) dispatch_queue_t lastModifiedAccessQueue;
 
 
 @end
@@ -190,7 +190,7 @@
 @synthesize lastModified = _lastModified;
 - (void) setLastModified:(NSDate *)lastModified {
 	if (_lastModified != lastModified) {
-		dispatch_barrier_sync(_lastModifiedQueue, ^{
+		dispatch_barrier_sync(_lastModifiedAccessQueue, ^{
 			_lastModified = lastModified;
 			[self setValue:[_httpDateFormatter stringFromDate:_lastModified] forHeaderField:kCumulusHTTPHeaderIfModifiedSince];
 		});
@@ -199,7 +199,7 @@
 
 - (NSDate *)lastModified {
 	__block NSDate *lastModifiedValue = nil;
-	dispatch_sync(_lastModifiedQueue, ^{
+	dispatch_sync(_lastModifiedAccessQueue, ^{
 		lastModifiedValue = _lastModified;
 	});
 	return lastModifiedValue;
@@ -247,7 +247,7 @@
 @dynamic requests;
 - (NSMutableSet *) requests {
 	__block NSMutableSet *requests = nil;
-	dispatch_sync(_requestsInternalQueue, ^{
+	dispatch_sync(_requestsInternalAccessQueue, ^{
 		requests = [NSMutableSet setWithSet:self.requestsInternal];
 	});
 	return requests;
@@ -312,8 +312,8 @@
 #pragma mark - Object
 
 - (void)dealloc {
-	dispatch_release(_requestsInternalQueue);
-	dispatch_release(_lastModifiedQueue);
+	//dispatch_release(_requestsInternalAccessQueue);
+	//dispatch_release(_lastModifiedAccessQueue);
 }
 
 + (id) withURL:(id)URL {
@@ -335,8 +335,8 @@
 		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
 		_requestsInternal = [NSMutableSet new];
 		
-		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.requestsInternalQueue.%p", self];
-		_requestsInternalQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.requestsInternalAccessQueue.%p", self];
+		_requestsInternalAccessQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 
 		_chunkSize = 0;
 		_maxConcurrentChunks = kCMChunkedDownloadRequestDefaultMaxConcurrentChunks;
@@ -346,8 +346,8 @@
 		[dateFormatter setDateFormat:kCumulusHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
 		
-		queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.lastModifiedQueue.%p", self];
-		_lastModifiedQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+		queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.lastModifiedAccessQueue.%p", self];
+		_lastModifiedAccessQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 	
 		_maxConcurrentRequests = kCumulusDefaultMaxConcurrentRequestCount;
 	}
@@ -473,7 +473,7 @@
 
 - (CMRequest *) requestForIdentifier:(id)identifier {
 	__block CMRequest *request = nil;
-	dispatch_sync(_requestsInternalQueue, ^{
+	dispatch_sync(_requestsInternalAccessQueue, ^{
 		request = [[self.requestsInternal objectsPassingTest:^BOOL(CMRequest *obj, BOOL *stop) {
 			return [obj.identifier isEqual:identifier];
 		}] anyObject];
@@ -489,7 +489,7 @@
 	dispatch_queue_t request_cancel_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	
 	dispatch_async(request_cancel_queue, ^{
-		dispatch_sync(_requestsInternalQueue, ^{
+		dispatch_sync(_requestsInternalAccessQueue, ^{
 			for (CMRequest *request in self.requestsInternal) {
 				[request cancel];
 			}
@@ -522,7 +522,7 @@
 
 
 - (CMResponse *) get {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodGET];
 	return [self runBlockingRequest:request];
 }
 
@@ -531,13 +531,13 @@
 }
 
 - (id) getWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodGET];
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) getWithQuery:(NSDictionary *)query {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET query:query];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodGET query:query];
 	return [self runBlockingRequest:request];
 }
 
@@ -546,7 +546,7 @@
 }
 
 - (id) getWithQuery:(NSDictionary *)query progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodGET query:query];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodGET query:query];
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
@@ -556,22 +556,22 @@
 
 
 - (CMResponse *) head {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodHEAD];
 	return [self runBlockingRequest:request];
 }
 
 - (id) headWithCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodHEAD];
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (CMResponse *) headWithQuery:(NSDictionary *)query {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
 	return [self runBlockingRequest:request];
 }
 
 - (id) headWithQuery:(NSDictionary *)query completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
@@ -580,12 +580,12 @@
 
 
 - (CMResponse *) delete {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodDELETE];
 	return [self runBlockingRequest:request];
 }
 
 - (id) deleteWithCompletionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodDELETE];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodDELETE];
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
@@ -594,7 +594,7 @@
 
 
 - (CMResponse *) post:(id)payload {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodPOST];
 	request.payload = payload;
 	return [self runBlockingRequest:request];
 }
@@ -604,7 +604,7 @@
 }
 
 - (id) post:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPOST];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodPOST];
 	request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
@@ -615,7 +615,7 @@
 
 
 - (CMResponse *) put:(id)payload {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodPUT];
 	request.payload = payload;
 	return [self runBlockingRequest:request];
 }
@@ -625,7 +625,7 @@
 }
 
 - (id) put:(id)payload withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self requestForHTTPMethod:kCumulusHTTPMethodPUT];
+	CMRequest *request = [self newRequestForHTTPMethod:kCumulusHTTPMethodPUT];
 	request.payload = payload;
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
@@ -637,33 +637,33 @@
 
 
 - (id) downloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
+	CMRequest<CMDownloadRequest> *request = [self newDownloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (id) downloadInChunksWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMChunkedDownloadRequest *request = [self chunkedDownloadRequestWithQuery:nil];
+	CMChunkedDownloadRequest *request = [self newChunkedDownloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (id) resumeOrBeginDownloadWithProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
+	CMRequest<CMDownloadRequest> *request = [self newDownloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	request.shouldResume = YES;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (id) downloadRange:(CMContentRange)range progressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest<CMDownloadRequest> *request = [self downloadRequestWithQuery:nil];
+	CMRequest<CMDownloadRequest> *request = [self newDownloadRequestWithQuery:nil];
 	request.didReceiveDataBlock = progressBlock;
 	request.range = range;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
 
 - (id) uploadFile:(NSURL *)fileURL withProgressBlock:(CMProgressBlock)progressBlock completionBlock:(CMCompletionBlock)completionBlock {
-	CMRequest *request = [self uploadRequestWithFileURL:fileURL query:nil];
+	CMRequest *request = [self newUploadRequestWithFileURL:fileURL query:nil];
 	request.didSendDataBlock = progressBlock;
 	return [self launchRequest:request withCompletionBlock:completionBlock];
 }
@@ -676,12 +676,12 @@
 
 
 
-- (CMRequest *) requestForHTTPMethod:(NSString *)method {
-	return [self requestForHTTPMethod:method query:nil];
+- (CMRequest *) newRequestForHTTPMethod:(NSString *)method NS_RETURNS_RETAINED {
+	return [self newRequestForHTTPMethod:method query:nil];
 }
 
-- (CMRequest *) requestForHTTPMethod:(NSString *)method query:(id)query {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:method query:query];
+- (CMRequest *) newRequestForHTTPMethod:(NSString *)method query:(id)query NS_RETURNS_RETAINED {
+	NSMutableURLRequest *URLRequest = [self newURLRequestForHTTPMethod:method query:query];
 	CMRequest *request;
 	id fixture = nil;
 	if ( (fixture = [self fixtureForHTTPMethod:method]) ) {
@@ -690,11 +690,12 @@
 		request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	}
 	[self configureRequest:request];
+	URLRequest = nil; //shouldn't leak .. but does?
 	return request;
 }
 
-- (CMRequest<CMDownloadRequest> *) downloadRequestWithQuery:query {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodGET query:query];
+- (CMRequest<CMDownloadRequest> *) newDownloadRequestWithQuery:query NS_RETURNS_RETAINED {
+	NSMutableURLRequest *URLRequest = [self newURLRequestForHTTPMethod:kCumulusHTTPMethodGET query:query];
 	CMRequest<CMDownloadRequest> *request;
 	id fixture = nil;
 	if ( (fixture = [self fixtureForHTTPMethod:kCumulusHTTPMethodGET]) ) {
@@ -707,8 +708,8 @@
 	return request;
 }
 
-- (CMChunkedDownloadRequest *) chunkedDownloadRequestWithQuery:query {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
+- (CMChunkedDownloadRequest *) newChunkedDownloadRequestWithQuery:query NS_RETURNS_RETAINED {
+	NSMutableURLRequest *URLRequest = [self newURLRequestForHTTPMethod:kCumulusHTTPMethodHEAD query:query];
 	CMChunkedDownloadRequest *request = [[CMChunkedDownloadRequest alloc] initWithURLRequest:URLRequest];
 	[request setCachesDir:self.cachesDir];
 	request.maxConcurrentChunks = self.maxConcurrentChunks;
@@ -718,8 +719,8 @@
 	return request;
 }
 
-- (CMRequest *) uploadRequestWithFileURL:(NSURL *)fileURL query:(id)query {
-	NSMutableURLRequest *URLRequest = [self URLRequestForHTTPMethod:kCumulusHTTPMethodPUT query:query];
+- (CMRequest *) newUploadRequestWithFileURL:(NSURL *)fileURL query:(id)query NS_RETURNS_RETAINED {
+	NSMutableURLRequest *URLRequest = [self newURLRequestForHTTPMethod:kCumulusHTTPMethodPUT query:query];
 	CMUploadRequest *request = [[CMUploadRequest alloc] initWithURLRequest:URLRequest];
 	[self configureRequest:request];
 	request.fileToUploadURL = fileURL;
@@ -731,7 +732,7 @@
 
 // ========================================================================== //
 
-#pragma mark - Request Helpers
+#pragma mark - Configuration Helpers
 
 
 - (void) setHeadersForContentType:(CMContentType)contentType {
@@ -761,7 +762,7 @@
 	}
 }
 
-- (NSMutableURLRequest *) URLRequestForHTTPMethod:(NSString *)method query:(NSDictionary *)query {	
+- (NSMutableURLRequest *) newURLRequestForHTTPMethod:(NSString *)method query:(NSDictionary *)query {	
 	NSMutableDictionary *requestQuery = [NSMutableDictionary dictionaryWithDictionary:self.mergedQuery];
 	[requestQuery addEntriesFromDictionary:query];
 	
@@ -830,8 +831,10 @@
 	else {
 		dispatch_semaphore_wait(requestSema, DISPATCH_TIME_FOREVER);
 	}
-	dispatch_release(requestSema);
-	return localResponse;
+	//dispatch_release(requestSema);
+	__autoreleasing CMResponse *autoreleasingResponse = localResponse;
+	localResponse = nil;
+	return autoreleasingResponse;
 }
 
 - (id) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
@@ -871,7 +874,7 @@
 		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context immediately:dispatchImmediately];
 	}
 	dispatch_semaphore_wait(launchSemaphore, DISPATCH_TIME_FOREVER);
-	dispatch_release(launchSemaphore);
+	//dispatch_release(launchSemaphore);
 	return request.identifier;
 }
 
@@ -900,7 +903,7 @@
 }
 
 - (void) addRequest:(CMRequest *)request context:(id)context {
-	dispatch_barrier_sync(_requestsInternalQueue, ^{
+	dispatch_barrier_sync(_requestsInternalAccessQueue, ^{
 		[self.requestsInternal addObject:request];
 	});
 	if ([context isKindOfClass:[CMResourceContextGroup class]]) {
@@ -920,7 +923,7 @@
 
 - (void) removeResponse:(CMResponse *)response context:(id)context {
 	CMRequest *request = response.request;
-	dispatch_barrier_sync(_requestsInternalQueue, ^{
+	dispatch_barrier_sync(_requestsInternalAccessQueue, ^{
 		if (request) {
 			[self.requestsInternal removeObject:request];
 		}

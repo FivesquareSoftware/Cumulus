@@ -28,9 +28,8 @@
 @end
 
 
-@interface CMChunkedDownloadRequest () {
-	dispatch_semaphore_t _chunksSemaphore;
-}
+@interface CMChunkedDownloadRequest () 
+
 @property BOOL sentInitialProgress;
 @property (strong) NSDate *lastProgressUpdateSentAt;
 @property (readonly) NSTimeInterval timeSinceLastProgressUpdate;
@@ -49,6 +48,10 @@
 @property (strong) NSMutableSet *completedChunks;
 @property (strong) NSMutableSet *allChunks;
 @property (nonatomic, readonly) NSSet *chunkErrors;
+
+
+@property (nonatomic, strong) dispatch_semaphore_t chunksSemaphore;
+
 @end
 
 @implementation CMChunkedDownloadRequest
@@ -129,7 +132,7 @@
 #pragma mark - Object
 
 - (void)dealloc {
-	dispatch_release(_chunksSemaphore);
+	//dispatch_release(_chunksSemaphore);
 }
 
 

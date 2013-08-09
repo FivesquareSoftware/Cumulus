@@ -93,7 +93,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	STAssertThrows([request start], @"Should not be able to start a request that is finished");
@@ -138,7 +138,7 @@
 	[request cancel];	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(touched, @"Touched should be YES");
 }
@@ -158,7 +158,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 
 	STAssertNotNil(request.error, @"Error should not be nil");
 	STAssertTrue([request.error.domain isEqualToString:NSURLErrorDomain] && request.error.code == NSURLErrorTimedOut, @"Error should be timeout error", request.error);
@@ -181,7 +181,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(touched, @"Touched should be YES");
 }
@@ -227,7 +227,7 @@
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	id responseInternal = [request valueForKey:@"responseInternal"];
 	STAssertNil(responseInternal, @"Internal response pointer should be nil after completion block runs");
@@ -248,7 +248,7 @@
 	}];
 	[request cancel];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	id responseInternal = [request valueForKey:@"responseInternal"];
 	STAssertNil(responseInternal, @"Internal response pointer should be nil after cancelation");
@@ -269,7 +269,7 @@
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(complete, @"Simple request should have completed");
 }
@@ -289,7 +289,7 @@
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(complete, @"Streamed request should have completed");
 }
@@ -310,7 +310,7 @@
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertTrue(complete, @"Simple request should have completed");
 }
@@ -342,7 +342,7 @@
 	}];
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_release(request_sema);
+	//dispatch_release(request_sema);
 	
 	STAssertFalse(complete,@"Interrupted request should not have been complete");
 }
