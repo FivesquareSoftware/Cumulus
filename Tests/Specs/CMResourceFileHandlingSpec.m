@@ -688,7 +688,18 @@
 	
 	
 	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
-	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without interruption.");
+	BOOL equalContents = [fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]];
+	NSDictionary *resourceAttributes = nil;
+	NSDictionary *copiedFileAttributes = nil;
+	if (NO == equalContents) {
+		resourceAttributes = [fm attributesOfItemAtPath:resourceImagePath error:NULL];
+		copiedFileAttributes = [fm attributesOfItemAtPath:[self.copiedFileURL path] error:NULL];
+		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		NSString *documentsDir = [paths lastObject];
+		NSString *documentFilePath = [documentsDir stringByAppendingPathComponent:[self.copiedFileURL lastPathComponent]];
+		[fm copyItemAtPath:[self.copiedFileURL path] toPath:documentFilePath error:NULL];
+	}
+	STAssertTrue(equalContents, @"Completed file should be the same as if it were downloaded without interruption. (%@ != %@)",resourceAttributes,copiedFileAttributes);
 }
 
 

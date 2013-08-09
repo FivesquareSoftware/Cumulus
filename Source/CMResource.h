@@ -39,6 +39,8 @@
 #import "CMAuthProvider.h"
 
 
+
+
 @class CMResponse;
 @class CMResourceContext;
 
@@ -181,13 +183,6 @@
 
 
 
-
-/** When set, NSURLRequest delegate callbacks will be scheduled on this on this queue. Otherwise, they are schedule on the main run loop. Defaults to nil. 
- *  @note It is generally not necessary to set this attribute, but it can be useful if you want to be able to control their delivery without affecting the main thread. Keep in mind that the value of this attribute has no affect on whether or not requests are started, only how their delegate callbacks are issued.
- */
-@property (nonatomic, strong) NSOperationQueue *requestDelegateQueue;
-
-
 /** The headers specific to the receiver. 
  *  @note Headers can be set on each individual resource. However, while building a request for any resource, that resource's headers are merged with all of its ancestors' headers, with any conflicts resolved in favor of the resource farthest down the inheriticance chain. 
  */
@@ -270,6 +265,15 @@
 /** @name Request Control */
 // ========================================================================== //
 
+/** This value limits how many asycnchronous requests for the receiver can be running at any given moment.  Changing it does not affect in-flight requests. If the default value (kCumulusDefaultMaxConcurrentRequestCount) is not overridden in the receiver, the returned value is inherited from the resource hierarchy. If the receiver is the top of the hierarchy a request queue is always created unless the value of maxConcurrentRequests is 0, indicating no request throttling.
+ *  @note To allow the system to choose an optimal number of concurrent requests for you, set this value to kCumulusDefaultMaxConcurrentRequestCount, which is also the default. Setting maxConcurrentRequests to 0 removes all restrictions on the number of concurrent requests.
+ *  @note When a request is initiated, the receiver's preflight block—if any—is evaluated immediately. Once the preflight block passes, or if there is no preflight block, each request is then either dispatched at that point, or queued for dispatch depending on whether the max number of concurrent requests has been reached.
+ *  @note This is a per-resource control mechanism, not a global restriction on the number of requests. For this reason, it is best to define this on a root resource if you wish to limit a collection of child resources to a finite number of connections.
+ *  @warning This value has no effect on blocking requests; a call for a blocking request always dispatches immediately.
+ */
+@property (nonatomic) NSUInteger maxConcurrentRequests;
+
+
 /// The array of CMRequest objects that are currently running. Since these requests may quit at any point, the returned set only reflects a snapshot in time of the receiver's requests.
 @property (readonly) NSMutableSet *requests;
 
@@ -290,6 +294,12 @@
  *  @note When this method returns there is no guarantee that the underlying NSURLConnection object associated with the request has fully canceled.
  */
 - (void) cancelRequestForIdentifier:(id)identifier;
+
+
+/** When set, NSURLRequest delegate callbacks will be scheduled on this queue. Otherwise, they are schedule on the main run loop. Defaults to nil.
+ *  @note It is generally not necessary to set this attribute, but it can be useful if you want to be able to control the delivery of NSURLRequest delegate callbacks without affecting the main thread. Keep in mind that the value of this attribute has no affect on whether or not requests are started, only how their delegate callbacks are issued.
+ */
+@property (nonatomic, strong) NSOperationQueue *requestDelegateQueue;
 
 
 

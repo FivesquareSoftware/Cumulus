@@ -95,10 +95,10 @@
 	return self;
 }
 
-- (void) start {
+- (BOOL) start {
 	NSAssert(NO == self.started, @"Attempting to start a request that has already been started, canceled or finished");
 	if (NO == self.canStart) {
-		return;
+		return NO;
 	}
 	
 	self.started = YES;
@@ -131,6 +131,8 @@
 	self.receivedContentLength = [self.data length];
 	
 	[self handleConnectionFinished];
+	
+	return YES;
 }
 
 

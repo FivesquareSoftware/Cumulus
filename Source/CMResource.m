@@ -34,8 +34,11 @@
  */
 
 #import "CMResource.h"
+#import "CMResource+Protected.h"
 
 #import "Cumulus.h"
+
+#import "CMRequestQueue.h"
 
 #import "CMFixtureRequest.h"
 #import "CMFixtureDownloadRequest.h"
@@ -54,7 +57,6 @@
 	dispatch_queue_t _lastModifiedQueue;
 }
 
-+ (dispatch_queue_t) dispatchQueue;
 
 // Readwrite Versions of Public Properties
 
@@ -89,14 +91,6 @@
 
 @implementation CMResource
 
-+ (dispatch_queue_t) dispatchQueue {
-	static dispatch_queue_t _dispatchQueue = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		_dispatchQueue = dispatch_queue_create("com.fivesquaresoftware.CMResource.dispatchQueue", DISPATCH_QUEUE_CONCURRENT);
-	});
-	return _dispatchQueue;
-}
 
 // ========================================================================== //
 
@@ -227,6 +221,29 @@
 	return _postprocessorBlock;
 }
 
+@synthesize maxConcurrentRequests = _maxConcurrentRequests;
+- (NSUInteger) maxConcurrentRequests {
+	if (_maxConcurrentRequests == kCumulusDefaultMaxConcurrentRequestCount && _parent.maxConcurrentRequests != kCumulusDefaultMaxConcurrentRequestCount) {
+		return _parent.maxConcurrentRequests;
+	}
+	return _maxConcurrentRequests;
+}
+
+- (void) setMaxConcurrentRequests:(NSUInteger)maxConcurrentRequests {
+	if (_maxConcurrentRequests != maxConcurrentRequests) {
+		_maxConcurrentRequests = maxConcurrentRequests;
+		if (_maxConcurrentRequests > 0) {
+			if (nil == _requestQueue) {
+				_requestQueue = [CMRequestQueue new];
+			}
+			_requestQueue.maxConcurrentRequests = _maxConcurrentRequests;
+		}
+		else {
+			_requestQueue = nil;
+		}
+	}
+}
+
 @dynamic requests;
 - (NSMutableSet *) requests {
 	__block NSMutableSet *requests = nil;
@@ -275,6 +292,20 @@
 	return _fixtures;
 }
 
+@synthesize requestQueue = _requestQueue;
+- (CMRequestQueue *) requestQueue {
+	// If this is the top of heierarchy and we have a request limit, create the request queue here
+	if (_maxConcurrentRequests > 0 && nil == self.parent && nil == _requestQueue) {
+		_requestQueue = [CMRequestQueue new];
+		_requestQueue.maxConcurrentRequests = _maxConcurrentRequests;
+	}
+	// If we have not overridden the default request limit and we have a parent, use the request queue from up the hierarchy, not here
+	if (_maxConcurrentRequests == kCumulusDefaultMaxConcurrentRequestCount && self.parent.requestQueue) {
+		return self.parent.requestQueue;
+	}
+	return _requestQueue;
+}
+
 
 // ========================================================================== //
 
@@ -312,12 +343,13 @@
 		_readBufferLength = kCMChunkedDownloadRequestDefaultBufferSize;
 		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateFormat:kHTTPDateFormat];
+		[dateFormatter setDateFormat:kCumulusHTTPDateFormat];
 		_httpDateFormatter = dateFormatter;
 		
 		queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResource.lastModifiedQueue.%p", self];
 		_lastModifiedQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
-		
+	
+		_maxConcurrentRequests = kCumulusDefaultMaxConcurrentRequestCount;
 	}
 	return self;
 }
@@ -457,17 +489,12 @@
 	dispatch_queue_t request_cancel_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	
 	dispatch_async(request_cancel_queue, ^{
-//		dispatch_semaphore_wait(_requests_semaphore, DISPATCH_TIME_FOREVER);
-		
 		dispatch_sync(_requestsInternalQueue, ^{
 			for (CMRequest *request in self.requestsInternal) {
 				[request cancel];
 			}
 		});
-		
-		
-//		dispatch_semaphore_signal(_requests_semaphore);
-		
+						
 		if (block) {
 			dispatch_async(dispatch_get_main_queue(), block);
 		}
@@ -764,7 +791,7 @@
 	NSUUID *UUID = [NSUUID new];
 	request.identifier = [UUID UUIDString];
 	
-	request.queue = self.requestDelegateQueue;
+	request.connectionDelegateQueue = self.requestDelegateQueue;
 }
 
 - (NSString *) requestSignatureForHTTPMethod:(NSString *)method {
@@ -793,7 +820,7 @@
 		dispatch_semaphore_signal(requestSema);
 	};
 	
-	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock];
+	[self launchRequest:request withCompletionBlock:completionBlock abortBlock:abortBlock dispatchImmediately:YES];
 	
 	if ([NSThread isMainThread]) {
 		do {
@@ -808,16 +835,15 @@
 }
 
 - (id) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
-	return [self launchRequest:request withCompletionBlock:completionBlock abortBlock:NULL];
+	return [self launchRequest:request withCompletionBlock:completionBlock abortBlock:NULL dispatchImmediately:NO];
 }
 
-- (id) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock {
+- (id) launchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock abortBlock:(CMAbortBlock)abortBlock dispatchImmediately:(BOOL)dispatchImmediately {
 	
 	id context = (__bridge id)(dispatch_get_specific(&kCMResourceContextKey));
 	if (context) {
 		RCLog(@"Dispatching request with context: %@",context);
 	}
-	
 	
 	dispatch_semaphore_t launchSemaphore = dispatch_semaphore_create(0);
 	
@@ -826,7 +852,7 @@
 		void(^dispatchPreflightBlock)(void) = ^{
 			BOOL success = preflightBlock(request);
 			if(success) {
-				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context];
+				[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context immediately:dispatchImmediately];
 			}
 			else {
 				[request abortWithBlock:abortBlock];
@@ -842,32 +868,35 @@
 		}
 	}
 	else {
-		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context];
+		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context immediately:dispatchImmediately];
 	}
 	dispatch_semaphore_wait(launchSemaphore, DISPATCH_TIME_FOREVER);
 	dispatch_release(launchSemaphore);
 	return request.identifier;
 }
 
-- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launchSemaphore context:(id)context {
+- (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launchSemaphore context:(id)context immediately:(BOOL)immediately {
 	[self addRequest:request context:context];
 	dispatch_semaphore_signal(launchSemaphore);
 	
 	__weak id weakContext = context;
-	dispatch_queue_t dispatchQueue = [CMResource dispatchQueue];
-	dispatch_async(dispatchQueue, ^{
-		[request startWithCompletionBlock:^(CMResponse *response) {
-			if (self.automaticallyTracksLastModified && response.lastModified) {
-				self.lastModified = response.lastModified;
-			}
-			if (completionBlock) {
-				completionBlock(response);
-			}
-			dispatch_async(dispatchQueue, ^{
-				[self removeResponse:response context:weakContext];
-			});
-		}];
-	});
+	CMCompletionBlock dispatchCompletionBlock = ^(CMResponse *response) {
+		if (self.automaticallyTracksLastModified && response.lastModified) {
+			self.lastModified = response.lastModified;
+		}
+		if (completionBlock) {
+			completionBlock(response);
+		}
+		[self removeResponse:response context:weakContext];
+	};
+	
+	CMRequestQueue *dispatchQueue = self.requestQueue;
+	if (immediately || nil == dispatchQueue) {
+		[request startWithCompletionBlock:dispatchCompletionBlock];
+	}
+	else {
+		[dispatchQueue queueRequest:request withCompletionBlock:dispatchCompletionBlock];
+	}
 }
 
 - (void) addRequest:(CMRequest *)request context:(id)context {

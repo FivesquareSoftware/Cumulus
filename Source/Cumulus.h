@@ -112,19 +112,25 @@
 
 /** @see [CMResource timeout] */
 + (NSTimeInterval) timeout;
-/** @see [CMResource setTimeout] */
+/** @see [CMResource setTimeout:] */
 + (void) setTimeout:(NSTimeInterval)timeout;
 
 /** @see [CMResource authProviders] */
 + (NSMutableArray *)authProviders;
-/** @see [CMResource setAuthProviders] */
+/** @see [CMResource setAuthProviders:] */
 + (void) setAuthProviders:(NSMutableArray *)authProviders;
 
 /** @see [CMResource headers] */
 + (NSMutableDictionary *) headers;
-/** @see [CMResource setHeaders] */
+/** @see [CMResource setHeaders:] */
 + (void) setHeaders:(NSMutableDictionary *)headers;
 
+/** Sets the maximum number of asynchronous requests that can be launched via the static interface in this Class. 
+ *  @see [CMResource maxConcurrentRequests] for more information on what various values mean.
+ */
++ (NSUInteger) maxConcurrentRequests;
+/** @see [CMResource setMaxConcurrentRequests:] */
++ (void) setMaxConcurrentRequests:(NSUInteger)maxConcurrentRequests;
 
 
 // ========================================================================== //

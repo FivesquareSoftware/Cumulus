@@ -63,5 +63,7 @@ NSString *kCumulusProgressInfoKeyProgress = @"progress";
 
 NSString *kCumulusCachesDirectoryName = @"Cumulus";
 
-NSString *kHTTPDateFormat = @"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz";
+NSUInteger kCumulusDefaultMaxConcurrentRequestCount = NSUIntegerMax;
+
+NSString *kCumulusHTTPDateFormat = @"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz";
 

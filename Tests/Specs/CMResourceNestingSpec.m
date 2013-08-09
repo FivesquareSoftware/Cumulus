@@ -10,9 +10,16 @@
 
 // This class will be instantiated for you and made available in the property "self.specHelper", store your cross-test data and helper methods there
 #import "SpecHelper.h"
-
+#import "CMRequestQueue.h"
 
 #import <SenTestingKit/SenTestingKit.h>
+
+@interface CMResource (ResourceNestingSpecs)
+@property (nonatomic, readonly) CMRequestQueue *requestQueue;
+@end
+@implementation CMResource (ResourceNestingSpecs)
+@dynamic requestQueue;
+@end
 
 
 @implementation CMResourceNestingSpec
@@ -276,6 +283,70 @@
 	STAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should inherit cache policy from any parent");
 }
 
+// Max Concurrent Requests
+
+- (void)shouldInheritMaxConcurrentRequestsFromParent {
+	self.parent.maxConcurrentRequests = 5;
+	STAssertTrue(self.child.maxConcurrentRequests == 5, @"Child should inherit maxConcurrentRequests from parent");
+}
+
+- (void)shouldUseOwnMaxConcurrentRequestsOverParents {
+	self.parent.maxConcurrentRequests = 5;
+	self.child.maxConcurrentRequests = 10;
+	STAssertTrue(self.child.maxConcurrentRequests == 10, @"Child should use own maxConcurrentRequests over parent's");
+}
+
+- (void)shouldInheritMaxConcurrentRequestsFromFirstParentOnlyIfSet {
+	self.child.maxConcurrentRequests = 10;
+	STAssertTrue(self.child.maxConcurrentRequests == 10, @"Child should use parent's maxConcurrentRequests only if set");
+}
+
+- (void)shouldInheritMaxConcurrentRequestsFromAnyParent {
+	self.ancestor.maxConcurrentRequests = 5;
+	STAssertTrue(self.child.maxConcurrentRequests == 5, @"Child should inherit maxConcurrentRequests from any parent");
+}
+
+- (void)shouldInheritRequestQueueFromParent {
+	self.parent.maxConcurrentRequests = 5;
+	CMRequestQueue *parentRequestQueue = self.parent.requestQueue;
+	CMRequestQueue *childRequestQueue = self.child.requestQueue;
+	STAssertEqualObjects(parentRequestQueue, childRequestQueue, @"Child should inherit requestQueue from parent");
+}
+
+- (void)shouldUseOwnRequestQueueOverParents {
+	self.parent.maxConcurrentRequests = 5;
+	self.child.maxConcurrentRequests = 10;
+	CMRequestQueue *parentRequestQueue = self.parent.requestQueue;
+	CMRequestQueue *childRequestQueue = self.child.requestQueue;
+	STAssertNotNil(parentRequestQueue, @"Parent must have a request queue for this test");
+	STAssertFalse(parentRequestQueue == childRequestQueue, @"Child should use own requestQueue over parent's");
+}
+
+- (void)shouldInheritRequestQueueFromAnyAncestor {
+	self.ancestor.maxConcurrentRequests = 5;
+	CMRequestQueue *ancestorRequestQueue = self.ancestor.requestQueue;
+	CMRequestQueue *childRequestQueue = self.child.requestQueue;
+	STAssertEqualObjects(ancestorRequestQueue, childRequestQueue, @"Child should inherit requestQueue from any parent");
+}
+
+- (void)shouldUseOwnRequestQueueOverAncestors {
+	self.ancestor.maxConcurrentRequests = 5;
+	self.child.maxConcurrentRequests = 10;
+	CMRequestQueue *ancestorRequestQueue = self.ancestor.requestQueue;
+	CMRequestQueue *childRequestQueue = self.child.requestQueue;
+	STAssertNotNil(ancestorRequestQueue, @"Ancestor must have a request queue for this test");
+	STAssertFalse(ancestorRequestQueue == childRequestQueue, @"Child should use own requestQueue over ancestor's");
+}
+
+- (void) shouldInheritANilRequestQueueWFromParent {
+	self.parent.maxConcurrentRequests = 0;
+	STAssertNil(self.child.requestQueue, @"Child should inherit a nil requestQueue from parent");
+}
+
+- (void) shouldInheritANilRequestQueueWFromAnyAncestor {
+	self.ancestor.maxConcurrentRequests = 0;
+	STAssertNil(self.child.requestQueue, @"Child should inherit a nil requestQueue from ancestors");
+}
 
 
 @end

@@ -60,10 +60,10 @@
 	[CMRequest incrementRequestCountFor:self];
 }
 
-- (void) start {
+- (BOOL) start {
 	NSAssert(NO == self.started, @"Attempting to start a request that has already been started, canceled or finished");
 	if (NO == self.canStart) {
-		return;
+		return NO;
 	}
 	
 	[self handleConnectionWillStart];
@@ -109,7 +109,7 @@
 			RCLog(@"Could not read attributes of fixture at URL: %@ %@ (%@)", fixtureURL, [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
 			[self handleConnectionFinished];
-			return;
+			return YES;
 		}
 		
 		NSString *MIMEType = [self mimeTypeForFileAtPath:fixturePath];
@@ -121,7 +121,7 @@
 			RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
 			[self handleConnectionFinished];
-			return;
+			return YES;
 		}
 	}
 	else {
@@ -132,7 +132,7 @@
 				RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 				self.error = writeError;
 				[self handleConnectionFinished];
-				return;
+				return YES;
 			}
 		}
 	}
@@ -168,6 +168,8 @@
 			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 		}
 	});
+	
+	return YES;
 	
 }
 

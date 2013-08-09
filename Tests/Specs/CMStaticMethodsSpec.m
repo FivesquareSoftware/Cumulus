@@ -13,6 +13,14 @@
 
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "CMRequestQueue.h"
+
+@interface CMRequestQueue (CMStaticMethodsSpec)
+@property (nonatomic, readonly) NSUInteger actualMaxConcurrentRequests;
+@end
+@implementation CMRequestQueue (CMStaticMethodsSpec)
+@dynamic actualMaxConcurrentRequests;
+@end
 
 
 @implementation CMStaticMethodsSpec
@@ -41,6 +49,7 @@
 
 - (void)afterEach {
 	// tear down resources specific to each example here
+	[Cumulus setMaxConcurrentRequests:kCumulusDefaultMaxConcurrentRequestCount];
 }
 
 
@@ -309,6 +318,205 @@
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
+
+- (void) shouldOptimallyThrottleAllConcurrentRequestsWhenMaxConcurrentRequestsIsSetToDefault {
+	CMRequestQueue *requestQueue = [CMRequestQueue sharedRequestQueue];
+	
+	NSString *hero = [NSString stringWithFormat:@"%@/test/download/hero",kTestServerHost];
+	NSString *index = [NSString stringWithFormat:@"%@/index",kTestServerHost];
+	NSString *item = [NSString stringWithFormat:@"%@/test/get/item",kTestServerHost];
+	
+	
+	__block NSUInteger highwaterRequestCount = 0;
+	__block BOOL success = YES;
+	
+	dispatch_group_t group = dispatch_group_create();
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+	__block NSUInteger runningCount = requestQueue.actualMaxConcurrentRequests*3;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		
+		CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo) {
+			NSUInteger dispatchedRequestsCount = requestQueue.dispatchedRequestCount;
+//			NSLog(@"**** DISPATCHED: %@ ****",@(dispatchedRequestsCount));
+			if (dispatchedRequestsCount > highwaterRequestCount) {
+				highwaterRequestCount = dispatchedRequestsCount;
+//				NSLog(@"**** HIGHWATER: %@ ****",@(highwaterRequestCount));
+			}
+		};
+		
+		CMCompletionBlock completionBlock = ^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		};
+		
+		if (i%1 == 0) {
+			[Cumulus download:hero withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+		else if (i%2 == 0) {
+			[Cumulus get:index withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+		else {
+			[Cumulus get:item withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	
+	
+	STAssertTrue(success, @"All requests should have succeeded");
+	STAssertTrue(highwaterRequestCount <= [requestQueue actualMaxConcurrentRequests], @"Should not have run more than the optimal max allowed requests (%@ > %@)",@(highwaterRequestCount), [requestQueue actualMaxConcurrentRequests]);
+}
+
+- (void) shouldThrottleAllConcurrentRequestsWhenMaxConcurrentRequestsIsSet {
+	[Cumulus setMaxConcurrentRequests:2];
+	CMRequestQueue *requestQueue = [CMRequestQueue sharedRequestQueue];
+	
+	NSString *hero = [NSString stringWithFormat:@"%@/test/download/hero",kTestServerHost];
+	NSString *index = [NSString stringWithFormat:@"%@/index",kTestServerHost];
+	NSString *item = [NSString stringWithFormat:@"%@/test/get/item",kTestServerHost];
+
+	
+	__block NSUInteger highwaterRequestCount = 0;
+	__block BOOL success = YES;
+	
+	dispatch_group_t group = dispatch_group_create();
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+	__block NSUInteger runningCount = 33;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		
+		CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo) {
+			NSUInteger dispatchedRequestsCount = requestQueue.dispatchedRequestCount;
+//						NSLog(@"**** DISPATCHED: %@ ****",@(dispatchedRequestsCount));
+			if (dispatchedRequestsCount > highwaterRequestCount) {
+				highwaterRequestCount = dispatchedRequestsCount;
+//								NSLog(@"**** HIGHWATER: %@ ****",@(highwaterRequestCount));
+			}
+		};
+		
+		CMCompletionBlock completionBlock = ^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		};
+		
+		if (i%1 == 0) {
+			[Cumulus download:hero withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+		else if (i%2 == 0) {
+			[Cumulus get:index withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+		else {
+			[Cumulus get:item withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+
+	
+	STAssertTrue(success, @"All requests should have succeeded");
+	STAssertTrue(highwaterRequestCount <= [Cumulus maxConcurrentRequests], @"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]);
+}
+
+- (void) shouldNotThrottleAnyConcurrentRequestsWhenMaxConcurrentRequestsIsSetToZero {
+	[Cumulus setMaxConcurrentRequests:0];
+	CMRequestQueue *requestQueue = [CMRequestQueue sharedRequestQueue];
+	
+	NSString *hero = [NSString stringWithFormat:@"%@/test/download/hero",kTestServerHost];
+	NSString *index = [NSString stringWithFormat:@"%@/index",kTestServerHost];
+	NSString *item = [NSString stringWithFormat:@"%@/test/get/item",kTestServerHost];
+	
+	
+	__block NSUInteger highwaterRequestCount = 0;
+	__block BOOL success = YES;
+	
+	dispatch_group_t group = dispatch_group_create();
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+	__block NSUInteger runningCount = 33;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		
+		CMProgressBlock progressBlock = ^(CMProgressInfo *progressInfo) {
+			NSUInteger dispatchedRequestsCount = requestQueue.dispatchedRequestCount;
+//			NSLog(@"**** DISPATCHED: %@ ****",@(dispatchedRequestsCount));
+			if (dispatchedRequestsCount > highwaterRequestCount) {
+				highwaterRequestCount = dispatchedRequestsCount;
+//				NSLog(@"**** HIGHWATER: %@ ****",@(highwaterRequestCount));
+			}
+		};
+		
+		CMCompletionBlock completionBlock = ^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		};
+		
+		if (i%1 == 0) {
+			[Cumulus download:hero withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+		else if (i%2 == 0) {
+			[Cumulus get:index withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+		else {
+			[Cumulus get:item withProgressBlock:progressBlock completionBlock:completionBlock];
+		}
+	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	
+	
+	STAssertTrue(success, @"All requests should have succeeded");
+	STAssertTrue(highwaterRequestCount == [Cumulus maxConcurrentRequests], @"Should not have throttled concurrent requests (%@ == %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]);
+
+
+	
+//	CMResource *resource = [self.service resource:@"test/download/hero"];
+//	resource.maxConcurrentRequests = 0;
+//	
+//	CMRequestQueue *requestQueue = resource.requestQueue;
+//	STAssertNil(requestQueue, @"Should not have a request queue when maxConcurrentRequests is zero");
+//	
+//	__block NSUInteger highwaterRequestCount = 0;
+//	__block BOOL success = YES;
+//	
+//	dispatch_group_t group = dispatch_group_create();
+//	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+//	NSUInteger runningCount = 10;
+//	
+//	NSMutableSet *dispatchedRequests = [NSMutableSet new];
+//	dispatch_apply(runningCount, queue, ^(size_t i) {
+//		dispatch_group_enter(group);
+//		[resource downloadWithProgressBlock:^(CMProgressInfo *progressInfo) {
+//			[dispatchedRequests addObject:progressInfo.request];
+//			NSUInteger dispatchedRequestsCount = [dispatchedRequests count];
+//			//			NSLog(@"**** DISPATCHED: %@ ****",@(dispatchedRequestsCount));
+//			if (dispatchedRequestsCount > highwaterRequestCount) {
+//				highwaterRequestCount = dispatchedRequestsCount;
+//				//				NSLog(@"**** HIGHWATER: %@ ****",@(highwaterRequestCount));
+//			}
+//		} completionBlock:^(CMResponse *response) {
+//			[dispatchedRequests removeObject:response.request];
+//			if (NO == response.wasSuccessful) {
+//				success = NO;
+//			}
+//			dispatch_group_leave(group);
+//		}];
+//	});
+//	
+//	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+//	dispatch_release(group);
+//	
+//	STAssertTrue(success, @"All requests should have succeeded");
+//	STAssertTrue(highwaterRequestCount == runningCount, @"Should not have throttled requests (%@ == %@)",@(highwaterRequestCount), @(runningCount));
+
+}
+
+
 
 
 @end

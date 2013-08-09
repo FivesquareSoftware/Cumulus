@@ -69,6 +69,11 @@
 @interface CMRequest : NSObject <NSURLConnectionDelegate,NSURLConnectionDataDelegate>  
 
 
+/** Returns the total number of requests running via Cumulus. 
+ *  The value returned by this method is global; it accounts for all requests launched via either tne static Cumulus interface or through instances of CMResource.
+ */
++ (NSUInteger) requestCount;
+
 // ========================================================================== //
 /** @name Request State */
 // ========================================================================== //
@@ -211,19 +216,41 @@
 /** @name Controlling Requests */
 // ========================================================================== //
 
-@property (nonatomic, strong) NSOperationQueue *queue;
+/** Passed to the internal NSURLConnection via setDelegateQueue. Controls how the connection's delegate messages are delivered. */
+@property (nonatomic, strong) NSOperationQueue *connectionDelegateQueue;
 
-- (void) start;
-- (void) startWithCompletionBlock:(CMCompletionBlock)completionBlock;
-- (void) startOnQueue:(NSOperationQueue *)delegateQueue withCompletionBlock:(CMCompletionBlock)completionBlock;
+/** Starts the NSURLRequest.
+ *  @returns YES if the request was started, NO otherwise.
+ */
+- (BOOL) start;
+
+/** Sets the receiver's completion block and starts the NSURLRequest.
+ *  @returns YES if the request was started, NO otherwise (such as when start is called more than once or after the receiver has been canceled).
+ */
+- (BOOL) startWithCompletionBlock:(CMCompletionBlock)completionBlock;
+
+/** Sets the receiver's connectionDelegateQueue and starts the NSURLRequest.
+ *  @returns YES if the request was started, NO otherwise.
+ */
+- (BOOL) startOnQueue:(NSOperationQueue *)delegateQueue withCompletionBlock:(CMCompletionBlock)completionBlock;
    
 
-/** Will cancel a connection if it has not finished. Creates the response object, sets the request to finished and runs #completionBlock if it was set. */
-- (void) cancel;
+/** Will cancel a connection if it has not finished. Creates the response object, sets the request to finished and runs #completionBlock if it was set. 
+ *  @returns YES if the receiver was canceled, NO otherwise (such as when cancel is called more than once).
+ */
+- (BOOL) cancel;
 
-/** Aborts a request if it has not been started, canceled or completed. Sets the request to finished but does not create a response object nor run #completionBlock. */
-- (void) abort;
-- (void) abortWithBlock:(CMAbortBlock)abortBlock;
+/** Aborts a request if it has not been started, canceled or completed. Sets the request to finished but does not create a response object nor run #completionBlock. 
+ *  @note If you want to stop a request that has already started, you must call cancel, which dispatches the completion block.
+ *  @returns YES if the receiver was aborted, NO otherwise (such as when the receiver has already started).
+ */
+- (BOOL) abort;
+
+/** Invokes #abort and dispatches the supplied block. 
+ *  @returns YES if the receiver was aborted, NO otherwise (such as when the receiver has already started).
+ *  @note if NO is returned the supplied block is not dispatched.
+ */
+- (BOOL) abortWithBlock:(CMAbortBlock)abortBlock;
 
 
 

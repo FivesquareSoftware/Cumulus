@@ -294,7 +294,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	dispatch_semaphore_t launch_semaphore = dispatch_semaphore_create(0);
 	
 	[context performRequests:^{
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 3; i++) {
 			[resource getWithCompletionBlock:nil];
 		}
 		dispatch_semaphore_signal(launch_semaphore);

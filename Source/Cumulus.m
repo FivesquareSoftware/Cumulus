@@ -35,9 +35,11 @@
 
 #import "Cumulus.h"
 
+#import "CMRequestQueue.h"
+#import "CMResource+Protected.h"
+
 
 @interface Cumulus()
-+ (CMResource *) configuredResourceForURL:(id)URL method:(NSString *)HTTPMethod;
 @end
 
 
@@ -49,15 +51,18 @@
 #pragma mark - Class Methods
 
 + (void) load {
-	@autoreleasepool {
-		NSFileManager *fm = [NSFileManager new];
-		if (NO == [fm fileExistsAtPath:[self cachesDir]]) {
-			NSError *error = nil;
-			if (NO == [fm createDirectoryAtPath:[self cachesDir] withIntermediateDirectories:YES attributes:nil error:&error]) {
-				RCLog(@"Could not create Cumulus caches %@ (%@)", [error localizedDescription], [error userInfo]);
+	static dispatch_once_t loadCumulusOnceToken;
+	dispatch_once(&loadCumulusOnceToken, ^{
+		@autoreleasepool {
+			NSFileManager *fm = [NSFileManager new];
+			if (NO == [fm fileExistsAtPath:[self cachesDir]]) {
+				NSError *error = nil;
+				if (NO == [fm createDirectoryAtPath:[self cachesDir] withIntermediateDirectories:YES attributes:nil error:&error]) {
+					RCLog(@"Could not create Cumulus caches %@ (%@)", [error localizedDescription], [error userInfo]);
+				}
 			}
 		}
-	}
+	});
 }
 
 + (void) log:(NSString *)format, ... {
@@ -147,6 +152,21 @@ static NSMutableDictionary *_headers = nil;
 		}
 	}
 }
+
+static NSUInteger _maxConcurrentRequests = 0;
++ (NSUInteger) maxConcurrentRequests {
+	return _maxConcurrentRequests;
+}
+
++ (void) setMaxConcurrentRequests:(NSUInteger)maxConcurrentRequests {
+	@synchronized(@"Cumulus.maxConcurrentRequests") {
+		if (_maxConcurrentRequests != maxConcurrentRequests) {
+			_maxConcurrentRequests = maxConcurrentRequests;
+			[[CMRequestQueue sharedRequestQueue] setMaxConcurrentRequests:_maxConcurrentRequests];
+		}
+	}
+}
+
 
 static NSMutableDictionary *_fixtures = nil;
 
@@ -309,6 +329,14 @@ static BOOL _usingFixtures = NO;
 	resource.timeout = [self timeout];
 	resource.headers = [self headers];
 	resource.authProviders = [self authProviders];
+	
+	// Use the shared queue or just let them fly ...
+	if ([self maxConcurrentRequests] > 0) {
+		resource.requestQueue = [CMRequestQueue sharedRequestQueue];
+	}
+	else {
+		resource.maxConcurrentRequests = 0;
+	}
 	
 	if (_usingFixtures) {
 		id fixture = nil;

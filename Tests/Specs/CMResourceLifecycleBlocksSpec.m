@@ -237,7 +237,10 @@
 	
 	__block BOOL highQueue = NO;
 	index.postProcessorBlock = ^(CMResponse *response, id result) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 		highQueue = dispatch_get_current_queue() == dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+#pragma clang diagnostic pop
 		NSString *newResult = [NSString stringWithFormat:@"-- %@ --",result];
 		return newResult;
 	};

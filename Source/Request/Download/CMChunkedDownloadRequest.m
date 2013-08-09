@@ -155,13 +155,13 @@
 #pragma mark - CMRequest
 
 
-- (void) cancel {
+- (BOOL) cancel {
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	[_allChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
 		[chunk.request cancel];
 	}];
 	dispatch_semaphore_signal(_chunksSemaphore);
-	[super cancel];
+	return [super cancel];
 }
 
 - (void) handleConnectionWillStart {

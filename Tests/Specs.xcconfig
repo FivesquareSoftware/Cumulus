@@ -6,6 +6,6 @@
 //  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
 //
 
-CumulusTestServerHost = localhost
+CumulusTestServerHost = Hummingbird.local
 CumulusTestServerPort = 4567
 CumulusTestServerSSLPort = 4543

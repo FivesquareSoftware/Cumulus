@@ -72,8 +72,8 @@
 	return self;
 }
 
-- (NSString *) debugDescription {
-	return [NSString stringWithFormat:@"%@ %@",[super debugDescription],_identifier];
+- (NSString *) description {
+	return [NSString stringWithFormat:@"%@ %@",[super description],_identifier];
 }
 
 - (void) enterWithRequest:(CMRequest *)request {

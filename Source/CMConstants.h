@@ -109,7 +109,9 @@ extern NSString *kCumulusProgressInfoKeyProgress;
 
 extern NSString *kCumulusCachesDirectoryName;
 
-extern NSString *kHTTPDateFormat;
+extern NSUInteger kCumulusDefaultMaxConcurrentRequestCount;
+
+extern NSString *kCumulusHTTPDateFormat;
 
 
 

@@ -53,6 +53,17 @@ static dispatch_queue_t __activityQueue = nil;
 
 
 static NSInteger __requestCount = 0;
++ (NSUInteger) requestCount {
+	__block NSInteger requestCount = 0;
+	dispatch_sync(__activityQueue, ^{
+		requestCount = __requestCount;
+	});
+	if (requestCount < 0) {
+		requestCount = 0;
+	}
+	return (NSUInteger)requestCount;
+}
+
 static BOOL __networkActivityIndicatorVisible = NO;
 + (void) incrementRequestCountFor:(id)context {
 	dispatch_sync(__activityQueue, ^{
@@ -373,29 +384,32 @@ static BOOL __networkActivityIndicatorVisible = NO;
 #pragma mark - Control
 
 
-- (void) start {
-	NSAssert(NO == self.started, @"Attempting to start a request that has already been started or has finished");
+- (BOOL) start {
+	NSAssert(self.canStart, @"Attempting to start a request that has already been started or has finished");
 	if (NO == self.canStart) {
-		return;
+		RCLog(@"Attempting to start a request that has already been started or has finished");
+		return NO;
 	}
 	
 	// If a request was asked to cancel before it was completely set up, we will handle that now and bail
 	if (self.wasCanceled) {
+		RCLog(@"Attempting to start a canceled request, completing now instead");
 		[self handleConnectionFinished];
-		return;
+		return NO;
 	}
 	
-	[self handleConnectionWillStart];
 	
 	self.started = YES;
 	self.startedAt = [NSDate date];
 	
-	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];\
-	if (nil == self.queue) {
+	[self handleConnectionWillStart];
+
+	self.connection = [[NSURLConnection alloc] initWithRequest:self.URLRequest delegate:self startImmediately:NO];
+	if (nil == self.connectionDelegateQueue) {
 		[self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 	}
 	else {
-		[self.connection setDelegateQueue:self.queue];
+		[self.connection setDelegateQueue:self.connectionDelegateQueue];
 	}
 
 	[self.connection start];
@@ -410,47 +424,53 @@ static BOOL __networkActivityIndicatorVisible = NO;
 		[[NSRunLoop mainRunLoop] addTimer:timeoutTimer forMode:NSDefaultRunLoopMode];
 		self.timeoutTimer = timeoutTimer;
 	}
+	return YES;
 }
 
-- (void) startWithCompletionBlock:(CMCompletionBlock)block {
+- (BOOL) startWithCompletionBlock:(CMCompletionBlock)block {
 	self.completionBlock = block;
-	[self start];
+	return [self start];
 }
 
-- (void) startOnQueue:(NSOperationQueue *)delegateQueue withCompletionBlock:(CMCompletionBlock)completionBlock {
-	self.queue = delegateQueue;
+- (BOOL) startOnQueue:(NSOperationQueue *)delegateQueue withCompletionBlock:(CMCompletionBlock)completionBlock {
+	self.connectionDelegateQueue = delegateQueue;
+	return [self start];
 }
 
-- (void) cancel {
+- (BOOL) cancel {
 	if (NO == self.canCancel) {
 		RCLog(@"Attempting to cancel a request that has already been canceled or has finished ");
-		return;
+		return NO;
 	}
 	self.canceled = YES;
+
+	// We don't call the completion block otherwise, deferring until start is called. i.e. unless someone has called start, we assume they don't really want to fire the completion block
 	if (self.started) {
 		//	[self.connection cancel];
 		// strangely, *NOT* calling this on the main thread will cause other calls to dispatch on the main thread (like to completion block) to deadlock, freakish, something about the connection needing to be canceled on the same runloop it was canceled on?
 		[self.connection performSelectorOnMainThread:@selector(cancel) withObject:nil waitUntilDone:NO];
 		[self handleConnectionFinished];
 	}
+	return YES;
 }
 
 
-- (void) abort {
+- (BOOL) abort {
 	if (NO == self.canAbort) {
 		RCLog(@"Attempting to abort a request that has already been started, canceled or finished ");
-		return;
+		return NO;
 	}
 	if (self.abortBlock) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			self.abortBlock(self);
 		});
 	}
+	return YES;
 }
 
-- (void) abortWithBlock:(CMAbortBlock)abortBlock {
+- (BOOL) abortWithBlock:(CMAbortBlock)abortBlock {
 	self.abortBlock = abortBlock;
-	[self abort];
+	return [self abort];
 }
 
 - (void) timeoutFired:(NSTimer *)timer {
@@ -642,7 +662,8 @@ static BOOL __networkActivityIndicatorVisible = NO;
 		} else {
 			[[challenge sender] cancelAuthenticationChallenge:challenge];
 		}
-	} else {
+	}
+	else {
 		[[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
 	}
 }

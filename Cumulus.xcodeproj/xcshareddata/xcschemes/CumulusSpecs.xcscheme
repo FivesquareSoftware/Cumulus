@@ -61,7 +61,7 @@
          <EnvironmentVariable
             key = "MallocStackLoggingNoCompact"
             value = "YES"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "CumulusLoggingOn"

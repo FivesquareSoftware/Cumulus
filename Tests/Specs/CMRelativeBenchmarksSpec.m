@@ -35,6 +35,7 @@
 	// set up resources common to all examples here
 	self.service = [CMResource withURL:kTestServerHost];
 	self.benchmarks = [self.service resource:@"test/benchmarks"];
+//	self.benchmarks.maxConcurrentRequests = 0;
 	//	  NSLog(@"item: %@",self.specHelper.item);
 	self.largeList = self.specHelper.largeList;
 	//	  NSLog(@"largeList: %@",self.largeList);
@@ -82,13 +83,11 @@
 	[complicatedResource get];
 	[smallFile get];
 	
-	dispatch_semaphore_t request_sema = dispatch_semaphore_create(1);
-	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_t request_sema = dispatch_semaphore_create(0);
 	[largeFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 	
 }
@@ -99,6 +98,7 @@
 
 #pragma mark - Specs
 
+
 - (void)shouldGetManySmallResourcesWithNoCaching {
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *smallResource = [self.benchmarks resource:@"small-resource.json"];
@@ -107,17 +107,34 @@
 	__block BOOL success = YES;
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
+	dispatch_group_t group = dispatch_group_create();
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_apply(1000, queue, ^(size_t i) {
-		CMResponse *response = [smallResource get];
-		if (NO == response.wasSuccessful) {
-			success = NO;
-		}
+	__block NSUInteger runningCount = 1000;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		[smallResource getWithCompletionBlock:^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	dispatch_release(group);
+
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
+#if TARGET_OS_IPHONE
+	#if TARGET_IPHONE_SIMULATOR
+		CFTimeInterval expected = 23.f;
+	#else
+		CFTimeInterval expected = 23.f;
+	#endif
+#else
 	CFTimeInterval expected = 3.f;
+#endif
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
 	STAssertTrue(success, @"Should have succeeded");
@@ -127,7 +144,7 @@
 - (void)shouldGetManySmallResourcesWithExplicitCaching {
 	self.benchmarks.contentType = CMContentTypeJSON;
 	CMResource *smallResource = [self.benchmarks resource:@"small-resource.json"];
-	smallResource.cachePolicy = NSURLRequestReturnCacheDataElseLoad;
+	smallResource.cachePolicy = NSURLRequestReturnCacheDataDontLoad;
 	__block BOOL success = YES;
 	
 	// generate cache
@@ -135,17 +152,26 @@
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
+	dispatch_group_t group = dispatch_group_create();
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_apply(1000, queue, ^(size_t i) {
-		CMResponse *response = [smallResource get];
-		if (NO == response.wasSuccessful) {
-			success = NO;
-		}
+	__block NSUInteger runningCount = 1000;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		[smallResource getWithCompletionBlock:^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	dispatch_release(group);
+	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
-	CFTimeInterval expected = 1.f;
+	CFTimeInterval expected = 1.5;
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
@@ -164,7 +190,7 @@
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
-	CFTimeInterval expected = 1.f;
+	CFTimeInterval expected = 1.1;
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
@@ -201,13 +227,23 @@
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
+		
+	dispatch_group_t group = dispatch_group_create();
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_apply(15, queue, ^(size_t i) {
-		CMResponse *response = [complicatedResource get];
-		if (NO == response.wasSuccessful) {
-			success = NO;
-		}
+	__block NSUInteger runningCount = 15;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		[complicatedResource getWithCompletionBlock:^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	dispatch_release(group);
+
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -231,13 +267,21 @@
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
+	dispatch_group_t group = dispatch_group_create();
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_apply(15, queue, ^(size_t i) {
-		CMResponse *response = [complicatedResource get];
-		if (NO == response.wasSuccessful) {
-			success = NO;
-		}
+	__block NSUInteger runningCount = 15;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		[complicatedResource getWithCompletionBlock:^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	dispatch_release(group);
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -256,17 +300,28 @@
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
+		
+	dispatch_group_t group = dispatch_group_create();
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_apply(1000, queue, ^(size_t i) {
-		CMResponse *response = [smallResource post:self.specHelper.item];
-		if (NO == response.wasSuccessful) {
-			success = NO;
-		}
+	__block NSUInteger runningCount = 1000;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		[smallResource post:self.specHelper.item withCompletionBlock:^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	dispatch_release(group);
+
+
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
-	CFTimeInterval expected = 2.f;
+	CFTimeInterval expected = 4.f;
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
@@ -302,18 +357,27 @@
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
+	
+	dispatch_group_t group = dispatch_group_create();
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_apply(15, queue, ^(size_t i) {
-		CMResponse *response = [complicatedResource post:payload];
-		if (NO == response.wasSuccessful) {
-			success = NO;
-		}
+	__block NSUInteger runningCount = 15;
+	dispatch_apply(runningCount, queue, ^(size_t i) {
+		dispatch_group_enter(group);
+		[complicatedResource post:payload withCompletionBlock:^(CMResponse *response) {
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
+	
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	dispatch_release(group);
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
-	CFTimeInterval expected = .75;
+	CFTimeInterval expected = 1.5;
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
@@ -330,20 +394,15 @@
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
 	dispatch_group_t group = dispatch_group_create();
-	dispatch_group_enter(group); // wait on the last completion block
-	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(100, queue, ^(size_t i) {
-		dispatch_group_async(group, dispatch_get_current_queue(), ^{
-			[smallFile uploadFile:[NSURL fileURLWithPath:filePath] withProgressBlock:nil completionBlock:^(CMResponse *response){
-				if (NO == response.wasSuccessful) {
-					success = NO;
-				}
-				if (i >= 99) {
-					dispatch_group_leave(group);
-				}
-			}];
-		});
+		dispatch_group_enter(group);
+		[smallFile uploadFile:[NSURL fileURLWithPath:filePath] withProgressBlock:nil completionBlock:^(CMResponse *response){
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
@@ -395,25 +454,23 @@
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
-	dispatch_group_t group = dispatch_group_create();
-	dispatch_group_enter(group); // wait on the last completion block
 	
+	dispatch_group_t group = dispatch_group_create();
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(100, queue, ^(size_t i) {
-		dispatch_group_async(group, dispatch_get_current_queue(), ^{
-			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
-				if (NO == response.wasSuccessful) {
-					success = NO;
-				}
-				if (i >= 99) {
-					dispatch_group_leave(group);
-				}
-			}];
-		});
+		dispatch_group_enter(group);
+		[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	dispatch_release(group);
+	
+
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -446,20 +503,15 @@
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
 	dispatch_group_t group = dispatch_group_create();
-	dispatch_group_enter(group); // wait on the last completion block
-	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 	dispatch_apply(100, queue, ^(size_t i) {
-		dispatch_group_async(group, dispatch_get_current_queue(), ^{
-			[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
-				if (NO == response.wasSuccessful) {
-					success = NO;
-				}
-				if (i >= 99) {
-					dispatch_group_leave(group);
-				}
-			}];
-		});
+		dispatch_group_enter(group);
+		[smallFile downloadWithProgressBlock:nil completionBlock:^(CMResponse *response){
+			if (NO == response.wasSuccessful) {
+				success = NO;
+			}
+			dispatch_group_leave(group);
+		}];
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);

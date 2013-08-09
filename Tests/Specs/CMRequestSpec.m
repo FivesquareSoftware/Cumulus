@@ -56,8 +56,10 @@
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 
 	[request startWithCompletionBlock:nil];
-#ifdef DEBUG
+#if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	STAssertThrows([request start], @"Should not be able to start a request twice");
+#else 
+	STAssertFalse([request start], @"Should not be able to start a request twice");
 #endif
 }
 
@@ -69,7 +71,12 @@
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	[request startWithCompletionBlock:nil];
 	[request cancel];
+#if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	STAssertThrows([request start], @"Should not be able to start a request that is canceled");
+#else
+	STAssertFalse([request start], @"Should not be able to start a request that is canceled");
+#endif
+
 }
 
 - (void)shouldNotBeAbleToStartARequestThatIsFinished {
@@ -88,7 +95,12 @@
 	dispatch_semaphore_signal(request_sema);
 	dispatch_release(request_sema);
 
+#if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	STAssertThrows([request start], @"Should not be able to start a request that is finished");
+#else
+	STAssertFalse([request start], @"Should not be able to start a request that is finished");
+#endif
+
 }
 
 - (void)shouldBeCanceledWhenCanceled {
@@ -176,7 +188,7 @@
 
 - (void) shouldFailToCreateARequestWithNoURLRequest {
 	CMRequest *request;
-#ifdef DEBUG	
+#if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	STAssertThrows((request = [[CMRequest alloc] initWithURLRequest:nil]), @"Should not create a request without a URL request");
 #else
 	request = [[CMRequest alloc] initWithURLRequest:nil];

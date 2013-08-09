@@ -37,16 +37,24 @@ get '/index' do
 	ok('OK')
 end
 
+get '/index/slow' do
+	sleep(1)
+	ok('OK')
+end
+
 get '/slow' do
-  sleep(1)
+	sleep(1)
+	ok('OK')
 end
 
 get '/superslow' do
 	sleep(5)
+	ok('OK')
 end
 
 get '/crazyslow' do
 	sleep(20)
+	ok('OK')
 end
 
 put '/index' do
