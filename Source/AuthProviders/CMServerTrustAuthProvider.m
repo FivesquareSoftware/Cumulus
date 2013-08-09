@@ -70,8 +70,11 @@
 
 - (void) addCertificate:(id)certificate {
 	SecCertificateRef certRef = (__bridge SecCertificateRef)certificate;
-	NSAssert(CFGetTypeID(certRef) == SecCertificateGetTypeID(), @"Type of certificate was not SecCertificateRef");
-	[self.certificates addObject:certificate];
+	BOOL isSecCertificateRef = CFGetTypeID(certRef) == SecCertificateGetTypeID()
+	NSAssert(isSecCertificateRef, @"Type of certificate was not SecCertificateRef");
+	if (isSecCertificateRef) {
+		[self.certificates addObject:certificate];
+	}
 }
 
 
@@ -101,7 +104,7 @@
 		}
 		SecTrustResultType result;
 		OSStatus returnCode = SecTrustEvaluate(serverTrust, &result);
-		if (returnCode == errSecSuccess && (result == kSecTrustResultProceed || result == kSecTrustResultConfirm || result == kSecTrustResultUnspecified) ) {
+		if (returnCode == errSecSuccess && (result == kSecTrustResultProceed /*|| result == kSecTrustResultConfirm -- DEPRECATED */ || result == kSecTrustResultUnspecified) ) {
 			credential = [NSURLCredential credentialForTrust:serverTrust];
 		} else {
 			RCLog(@"SecTrustEvaluate failed: %ld",returnCode);
