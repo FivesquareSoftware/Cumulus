@@ -36,10 +36,16 @@
 #import <Foundation/Foundation.h>
 
 
-#if DEBUG
+#ifndef CUMULUS_BLOCK_LOGGING
+	#define CUMULUS_BLOCK_LOGGING 1
+#endif
+
+#if DEBUG || CUMULUS_BLOCK_LOGGING == 0
 	#ifdef CumulusLoggingOn
+// always log
 		#define RCLog(fmt,...) NSLog(fmt, ##__VA_ARGS__ )
 	#else
+// log based on the environment
 		#define RCLog(fmt,...) [Cumulus log:fmt, ##__VA_ARGS__ ]
 	#endif
 #else
