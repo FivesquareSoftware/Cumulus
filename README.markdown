@@ -31,9 +31,9 @@ Cumulus handles the most common cases for you, but provides well defined interfa
 Cumulus was implemented with automatic reference counting (ARC). It requires iOS 6 or greater and/or Mac OS 10.8 or greater.
 
 
-## Including in Your Project
+## Using in Your Project
 
-#### Setup
+#### Including
 
 The easiest way to use Cumulus in your project is to include pod 'Cumulus' in your [CocoaPods](http://cocoapods.org) Podfile. Make sure you are targeting iOS 6 and/or OS X 10.8 (e.g. platform :ios, '6.0')
 
@@ -57,7 +57,7 @@ On iOS, use:
 #import "Cumulus.h"
 ```
 
-#### Linking Dependencies
+#### Dependencies
 
 Make sure the _Security_ framework (to handle certificate based auth) and _MobileCoreServices_ framework are linked (for iOS), or _CoreServices_ framework (for Mac OS).
 
