@@ -23,7 +23,7 @@
 
 #### How do I set up my workspace to use Cumulus?
 
-You can build and link libCumulus.a as part of your project build by adding its Xcode project to your workspace and adding libCumulus.a to the link phase. Workspaces don't currently provide a way to automatically search for headers in other projects in the workspace, so you'll also need to add the path to Cumulus to your header search path.  
+If you aren't using [Cocoa Pods](http://cocoapods.org), you can build and link libCumulus.a as part of your project build by adding its Xcode project to your workspace and adding libCumulus.a to the link phase. Workspaces don't currently provide a way to automatically search for headers in other projects in the workspace, so you'll also need to add the path to Cumulus to your header search path.  
 
 Let's say you dropped Cumulus in ./Ext/Cumulus. Then, in Xcode, you would:
 
@@ -38,7 +38,7 @@ If you are interested in tracking the bleeding edge (or if you just want a simpl
 1. In Terminal:
 ```sh
 % cd <your_project>  
-% git submodule add git@github.com:FivesquareSoftware/Cumulus.git Ext/Cumulus  
+% git submodule add --branch <some branch> git@github.com:FivesquareSoftware/Cumulus.git Ext/Cumulus  
 ```
 1. When you want to get an update:
 ```sh
@@ -64,7 +64,7 @@ You can set up a base resource for other resources to inherit, or to use directl
 CMResource *site = [CMResource withURL:@"http://example.com"];
 // Health check
 [site getWithCompletionBlock:^(CMResponse *response){
-	if (NO == response.success) {
+	if (NO == response.wasSuccessful) {
 		NSLog(@"The site is down!");
 	}
 }];
@@ -75,7 +75,9 @@ You can configure settings on parent resources (they will be inherited by child 
 ```objective-c 
 site.contentType = CumulusContentTypeJSON
 site.timeout = 20;
+site.maxConcurrentRequests = 10;
 [site setValue:@"foo" forHeaderField:@"X-MyCustomHeader"];
+site.query = @{ "TOKEN" : @"MY API TOKEN" };
 ```
 
 Create child resources using the `-resource:` method with a relative path (which can be any object that will output a useful description).
@@ -155,7 +157,7 @@ Completion blocks run when a request is complete, regardless of whether it was a
 ```objective-c 
 [posts getWithCompletionBlock:^(CMResponse *response) {
 	// it's safe to call UI code here
-	if (response.success) {
+	if (response.wasSuccessful) {
 		[myController reload:response.result];
 	} else {
 		UIAlertView *alert = [[UIAlertView alloc] initWith ...];
@@ -183,36 +185,31 @@ if ([response isOK]) {
 }
 ```
 
-All of the HTTP methods take an optional query object, which can be an array or dictionary.
+The GET and HEAD HTTP methods also take an optional query object, which is a dictionary.
 
 ```objective-c 
-CMResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:@"bar",@"foo",@"today",@"date",nil]];
+CMResponse *response = [posts getWithQuery:@{ @"foo" : @"bar", @"date" : @"today"}];
 ```
 
 will yield a query string like this: "foo=bar&date=today".
 
-A single dictionary could also produce a similar result:
+Specific objects, like arrays, know how to serialize themselves as query string objects correctly.
 
 ```objective-c 
-CMResponse *response = [posts getWithQuery:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"]];
+CMResponse *response = [posts getWithQuery:@{ @"foo" : @[@"1",@"2"] }];
 ```
 
-However, anything after a dictionary is ignored.
+yields this query string: "foo[]=1&foo[]=2". You can extend this special handling to your own objects by implementing -queryWithKey:.
+
+
+Any query you pass to a request is appended to a resource's base query if it exists.
 
 ```objective-c 
-CMResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"],@"today",@"date",nil]];
+site.query = @{ @"TOKEN" : TOKEN };
+CMResource *posts = [site resource:@"posts"];
+CMResponse *response = [posts getWithQuery:@{ @"offset" : @(10), @"limit" : @(10) }];
 ```
-
-will yield "foo=bar" and drop the remaining parameters.
-
-Finally, specific objects, like arrays, know how to serialize themselves as query string objects correctly.
-
-```objective-c 
-CMResponse *response = [posts getWithQuery:[NSArray arrayWithObjects:[NSArray arrayWithObjects:@"1",@"2"],@"foo",@"today",@"date",nil]];
-```
-
-yields this query string: "foo[]=1&foo[]=2&date=today". You can extend this special handling to your own objects by implementing -queryWithKey:.
-
+yields a query string like: "TOKEN=abc123&offset=10&limit=10". This makes it easy to set up a base resource that must pass things like API tokens or version at all times, but still augment that query at request time.
 
 
 
@@ -298,9 +295,9 @@ myProtectedResource.preflightBlock = ^(CMRequest * request){
 Progress blocks allow you to do work when data is received on a connection. They run once when the request begins and are called on the main queue like preflight blocks.
 
 ```objective-c 
-RCProgressBlock pictureProgressBlock = ^(NSDictionary *progressInfo){
+RCProgressBlock pictureProgressBlock = ^(CMProgressInfo *progressInfo){
 	pictureDownloadProgressBar.hidden = NO;
-	pictureDownloadProgressBar.progress = [[progressInfo objectForKey:kCumulusProgressInfoKeyProgress] floatValue];
+	pictureDownloadProgressBar.progress = [progressInfo.progress floatValue];
 }	
 [[pictures resource:@"abc123"] getWithProgressBlock:pictureProgressBlock completionBlock:^(CMResponse *response) {
 	pictureDownloadProgressBar.hidden = YES;
@@ -317,9 +314,19 @@ RCProgressBlock pictureProgressBlock = ^(NSDictionary *progressInfo){
 You can download large files directly to disk.
 
 ```objective-c 
-CMResource *images = [site resource:@"images"];
-[images downloadWithProgressBlock:nil completionBlock:^(CMResponse *response) {
-	NSURL *downloadedFile = [response.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
+CMResource *bigImage = [site resource:@"bigImage.png"];
+[bigImage downloadWithProgressBlock:nil completionBlock:^(CMResponse *response) {
+	NSURL *downloadedFile = [(CMProgressInfo *)response.result tempFileURL];
+	// Move the file to where you want it
+}
+```
+
+You can also download big honking resources in chunks.
+
+```objective-c 
+CMResource *massiveVideo = [site resource:@"huge_video.m4v"];
+[massiveVideo downloadInChunksWithProgressBlock:^(CMProgressInfo *){...} completionBlock:^(CMResponse *response) {
+	NSURL *downloadedFile = [(CMProgressInfo *)response.result tempFileURL];
 	// Move the file to where you want it
 }
 ```
@@ -335,7 +342,7 @@ RCProgressBlock progressBlock = ^(NSDictionary *progressInfo){
 };
 
 RCCompletionBlock completionBlock = ^(CMResponse *response) {
-	if (response.success) {
+	if (response.wasSuccessful) {
 		NSLog(@"Upload done!");
 	}
 };
@@ -521,7 +528,7 @@ Take a look at CMRequest.h for more information.
 
 #### Configuring Logging
 
-Logging is disabled by default unless the 'DEBUG' preprocessor macro is set to YES|true|1|foo in your build settings. Once that flag is defined, logging can then be turned on or off in one of two ways:
+Logging is disabled by default unless 'DEBUG' set to YES|true|1|foo or 'CUMULUS_BLOCK_LOGGING' is set to 0 in your build settings. Once those flags are defined, logging can then be turned on or off in one of two ways:
 
 1. Pass in CumulusLoggingOn=YES|true|foo in your builds settings, this will compile logging in.
 1. Set CumulusLoggingOn=YES|true|1 in the environment in the Run phase of your target's scheme to turn logging on, or NO|false|0 to turn it off (the default is off). This is wicked handy, because you can turn on logging even on an already compiled library, simply by changing the process environment. The environment is only checked once at startup, but this will result in a BOOL comparison for every log statement. Thankfully, Cumulus doesn't log much.
@@ -533,7 +540,7 @@ Logging is disabled by default unless the 'DEBUG' preprocessor macro is set to Y
 
 #### Troubleshooting Deadlocks
 
-Because Cumulus uses Grand Central Dispatch, it shares a few of the gotchas that GCD does, for example, dispatching synchronously (or asynchronously to a serial queue) from the same queue will produce deadlock. Cumulus runs some of the lifecyle blocks for a resource on the main queue, which is a serial queue. If you were to dispatch to the main queue again from inside of that block, you would see a deadlock.  Mostly, just know what your GCD environment is when dispatching, and you'll be fine. The Cumulus docs indicate how it dispatches the various blocks you provide. And, [Apple's documentation on GCD](http://developer.apple.com/library/ios/#documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1) is excellent.
+Because Cumulus uses Grand Central Dispatch, it shares a few of the gotchas that GCD does, for example, dispatching synchronously from the same queue that a bit of code is running on will produce deadlock. Cumulus runs some of the lifecyle blocks for a resource on the main queue, which is a serial queue. If you were to dispatch synchronously to the main queue again from inside of that block, you would see the application freeze.  Mostly, just know what your GCD environment is when dispatching, and you'll be fine. The Cumulus docs indicate exactly how it dispatches the various blocks you provide. And, [Apple's documentation on GCD](http://developer.apple.com/library/ios/#documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1) is excellent.
 
 
 [Top &#x2191;][top]

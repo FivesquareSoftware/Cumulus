@@ -33,13 +33,13 @@ Cumulus was implemented with automatic reference counting (ARC). It requires iOS
 
 ## Including in Your Project
 
-#### Podspec
+#### Setup
 
-#### Building
+The easiest way to use Cumulus in your project is to include pod 'Cumulus' in your [CocoaPods](http://cocoapods.org) Podfile. Make sure you are targeting iOS 6 and/or OS X 10.8 (e.g. platform :ios, '6.0')
 
-The simplest way to use Cumulus in your Xcode project is to just copy the files in "Source" to your own project.
+The most low tech way to use Cumulus in your Xcode project is to just copy the files in "Source" to your own project.
 
-The best way to include Cumulus is to drag the project into your workspace, then add either libCumulus.a (iOS) or Cumulus.framework (Mac OS) to your main target's link phase. 
+To track a development branch of Cumulus, set it up as a git submodule and drag the project into your workspace, then add either libCumulus.a (iOS) or Cumulus.framework (Mac OS) to your main target's link phase. 
 
 If you are using the Mac OS framework, the headers are automatically in your header search path. To add them for iOS, add "${SRCROOT}/relative/path/to/Cumulus/Source" to your HEADER_SEARCH_PATHS build setting and check the recursive box.
 
@@ -68,7 +68,6 @@ You must use the -ObjC linker flag (at least, you could also use -force_load="${
 If you plan on running the tests, make sure you use `git clone --recursive` to get the repository (or if you are adding Cumulus as a submodule, `git submodule update --recursive`) to be sure to fetch Cumulus's own externals as these are required for the specs to run.
 
 
-
 That's it. There is detailed help in the [Cumulus Programming Guide][] if you need more information about how to set up your workspace.
 
 
@@ -87,7 +86,7 @@ site.contentType = CMContentTypeJSON;
 site.username = @"foo";
 site.password = @"bar";
 ```
-Usually, you would store this somewhere you could access from anywhere in your app, like your app delegate or a singleton.
+Usually, you would store this somewhere you could access from anywhere in your app, like your app delegate or a context object.
 	
 #### Configure some child resources and start using them
 
@@ -114,7 +113,7 @@ CMProgressBlock postProgressBlock = ^(NSDictionary *progressInfo) {
 NSDictionary *postData = ...;
 CMResource *firstPost = [posts resource:[NSNumber numberWithInt:1]];
 [firstPost post:postData withProgressBlock:postProgressBlock completionBlock:^(CMResponse *response) {
-	if (response.success) {
+	if (response.wasSuccessful) {
 		[postsController addPost:postData];
 	}
 }];
@@ -126,7 +125,7 @@ _Map stuff_
 CMResource *user123 = [site resourceWithFormat:@"users/%@",[NSNumber numberWithInt:123]];
 __block MyUserClass *user;
 [user123 getWithCompletionBlock:^(CMResponse *response) {
-	if (response.success) {
+	if (response.wasSuccessful) {
 		user = [MyUserClass withUserData:response.result];
 	}
 }];
@@ -151,7 +150,7 @@ _Download stuff directly to disk_
 ```objective-c 	
 CMResource *images = [site resource:@"images"];
 [images downloadWithProgressBlock:nil completionBlock:^(CMResponse *response) {
-	NSURL *downloadedFile = [response.result valueForKey:kCumulusProgressInfoKeyTempFileURL];
+	NSURL *downloadedFile = [(CMProgressInfo *)response.result tempFileURL];
 	// Move the file to where you want it
 }
 ```
@@ -159,8 +158,7 @@ CMResource *images = [site resource:@"images"];
 _Test stuff even before your services are ready_
 
 ```objective-c 	
-CMResource *posts = [site resource:@"posts"];
-posts.contentType = CMContentTypeJSON;
+CMResource *posts = [site resource:@"posts.json"];
 [posts setFixture:[NSArray arrayWithObjects:postOne,postTwo,nil] forHTTPMethod:kCumulusHTTPMethodGET];
 [posts getWithCompletionBlock:^(CMResponse *response) {
 	postsController.posts = response.result;
@@ -172,8 +170,42 @@ posts.contentType = CMContentTypeJSON;
 // now all resources will also check in with Cumulus to see if they have a fixture, yay!
 ```
 
+_Group a whole bunch of requests together using block_
 
-Cumulus does even more, like direct from disk uploads, OAuth2 authentication, automatic queueing and cancelling of requests, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [Cumulus Programming Guide][Cumulus Programming Guide].
+```objective-c 	
+CMResourceContext *context = [CMResourceContext withName:@"Posts Context"];
+[context performRequestsAndWait:^() {
+	CMResource *users = [site resource:@"users.json"];
+	CMResponse *users = [users get];
+	// Do something with users	
+	CMResource *posts = [site resource:@"test/get/item"];
+	[posts getWithCompletionBlock:^(CMResponse *response) {
+		// Do something with posts	
+	}];	
+} withCompletionBlock:^(BOOL success, NSSet *responses) {
+	NSLog(@"All my updates were %@",success ? @"successful" : @"not successful");
+}];
+```
+
+_Automatically cancel groups of requests when a scope object deallocates_
+
+```objective-c 	
+// PostsController.m
+- (void) viewDidLoad {
+	CMResourceContext *context = [CMResourceContext withName:@"Posts Controller Context"];
+	[context performRequests:^{
+		for (int i = 0; i < 10; i++) {
+			[[self.posts resource:@(i)] getWithCompletionBlock:...];
+		}
+	} inScope:self];
+}
+// When the posts controller deallocates, any requests still running will cancel automatically
+// There is also a convenience category on NSObject that lets you scope requests directly on any object
+[self performRequestsInScope:^{...}];
+```
+
+
+Cumulus does even more, like direct from disk uploads, chunked downloads, OAuth2  and S3 authentication, automatic queueing and cancelling of requests, automatic concurrent request optimization, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [Cumulus Programming Guide][Cumulus Programming Guide].
 
 
 ## Documentation
@@ -196,7 +228,7 @@ Cumulus was originally created by and is maintained by John Clayton <Cumulus@fiv
 
 Check out the [contributors graph](https://github.com/FivesquareSoftware/Cumulus/contributors) to see all the great people making Cumulus work.
 
-Patches are welcome, pull requests make us all excited.
+Patches are welcome, pull requests get us all excited.
 
 
 ## Acknowledgements
