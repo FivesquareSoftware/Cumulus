@@ -35,7 +35,7 @@ Cumulus was implemented with automatic reference counting (ARC). It requires iOS
 
 #### Including
 
-The easiest way to use Cumulus in your project is to include pod 'Cumulus' in your [CocoaPods](http://cocoapods.org) Podfile. Make sure you are targeting iOS 6 and/or OS X 10.8 (e.g. platform :ios, '6.0')
+The easiest way to use Cumulus in your project is to include `pod 'Cumulus'` in your [CocoaPods](http://cocoapods.org) Podfile. Make sure you are targeting iOS 6 and/or OS X 10.8 (e.g. `platform :ios, '6.0'`)
 
 The most low tech way to use Cumulus in your Xcode project is to just copy the files in "Source" to your own project.
 
