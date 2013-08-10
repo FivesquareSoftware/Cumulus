@@ -16,7 +16,7 @@ By design, Cumulus does one thing only, and one thing well: interact with REST r
 
 #### Lives in the Moment
 
-Cumulus was also created to be a joy to use. The primary interfaces are all implemented with blocks, so you can just forget about writing a thousand implementations of a delegate protocol or adding pointers to everything everywhere—define your intentions in a block—where you intend them and enjoy the rest of your day. All the blocks used in the public interface are typed, so you can define them once and reuse them if you find that convenient.
+Cumulus was also created to be a joy to use. The primary interfaces are all implemented with blocks, so you can just forget about writing a thousand implementations of a delegate protocol or adding pointers to everything everywhere—define your intentions in a block where you intend them and enjoy the rest of your day. All the blocks used in the public interface are typed, so you can define them once and reuse them if you find that convenient.
 
 #### Easy On The I's
 
@@ -59,9 +59,9 @@ On iOS, use:
 
 #### Linking Dependencies
 
-Make sure you link the _Security_ framework (to handle certificate based auth) and _MobileCoreServices_ framework (for iOS), or _CoreServices_ framework (for Mac OS).
+Make sure the _Security_ framework (to handle certificate based auth) and _MobileCoreServices_ framework are linked (for iOS), or _CoreServices_ framework (for Mac OS).
 
-You must use the -ObjC linker flag (at least, you could also use -force_load="${BUILT_PRODUCTS_DIR}/libCumulus.a" or -all_load if you wanted to be more agressive) in order to link in the categories defined in Cumulus.
+You must use the -ObjC linker flag (at least—you could also use -force_load="${BUILT_PRODUCTS_DIR}/libCumulus.a" or -all_load if you wanted to be more agressive) in order to link in the categories defined in Cumulus.
 
 #### Tests
 
@@ -106,12 +106,12 @@ CMResource *posts = [site resource:@"posts"];
 _Create stuff_
 
 ```objective-c 	
-CMProgressBlock postProgressBlock = ^(NSDictionary *progressInfo) {
-	postProgressView.progress = [[progressInfo objectForKey:kCumulusProgressInfoKeyProgress] floatValue];
+CMProgressBlock postProgressBlock = ^(CMProgressInfo *progressInfo) {
+	postProgressView.progress = [progressInfo.progress floatValue];
 };
 
 NSDictionary *postData = ...;
-CMResource *firstPost = [posts resource:[NSNumber numberWithInt:1]];
+CMResource *firstPost = [posts resource:@(1)];
 [firstPost post:postData withProgressBlock:postProgressBlock completionBlock:^(CMResponse *response) {
 	if (response.wasSuccessful) {
 		[postsController addPost:postData];
@@ -122,7 +122,7 @@ CMResource *firstPost = [posts resource:[NSNumber numberWithInt:1]];
 _Map stuff_
 
 ```objective-c 	
-CMResource *user123 = [site resourceWithFormat:@"users/%@",[NSNumber numberWithInt:123]];
+CMResource *user123 = [site resourceWithFormat:@"users/%@",@(123)];
 __block MyUserClass *user;
 [user123 getWithCompletionBlock:^(CMResponse *response) {
 	if (response.wasSuccessful) {
@@ -155,7 +155,7 @@ CMResource *images = [site resource:@"images"];
 }
 ```
 
-_Test stuff even before your services are ready_
+_Test stuff—even before your services are ready!_
 
 ```objective-c 	
 CMResource *posts = [site resource:@"posts.json"];
@@ -170,7 +170,7 @@ CMResource *posts = [site resource:@"posts.json"];
 // now all resources will also check in with Cumulus to see if they have a fixture, yay!
 ```
 
-_Group a whole bunch of requests together using block_
+_Group a whole bunch of requests together using blocks_
 
 ```objective-c 	
 CMResourceContext *context = [CMResourceContext withName:@"Posts Context"];
@@ -192,7 +192,7 @@ _Automatically cancel groups of requests when a scope object deallocates_
 ```objective-c 	
 // PostsController.m
 - (void) viewDidLoad {
-	CMResourceContext *context = [CMResourceContext withName:@"Posts Controller Context"];
+	CMResourceContext *context = [CMResourceContext withName:@"Posts Context"];
 	[context performRequests:^{
 		for (int i = 0; i < 10; i++) {
 			[[self.posts resource:@(i)] getWithCompletionBlock:...];
@@ -204,8 +204,7 @@ _Automatically cancel groups of requests when a scope object deallocates_
 [self performRequestsInScope:^{...}];
 ```
 
-
-Cumulus does even more, like direct from disk uploads, chunked downloads, OAuth2  and S3 authentication, automatic queueing and cancelling of requests, automatic concurrent request optimization, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [Cumulus Programming Guide][Cumulus Programming Guide].
+Cumulus does even more, like direct from disk uploads, chunked downloads, OAuth2 and S3 authentication, automatic queueing and canceling of requests, automatic concurrent request optimization, and post-processing on a background thread (great for Core Data mapping in a child context), See more detailed examples in  the [Cumulus Programming Guide][Cumulus Programming Guide].
 
 
 ## Documentation

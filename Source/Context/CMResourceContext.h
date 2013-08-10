@@ -68,6 +68,7 @@ extern NSString *kCMResourceContextKey;
  *  @param work A block containing a series of requests made with CMResource objects that you wish to scope to the lifetime of the scope parameter.
  *  @param scope An object whose lifetime will define the scope of any requests launched at the top level of the work block; when scope is deallocated, any running requests are canceled.
  *  @note Only requests launched during the execution of the top level block are included in the scope of the work. For example, if you launch a new request from the completion block of an asynchronous request launched inside the work block, the receiver does not control the lifecycle of that request, nor is it part of any subsequent work scope.
+ *  Idea for this was stolen shamelessly from @bsneed.
 */
 - (void) performRequests:(void(^)())work inScope:(id)scope;
 
