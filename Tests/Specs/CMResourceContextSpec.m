@@ -112,8 +112,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group_semaphore);
-	
+		
 	STAssertTrue(localSuccess, @"Group should have succeeded");
 	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
 	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
@@ -180,14 +179,12 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group_semaphore);
-	
+		
 	context = nil;
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(context_semaphore, DISPATCH_TIME_FOREVER);
-		//dispatch_release(context_semaphore);
-		STAssertNil(context, @"Context should no longer exist!");
+				STAssertNil(context, @"Context should no longer exist!");
 	}];
 }
 
@@ -213,12 +210,10 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(launch_semaphore);
-	[context cancelRequestsForIdentifier:groupIdentifier];
+		[context cancelRequestsForIdentifier:groupIdentifier];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group_semaphore);
-	
+		
 	[localResponses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
 		anyRequestWasCanceled = response.request.wasCanceled;
 		if (anyRequestWasCanceled) {
@@ -253,12 +248,10 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(launch_semaphore);
-	[context cancelAllRequests];
+		[context cancelAllRequests];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group_semaphore);
-	
+		
 	[localResponses enumerateObjectsUsingBlock:^(CMResponse *response, BOOL *stop) {
 		anyRequestWasCanceled = response.request.wasCanceled;
 		if (anyRequestWasCanceled) {
@@ -303,8 +296,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	} inScope:scope];
 	
 	dispatch_semaphore_wait(launch_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(launch_semaphore);
-	
+		
 	scope = nil;
 	
 	
@@ -339,8 +331,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 		} while (running == YES);
 
 		
-		//dispatch_release(scope_semaphore);
-//		STAssertTrue(lastRequest.wasCanceled, @"Request should have been canceled: %@",lastRequest);
+		//		STAssertTrue(lastRequest.wasCanceled, @"Request should have been canceled: %@",lastRequest);
 		STAssertTrue(anyRequestCanceled, @"At least one request should have been canceled: %@",requests);
 	}];
 }
@@ -374,8 +365,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	}];
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group_semaphore);
-	
+		
 	STAssertTrue(localSuccess, @"Group should have succeeded");
 	STAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
 	STAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");

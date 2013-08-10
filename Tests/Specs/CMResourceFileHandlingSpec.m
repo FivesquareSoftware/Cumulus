@@ -119,8 +119,7 @@
 	
 	[heroDownload downloadWithProgressBlock:nil completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
 	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
 	
@@ -200,8 +199,7 @@
 			
 	[massiveFailure resumeOrBeginDownloadWithProgressBlock:nil completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-		
+			
 	downloadState = [CMDownloadInfo downloadInfo];
 	massiveInfo = [downloadState objectForKey:[massiveFailure URL]];
 	STAssertNil(massiveInfo, @"Download state should have been cleaned up on a resume failure");
@@ -249,8 +247,7 @@
 	};
 	[massiveStream resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	STAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
 	STAssertTrue(firstProgress == 0.f, @"Download should have reset to a zero byte offset");
@@ -279,8 +276,7 @@
 	CMContentRange contentRange = CMContentRangeMake(0, 100000, 0);
 	[massive downloadRange:contentRange progressBlock:nil completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-
+	
 	NSDictionary *downloadInfo = [CMDownloadInfo downloadInfo];
 	CMDownloadInfo *downloadState = [downloadInfo objectForKey:[massive URL]];
 	STAssertNil(downloadState, @"Download state for range download should have been reset");
@@ -328,8 +324,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-
+	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -429,8 +424,7 @@
 	[massive downloadInChunksWithProgressBlock:progressBlock completionBlock:completionBlock];
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 
 //	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
@@ -582,8 +576,7 @@
 	}
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	
 	[mockProgressObject verify];
 	
@@ -672,8 +665,7 @@
 	};
 	[massive resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	STAssertTrue(hadRangeHeader, @"Request should have included a range header");
 	STAssertTrue(writesToSameTempFile, @"Download should have resumed writing to partial download");

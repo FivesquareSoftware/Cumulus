@@ -311,10 +311,6 @@
 
 #pragma mark - Object
 
-- (void)dealloc {
-	//dispatch_release(_requestsInternalAccessQueue);
-	//dispatch_release(_lastModifiedAccessQueue);
-}
 
 + (id) withURL:(id)URL {
 	return [[CMResource alloc] initWithURL:URL];
@@ -831,8 +827,7 @@
 	else {
 		dispatch_semaphore_wait(requestSema, DISPATCH_TIME_FOREVER);
 	}
-	//dispatch_release(requestSema);
-	__autoreleasing CMResponse *autoreleasingResponse = localResponse;
+		__autoreleasing CMResponse *autoreleasingResponse = localResponse;
 	localResponse = nil;
 	return autoreleasingResponse;
 }
@@ -874,8 +869,7 @@
 		[self dispatchRequest:request withCompletionBlock:completionBlock launchSemaphore:launchSemaphore context:context immediately:dispatchImmediately];
 	}
 	dispatch_semaphore_wait(launchSemaphore, DISPATCH_TIME_FOREVER);
-	//dispatch_release(launchSemaphore);
-	return request.identifier;
+		return request.identifier;
 }
 
 - (void) dispatchRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock launchSemaphore:(dispatch_semaphore_t)launchSemaphore context:(id)context immediately:(BOOL)immediately {

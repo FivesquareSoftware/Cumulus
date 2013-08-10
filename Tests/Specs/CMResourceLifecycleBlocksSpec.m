@@ -142,8 +142,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	
 	STAssertTrue(touched, @"Should have run preflight block");
 	STAssertNotNil(localResponse, @"Response should not be nil when preflight allows a request to run");
@@ -211,8 +210,7 @@
 	[hero getWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	
 	[mockProgressObject verify];
 }
@@ -268,8 +266,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(touched, @"Should have run completion block");
 }
 
@@ -289,8 +286,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(mainThread, @"Completion block should have run on main thread");
 }
 

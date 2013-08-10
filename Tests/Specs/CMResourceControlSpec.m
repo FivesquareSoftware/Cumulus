@@ -110,8 +110,7 @@
 		dispatch_semaphore_signal(cancel_sema);
 	}];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(cancel_sema);
-	
+		
 	STAssertTrue([requests count] > 0, @"There must be some requests to run this this");
 	for (CMRequest *request in requests) {
 		[NSThread sleepForTimeInterval:.05]; // let connection die
@@ -166,8 +165,7 @@
 //		dispatch_semaphore_signal(cancel_sema);
 //	}];
 //	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-//	//dispatch_release(cancel_sema);
-	[smallResource cancelRequests];
+//		[smallResource cancelRequests];
 	afterCancelRequestsCount = smallResource.requests.count;
 	
 	STAssertTrue(afterCancelRequestsCount > 0, @"Canceled requests should be allowed to remove themselves from their completion block (afterCancelRequestsCount: %@)",@(afterCancelRequestsCount));
@@ -229,8 +227,7 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 }
 
 - (void) shouldRunAsynchronouslyFromTheMainQueueWithPreflightBlock {
@@ -252,8 +249,7 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 	STAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
 }
 
@@ -281,8 +277,7 @@
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		//dispatch_release(request_sema);
-		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+				STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 		STAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
 	}];
 }
@@ -314,8 +309,7 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThread {
@@ -411,8 +405,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
 }
 
@@ -429,8 +422,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
 }
 
@@ -463,8 +455,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	STAssertTrue(success, @"All requests should have succeeded");
 	STAssertTrue(highwaterRequestCount <= requestQueue.actualMaxConcurrentRequests, @"Should not have run more than the optimally max allowed requests (%@ > %@)",@(highwaterRequestCount), @(requestQueue.actualMaxConcurrentRequests));
 }
@@ -499,8 +490,7 @@
 	});
 
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-
+	
 	STAssertTrue(success, @"All requests should have succeeded");
 	STAssertTrue(highwaterRequestCount <= resource.maxConcurrentRequests, @"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), @(resource.maxConcurrentRequests));
 }
@@ -540,8 +530,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	STAssertTrue(success, @"All requests should have succeeded");
 	STAssertTrue(highwaterRequestCount == runningCount, @"Should not have throttled requests (%@ == %@)",@(highwaterRequestCount), @(runningCount));
 }
@@ -575,8 +564,7 @@
 	BOOL finishedBeforeQueue = queueComplete == NO;
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	STAssertTrue(finishedBeforeQueue, @"Blocking request should have completed before queued requests");
 
 }
@@ -604,8 +592,7 @@
 	[resource cancelRequests];
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	STAssertTrue(anyRequestCanceledBeforeStarting, @"Some queued requests should have been canceled before they got a chance to start");
 }
 
@@ -633,8 +620,7 @@
 //	}];
 //	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 //	dispatch_semaphore_signal(request_sema);
-//	//dispatch_release(request_sema);
-//	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+//	//	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 //}
 
 // ========================================================================== //
@@ -662,8 +648,7 @@
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		//dispatch_release(request_sema);
-		STAssertTrue(firstResponse.wasSuccessful, @"Response should be successful: %@", firstResponse);
+				STAssertTrue(firstResponse.wasSuccessful, @"Response should be successful: %@", firstResponse);
 		STAssertTrue(secondResponse.wasSuccessful, @"Response should be successful: %@", secondResponse);
 	}];
 }
@@ -682,8 +667,7 @@
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		//dispatch_release(request_sema);
-		
+				
 		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 	}];
 }

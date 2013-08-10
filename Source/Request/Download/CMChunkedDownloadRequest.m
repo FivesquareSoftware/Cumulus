@@ -131,9 +131,6 @@
 
 #pragma mark - Object
 
-- (void)dealloc {
-	//dispatch_release(_chunksSemaphore);
-}
 
 
 - (id)initWithURLRequest:(NSURLRequest *)URLRequest {

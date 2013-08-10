@@ -103,8 +103,7 @@
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 }
 
 
@@ -136,8 +135,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-
+	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -181,8 +179,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -257,8 +254,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-
+	
 	
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -296,8 +292,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .5;
@@ -330,8 +325,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-
+	
 
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
@@ -387,8 +381,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -421,8 +414,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = 3.f;
@@ -449,8 +441,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -483,8 +474,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 
 	
 	
@@ -512,8 +502,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	
 	CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 	
@@ -530,8 +519,7 @@
 	});
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	//dispatch_release(group);
-	
+		
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -559,8 +547,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
@@ -595,8 +582,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
-	//dispatch_release(request_sema);
-	
+		
 	CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
 	CFTimeInterval elapsed = (end - start);
 	CFTimeInterval expected = .35;

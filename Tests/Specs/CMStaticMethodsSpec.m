@@ -95,8 +95,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -120,8 +119,7 @@
 	[Cumulus get:endpoint withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -143,8 +141,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -166,8 +163,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -189,8 +185,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -214,8 +209,7 @@
 	[Cumulus post:endpoint payload:self.specHelper.item withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -237,8 +231,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -262,8 +255,7 @@
 	[Cumulus put:endpoint payload:self.specHelper.item withProgressBlock:progressBlock completionBlock:completionBlock];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
     STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
@@ -285,8 +277,7 @@
 	[Cumulus download:endpoint withProgressBlock:progressBlock completionBlock:completionBlock];
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 }
@@ -314,8 +305,7 @@
 	
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 

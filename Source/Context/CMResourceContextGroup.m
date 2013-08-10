@@ -10,13 +10,15 @@
 
 #import "Cumulus.h"
 
-@interface CMResourceContextGroup () {
-	dispatch_group_t _dispatchGroup;
-	dispatch_queue_t _requestsInternalQueue;
-	dispatch_queue_t _responsesInternalQueue;
-}
+@interface CMResourceContextGroup ()
+
 @property (nonatomic, strong) NSMutableSet *requestsInternal;
 @property (nonatomic, strong) NSMutableSet *responsesInternal;
+
+@property (nonatomic, strong) dispatch_group_t dispatchGroup;
+@property (nonatomic, strong) dispatch_queue_t requestsInternalAccessQueue;
+@property (nonatomic, strong) dispatch_queue_t responsesInternalAccessQueue;
+
 @end
 
 @implementation CMResourceContextGroup
@@ -24,7 +26,7 @@
 @dynamic runningRequests;
 - (NSSet *) runningRequests {
 	__block NSSet *runningRequests = nil;
-	dispatch_sync(_requestsInternalQueue, ^{
+	dispatch_sync(_requestsInternalAccessQueue, ^{
 		runningRequests = [_requestsInternal copy];
 	});
 	return runningRequests;
@@ -33,7 +35,7 @@
 @dynamic responses;
 - (NSSet *) responses {
 	__block NSSet *responses = nil;
-	dispatch_sync(_responsesInternalQueue, ^{
+	dispatch_sync(_responsesInternalAccessQueue, ^{
 		responses = [_responsesInternal copy];
 	});
 	return responses;
@@ -41,9 +43,6 @@
 
 - (void)dealloc {
 	dispatch_group_wait(_dispatchGroup, DISPATCH_TIME_FOREVER);
-	//dispatch_release(_dispatchGroup);
-	//dispatch_release(_requestsInternalQueue);
-	//dispatch_release(_responsesInternalQueue);
 }
 
 - (id)init {
@@ -60,11 +59,11 @@
 		}
 		_dispatchGroup = dispatch_group_create();
 		
-		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResourceContextGroup.requestsInternalQueue.%p", self];
-		_requestsInternalQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResourceContextGroup.requestsInternalAccessQueue.%p", self];
+		_requestsInternalAccessQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 
-		queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResourceContextGroup.responsesInternalQueue.%p", self];
-		_responsesInternalQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+		queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMResourceContextGroup.responsesInternalAccessQueue.%p", self];
+		_responsesInternalAccessQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
 
 		_requestsInternal = [NSMutableSet new];
 		_responsesInternal = [NSMutableSet new];
@@ -79,7 +78,7 @@
 - (void) enterWithRequest:(CMRequest *)request {
 	RCLog(@"%@.enterWithRequest: ->",self);
 	if (request) {
-		dispatch_barrier_sync(_requestsInternalQueue, ^{
+		dispatch_barrier_sync(_requestsInternalAccessQueue, ^{
 			[_requestsInternal addObject:request];
 		});
 	}
@@ -92,10 +91,10 @@
 - (void) leaveWithResponse:(CMResponse *)response {
 	RCLog(@"%@.leaveWithResponse: <-",self);
 	if (response) {
-		dispatch_barrier_sync(_responsesInternalQueue, ^{
+		dispatch_barrier_sync(_responsesInternalAccessQueue, ^{
 			[_responsesInternal addObject:response];
 		});
-		dispatch_barrier_sync(_requestsInternalQueue, ^{
+		dispatch_barrier_sync(_requestsInternalAccessQueue, ^{
 			[_requestsInternal removeObject:response.request];
 		});
 	}
@@ -108,7 +107,7 @@
 
 - (void) cancel {
 	_wasCanceled = YES;
-	dispatch_sync(_requestsInternalQueue, ^{
+	dispatch_sync(_requestsInternalAccessQueue, ^{
 		for (CMRequest *request in _requestsInternal) {
 			[request cancel];
 		}

@@ -129,8 +129,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	STAssertTrue(localResponse.expectedContentRange.location == 0, @"Content range location should be equal to the start of the range");
+		STAssertTrue(localResponse.expectedContentRange.location == 0, @"Content range location should be equal to the start of the range");
 	STAssertTrue(CMContentRangeLastByte(localResponse.expectedContentRange) == (_heroBytes/2)-1, @"Content range last byte should be equal to the length of the range minus 1 because bytes are zero indexed");
 	STAssertTrue(localResponse.expectedContentRange.contentLength == _heroBytes, @"Content range contentLength should be equal to the length of the content");
 }
@@ -146,8 +145,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	STAssertTrue(localResponse.HTTPPartialContent, @"Should return YES for a HTTPPartialContent for a range request");
+		STAssertTrue(localResponse.HTTPPartialContent, @"Should return YES for a HTTPPartialContent for a range request");
 }
 
 - (void) shouldReturnAnInvalidContentRangeForANonRangeRequest {
@@ -174,8 +172,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertNil([localResponse.headers objectForKey:kCumulusHTTPHeaderContentLength], @"Content length header must be nil for this to be a valid test");
 	STAssertEquals(localResponse.expectedContentLength, localResponse.expectedContentRange.length, @"Content length should derive from content range when the header is missing");
 }
@@ -191,8 +188,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertEquals(localResponse.expectedContentRange.length, localResponse.request.expectedContentLength, @"Content range length should equal what the request expected: %@",@(localResponse.request.expectedContentLength));
 }
 
@@ -207,8 +203,7 @@
 	}];
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(request_sema);
-	
+		
 	STAssertEquals(localResponse.totalContentLength, localResponse.expectedContentRange.contentLength, @"Total length should derive from content range for a range request");
 }
 
@@ -250,8 +245,7 @@
 	}];
 	[resource cancelRequests];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(cancel_sema);
-	
+		
 	NSError *error = localResponse.error;
 	STAssertNil(error, @"Status code error should have been nil: %@",error);
 }
@@ -273,8 +267,7 @@
 	//		dispatch_semaphore_signal(cancel_sema);
 	//	}];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
-	//dispatch_release(cancel_sema);
-	STAssertTrue([localResponse HTTPCanceled], @"Response#HTTPCanceled should be true: %@",localResponse);
+		STAssertTrue([localResponse HTTPCanceled], @"Response#HTTPCanceled should be true: %@",localResponse);
 }
 
 

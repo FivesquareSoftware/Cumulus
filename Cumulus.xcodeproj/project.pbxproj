@@ -57,6 +57,21 @@
 		A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
 		A410FE8517B444E000024F2D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A410FE8417B444E000024F2D /* MessageUI.framework */; };
 		A410FEC817B5B16900024F2D /* CMRelativeBenchmarksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C9D1DB1482E506004E9B72 /* CMRelativeBenchmarksSpec.m */; };
+		A410FECA17B5B77100024F2D /* CMResourceConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416120F144109870008A235 /* CMResourceConfigSpec.m */; };
+		A410FECB17B5B77100024F2D /* CMResourceNestingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD025714804612006EE89E /* CMResourceNestingSpec.m */; };
+		A410FECC17B5B77100024F2D /* CMResourceControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A465B124148AD74000C5589B /* CMResourceControlSpec.m */; };
+		A410FECD17B5B77100024F2D /* CMResourceHTTPMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B2EFFB14217FDF000E8860 /* CMResourceHTTPMethodsSpec.m */; };
+		A410FECE17B5B77100024F2D /* CMResourceQuerySpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CCAF0D14B63C1500A8C21B /* CMResourceQuerySpec.m */; };
+		A410FECF17B5B77100024F2D /* CMResourceLifecycleBlocksSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A416121514410B640008A235 /* CMResourceLifecycleBlocksSpec.m */; };
+		A410FED017B5B77100024F2D /* CMResourceFileHandlingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A44C586C147DC15700CD592C /* CMResourceFileHandlingSpec.m */; };
+		A410FED117B5B77100024F2D /* CMResourceContextSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB124415ED5D9100513F73 /* CMResourceContextSpec.m */; };
+		A410FED217B5B77100024F2D /* CMResourceIfModifiedSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A48A7F3D17724E8A005D9610 /* CMResourceIfModifiedSpec.m */; };
+		A410FED317B5B77100024F2D /* CMStaticMethodsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC12591481D6050066C7E6 /* CMStaticMethodsSpec.m */; };
+		A410FED417B5B77100024F2D /* CMAuthSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CD1951141A78C800FADC09 /* CMAuthSpec.m */; };
+		A410FED517B5B77100024F2D /* CMCodingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86E1144AB2FB00C69C3D /* CMCodingSpec.m */; };
+		A410FED617B5B77100024F2D /* CMRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A22274148AAAFD001726E4 /* CMRequestSpec.m */; };
+		A410FED717B5B77100024F2D /* CMResponseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F86DE144AB14100C69C3D /* CMResponseSpec.m */; };
+		A410FED817B5B77100024F2D /* CMFixtureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D17DF315533E880063B061 /* CMFixtureSpec.m */; };
 		A41410D514B680070026A8C1 /* NSDictionary+Cumulus.h in Headers */ = {isa = PBXBuildFile; fileRef = A41410D314B680070026A8C1 /* NSDictionary+Cumulus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A41410D614B680070026A8C1 /* NSDictionary+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A41410D414B680070026A8C1 /* NSDictionary+Cumulus.m */; };
 		A414FD4C13DB459200F96152 /* Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD4B13DB459200F96152 /* Cumulus.m */; };
@@ -1248,7 +1263,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				A4626A4D14199082005544D6 /* main.m in Sources */,
+				A410FECE17B5B77100024F2D /* CMResourceQuerySpec.m in Sources */,
 				A4D4FF73141A57DF00E58873 /* SpecHelper.m in Sources */,
+				A410FED717B5B77100024F2D /* CMResponseSpec.m in Sources */,
+				A410FED017B5B77100024F2D /* CMResourceFileHandlingSpec.m in Sources */,
+				A410FECC17B5B77100024F2D /* CMResourceControlSpec.m in Sources */,
+				A410FECF17B5B77100024F2D /* CMResourceLifecycleBlocksSpec.m in Sources */,
+				A410FED117B5B77100024F2D /* CMResourceContextSpec.m in Sources */,
+				A410FED817B5B77100024F2D /* CMFixtureSpec.m in Sources */,
+				A410FECD17B5B77100024F2D /* CMResourceHTTPMethodsSpec.m in Sources */,
+				A410FED417B5B77100024F2D /* CMAuthSpec.m in Sources */,
+				A410FED217B5B77100024F2D /* CMResourceIfModifiedSpec.m in Sources */,
+				A410FECA17B5B77100024F2D /* CMResourceConfigSpec.m in Sources */,
+				A410FED317B5B77100024F2D /* CMStaticMethodsSpec.m in Sources */,
+				A410FECB17B5B77100024F2D /* CMResourceNestingSpec.m in Sources */,
+				A410FED517B5B77100024F2D /* CMCodingSpec.m in Sources */,
+				A410FED617B5B77100024F2D /* CMRequestSpec.m in Sources */,
 				A410FEC817B5B16900024F2D /* CMRelativeBenchmarksSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

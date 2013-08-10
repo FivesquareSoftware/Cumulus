@@ -119,8 +119,7 @@
 		}];
 		
 		dispatch_semaphore_wait(credentialsSemaphore, DISPATCH_TIME_FOREVER);
-		//dispatch_release(credentialsSemaphore);
-	} else {
+			} else {
 		[self signRequest:URLRequest];
 	}
 }

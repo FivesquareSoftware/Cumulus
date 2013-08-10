@@ -34,9 +34,7 @@ NSString *kCMResourceContextKey = @"kCMResourceContextKey";
 
 #pragma mark - Object
 
-- (void)dealloc {
-	//dispatch_release(_dispatchQueue);
-}
+
 
 + (id) withName:(NSString *)name {
 	return [[self alloc] initWithName:name];
