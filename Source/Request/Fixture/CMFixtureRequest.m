@@ -12,6 +12,12 @@
 #import "Cumulus.h"
 #import "CMFixtureHTTPResponse.h"
 
+// Allow access to the private timeout method in the CMRequest base class
+@interface CMRequest ()
+- (void) timeoutFired:(NSTimer *)timer;
+@end
+
+
 @interface CMFixtureRequest ()
 @end
 
