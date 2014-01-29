@@ -203,8 +203,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		07E9A65F187F344600987917 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = OCMock.framework; path = Ext/OCMock/Source/build/Debug/OCMock.framework; sourceTree = "<group>"; };
-		07E9A661187F345D00987917 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libOCMock.a; path = Ext/OCMock/Source/build/Debug/libOCMock.a; sourceTree = "<group>"; };
+		07E9A65F187F344600987917 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Ext/OCMock/Source/build/Debug/OCMock.framework; sourceTree = "<group>"; };
+		07E9A661187F345D00987917 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = Ext/OCMock/Source/build/Debug/libOCMock.a; sourceTree = "<group>"; };
 		07F9C500187F275B00A73726 /* libOCSpec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCSpec.a; path = "Ext/OCSpec/build/Debug-iphoneos/libOCSpec.a"; sourceTree = "<group>"; };
 		07F9C502187F276200A73726 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = "Ext/OCMock/Source/build/Debug-iphoneos/libOCMock.a"; sourceTree = "<group>"; };
 		A406BD2017A9E54D001070F0 /* CMRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMRequest.m; sourceTree = "<group>"; };
@@ -1375,6 +1375,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;
 				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1390,6 +1391,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;
 				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
