@@ -2,12 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Ext/OCMock/Source/OCMock.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Cumulus.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Ext/OCSpec/OCSpec.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Ext/OCMock/Source/OCMock.xcodeproj">
    </FileRef>
 </Workspace>
