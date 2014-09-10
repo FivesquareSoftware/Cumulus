@@ -79,10 +79,10 @@
 @dynamic numberOfCores;
 - (NSUInteger) numberOfCores {
 	size_t len;
-    NSUInteger numberOfCPUs;
+	NSUInteger numberOfCPUs;
 	
-    len = sizeof(numberOfCPUs);
-    sysctlbyname ("hw.ncpu",&numberOfCPUs,&len,NULL,0);
+	len = sizeof(numberOfCPUs);
+	sysctlbyname ("hw.ncpu",&numberOfCPUs,&len,NULL,0);
 	
 	return numberOfCPUs;
 }
@@ -95,17 +95,17 @@
 
 
 - (id)init {
-    self = [super init];
-    if (self) {
-        _maxConcurrentRequests = kCumulusDefaultMaxConcurrentRequestCount;
+	self = [super init];
+	if (self) {
+		_maxConcurrentRequests = kCumulusDefaultMaxConcurrentRequestCount;
 		_queuedIdentifiers = [NSMutableOrderedSet new];
 		_queuedDispatchBlocksByIdentifier = [NSMutableDictionary new];
 		_dispatchedIdentifiers = [NSMutableSet new];
 		
 		NSString *queueName = [NSString stringWithFormat:@"com.fivesquaresoftware.CMRequestQueue.dispatchAccessQueue.%p", self];
 		_dispatchAccessQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
-    }
-    return self;
+	}
+	return self;
 }
 
 

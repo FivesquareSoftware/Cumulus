@@ -69,7 +69,7 @@
 	static id CumulusLoggingOnEnvironment = nil;
 	static BOOL isLoggingEnabled = NO;
 	static dispatch_once_t onceToken = 0;
-    dispatch_once(&onceToken, ^{
+	dispatch_once(&onceToken, ^{
 		if (nil == CumulusLoggingOnEnvironment) {
 			NSProcessInfo *processInfo = [NSProcessInfo processInfo];
 			CumulusLoggingOnEnvironment = [[processInfo environment] objectForKey:@"CumulusLoggingOn"];
@@ -81,13 +81,13 @@
 				isLoggingEnabled = [CumulusLoggingOnEnvironment boolValue];
 			}
 		}
-    });
+	});
 
 	if (isLoggingEnabled) {
-        va_list args;
-        va_start(args,format);
+		va_list args;
+		va_start(args,format);
 		NSLogv(format, args);
-        va_end(args);    
+		va_end(args);    
 	}
 }
 

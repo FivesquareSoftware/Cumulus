@@ -215,7 +215,7 @@
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 
-/** Auth providers, like headers, are set on each individual resource, but when a request is marshaled, a merged array from the receiver and all it's ancestors is used. Per resource, auth providers are given a chance to authorize requests in the order they were added. However child providers take precedence over ancestors' providers. */
+/** Auth providers, like headers, are set on each individual resource, but when a request is marshaled, a merged array from the receiver and all its ancestors is used. Per resource, auth providers are given a chance to authorize requests in the order they were added. However child providers take precedence over ancestors' providers. */
 @property (nonatomic, strong) NSMutableArray *authProviders;
 
 /// When set, will set 'Content-Type' and 'Accept' headers appropriately
@@ -248,6 +248,11 @@
 - (void) addAuthProvider:(id<CMAuthProvider>)authProvider;
 
 
+#if defined(DEBUG) & DEBUG
+/** USE THIS AT YOUR OWN RISK. Only available in Debug builds. */
+- (void)allowInsecureCertificates;
+#endif
+    
 
 // ========================================================================== //
 /** @name Fixtures */

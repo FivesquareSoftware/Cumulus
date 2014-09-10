@@ -1,9 +1,9 @@
 //
-//  CMOAuthToken.h
+//  CMFormCoder.h
 //  Cumulus
 //
-//  Created by John Clayton on 12/19/11.
-//  Copyright (c) 2011 Fivesquare Software, LLC. All rights reserved.
+//  Created by Carlos McEvilly on 6/19/14.
+//  Copyright 2014 Fivesquare Software, LLC. All rights reserved.
 //
 
 /*
@@ -17,7 +17,7 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Fivesquare Software, LLC nor the names of its contributors may
+ * 3. Neither the name of Fivesquare Software nor the names of its contributors may
  *    be used to endorse or promote products derived from this software without
  *    specific prior written permission.
  *
@@ -35,18 +35,9 @@
 
 #import <Foundation/Foundation.h>
 
-/** Represents an OAuth token. */
-@interface CMOAuthToken : NSObject <NSCoding>
+#import "CMCoder.h"
 
-/// The token string that can be used to authorize a request
-@property (nonatomic, strong) NSString *accessToken;
-/// The token string that can be used to request a new access token
-@property (nonatomic, strong) NSString *refreshToken;
-/// When the token expires
-@property (nonatomic, strong) NSDate *accessExpires;
-/// The associated scope for the token
-@property (nonatomic, strong) NSString *scope;
-/// The type string for the token, e.g. OAuth or Bearer
-@property (nonatomic, strong) NSString *tokenType;
+/** A coder that converts to and from urlencoded form data and NSData. */
+@interface CMFormCoder : NSObject <CMCoder>
 
 @end
