@@ -13,16 +13,16 @@
 + (NSFetchedResultsController *) withEntityName:(NSString *)entityName sortKey:(NSString *)soryKey ascending:(BOOL)ascending inContext:(NSManagedObjectContext *)context {
 	NSFetchedResultsController *controller = nil;
 	
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:entityName];
-    [fetchRequest setFetchBatchSize:20];
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:entityName];
+	[fetchRequest setFetchBatchSize:20];
 	if (soryKey.length) {
 		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:soryKey ascending:ascending];
 		[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	}
 	
 	controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:context sectionNameKeyPath:nil cacheName:nil];
-    
-    return controller;
+	
+	return controller;
 }
 
 - (void) fetch {

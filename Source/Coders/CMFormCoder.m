@@ -104,17 +104,17 @@
  * returns the encoded result as an NSString*
  */
 - (NSString *)urlencodeString:(NSString *)inputString withEncoding:(NSStringEncoding)encoding {
-    /* Using a CF function because -stringByAddingPercentEscapesUsingEncoding:
-     * isn't thorough enough. */
-    
-    NSString *charsToEncode = @"(){}[]<>!*'\";:@&=+$,/?#% |\\^~`";
-    NSString *outputString = (NSString *)
-    CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                              (CFStringRef)inputString,
-                                                              NULL,
-                                                              (CFStringRef)charsToEncode,
-                                                              CFStringConvertNSStringEncodingToEncoding(encoding)));
-    return outputString;
+	/* Using a CF function because -stringByAddingPercentEscapesUsingEncoding:
+	 * isn't thorough enough. */
+	
+	NSString *charsToEncode = @"(){}[]<>!*'\";:@&=+$,/?#% |\\^~`";
+	NSString *outputString = (NSString *)
+	CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
+															  (CFStringRef)inputString,
+															  NULL,
+															  (CFStringRef)charsToEncode,
+															  CFStringConvertNSStringEncodingToEncoding(encoding)));
+	return outputString;
 }
 
 
@@ -124,8 +124,8 @@
  * returns the decoded result as an NSString*
  */
 - (NSString *)urldecodeString:(NSString *)inputString withEncoding:(NSStringEncoding)encoding {
-    NSString *decodedString = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (CFStringRef)inputString, CFSTR(""), CFStringConvertNSStringEncodingToEncoding(encoding));
-    return decodedString;
+	NSString *decodedString = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (CFStringRef)inputString, CFSTR(""), CFStringConvertNSStringEncodingToEncoding(encoding));
+	return decodedString;
 }
 
 
