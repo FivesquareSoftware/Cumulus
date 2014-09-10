@@ -52,9 +52,9 @@ static SVProgressHUD *sharedView = nil;
 	if(fadeOutTimer != nil)
 		[fadeOutTimer invalidate], fadeOutTimer = nil;
 	
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	
 }
 
 
@@ -78,55 +78,55 @@ static SVProgressHUD *sharedView = nil;
 }
 
 + (void)showWithStatus:(NSString *)status {
-    [SVProgressHUD showWithStatus:status networkIndicator:SVProgressHUDShowNetworkIndicator];
+	[SVProgressHUD showWithStatus:status networkIndicator:SVProgressHUDShowNetworkIndicator];
 }
 
 + (void)showWithMaskType:(SVProgressHUDMaskType)maskType {
-    [SVProgressHUD showWithStatus:nil maskType:maskType networkIndicator:SVProgressHUDShowNetworkIndicator];
+	[SVProgressHUD showWithStatus:nil maskType:maskType networkIndicator:SVProgressHUDShowNetworkIndicator];
 }
 
 + (void)showWithStatus:(NSString*)status maskType:(SVProgressHUDMaskType)maskType {
-    [SVProgressHUD showWithStatus:status maskType:maskType networkIndicator:SVProgressHUDShowNetworkIndicator];
+	[SVProgressHUD showWithStatus:status maskType:maskType networkIndicator:SVProgressHUDShowNetworkIndicator];
 }
 
 + (void)showWithStatus:(NSString *)status networkIndicator:(BOOL)show {
-    [SVProgressHUD showWithStatus:status maskType:SVProgressHUDMaskTypeNone networkIndicator:show];
+	[SVProgressHUD showWithStatus:status maskType:SVProgressHUDMaskTypeNone networkIndicator:show];
 }
 
 + (void)showWithMaskType:(SVProgressHUDMaskType)maskType networkIndicator:(BOOL)show {
-    [SVProgressHUD showWithStatus:nil maskType:maskType networkIndicator:show];
+	[SVProgressHUD showWithStatus:nil maskType:maskType networkIndicator:show];
 }
 
 + (void)showWithStatus:(NSString*)status maskType:(SVProgressHUDMaskType)maskType networkIndicator:(BOOL)show {
-    [[SVProgressHUD sharedView] showWithStatus:status maskType:maskType networkIndicator:show];
+	[[SVProgressHUD sharedView] showWithStatus:status maskType:maskType networkIndicator:show];
 }
 
 + (void)showSuccessWithStatus:(NSString *)string {
-    [SVProgressHUD show];
-    [SVProgressHUD dismissWithSuccess:string afterDelay:1];
+	[SVProgressHUD show];
+	[SVProgressHUD dismissWithSuccess:string afterDelay:1];
 }
 
 
 #pragma mark - Deprecated show methods
 
 + (void)showInView:(UIView*)view {
-    [SVProgressHUD showWithStatus:nil maskType:SVProgressHUDMaskTypeNone networkIndicator:SVProgressHUDShowNetworkIndicator];
+	[SVProgressHUD showWithStatus:nil maskType:SVProgressHUDMaskTypeNone networkIndicator:SVProgressHUDShowNetworkIndicator];
 }
 
 + (void)showInView:(UIView*)view status:(NSString*)string {
-    [SVProgressHUD showWithStatus:string maskType:SVProgressHUDMaskTypeNone networkIndicator:SVProgressHUDShowNetworkIndicator];
+	[SVProgressHUD showWithStatus:string maskType:SVProgressHUDMaskTypeNone networkIndicator:SVProgressHUDShowNetworkIndicator];
 }
 
 + (void)showInView:(UIView*)view status:(NSString*)string networkIndicator:(BOOL)show {
-    [SVProgressHUD showWithStatus:string maskType:SVProgressHUDMaskTypeNone networkIndicator:show];
+	[SVProgressHUD showWithStatus:string maskType:SVProgressHUDMaskTypeNone networkIndicator:show];
 }
 
 + (void)showInView:(UIView*)view status:(NSString*)string networkIndicator:(BOOL)show posY:(CGFloat)posY {
-    [SVProgressHUD showWithStatus:string maskType:SVProgressHUDMaskTypeNone networkIndicator:show];
+	[SVProgressHUD showWithStatus:string maskType:SVProgressHUDMaskTypeNone networkIndicator:show];
 }
 
 + (void)showInView:(UIView*)view status:(NSString*)string networkIndicator:(BOOL)show posY:(CGFloat)posY maskType:(SVProgressHUDMaskType)hudMaskType {
-    [SVProgressHUD showWithStatus:string maskType:hudMaskType networkIndicator:show];    
+	[SVProgressHUD showWithStatus:string maskType:hudMaskType networkIndicator:show];    
 }
 
 #pragma mark - Dismiss Methods
@@ -140,7 +140,7 @@ static SVProgressHUD *sharedView = nil;
 }
 
 + (void)dismissWithSuccess:(NSString *)successString afterDelay:(NSTimeInterval)seconds {
-    [[SVProgressHUD sharedView] dismissWithStatus:successString error:NO afterDelay:seconds];
+	[[SVProgressHUD sharedView] dismissWithStatus:successString error:NO afterDelay:seconds];
 }
 
 + (void)dismissWithError:(NSString*)errorString {
@@ -148,7 +148,7 @@ static SVProgressHUD *sharedView = nil;
 }
 
 + (void)dismissWithError:(NSString *)errorString afterDelay:(NSTimeInterval)seconds {
-    [[SVProgressHUD sharedView] dismissWithStatus:errorString error:YES afterDelay:seconds];
+	[[SVProgressHUD sharedView] dismissWithStatus:errorString error:YES afterDelay:seconds];
 }
 
 
@@ -156,72 +156,72 @@ static SVProgressHUD *sharedView = nil;
 
 - (id)initWithFrame:(CGRect)frame {
 	
-    if ((self = [super initWithFrame:frame])) {
+	if ((self = [super initWithFrame:frame])) {
 		self.userInteractionEnabled = NO;
-        self.backgroundColor = [UIColor clearColor];
+		self.backgroundColor = [UIColor clearColor];
 		self.alpha = 0;
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    }
+		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	}
 	
-    return self;
+	return self;
 }
 
 - (void)drawRect:(CGRect)rect {
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    switch (self.maskType) {
-            
-        case SVProgressHUDMaskTypeBlack: {
-            [[UIColor colorWithWhite:0 alpha:0.5] set];
-            CGContextFillRect(context, self.bounds);
-            break;
-        }
-            
-        case SVProgressHUDMaskTypeGradient: {
-            
-            size_t locationsCount = 2;
-            CGFloat locations[2] = {0.0f, 1.0f};
-            CGFloat colors[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.75f}; 
-            CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-            CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, colors, locations, locationsCount);
-            CGColorSpaceRelease(colorSpace);
-            
-            CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-            float radius = MIN(self.bounds.size.width , self.bounds.size.height) ;
-            CGContextDrawRadialGradient (context, gradient, center, 0, center, radius, kCGGradientDrawsAfterEndLocation);
-            CGGradientRelease(gradient);
-            
-            break;
-        }
-    }
+	
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+	switch (self.maskType) {
+			
+		case SVProgressHUDMaskTypeBlack: {
+			[[UIColor colorWithWhite:0 alpha:0.5] set];
+			CGContextFillRect(context, self.bounds);
+			break;
+		}
+			
+		case SVProgressHUDMaskTypeGradient: {
+			
+			size_t locationsCount = 2;
+			CGFloat locations[2] = {0.0f, 1.0f};
+			CGFloat colors[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.75f}; 
+			CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+			CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, colors, locations, locationsCount);
+			CGColorSpaceRelease(colorSpace);
+			
+			CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+			float radius = MIN(self.bounds.size.width , self.bounds.size.height) ;
+			CGContextDrawRadialGradient (context, gradient, center, 0, center, radius, kCGGradientDrawsAfterEndLocation);
+			CGGradientRelease(gradient);
+			
+			break;
+		}
+	}
 }
 
 - (void)setStatus:(NSString *)string {
 	
-    CGFloat hudWidth = 100;
-    CGFloat hudHeight = 100;
-    CGFloat stringWidth = 0;
-    CGFloat stringHeight = 0;
-    CGRect labelRect = CGRectZero;
-    
-    if(string) {
-        CGSize stringSize = [string sizeWithFont:self.stringLabel.font constrainedToSize:CGSizeMake(200, 300)];
-        stringWidth = stringSize.width;
-        stringHeight = stringSize.height;
-        hudHeight = 80+stringHeight;
-        
-        if(stringWidth > hudWidth)
-            hudWidth = ceil(stringWidth/2)*2;
-        
-        if(hudHeight > 100) {
-            labelRect = CGRectMake(12, 66, hudWidth, stringHeight);
-            hudWidth+=24;
-        } else {
-            hudWidth+=24;  
-            labelRect = CGRectMake(0, 66, hudWidth, stringHeight);   
-        }
-    }
+	CGFloat hudWidth = 100;
+	CGFloat hudHeight = 100;
+	CGFloat stringWidth = 0;
+	CGFloat stringHeight = 0;
+	CGRect labelRect = CGRectZero;
+	
+	if(string) {
+		CGSize stringSize = [string sizeWithFont:self.stringLabel.font constrainedToSize:CGSizeMake(200, 300)];
+		stringWidth = stringSize.width;
+		stringHeight = stringSize.height;
+		hudHeight = 80+stringHeight;
+		
+		if(stringWidth > hudWidth)
+			hudWidth = ceil(stringWidth/2)*2;
+		
+		if(hudHeight > 100) {
+			labelRect = CGRectMake(12, 66, hudWidth, stringHeight);
+			hudWidth+=24;
+		} else {
+			hudWidth+=24;  
+			labelRect = CGRectMake(0, 66, hudWidth, stringHeight);   
+		}
+	}
 	
 	self.hudView.bounds = CGRectMake(0, 0, hudWidth, hudHeight);
 	
@@ -239,43 +239,43 @@ static SVProgressHUD *sharedView = nil;
 
 
 - (void)showWithStatus:(NSString*)string maskType:(SVProgressHUDMaskType)hudMaskType networkIndicator:(BOOL)show {
-    
+	
 	if(fadeOutTimer != nil)
 		[fadeOutTimer invalidate], fadeOutTimer = nil;
 	
-    self.showNetworkIndicator = show;
-    
-    if(self.showNetworkIndicator)
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+	self.showNetworkIndicator = show;
+	
+	if(self.showNetworkIndicator)
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 	
 	self.imageView.hidden = YES;
-    self.maskType = hudMaskType;
+	self.maskType = hudMaskType;
 	
 	[self setStatus:string];
 	[self.spinnerView startAnimating];
-    
-    if(self.maskType != SVProgressHUDMaskTypeNone)
-        self.userInteractionEnabled = YES;
-    else
-        self.userInteractionEnabled = NO;
-    
-    if(![self isKeyWindow]) {
-        
-        [[UIApplication sharedApplication].windows enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            UIWindow *window = (UIWindow*)obj;
-            if(window.windowLevel == UIWindowLevelNormal && ![[window class] isEqual:[SVProgressHUD class]]) {
-                self.previousKeyWindow = window;
-                *stop = YES;
-            }
-        }];
-         
-        [self makeKeyAndVisible];
-    }
-    
-    [self positionHUD:nil];
-    
+	
+	if(self.maskType != SVProgressHUDMaskTypeNone)
+		self.userInteractionEnabled = YES;
+	else
+		self.userInteractionEnabled = NO;
+	
+	if(![self isKeyWindow]) {
+		
+		[[UIApplication sharedApplication].windows enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+			UIWindow *window = (UIWindow*)obj;
+			if(window.windowLevel == UIWindowLevelNormal && ![[window class] isEqual:[SVProgressHUD class]]) {
+				self.previousKeyWindow = window;
+				*stop = YES;
+			}
+		}];
+		 
+		[self makeKeyAndVisible];
+	}
+	
+	[self positionHUD:nil];
+	
 	if(self.alpha != 1) {
-        [self registerNotifications];
+		[self registerNotifications];
 		self.hudView.transform = CGAffineTransformScale(self.hudView.transform, 1.3, 1.3);
 		
 		[UIView animateWithDuration:0.15
@@ -283,119 +283,119 @@ static SVProgressHUD *sharedView = nil;
 							options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
 						 animations:^{	
 							 self.hudView.transform = CGAffineTransformScale(self.hudView.transform, 1/1.3, 1/1.3);
-                             self.alpha = 1;
+							 self.alpha = 1;
 						 }
 						 completion:NULL];
 	}
-    
-    [self setNeedsDisplay];
+	
+	[self setNeedsDisplay];
 }
 
 
 - (void)registerNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(positionHUD:) 
-                                                 name:UIApplicationDidChangeStatusBarOrientationNotification 
-                                               object:nil];  
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(positionHUD:) 
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(positionHUD:) 
-                                                 name:UIKeyboardDidHideNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(positionHUD:) 
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(positionHUD:) 
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(positionHUD:) 
+												 name:UIApplicationDidChangeStatusBarOrientationNotification 
+											   object:nil];  
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(positionHUD:) 
+												 name:UIKeyboardWillHideNotification
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(positionHUD:) 
+												 name:UIKeyboardDidHideNotification
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(positionHUD:) 
+												 name:UIKeyboardWillShowNotification
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(positionHUD:) 
+												 name:UIKeyboardDidShowNotification
+											   object:nil];
 }
 
 
 - (void)positionHUD:(NSNotification*)notification {
-    
-    CGFloat keyboardHeight;
-    double animationDuration;
-    
-    if(notification) {
-        NSDictionary* keyboardInfo = [notification userInfo];
-        CGRect keyboardFrame = [[keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-        animationDuration = [[keyboardInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        
-        if(notification.name == UIKeyboardWillShowNotification)
-            keyboardHeight = keyboardFrame.size.height;
-        else
-            keyboardHeight = 0;
-    } else {
-        keyboardHeight = self.visibleKeyboardHeight;
-    }
-    
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGRect orientationFrame = [UIScreen mainScreen].bounds;
-    
-    if(UIInterfaceOrientationIsLandscape(orientation)) {
-        float temp = orientationFrame.size.width;
-        orientationFrame.size.width = orientationFrame.size.height;
-        orientationFrame.size.height = temp;
-    }
-    
-    CGFloat activeHeight = orientationFrame.size.height;
-    
-    if(keyboardHeight > 0)
-        activeHeight += [UIApplication sharedApplication].statusBarFrame.size.height*2;
-    
-    activeHeight -= keyboardHeight;
-    CGFloat posY = floor(activeHeight*0.45);
-    CGFloat posX = orientationFrame.size.width/2;
-    
-    CGPoint newCenter;
-    CGFloat rotateAngle;
-    
-    switch (orientation) { 
-        case UIInterfaceOrientationPortraitUpsideDown:
-            rotateAngle = M_PI; 
-            newCenter = CGPointMake(posX, orientationFrame.size.height-posY);
-            break;
-        case UIInterfaceOrientationLandscapeLeft:
-            rotateAngle = -M_PI/2.0f;
-            newCenter = CGPointMake(posY, posX);
-            break;
-        case UIInterfaceOrientationLandscapeRight:
-            rotateAngle = M_PI/2.0f;
-            newCenter = CGPointMake(orientationFrame.size.height-posY, posX);
-            break;
-        default: // as UIInterfaceOrientationPortrait
-            rotateAngle = 0.0;
-            newCenter = CGPointMake(posX, posY);
-            break;
-    } 
-    
-    if(notification) {
-        [UIView animateWithDuration:animationDuration 
-                              delay:0 
-                            options:UIViewAnimationOptionAllowUserInteraction 
-                         animations:^{
-                             [self moveToPoint:newCenter rotateAngle:rotateAngle];
-                         } completion:NULL];
-    } 
-    
-    else {
-        [self moveToPoint:newCenter rotateAngle:rotateAngle];
-    }
-    
+	
+	CGFloat keyboardHeight;
+	double animationDuration;
+	
+	if(notification) {
+		NSDictionary* keyboardInfo = [notification userInfo];
+		CGRect keyboardFrame = [[keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+		animationDuration = [[keyboardInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+		
+		if(notification.name == UIKeyboardWillShowNotification)
+			keyboardHeight = keyboardFrame.size.height;
+		else
+			keyboardHeight = 0;
+	} else {
+		keyboardHeight = self.visibleKeyboardHeight;
+	}
+	
+	UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+	CGRect orientationFrame = [UIScreen mainScreen].bounds;
+	
+	if(UIInterfaceOrientationIsLandscape(orientation)) {
+		float temp = orientationFrame.size.width;
+		orientationFrame.size.width = orientationFrame.size.height;
+		orientationFrame.size.height = temp;
+	}
+	
+	CGFloat activeHeight = orientationFrame.size.height;
+	
+	if(keyboardHeight > 0)
+		activeHeight += [UIApplication sharedApplication].statusBarFrame.size.height*2;
+	
+	activeHeight -= keyboardHeight;
+	CGFloat posY = floor(activeHeight*0.45);
+	CGFloat posX = orientationFrame.size.width/2;
+	
+	CGPoint newCenter;
+	CGFloat rotateAngle;
+	
+	switch (orientation) { 
+		case UIInterfaceOrientationPortraitUpsideDown:
+			rotateAngle = M_PI; 
+			newCenter = CGPointMake(posX, orientationFrame.size.height-posY);
+			break;
+		case UIInterfaceOrientationLandscapeLeft:
+			rotateAngle = -M_PI/2.0f;
+			newCenter = CGPointMake(posY, posX);
+			break;
+		case UIInterfaceOrientationLandscapeRight:
+			rotateAngle = M_PI/2.0f;
+			newCenter = CGPointMake(orientationFrame.size.height-posY, posX);
+			break;
+		default: // as UIInterfaceOrientationPortrait
+			rotateAngle = 0.0;
+			newCenter = CGPointMake(posX, posY);
+			break;
+	} 
+	
+	if(notification) {
+		[UIView animateWithDuration:animationDuration 
+							  delay:0 
+							options:UIViewAnimationOptionAllowUserInteraction 
+						 animations:^{
+							 [self moveToPoint:newCenter rotateAngle:rotateAngle];
+						 } completion:NULL];
+	} 
+	
+	else {
+		[self moveToPoint:newCenter rotateAngle:rotateAngle];
+	}
+	
 }
 
 - (void)moveToPoint:(CGPoint)newCenter rotateAngle:(CGFloat)angle {
-    self.hudView.transform = CGAffineTransformMakeRotation(angle); 
-    self.hudView.center = newCenter;
+	self.hudView.transform = CGAffineTransformMakeRotation(angle); 
+	self.hudView.center = newCenter;
 }
 
 
@@ -405,12 +405,12 @@ static SVProgressHUD *sharedView = nil;
 
 
 - (void)dismissWithStatus:(NSString *)string error:(BOOL)error afterDelay:(NSTimeInterval)seconds {
-    
-    if(self.alpha != 1)
-        return;
-    
-    if(self.showNetworkIndicator)
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	
+	if(self.alpha != 1)
+		return;
+	
+	if(self.showNetworkIndicator)
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	
 	if(error)
 		self.imageView.image = [UIImage imageNamed:@"SVProgressHUD.bundle/error.png"];
@@ -422,7 +422,7 @@ static SVProgressHUD *sharedView = nil;
 	[self setStatus:string];
 	
 	[self.spinnerView stopAnimating];
-    
+	
 	if(fadeOutTimer != nil)
 		[fadeOutTimer invalidate], fadeOutTimer = nil;
 	
@@ -431,8 +431,8 @@ static SVProgressHUD *sharedView = nil;
 
 - (void)dismiss {
 	
-    if(self.showNetworkIndicator)
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	if(self.showNetworkIndicator)
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
 	[UIView animateWithDuration:0.15
 						  delay:0
@@ -442,38 +442,38 @@ static SVProgressHUD *sharedView = nil;
 						 sharedView.alpha = 0;
 					 }
 					 completion:^(BOOL finished){ 
-                         if(sharedView.alpha == 0) {
-                             [[NSNotificationCenter defaultCenter] removeObserver:sharedView];
-                             [sharedView.previousKeyWindow makeKeyWindow];
-                             sharedView = nil;
-                             
-                             // uncomment to make sure UIWindow is gone from app.windows
-                             //NSLog(@"%@", [UIApplication sharedApplication].windows);
-                         }
-                     }];
+						 if(sharedView.alpha == 0) {
+							 [[NSNotificationCenter defaultCenter] removeObserver:sharedView];
+							 [sharedView.previousKeyWindow makeKeyWindow];
+							 sharedView = nil;
+							 
+							 // uncomment to make sure UIWindow is gone from app.windows
+							 //NSLog(@"%@", [UIApplication sharedApplication].windows);
+						 }
+					 }];
 }
 
 #pragma mark - Getters
 
 - (UIView *)hudView {
-    
-    if(!hudView) {
-        hudView = [[UIView alloc] initWithFrame:CGRectZero];
-        hudView.layer.cornerRadius = 10;
+	
+	if(!hudView) {
+		hudView = [[UIView alloc] initWithFrame:CGRectZero];
+		hudView.layer.cornerRadius = 10;
 		hudView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
-        hudView.autoresizingMask = (UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin |
-                                    UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin);
-        
-        [self addSubview:hudView];
-    }
-    
-    return hudView;
+		hudView.autoresizingMask = (UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin |
+									UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin);
+		
+		[self addSubview:hudView];
+	}
+	
+	return hudView;
 }
 
 - (UILabel *)stringLabel {
-    
-    if (stringLabel == nil) {
-        stringLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	
+	if (stringLabel == nil) {
+		stringLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 		stringLabel.textColor = [UIColor whiteColor];
 		stringLabel.backgroundColor = [UIColor clearColor];
 		stringLabel.adjustsFontSizeToFitWidth = YES;
@@ -482,33 +482,33 @@ static SVProgressHUD *sharedView = nil;
 		stringLabel.font = [UIFont boldSystemFontOfSize:16];
 		stringLabel.shadowColor = [UIColor blackColor];
 		stringLabel.shadowOffset = CGSizeMake(0, -1);
-        stringLabel.numberOfLines = 0;
+		stringLabel.numberOfLines = 0;
 		[self.hudView addSubview:stringLabel];
-    }
-    
-    return stringLabel;
+	}
+	
+	return stringLabel;
 }
 
 - (UIImageView *)imageView {
-    
-    if (imageView == nil) {
-        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
+	
+	if (imageView == nil) {
+		imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
 		[self.hudView addSubview:imageView];
-    }
-    
-    return imageView;
+	}
+	
+	return imageView;
 }
 
 - (UIActivityIndicatorView *)spinnerView {
-    
-    if (spinnerView == nil) {
-        spinnerView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	
+	if (spinnerView == nil) {
+		spinnerView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 		spinnerView.hidesWhenStopped = YES;
 		spinnerView.bounds = CGRectMake(0, 0, 37, 37);
 		[self.hudView addSubview:spinnerView];
-    }
-    
-    return spinnerView;
+	}
+	
+	return spinnerView;
 }
 
 - (CGFloat)visibleKeyboardHeight {
@@ -536,7 +536,7 @@ static SVProgressHUD *sharedView = nil;
 			}
 		}
 		
-        
+		
 		if(foundKeyboard && foundKeyboard.bounds.size.height > 100)
 			return foundKeyboard.bounds.size.height;
 		

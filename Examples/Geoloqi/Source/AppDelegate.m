@@ -34,7 +34,7 @@
 
 - (CLLocationManager *)locationManager {
 	
-    if (locationManager_ != nil) {
+	if (locationManager_ != nil) {
 		return locationManager_;
 	}
 	
@@ -62,7 +62,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+	// Override point for customization after application launch.
 	self.service = [CMResource withURL:@"https://api.geoloqi.com/1"];
 	service_.contentType = CMContentTypeJSON;
 
@@ -96,7 +96,7 @@
 	
 	[self.locationManager startUpdatingLocation];
 	
-    return YES;
+	return YES;
 }
 							
 
@@ -112,18 +112,18 @@
  */
 - (NSManagedObjectContext *)managedObjectContext
 {
-    if (managedObjectContext_ != nil)
-    {
-        return managedObjectContext_;
-    }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil)
-    {
-        managedObjectContext_ = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-        [managedObjectContext_ setPersistentStoreCoordinator:coordinator];
-    }
-    return managedObjectContext_;
+	if (managedObjectContext_ != nil)
+	{
+		return managedObjectContext_;
+	}
+	
+	NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+	if (coordinator != nil)
+	{
+		managedObjectContext_ = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+		[managedObjectContext_ setPersistentStoreCoordinator:coordinator];
+	}
+	return managedObjectContext_;
 }
 
 /**
@@ -132,13 +132,13 @@
  */
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (managedObjectModel_ != nil)
-    {
-        return managedObjectModel_;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"GeoloqiDemo" withExtension:@"momd"];
-    managedObjectModel_ = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return managedObjectModel_;
+	if (managedObjectModel_ != nil)
+	{
+		return managedObjectModel_;
+	}
+	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"GeoloqiDemo" withExtension:@"momd"];
+	managedObjectModel_ = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+	return managedObjectModel_;
 }
 
 /**
@@ -147,45 +147,45 @@
  */
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
-    if (persistentStoreCoordinator_ != nil)
-    {
-        return persistentStoreCoordinator_;
-    }
-    
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Geoloqi.sqlite"];
-    
-    NSError *error = nil;
-    persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![persistentStoreCoordinator_ addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error])
-    {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         
-         Typical reasons for an error here include:
-         * The persistent store is not accessible;
-         * The schema for the persistent store is incompatible with current managed object model.
-         Check the error message to determine what the actual problem was.
-         
-         
-         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
-         
-         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
-         * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter: 
-         [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
-         
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
-         
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }    
-    
-    return persistentStoreCoordinator_;
+	if (persistentStoreCoordinator_ != nil)
+	{
+		return persistentStoreCoordinator_;
+	}
+	
+	NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Geoloqi.sqlite"];
+	
+	NSError *error = nil;
+	persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+	if (![persistentStoreCoordinator_ addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error])
+	{
+		/*
+		 Replace this implementation with code to handle the error appropriately.
+		 
+		 abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+		 
+		 Typical reasons for an error here include:
+		 * The persistent store is not accessible;
+		 * The schema for the persistent store is incompatible with current managed object model.
+		 Check the error message to determine what the actual problem was.
+		 
+		 
+		 If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
+		 
+		 If you encounter schema incompatibility errors during development, you can reduce their frequency by:
+		 * Simply deleting the existing store:
+		 [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
+		 
+		 * Performing automatic lightweight migration by passing the following dictionary as the options parameter: 
+		 [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+		 
+		 Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
+		 
+		 */
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		abort();
+	}    
+	
+	return persistentStoreCoordinator_;
 }
 
 #pragma mark - Application's Documents directory
@@ -195,7 +195,7 @@
  */
 - (NSURL *)applicationDocumentsDirectory
 {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+	return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
 

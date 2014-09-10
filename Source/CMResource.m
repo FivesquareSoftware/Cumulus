@@ -50,6 +50,18 @@
 #import "NSString+Cumulus.h"
 
 
+#if defined(DEBUG) & DEBUG
+/** NSURLRequest () category to allow use of private method in debug.
+ *  Don't enable this in a release build... your app will be rejected,
+ *  and, worse, can dangerously make private information insecure.
+ */
+@interface NSURLRequest ()
++ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString*)host;
++ (void)setAllowsAnyHTTPSCertificate:(BOOL)allowOrNot forHost:(NSString *)host;
+@end
+#endif
+
+
 @interface CMResource()
 
 
@@ -753,6 +765,10 @@
 			[self.headersInternal setObject:@"image/png" forKey:kCumulusHTTPHeaderContentType];
 			[self.headersInternal setObject:@"image/png" forKey:kCumulusHTTPHeaderAccept];
 			break;
+		case CMContentTypeOAuth2:
+			[self.headersInternal setObject:@"application/x-www-form-urlencoded" forKey:kCumulusHTTPHeaderContentType];
+			[self.headersInternal setObject:@"application/json" forKey:kCumulusHTTPHeaderAccept];
+			break;
 		default:
 			break;
 	}
@@ -790,6 +806,17 @@
 	
 	request.connectionDelegateQueue = self.requestDelegateQueue;
 }
+
+
+#if defined(DEBUG) & DEBUG
+/** USE THIS AT YOUR OWN RISK. Only available in Debug builds. */
+- (void)allowInsecureCertificates {
+	// requires category on NSURLRequest to be defined with this method
+	[NSURLRequest setAllowsAnyHTTPSCertificate:YES forHost:[self.URL host]];
+	NSLog(@"\n/**\n *\n * SECURITY WARNING: bypassing SSL\n *\n **/");
+}
+#endif
+
 
 - (NSString *) requestSignatureForHTTPMethod:(NSString *)method {
 	return [NSString stringWithFormat:@"%@ %@",method,_URL];

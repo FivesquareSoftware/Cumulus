@@ -67,7 +67,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 }
 
 - (void)beforeEach {
-    // set up resources that need to be initialized before each example here
+	// set up resources that need to be initialized before each example here
 	self.service = [CMResource withURL:kTestServerHost];
 	self.service.cachePolicy = NSURLRequestReloadIgnoringCacheData;
 }

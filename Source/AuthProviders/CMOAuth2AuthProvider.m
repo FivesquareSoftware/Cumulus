@@ -55,6 +55,12 @@
 	return provider;
 }
 
+
++ (id) withTokenService:(CMResource *)tokenService {
+	return [self withAuthorizationURL:nil tokenService:tokenService];
+}
+
+
 // ========================================================================== //
 
 #pragma mark - Token Generation
@@ -62,12 +68,29 @@
 
 
 - (void) requestAccessTokenWithUsername:(NSString *)username password:(NSString *)password completionBlock:(CMCompletionBlock)passedBlock {
+
+	NSParameterAssert(username);
+	NSParameterAssert(password);
+
 	if (username && password) {
-		NSDictionary *tokenPayload = [NSDictionary dictionaryWithObjectsAndKeys:
-									  @"password", @"grant_type"
-									  , username, @"username"
-									  , password, @"password"
-									  , nil];
+		
+		NSMutableDictionary *tokenPayload = [NSMutableDictionary new];
+		
+		// add optional arguments
+		if (self.client_id ) {
+			[tokenPayload setObject:self.client_id forKey:@"client_id"];
+		}
+		if (self.client_secret) {
+			[tokenPayload setObject:self.client_secret forKey:@"client_secret"];
+		}
+		if (self.scope) {
+			[tokenPayload setObject:self.scope forKey:@"scope"];
+		}
+
+		// required arguments - already checked for non-nil above
+		[tokenPayload setObject:username forKey:@"username"];
+		[tokenPayload setObject:password forKey:@"password"];
+		[tokenPayload setObject:@"password" forKey:@"grant_type"];
 		
 		CMCompletionBlock completionBlock = ^(CMResponse *response) {
 			if (response.wasSuccessful) {
@@ -79,82 +102,88 @@
 			}
 		};
 		
-		[self.tokenService post:tokenPayload withCompletionBlock:completionBlock];
+		[self.tokenService post:[tokenPayload copy] withCompletionBlock:completionBlock];
 	}
 }
 
 #if TARGET_OS_IPHONE
-- (void) requestAccessTokenUsingWebView:(UIWebView *)webView {
+- (void) requestAccessTokenUsingWebView:(UIWebView *)webView
 #else
-	- (void) requestAccessTokenUsingWebView:(WebView *)webView {
+- (void) requestAccessTokenUsingWebView:(WebView *)webView
 #endif
-		//TODO
-	}
-	
-	
-	
-	// ========================================================================== //
-	
+{
+	//TODO
+}
+
+
+
+// ========================================================================== //
+
 #pragma mark - CMAuthProvider
 	
-	- (NSString *) providedAuthenticationMethod {
-		return nil; // I dunno, basic?
+- (NSString *) providedAuthenticationMethod {
+	return nil; // I dunno, basic?
+}
+
+- (void) authorizeRequest:(NSMutableURLRequest *)URLRequest {
+	NSDate *now = [NSDate date];
+	NSComparisonResult comparisonResult = [self.token.accessExpires compare:now];
+	if (self.token.accessExpires &&	 comparisonResult != NSOrderedDescending) {
+		[self refreshAccessToken];
 	}
+	[self addAuthHeader:URLRequest];
+}
+
+- (NSURLCredential *) credentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+	return nil;
+	// wondering, could we build a credential that would properly set the Authorization header?
+}
+
 	
-	- (void) authorizeRequest:(NSMutableURLRequest *)URLRequest {
-		NSDate *now = [NSDate date];
-		NSComparisonResult comparisonResult = [self.token.accessExpires compare:now];
-		if (self.token.accessExpires &&	 comparisonResult != NSOrderedDescending) {
-			[self refreshAccessToken];
-		}
-		[self addAuthHeader:URLRequest];
-	}
-	
-	- (NSURLCredential *) credentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-		return nil;
-		// wondering, could we build a credential that would properly set the Authorization header?
-	}
-	
-	
-	// ========================================================================== //
-	
+// ========================================================================== //
+
 #pragma mark - Helpers
 	
 	
 	
-	- (void) addAuthHeader:(NSMutableURLRequest *)URLRequest {
-		if(self.token.accessToken.length) {
-			NSString *authHeader = [NSString stringWithFormat:@"OAuth %@",self.token.accessToken];
-			[URLRequest setValue:authHeader forHTTPHeaderField:kCumulusHTTPHeaderAuthorization];
+- (void) addAuthHeader:(NSMutableURLRequest *)URLRequest {
+	if(self.token.accessToken.length) {
+		NSString *authHeader = [NSString stringWithFormat:@"%@ %@",self.token.tokenType,self.token.accessToken];
+		[URLRequest setValue:authHeader forHTTPHeaderField:kCumulusHTTPHeaderAuthorization];
+	}
+}
+
+- (void) refreshAccessToken {
+	if (self.token.refreshToken.length) {
+		NSDictionary *tokenPayload = [NSDictionary dictionaryWithObjectsAndKeys:
+									  @"refresh_token", @"grant_type"
+									  , self.token.refreshToken, @"refresh_token"
+									  , nil];
+		
+		CMResponse *response = [self.tokenService post:tokenPayload];
+		if (response.wasSuccessful) {
+			[self mapTokenFromResult:response.result];
+		}
+		else {
+			RCLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);
 		}
 	}
-	
-	- (void) refreshAccessToken {
-		if (self.token.refreshToken.length) {
-			NSDictionary *tokenPayload = [NSDictionary dictionaryWithObjectsAndKeys:
-										  @"refresh_token", @"grant_type"
-										  , self.token.refreshToken, @"refresh_token"
-										  , nil];
-			
-			CMResponse *response = [self.tokenService post:tokenPayload];
-			if (response.wasSuccessful) {
-				[self mapTokenFromResult:response.result];
-			}
-			else {
-				RCLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);
-			}
-		}
+}
+
+- (void) mapTokenFromResult:(id)result {
+	self.token.tokenType = [result valueForKey:@"token_type"];
+	if ( ! self.token.tokenType) {
+		self.token.tokenType = @"OAuth";
 	}
-	
-	- (void) mapTokenFromResult:(id)result {
-		self.token.accessToken = [result valueForKey:@"access_token"];
-		self.token.refreshToken = [result valueForKey:@"refresh_token"];
-		NSTimeInterval expiresIn = [[result valueForKey:@"expires_in"] doubleValue];
-		if (expiresIn > 0) {
-			self.token.accessExpires = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
-		}
-		self.token.scope = [result valueForKey:@"scope"];
+	self.token.accessToken = [result valueForKey:@"access_token"];
+	self.token.refreshToken = [result valueForKey:@"refresh_token"];
+	NSTimeInterval expiresIn = [[result valueForKey:@"expires_in"] doubleValue];
+	if (expiresIn > 0) {
+		self.token.accessExpires = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
 	}
-	
-	
-	@end
+	// TODO: if scope is not set, it should be gotten from the original request
+	self.token.scope = [result valueForKey:@"scope"];
+}
+
+
+@end

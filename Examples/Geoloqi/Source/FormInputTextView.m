@@ -12,12 +12,12 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+	self = [super initWithFrame:frame];
+	if (self) {
+		// Initialization code
 		self.layer.cornerRadius = 7.f;
-    }
-    return self;
+	}
+	return self;
 }
 
 - (void) awakeFromNib {
@@ -30,7 +30,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    // Drawing code
+	// Drawing code
 }
 */
 
