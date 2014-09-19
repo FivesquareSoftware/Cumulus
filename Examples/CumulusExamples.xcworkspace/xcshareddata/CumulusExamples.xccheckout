@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>CEB80B44-EF85-4468-AA41-52E01DB2AC31</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CumulusExamples</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F78ED36C-9C42-49E1-A0CF-1B822DC7D59E</key>
+		<string>ssh://github.com/FivesquareSoftware/Cumulus.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Examples/CumulusExamples.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F78ED36C-9C42-49E1-A0CF-1B822DC7D59E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/FivesquareSoftware/Cumulus.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F78ED36C-9C42-49E1-A0CF-1B822DC7D59E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F78ED36C-9C42-49E1-A0CF-1B822DC7D59E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Cumulus</string>
+		</dict>
+	</array>
+</dict>
+</plist>
