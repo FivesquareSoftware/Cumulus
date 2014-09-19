@@ -41,10 +41,10 @@
 	// We'll try and bump performance a bit on ios devices
 #if TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR
 	size_t len;
-    NSUInteger numberOfCPUs;
+	NSUInteger numberOfCPUs;
 	
-    len = sizeof(numberOfCPUs);
-    sysctlbyname ("hw.ncpu",&numberOfCPUs,&len,NULL,0);
+	len = sizeof(numberOfCPUs);
+	sysctlbyname ("hw.ncpu",&numberOfCPUs,&len,NULL,0);
 
 	if (numberOfCPUs > 0) {
 		self.benchmarks.maxConcurrentRequests = numberOfCPUs*4;

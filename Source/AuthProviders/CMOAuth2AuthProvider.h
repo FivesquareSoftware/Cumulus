@@ -58,11 +58,22 @@
 /// includes an access token and the refresh token + expiration date if they exist
 @property (strong, nonatomic) CMOAuthToken *token;
 
+// optional properties, will be added to payload of auth request if non-nil
+@property (strong, nonatomic) NSString *scope;
+@property (strong, nonatomic) NSString *client_id;
+@property (strong, nonatomic) NSString *client_secret;
+
+
 /** Creates a new auth provider using the authorization URL and token service requested. 
  *  @param authorizationURL A URL for an OAuth auth page. (Currently unused)
  *  @param tokenService an instance of CMResource that knows how to request, return and map a token response to an instance of CMOAuthToken.
  */
 + (id) withAuthorizationURL:(NSURL *)authorizationURL tokenService:(CMResource *)tokenService;
+
+/** Creates a new auth provider using a token service.
+ *  @param tokenService an instance of CMResource that knows how to request, return and map a token response to an instance of CMOAuthToken.
+ */
++ (id) withTokenService:(CMResource *)tokenService;
 
 /** Aysnchronously requests and stores an access token directly from the token service using a 'password' grant type. */
 - (void) requestAccessTokenWithUsername:(NSString *)username password:(NSString *)password completionBlock:(CMCompletionBlock)passedBlock;

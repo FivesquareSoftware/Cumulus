@@ -11,9 +11,9 @@
 @implementation NSManagedObjectContext (Demo)
 
 - (NSManagedObjectContext *) newChildContext {
-    NSManagedObjectContext *child = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    child.parentContext = self;
-    return child;
+	NSManagedObjectContext *child = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+	child.parentContext = self;
+	return child;
 }
 
 - (BOOL) saveChild:(NSError **)error {

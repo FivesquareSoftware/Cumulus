@@ -43,6 +43,7 @@
 	[aCoder encodeObject:self.refreshToken forKey:@"refreshToken"];
 	[aCoder encodeObject:self.accessExpires forKey:@"tokenExpiration"];
 	[aCoder encodeObject:self.scope forKey:@"scope"];
+	[aCoder encodeObject:self.tokenType forKey:@"tokenType"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -50,12 +51,13 @@
 	self.refreshToken = [aDecoder decodeObjectForKey:@"refreshToken"];
 	self.accessExpires = [aDecoder decodeObjectForKey:@"tokenExpiration"];
 	self.scope = [aDecoder decodeObjectForKey:@"scope"];
+	self.tokenType = [aDecoder decodeObjectForKey:@"tokenType"];
 	
 	return self;
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ (accessToken: %@, refreshToken: %@, accessExpires: %@, scope: %@)",[super description],_accessToken,_refreshToken,_accessExpires,_scope];
+	return [NSString stringWithFormat:@"%@ (tokenType: %@, accessToken: %@, refreshToken: %@, accessExpires: %@, scope: %@)",[super description],_tokenType,_accessToken,_refreshToken,_accessExpires,_scope];
 }
 
 @end

@@ -200,6 +200,9 @@
 		A4EFF20C155334AE00868358 /* CMFixtureRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EFF209155334AE00868358 /* CMFixtureRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4EFF20D155334AE00868358 /* CMFixtureRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF20A155334AE00868358 /* CMFixtureRequest.m */; };
 		A4EFF20E155334AE00868358 /* CMFixtureRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EFF20A155334AE00868358 /* CMFixtureRequest.m */; };
+		F671C6C819C0EAD600E7163C /* CMFormCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = F671C6C619C0EAD600E7163C /* CMFormCoder.h */; };
+		F671C6C919C0EAD600E7163C /* CMFormCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F671C6C719C0EAD600E7163C /* CMFormCoder.m */; };
+		F671C6CA19C0EAED00E7163C /* CMFormCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F671C6C719C0EAD600E7163C /* CMFormCoder.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -367,6 +370,8 @@
 		A4F536B41624A15F000B7B78 /* appledoc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = appledoc; sourceTree = "<group>"; };
 		A4F536B61624A187000B7B78 /* gendocs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = gendocs.sh; sourceTree = "<group>"; };
 		A4FB357816F6944D00FA8B62 /* CumulusLib-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CumulusLib-Info.plist"; sourceTree = SOURCE_ROOT; };
+		F671C6C619C0EAD600E7163C /* CMFormCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMFormCoder.h; sourceTree = "<group>"; };
+		F671C6C719C0EAD600E7163C /* CMFormCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMFormCoder.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -549,6 +554,8 @@
 			children = (
 				A406BD3B17A9E5E6001070F0 /* CMCoder.h */,
 				A406BD3C17A9E5E6001070F0 /* CMCoder.m */,
+				F671C6C619C0EAD600E7163C /* CMFormCoder.h */,
+				F671C6C719C0EAD600E7163C /* CMFormCoder.m */,
 				A443AE3D13DB4C9300D55902 /* CMIdentityCoder.h */,
 				A443AE3E13DB4C9300D55902 /* CMIdentityCoder.m */,
 				A443AE4113DB4E8900D55902 /* CMTextCoder.h */,
@@ -923,6 +930,7 @@
 				A4C2085A141852F6003412BA /* CMXMLCoder.h in Headers */,
 				A43F86AD144AAC5D00C69C3D /* CMImageCoder.h in Headers */,
 				A4A22272148AA893001726E4 /* CMRequest+Protected.h in Headers */,
+				F671C6C819C0EAD600E7163C /* CMFormCoder.h in Headers */,
 				A4092665149725F300C42E8B /* CMOAuth2AuthProvider.h in Headers */,
 				A4092786149835FD00C42E8B /* CMServerTrustAuthProvider.h in Headers */,
 				A468A774149FA73900612DA9 /* CMClientCertificateAuthProvider.h in Headers */,
@@ -1186,6 +1194,7 @@
 				A443AE4013DB4C9300D55902 /* CMIdentityCoder.m in Sources */,
 				A443AE4413DB4E8900D55902 /* CMTextCoder.m in Sources */,
 				A409B3431408E890003495BA /* CMBasicAuthProvider.m in Sources */,
+				F671C6C919C0EAD600E7163C /* CMFormCoder.m in Sources */,
 				A409B3BD1410597D003495BA /* CMConstants.m in Sources */,
 				A4C2085B141852F6003412BA /* CMXMLCoder.m in Sources */,
 				A43F86AE144AAC5D00C69C3D /* CMImageCoder.m in Sources */,
@@ -1227,6 +1236,7 @@
 				A43E63C3152A6185006AEBCD /* CMIdentityCoder.m in Sources */,
 				A43E63C4152A6185006AEBCD /* CMTextCoder.m in Sources */,
 				A43E63C5152A6185006AEBCD /* CMJSONCoder.m in Sources */,
+				F671C6CA19C0EAED00E7163C /* CMFormCoder.m in Sources */,
 				A43E63C6152A6185006AEBCD /* CMXMLCoder.m in Sources */,
 				A43E63C7152A6185006AEBCD /* CMImageCoder.m in Sources */,
 				A43E63C8152A6185006AEBCD /* CMBasicAuthProvider.m in Sources */,

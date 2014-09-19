@@ -43,20 +43,20 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	if (self) {
+		// Custom initialization
+	}
+	return self;
 }
 
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
+	// Releases the view if it doesn't have a superview.
+	[super didReceiveMemoryWarning];
+	
+	// Release any cached data, images, etc that aren't in use.
 }
 
 
@@ -67,19 +67,19 @@
 
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+	// Uncomment the following line to preserve selection between presentations.
+	// self.clearsSelectionOnViewWillAppear = NO;
 	
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+	// self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+	[super viewDidUnload];
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
 	
 	self.fetchedResultsController = nil;
 }
@@ -100,8 +100,8 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	// Return YES for supported orientations
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 
@@ -233,26 +233,26 @@
 - (MKCoordinateRegion)regionFromCoordinates:(NSArray *)coordinates {	
 	id<CoordinateLike> lastCoordinate = [coordinates lastObject];
 	CLLocationCoordinate2D upper = lastCoordinate.coordinate;
-    CLLocationCoordinate2D lower = lastCoordinate.coordinate;
+	CLLocationCoordinate2D lower = lastCoordinate.coordinate;
 	
 	for (id<CoordinateLike> coordinateLike in coordinates) {
 		CLLocationCoordinate2D coordinate = coordinateLike.coordinate;
-        if(coordinate.latitude > upper.latitude) upper.latitude = coordinate.latitude;
-        if(coordinate.latitude < lower.latitude) lower.latitude = coordinate.latitude;
-        if(coordinate.longitude > upper.longitude) upper.longitude = coordinate.longitude;
-        if(coordinate.longitude < lower.longitude) lower.longitude = coordinate.longitude;
+		if(coordinate.latitude > upper.latitude) upper.latitude = coordinate.latitude;
+		if(coordinate.latitude < lower.latitude) lower.latitude = coordinate.latitude;
+		if(coordinate.longitude > upper.longitude) upper.longitude = coordinate.longitude;
+		if(coordinate.longitude < lower.longitude) lower.longitude = coordinate.longitude;
 	}
 	
-    // FIND REGION
-    MKCoordinateSpan locationSpan;
-    locationSpan.latitudeDelta = upper.latitude - lower.latitude;
-    locationSpan.longitudeDelta = upper.longitude - lower.longitude;
-    CLLocationCoordinate2D locationCenter;
-    locationCenter.latitude = (upper.latitude + lower.latitude) / 2;
-    locationCenter.longitude = (upper.longitude + lower.longitude) / 2;
+	// FIND REGION
+	MKCoordinateSpan locationSpan;
+	locationSpan.latitudeDelta = upper.latitude - lower.latitude;
+	locationSpan.longitudeDelta = upper.longitude - lower.longitude;
+	CLLocationCoordinate2D locationCenter;
+	locationCenter.latitude = (upper.latitude + lower.latitude) / 2;
+	locationCenter.longitude = (upper.longitude + lower.longitude) / 2;
 	
-    MKCoordinateRegion region = MKCoordinateRegionMake(locationCenter, locationSpan);
-    return region;
+	MKCoordinateRegion region = MKCoordinateRegionMake(locationCenter, locationSpan);
+	return region;
 }
 
 

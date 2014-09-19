@@ -36,7 +36,7 @@
 #import <Foundation/Foundation.h>
 
 /** CMAuthProvider is a simple protocol that can be easily implemented to include just about any type of request authorization. Cumulus includes built in implementations of CMAuthProvider that provide [BASIC](CMBasicAuthProvider), [CMServerTrustAuthProvider](Server Trust), [CMClientCertificateAuthProvider](Client Certificate), [CMOAuth2AuthProvider](OAuth2) and [CMS3AuthProvider](Amazon S3) authoriization. 
- *  @see howto.md for an example implementation of a custom auth provider.
+ *  @see the Cumulus Programming Guide for an example implementation of a custom auth provider.
  */
 @protocol CMAuthProvider <NSObject>
 
