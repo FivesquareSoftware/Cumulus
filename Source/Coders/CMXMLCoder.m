@@ -53,11 +53,11 @@
 		NSError *error = nil;
 		data = [NSPropertyListSerialization dataWithPropertyList:payload format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
 		if (error) {
-			RCLog(@"XML coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
+			CMLog(@"XML coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
 		}
 	}
 	@catch (NSException *exception) {
-		RCLog(@"XML coding error: %@",[exception reason]);
+		CMLog(@"XML coding error: %@",[exception reason]);
 	}
 	return data;
 }
@@ -69,7 +69,7 @@
 		object = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&error];
 	}
 	@catch (NSException *exception) {
-		RCLog(@"XML coding error: %@",[exception reason]);
+		CMLog(@"XML coding error: %@",[exception reason]);
 	}
 	return object;
 }

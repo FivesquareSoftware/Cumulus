@@ -71,8 +71,8 @@
 - (long long) totalAggregatedContentLength {
 	__block long long totalAggregatedContentLength = 0;
 	[_allChunks enumerateObjectsUsingBlock:^(CMDownloadChunk *chunk, BOOL *stop) {
-		//		RCLog(@"** totalAggregatedContentLength: %lld",totalAggregatedContentLength);
-		//		RCLog(@"** chunk.fileOffset: %lld",chunk.fileOffset);
+		//		CMLog(@"** totalAggregatedContentLength: %lld",totalAggregatedContentLength);
+		//		CMLog(@"** chunk.fileOffset: %lld",chunk.fileOffset);
 		totalAggregatedContentLength += chunk.fileOffset;
 	}];
 	return totalAggregatedContentLength;
@@ -171,7 +171,7 @@
 	if (NO == [fm fileExistsAtPath:self.cachesDir]) {
 		NSError *error = nil;
 		if (NO == [fm createDirectoryAtPath:self.cachesDir withIntermediateDirectories:YES attributes:nil error:&error]) {
-			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
+			CMLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
 		}
 	}
 	
@@ -204,7 +204,7 @@
 	if (NO == [fm fileExistsAtPath:[_chunksDirURL path]]) {
 		NSError *error = nil;
 		if (NO == [fm createDirectoryAtPath:[_chunksDirURL path] withIntermediateDirectories:YES attributes:nil error:&error]) {
-			RCLog(@"Could not create chunks dir: %@ %@ (%@)", _chunksDirURL, [error localizedDescription], [error userInfo]);
+			CMLog(@"Could not create chunks dir: %@ %@ (%@)", _chunksDirURL, [error localizedDescription], [error userInfo]);
 		}
 	}
 	
@@ -269,7 +269,7 @@
 }
 
 - (void) startChunkForRange:(CMContentRange)range sequence:(NSUInteger)idx {
-	RCLog(@"%@.startChunkForRange:%@ sequence:%@",self.URL,[NSString stringWithFormat:@"(%lld,%lld)",range.location,range.length],@(idx));
+	CMLog(@"%@.startChunkForRange:%@ sequence:%@",self.URL,[NSString stringWithFormat:@"(%lld,%lld)",range.location,range.length],@(idx));
 	CMDownloadChunk *chunk = [CMDownloadChunk new];
 	chunk.sequence = idx;
 	chunk.size = range.length;
@@ -278,7 +278,7 @@
 	NSFileManager *fm = [NSFileManager new];
 	NSURL *completedChunkURL = [self completedChunkFileURLForRange:range];
 	if ([fm fileExistsAtPath:[completedChunkURL path]]) {
-		RCLog(@"Found completed chunk: %@",completedChunkURL);
+		CMLog(@"Found completed chunk: %@",completedChunkURL);
 		chunk.file = completedChunkURL;
 		chunk.fileOffset = chunk.size;
 		dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
@@ -351,7 +351,7 @@
 				
 				NSError *moveError = nil;
 				if (NO == [fm moveItemAtURL:chunkTempURL toURL:chunkNewURL error:&moveError]) {
-					RCLog(@"Error moving completed chunk into place! %@ (%@)",[moveError localizedDescription],[moveError userInfo]);
+					CMLog(@"Error moving completed chunk into place! %@ (%@)",[moveError localizedDescription],[moveError userInfo]);
 					chunk_.error = moveError;
 				}
 				else {
@@ -381,14 +381,14 @@
 - (void) dispatchNextChunk {
 	dispatch_semaphore_wait(_chunksSemaphore, DISPATCH_TIME_FOREVER);
 	NSUInteger runningChunkCount = self.runningChunks.count;
-	RCLog(@"Current chunk workers: %@",@(runningChunkCount));
+	CMLog(@"Current chunk workers: %@",@(runningChunkCount));
 	if (runningChunkCount < self.maxConcurrentChunks) {
 		CMDownloadChunk *nextChunk = [self.waitingChunks anyObject];
 		if (nextChunk) {
 			[self.runningChunks addObject:nextChunk];
 			[self.waitingChunks removeObject:nextChunk];
 			[nextChunk.request start];
-			RCLog(@"Launched chunk request: %@",nextChunk.request);
+			CMLog(@"Launched chunk request: %@",nextChunk.request);
 		}
 	}
 	dispatch_semaphore_signal(_chunksSemaphore);
@@ -421,7 +421,7 @@
 								*stop = YES;
 								NSDictionary *info = @{ NSLocalizedDescriptionKey : @"Chunk order not sane" };
 								self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorOutOfOrderChunks userInfo:info];
-								RCLog(info[NSLocalizedDescriptionKey]);
+								CMLog(info[NSLocalizedDescriptionKey]);
 								return;
 							}
 							NSError *readError = nil;
@@ -441,7 +441,7 @@
 												readData = [chunkReadHandle readDataOfLength:_readBufferLength];
 												length = [readData length];
 												if (length < 1) {
-													RCLog(@"Read end of chunk: %@ assembled: %@",@(movedChunkDataLength),@(self.assembledAggregatedContentLength));
+													CMLog(@"Read end of chunk: %@ assembled: %@",@(movedChunkDataLength),@(self.assembledAggregatedContentLength));
 												}
 											}
 											@catch (NSException *exception) {
@@ -455,7 +455,7 @@
 												}
 												NSError *readWriteError = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorWritingToTempFile userInfo:info];
 												self.error = readWriteError;
-												RCLog(@"Error moving data from chunk to aggregate file: %@->%@ %@ (%@)", chunk.file, self.downloadedFileTempURL, [readWriteError localizedDescription], [readWriteError userInfo]);
+												CMLog(@"Error moving data from chunk to aggregate file: %@->%@ %@ (%@)", chunk.file, self.downloadedFileTempURL, [readWriteError localizedDescription], [readWriteError userInfo]);
 												length = 0;
 												return;
 											}
@@ -468,7 +468,7 @@
 								else {
 									*stop = YES;
 									self.error = readError;
-									RCLog(@"Could not create file handle to read chunk file: %@ %@ (%@)", chunk.file, [readError localizedDescription], [readError userInfo]);
+									CMLog(@"Could not create file handle to read chunk file: %@ %@ (%@)", chunk.file, [readError localizedDescription], [readError userInfo]);
 									return;
 								}
 							}
@@ -476,9 +476,9 @@
 								*stop = YES;
 								NSDictionary *info = @{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Actual chunk size did not match expected chunk size %@ != %@ (%@)",@(movedChunkDataLength), @(chunk.size),[chunk.file lastPathComponent]] };
 								self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorMismatchedChunkSize userInfo:info];
-								RCLog(info[NSLocalizedDescriptionKey]);
-								RCLog(@"chunk.request.headers: %@",chunk.request.headers);
-								RCLog(@"chunk.response.headers: %@",chunk.response.headers);
+								CMLog(info[NSLocalizedDescriptionKey]);
+								CMLog(@"chunk.request.headers: %@",chunk.request.headers);
+								CMLog(@"chunk.response.headers: %@",chunk.response.headers);
 							}
 						}];
 						[outHandle closeFile];
@@ -486,14 +486,14 @@
 					}
 					else {
 						self.error = writeError;
-						RCLog(@"Could not create file handle to aggregated file: %@ %@ (%@)", self.downloadedFileTempURL, [writeError localizedDescription], [writeError userInfo]);
+						CMLog(@"Could not create file handle to aggregated file: %@ %@ (%@)", self.downloadedFileTempURL, [writeError localizedDescription], [writeError userInfo]);
 					}
 				}
 			}
 			else {
 				NSDictionary *info = @{ NSLocalizedDescriptionKey : @"Not able to create temporary file for chunked download" };
 				self.error = [NSError errorWithDomain:kCumulusErrorDomain code:kCumulusErrorCodeErrorCreatingTempFile userInfo:info];
-				RCLog(info[NSLocalizedDescriptionKey]);
+				CMLog(info[NSLocalizedDescriptionKey]);
 			}
 		}
 		else if (self.chunkErrors.count > 0) {
@@ -539,7 +539,7 @@
 		NSFileManager *fm = [NSFileManager new];
 		NSError *error = nil;
 		if ([fm fileExistsAtPath:[self.downloadedFileTempURL path]] && NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
-			RCLog(@"Could not remove aggregate file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+			CMLog(@"Could not remove aggregate file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 		}
 	});
 }
@@ -549,7 +549,7 @@
 		NSFileManager *fm = [NSFileManager new];
 		NSError *error = nil;
 		if ([fm fileExistsAtPath:[self.chunksDirURL path]] && NO == [fm removeItemAtURL:self.chunksDirURL error:&error]) {
-			RCLog(@"Could not remove chunks dir: %@ %@ (%@)", self.chunksDirURL, [error localizedDescription], [error userInfo]);
+			CMLog(@"Could not remove chunks dir: %@ %@ (%@)", self.chunksDirURL, [error localizedDescription], [error userInfo]);
 		}
 	});
 }

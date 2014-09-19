@@ -39,7 +39,7 @@
 
 + (void) load {
 	@autoreleasepool {
-		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"text" options:0 error:NULL];
+		NSRegularExpression *mimeExpression = [NSRegularExpression regularExpressionWithPattern:@"text/plain" options:0 error:NULL];
 		NSArray *fileExtensions = [NSArray arrayWithObjects:@"txt", @"html", nil];
 		[CMCoder registerCoder:self objectType:[NSString class] mimeTypes:[NSArray arrayWithObject:mimeExpression] fileExtensions:fileExtensions];
 	}

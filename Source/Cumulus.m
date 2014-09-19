@@ -58,7 +58,7 @@
 			if (NO == [fm fileExistsAtPath:[self cachesDir]]) {
 				NSError *error = nil;
 				if (NO == [fm createDirectoryAtPath:[self cachesDir] withIntermediateDirectories:YES attributes:nil error:&error]) {
-					RCLog(@"Could not create Cumulus caches %@ (%@)", [error localizedDescription], [error userInfo]);
+					CMLog(@"Could not create Cumulus caches %@ (%@)", [error localizedDescription], [error userInfo]);
 				}
 			}
 		}

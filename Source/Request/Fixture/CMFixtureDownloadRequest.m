@@ -60,7 +60,7 @@
 	if (NO == [fm fileExistsAtPath:self.cachesDir]) {
 		NSError *error = nil;
 		if (NO == [fm createDirectoryAtPath:self.cachesDir withIntermediateDirectories:YES attributes:nil error:&error]) {
-			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
+			CMLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
 		}
 	}
 	[CMRequest incrementRequestCountFor:self];
@@ -76,7 +76,7 @@
 	
 	self.started = YES;
 	
-	RCLog(@"%@", self);
+	CMLog(@"%@", self);
 	
 	[self handleConnectionDidSendData];
 	[self handleConnectionDidReceiveData];
@@ -112,7 +112,7 @@
 		// Get attributes, if we can't assume we need to bail
 		NSDictionary *fixtureAttributes = [fm attributesOfItemAtPath:fixturePath error:&writeError];
 		if (writeError) {
-			RCLog(@"Could not read attributes of fixture at URL: %@ %@ (%@)", fixtureURL, [writeError localizedDescription],[writeError userInfo]);
+			CMLog(@"Could not read attributes of fixture at URL: %@ %@ (%@)", fixtureURL, [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
 			[self handleConnectionFinished];
 			return YES;
@@ -124,7 +124,7 @@
 		self.expectedContentLength = [fixtureAttributes fileSize];
 		
 		if (NO == [fm copyItemAtURL:fixtureURL toURL:self.downloadedFileTempURL error:&writeError]) {
-			RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
+			CMLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
 			[self handleConnectionFinished];
 			return YES;
@@ -135,7 +135,7 @@
 		
 		if (NO == [fm fileExistsAtPath:[self.downloadedFileTempURL path]]) {
 			if (NO == [self.fixtureData writeToURL:self.downloadedFileTempURL options:NSDataWritingAtomic error:&writeError]) {
-				RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
+				CMLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 				self.error = writeError;
 				[self handleConnectionFinished];
 				return YES;
@@ -171,7 +171,7 @@
 		NSFileManager *fm = [NSFileManager new];
 		NSError *error = nil;
 		if (NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
-			RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+			CMLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 		}
 	});
 	

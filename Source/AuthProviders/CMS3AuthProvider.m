@@ -193,7 +193,7 @@
 	}
 	
 	if (digestLength < 0) {
-		RCLog(@"Invalid hash algorithm: %d",algorithm);
+		CMLog(@"Invalid hash algorithm: %d",algorithm);
 		return nil;
 	}
 	

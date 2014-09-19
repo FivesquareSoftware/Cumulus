@@ -96,7 +96,7 @@
 	
 	NSURLCredential *credential = nil;
 	if (self.insecure) {
-		RCLog(@" *** WARNING **** : Accepting potentially insecure trust!");
+		CMLog(@" *** WARNING **** : Accepting potentially insecure trust!");
 		credential = [NSURLCredential credentialForTrust:serverTrust];
 	} else {
 		if (self.certificates.count > 0) {
@@ -107,7 +107,7 @@
 		if (returnCode == errSecSuccess && (result == kSecTrustResultProceed /*|| result == kSecTrustResultConfirm -- DEPRECATED */ || result == kSecTrustResultUnspecified) ) {
 			credential = [NSURLCredential credentialForTrust:serverTrust];
 		} else {
-			RCLog(@"SecTrustEvaluate failed: %ld",returnCode);
+			CMLog(@"SecTrustEvaluate failed: %ld",returnCode);
 		}
 	}
 	return credential;

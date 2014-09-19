@@ -43,13 +43,13 @@
 #if DEBUG || CUMULUS_BLOCK_LOGGING == 0
 	#ifdef CumulusLoggingOn
 // always log
-		#define RCLog(fmt,...) NSLog(fmt, ##__VA_ARGS__ )
+		#define CMLog(fmt,...) NSLog(fmt, ##__VA_ARGS__ )
 	#else
 // log based on the environment
-		#define RCLog(fmt,...) [Cumulus log:fmt, ##__VA_ARGS__ ]
+		#define CMLog(fmt,...) [Cumulus log:fmt, ##__VA_ARGS__ ]
 	#endif
 #else
-	#define RCLog(fmt,...) 
+	#define CMLog(fmt,...) 
 #endif
 
 #define kCMChunkedDownloadRequestDefaultChunkSize (1024*1024)

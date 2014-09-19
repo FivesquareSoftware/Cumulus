@@ -51,7 +51,7 @@
 		NSError *error = nil;
 		NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:&error];
 		if (error) {
-			RCLog(@"JSON coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
+			CMLog(@"JSON coding error: %@ (%@)",[error localizedDescription],[error userInfo]);
 		}
 		return data;
 	}
@@ -63,7 +63,7 @@
 	id object = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
 	if (error) {
 		NSString *JSONString __attribute__((unused)) = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-		RCLog(@"JSON coding error: '%@' %@ (%@)",JSONString, [error localizedDescription],[error userInfo]);
+		CMLog(@"JSON coding error: '%@' %@ (%@)",JSONString, [error localizedDescription],[error userInfo]);
 	}
 	return object;
 }

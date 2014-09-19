@@ -503,7 +503,7 @@
 		[request cancel];
 	}
 	else {
-		RCLog(@"Tried to cancel a non-existent request: %@",identifier);
+		CMLog(@"Tried to cancel a non-existent request: %@",identifier);
 	}
 }
 
@@ -840,7 +840,7 @@
 	
 	id context = (__bridge id)(dispatch_get_specific(&kCMResourceContextKey));
 	if (context) {
-		RCLog(@"Dispatching request with context: %@",context);
+		CMLog(@"Dispatching request with context: %@",context);
 	}
 	
 	dispatch_semaphore_t launchSemaphore = dispatch_semaphore_create(0);

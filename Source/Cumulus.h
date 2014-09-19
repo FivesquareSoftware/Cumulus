@@ -97,7 +97,7 @@
 /** Log a message to the console. 
  *
  * Whether or not this method actually logs a message is controlled by setting CumulusLoggingOn in the environment (Generally by setting it in the environment of the Run phase of your target's scheme). Setting it to YES|true|1 turns logging on, setting it to NO|false|0 to turns logging off (the default is off).
- * @warning If you are writing code for Cumulus or a Cumulus extension, you shouldn't be calling this method. Instead, call the RCLog() macro, which includes compile time checks to make sure logging doesn't make it into a release build of your application or framework.
+ * @warning If you are writing code for Cumulus or a Cumulus extension, you shouldn't be calling this method. Instead, call the CMLog() macro, which includes compile time checks to make sure logging doesn't make it into a release build of your application or framework.
 */
 + (void) log:(NSString *)format, ...;
 

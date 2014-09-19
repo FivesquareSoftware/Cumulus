@@ -76,7 +76,7 @@
 }
 
 - (void) enterWithRequest:(CMRequest *)request {
-	RCLog(@"%@.enterWithRequest: ->",self);
+	CMLog(@"%@.enterWithRequest: ->",self);
 	if (request) {
 		dispatch_barrier_sync(_requestsInternalAccessQueue, ^{
 			[_requestsInternal addObject:request];
@@ -89,7 +89,7 @@
 }
 
 - (void) leaveWithResponse:(CMResponse *)response {
-	RCLog(@"%@.leaveWithResponse: <-",self);
+	CMLog(@"%@.leaveWithResponse: <-",self);
 	if (response) {
 		dispatch_barrier_sync(_responsesInternalAccessQueue, ^{
 			[_responsesInternal addObject:response];

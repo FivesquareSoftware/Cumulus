@@ -111,7 +111,7 @@
 	
 	[CMRequest incrementRequestCountFor:self];
 	
-	RCLog(@"%@", self);
+	CMLog(@"%@", self);
 	
 	[self handleConnectionDidSendData];
 	[self handleConnectionDidReceiveData];

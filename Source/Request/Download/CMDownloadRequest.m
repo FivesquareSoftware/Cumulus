@@ -90,7 +90,7 @@
 	if (NO == [fm fileExistsAtPath:self.cachesDir]) {
 		NSError *error = nil;
 		if (NO == [fm createDirectoryAtPath:self.cachesDir withIntermediateDirectories:YES attributes:nil error:&error]) {
-			RCLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
+			CMLog(@"Could not create cachesDir: %@ %@ (%@)", self.cachesDir, [error localizedDescription], [error userInfo]);
 		}
 	}
 	BOOL canResume = NO;
@@ -159,7 +159,7 @@
 			NSFileManager *fm = [NSFileManager new];
 			NSError *error = nil;
 			if ([fm fileExistsAtPath:[self.downloadedFileTempURL path]] && NO == [fm removeItemAtURL:self.downloadedFileTempURL error:&error]) {
-				RCLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+				CMLog(@"Could not remove temp file: %@ %@ (%@)", self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 			}
 		});
 	}
@@ -223,7 +223,7 @@
 	BOOL isFirstChunk = self.receivedContentLength == 0;
 	if (NO == [fm fileExistsAtPath:[self.downloadedFileTempURL path]] || (isFirstChunk && NO == _shouldResume)) {
 		if (NO == [data writeToURL:self.downloadedFileTempURL options:NSDataWritingAtomic error:&writeError]) {
-			RCLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
+			CMLog(@"Could not write to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
 			[self handleConnectionFinished];
 			return;
@@ -237,7 +237,7 @@
 			[fh closeFile];
 		}
 		else {
-			RCLog(@"Could not get filehandle for writing to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
+			CMLog(@"Could not get filehandle for writing to downloaded file URL: %@ (%@)", [writeError localizedDescription],[writeError userInfo]);
 			self.error = writeError;
 			[self handleConnectionFinished];
 		}
@@ -282,7 +282,7 @@
 	NSFileManager *fm = [NSFileManager new];
 	NSError *moveError;
 	if ([fm moveItemAtURL:destinationURL toURL:self.downloadedFileTempURL error:&moveError]) {
-		RCLog(@"Could not move destination to temp file: %@ %@ (%@)", destinationURL, self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
+		CMLog(@"Could not move destination to temp file: %@ %@ (%@)", destinationURL, self.downloadedFileTempURL, [error localizedDescription], [error userInfo]);
 		self.error = moveError;
 	}
 	[self handleConnectionFinished];

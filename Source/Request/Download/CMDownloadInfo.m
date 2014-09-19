@@ -32,7 +32,7 @@ static NSMutableDictionary *_downloadInfo = nil;
 							_downloadInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[stateDataURL path]];
 						}
 						@catch (NSException *exception) {
-							RCLog(@"Exception while unarchiving download data: %@",exception);
+							CMLog(@"Exception while unarchiving download data: %@",exception);
 						}
 						NSAssert(_downloadInfo, @"Could not load state data from URL %@",stateDataURL);
 					}
@@ -85,7 +85,7 @@ static NSMutableDictionary *_downloadInfo = nil;
 		dispatch_semaphore_signal(_downloadInfoSemphore);
 	}
 	@catch (NSException *exception) {
-		RCLog(@"Exception while archiving download data: %@",exception);
+		CMLog(@"Exception while archiving download data: %@",exception);
 	}
 	
 	//	NSAssert(success, @"Failed to write download state!");

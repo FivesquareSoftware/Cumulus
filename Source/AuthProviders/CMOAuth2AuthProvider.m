@@ -141,7 +141,7 @@
 				[self mapTokenFromResult:response.result];
 			}
 			else {
-				RCLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);
+				CMLog(@"Could not refresh token: %@ (%@)",[response.error localizedDescription],[response.error userInfo]);
 			}
 		}
 	}

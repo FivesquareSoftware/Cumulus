@@ -68,7 +68,7 @@ static BOOL __networkActivityIndicatorVisible = NO;
 + (void) incrementRequestCountFor:(id)context {
 	dispatch_sync(__activityQueue, ^{
 		__requestCount++;
-//		RCLog(@"__requestCount++: %@ ** %@ **",@(__requestCount),context);
+//		CMLog(@"__requestCount++: %@ ** %@ **",@(__requestCount),context);
 #if TARGET_OS_IPHONE
 		if (__requestCount > 0 && NO == __networkActivityIndicatorVisible) {
 			[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -81,9 +81,9 @@ static BOOL __networkActivityIndicatorVisible = NO;
 + (void) decrementRequestCountFor:(id)context {
 	dispatch_sync(__activityQueue, ^{
 		__requestCount--;
-//		RCLog(@"__requestCount--: %@ ** %@ **",@(__requestCount),context);
+//		CMLog(@"__requestCount--: %@ ** %@ **",@(__requestCount),context);
 		if (__requestCount < 0) {
-			RCLog(@"** Unbalanced calls to request count  ** %@)",context);
+			CMLog(@"** Unbalanced calls to request count  ** %@)",context);
 		}
 #if TARGET_OS_IPHONE
 		if (__requestCount < 1 && __networkActivityIndicatorVisible) {
@@ -387,13 +387,13 @@ static BOOL __networkActivityIndicatorVisible = NO;
 - (BOOL) start {
 	NSAssert(self.canStart, @"Attempting to start a request that has already been started or has finished");
 	if (NO == self.canStart) {
-		RCLog(@"Attempting to start a request that has already been started or has finished");
+		CMLog(@"Attempting to start a request that has already been started or has finished");
 		return NO;
 	}
 	
 	// If a request was asked to cancel before it was completely set up, we will handle that now and bail
 	if (self.wasCanceled) {
-		RCLog(@"Attempting to start a canceled request, completing now instead");
+		CMLog(@"Attempting to start a canceled request, completing now instead");
 		[self handleConnectionFinished];
 		return NO;
 	}
@@ -414,7 +414,7 @@ static BOOL __networkActivityIndicatorVisible = NO;
 
 	[connection start];
 	self.connection = connection;
-	RCLog(@"%@", self);
+	CMLog(@"%@", self);
 	
 	[self handleConnectionDidSendData];
 	[self handleConnectionDidReceiveData];
@@ -440,7 +440,7 @@ static BOOL __networkActivityIndicatorVisible = NO;
 
 - (BOOL) cancel {
 	if (NO == self.canCancel) {
-		RCLog(@"Attempting to cancel a request that has already been canceled or has finished ");
+		CMLog(@"Attempting to cancel a request that has already been canceled or has finished ");
 		return NO;
 	}
 	self.canceled = YES;
@@ -458,7 +458,7 @@ static BOOL __networkActivityIndicatorVisible = NO;
 
 - (BOOL) abort {
 	if (NO == self.canAbort) {
-		RCLog(@"Attempting to abort a request that has already been started, canceled or finished ");
+		CMLog(@"Attempting to abort a request that has already been started, canceled or finished ");
 		return NO;
 	}
 	if (self.abortBlock) {
@@ -695,7 +695,7 @@ static BOOL __networkActivityIndicatorVisible = NO;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.URLResponse = (NSHTTPURLResponse *)response;
-	//	RCLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
+	//	CMLog(@"response.headers: %@",[self.URLResponse allHeaderFields]);
 	//	self.expectedContentLength = [response expectedContentLength]; // fails when there is no content length header, often in a range request this is true
 	// Works for simple requests as well as range requests
 	self.expectedContentLength = self.responseInternal.expectedContentLength;

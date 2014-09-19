@@ -46,7 +46,7 @@
 	__block NSUInteger dispatchedRequestCount = 0;
 	dispatch_sync(_dispatchAccessQueue, ^{
 		dispatchedRequestCount = [_dispatchedIdentifiers count];
-//		RCLog(@"_dispatchedIdentifiers.count: %@",@(dispatchedRequestCount));
+//		CMLog(@"_dispatchedIdentifiers.count: %@",@(dispatchedRequestCount));
 	});
 	return dispatchedRequestCount;
 }
@@ -116,7 +116,7 @@
 
 
 - (void) queueRequest:(CMRequest *)request withCompletionBlock:(CMCompletionBlock)completionBlock {
-//	RCLog(@"queueRequest: %@",request);
+//	CMLog(@"queueRequest: %@",request);
 	void(^dispatchBlock)() = ^{
 		[request startWithCompletionBlock:^(CMResponse *response) {
 			if ((completionBlock)) {
@@ -138,7 +138,7 @@
 - (void) queueForDispatch:(void(^)())dispatchBlock forIdentifier:(id)identifier {
 	NSParameterAssert(identifier);
 	dispatch_sync(_dispatchAccessQueue, ^{
-//		RCLog(@"Queueing identifier: %@",identifier);
+//		CMLog(@"Queueing identifier: %@",identifier);
 		[_queuedIdentifiers addObject:identifier];
 		_queuedDispatchBlocksByIdentifier[identifier] = [dispatchBlock copy];
 	});
@@ -149,19 +149,19 @@
 	NSUInteger actualAllowedMax = self.actualMaxConcurrentRequests;
 	dispatch_sync(_dispatchAccessQueue, ^{
 		NSUInteger dispatchedCount = [_dispatchedIdentifiers count];
-//		RCLog(@"dispatchedCount: %@",@(dispatchedCount));
-//		RCLog(@"actualAllowedMax: %@",@(actualAllowedMax));
+//		CMLog(@"dispatchedCount: %@",@(dispatchedCount));
+//		CMLog(@"actualAllowedMax: %@",@(actualAllowedMax));
 		if (dispatchedCount < actualAllowedMax) {
-//			RCLog(@"OK to deque next request..looking");
+//			CMLog(@"OK to deque next request..looking");
 			__block id nextIdentifier = nil;
 			__block void(^dispatchBlock)() = nil;
 			if ([_queuedIdentifiers count] > 0) {
 				nextIdentifier = [_queuedIdentifiers firstObject];
-//				RCLog(@"Found next identifier to dispatch: %@",nextIdentifier);
+//				CMLog(@"Found next identifier to dispatch: %@",nextIdentifier);
 				[_queuedIdentifiers removeObjectAtIndex:0];
 				dispatchBlock = _queuedDispatchBlocksByIdentifier[nextIdentifier];
 				if (dispatchBlock) {
-//					RCLog(@"Have dispatch block, dispatching for identifier %@",nextIdentifier);
+//					CMLog(@"Have dispatch block, dispatching for identifier %@",nextIdentifier);
 					[_dispatchedIdentifiers addObject:nextIdentifier];
 					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), dispatchBlock);
 					[_queuedDispatchBlocksByIdentifier removeObjectForKey:nextIdentifier];
@@ -173,7 +173,7 @@
 
 - (void) dispatchComplete:(id)identifier {
 	dispatch_sync(_dispatchAccessQueue, ^{
-//		RCLog(@"Completed identifier: %@",identifier);
+//		CMLog(@"Completed identifier: %@",identifier);
 		[_dispatchedIdentifiers removeObject:identifier];
 	});
 	[self dispatchNext];
