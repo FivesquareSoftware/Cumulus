@@ -849,7 +849,7 @@
 	if ([NSThread isMainThread]) {
 		do {
 			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
-		} while (dispatch_semaphore_wait(requestSema, 0.01) != 0);
+		} while (dispatch_semaphore_wait(requestSema, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC))) != 0);
 	}
 	else {
 		dispatch_semaphore_wait(requestSema, DISPATCH_TIME_FOREVER);
