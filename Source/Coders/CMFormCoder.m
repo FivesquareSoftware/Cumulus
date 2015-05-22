@@ -87,13 +87,19 @@
 		NSArray *pairs = [payloadString componentsSeparatedByString:@"&"];
 		for (NSString *pairString in pairs) {
 			NSArray *pairItems = [pairString componentsSeparatedByString:@"="];
-			NSString *pairKey = [pairItems objectAtIndex:0];
-			NSString *pairValue = [pairItems objectAtIndex:1];
-			NSString *urlencodedValue = [self urldecodeString:pairValue withEncoding:encoding];
-			[dataDict setObject:urlencodedValue forKey:pairKey];
+			// Process only well-formed actual pairs
+			if ([pairItems count]==2) {
+				NSString *pairKey = [pairItems firstObject];
+				NSString *pairValue = [pairItems lastObject];
+				NSString *urlencodedValue = [self urldecodeString:pairValue withEncoding:encoding];
+				[dataDict setObject:urlencodedValue forKey:pairKey];
+			}
 		}
 	}
-	return [dataDict copy];
+	if ([dataDict count]) {
+		return [dataDict copy];
+	}
+	return nil;
 }
 
 
