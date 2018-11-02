@@ -171,7 +171,7 @@
  *
  *  `[orders resourceWithFormat:@"users/%@/completed",@"joe"] => users/joe/completed`
  *
- *  @param relativePathFormat,... a format string and arguments
+ *  @param relativePathFormat a format string and arguments
  */
 - (CMResource *) resourceWithFormat:(NSString *)relativePathFormat,...;
 

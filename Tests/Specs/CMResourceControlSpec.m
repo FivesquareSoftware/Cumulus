@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 #import "CMRequestQueue.h"
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 @interface CMResource (CMResourceControlSpec)
 @property (nonatomic, readonly) CMRequestQueue *requestQueue;
@@ -81,7 +81,7 @@
 	CMResource *index = [self.service resource:@"index"];
 	
 	id identifier = [index getWithCompletionBlock:^(CMResponse *response) {}];
-	STAssertNotNil(identifier, @"Launching a request asynchronously should return an identifier");
+	XCTAssertNotNil(identifier, @"Launching a request asynchronously should return an identifier");
 }
 
 - (void) shouldCancelARequestForIdentifier {
@@ -90,8 +90,8 @@
 	id identifier = [index getWithCompletionBlock:nil];
 	CMRequest *request = [index requestForIdentifier:identifier];
 	[index cancelRequestForIdentifier:identifier];
-	STAssertTrue(request.wasCanceled, @"wasCanceled should be YES (%@)", request);
-	STAssertNil(request.URLResponse, @"URLResponse should be nil");
+	XCTAssertTrue(request.wasCanceled, @"wasCanceled should be YES (%@)", request);
+	XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
 }
 
 - (void)shouldCancelAllRequestsWithBlock {
@@ -111,11 +111,11 @@
 	}];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue([requests count] > 0, @"There must be some requests to run this this");
+	XCTAssertTrue([requests count] > 0, @"There must be some requests to run this this");
 	for (CMRequest *request in requests) {
 		[NSThread sleepForTimeInterval:.05]; // let connection die
-		STAssertTrue(request.wasCanceled, @"wasCanceled should be YES");
-		STAssertNil(request.URLResponse, @"URLResponse should be nil");
+		XCTAssertTrue(request.wasCanceled, @"wasCanceled should be YES");
+		XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
 	}
 }
 
@@ -131,7 +131,7 @@
 	NSMutableSet *requests = smallResource.requests; // the ones that are still running at the moment
 	[smallResource cancelRequests];
 	
-	STAssertTrue([requests count] > 0, @"There must be some requests to run this this");
+	XCTAssertTrue([requests count] > 0, @"There must be some requests to run this this");
 	
 	BOOL anyRequestWasCanceled = NO;
 	for (CMRequest *request in requests) {
@@ -140,12 +140,12 @@
 		if (NO == anyRequestWasCanceled) {
 			anyRequestWasCanceled = request.wasCanceled;
 		}
-		STAssertTrue(request.wasCanceled || request.finished, @"wasCanceled or finished should be YES");
+		XCTAssertTrue(request.wasCanceled || request.finished, @"wasCanceled or finished should be YES");
 		if (request.wasCanceled) {
-			STAssertNil(request.URLResponse, @"URLResponse should be nil");
+			XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
 		}
 	}
-	STAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled");
+	XCTAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled");
 }
 
 - (void) shouldNotRemoveRequestsOnCancelation {
@@ -168,7 +168,7 @@
 //		[smallResource cancelRequests];
 	afterCancelRequestsCount = smallResource.requests.count;
 	
-	STAssertTrue(afterCancelRequestsCount > 0, @"Canceled requests should be allowed to remove themselves from their completion block (afterCancelRequestsCount: %@)",@(afterCancelRequestsCount));
+	XCTAssertTrue(afterCancelRequestsCount > 0, @"Canceled requests should be allowed to remove themselves from their completion block (afterCancelRequestsCount: %@)",@(afterCancelRequestsCount));
 	
 //	for (CMRequest *request in smallResource.requests) {
 		[NSThread sleepForTimeInterval:.05]; // let connections die before we start next spec
@@ -187,7 +187,7 @@
 	});
 	
 	NSUInteger requestsCount = smallResource.requests.count;
-	STAssertTrue(requestsCount == 0, @"Aborted requests should not be tracked as part of the resources in flight requests");
+	XCTAssertTrue(requestsCount == 0, @"Aborted requests should not be tracked as part of the resources in flight requests");
 }
 
 #if TARGET_OS_IPHONE
@@ -209,7 +209,7 @@
 	});
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	
-	STAssertFalse([[UIApplication sharedApplication] isNetworkActivityIndicatorVisible], @"Activity spinner should not be running");
+	XCTAssertFalse([[UIApplication sharedApplication] isNetworkActivityIndicatorVisible], @"Activity spinner should not be running");
 }
 #endif
 
@@ -227,7 +227,7 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 }
 
 - (void) shouldRunAsynchronouslyFromTheMainQueueWithPreflightBlock {
@@ -249,8 +249,8 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
-	STAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
+		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+	XCTAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
 }
 
 - (void) shouldRunFromTheMainThreadWithPreflightBlock {
@@ -277,8 +277,8 @@
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-				STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
-		STAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
+				XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		XCTAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
 	}];
 }
 
@@ -291,7 +291,7 @@
 	CMResource *index = [self.service resource:@"index"];
 	
 	id identifier = [index getWithCompletionBlock:^(CMResponse *response) {}];
-	STAssertNotNil(identifier, @"Launching a request asynchronously from the main thread should return an identifier");
+	XCTAssertNotNil(identifier, @"Launching a request asynchronously from the main thread should return an identifier");
 }
 
 - (void) shouldRunAsynchronouslyFromConcurrentQueue {
@@ -309,7 +309,7 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThread {
@@ -321,7 +321,7 @@
 	CMResource *index = [self.service resource:@"index"];
 	CMResponse *response = [index get];
 
-	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
 }
 
 - (void) shouldBeAbleToLaunchARequestFromACompletionBlock {
@@ -355,7 +355,7 @@
 	index.requestDelegateQueue = [NSOperationQueue mainQueue];
 	CMResponse *response = [index get];
 	
-	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
 }
 
 - (void) shouldRunABlockingRequestUsingAPrivateQueueAsDelegateQueue {
@@ -363,7 +363,7 @@
 	index.requestDelegateQueue = [NSOperationQueue new];
 	CMResponse *response = [index get];
 	
-	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThreadUsingTheMainQueueAsDelegateQueue {
@@ -376,7 +376,7 @@
 	index.requestDelegateQueue = [NSOperationQueue mainQueue];
 	CMResponse *response = [index get];
 	
-	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThreadUsingAPrivateQueueAsDelegateQueue {
@@ -389,7 +389,7 @@
 	index.requestDelegateQueue = [NSOperationQueue new];
 	CMResponse *response = [index get];
 	
-	STAssertTrue(response.wasSuccessful,@"Response should be successful");
+	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
 }
 
 - (void) shouldRunANonBlockingRequestUsingTheMainQueueAsDelegateQueue {
@@ -406,7 +406,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
+	XCTAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
 }
 
 - (void) shouldRunANonBlockingRequestUsingAPrivateQueueAsDelegateQueue {
@@ -423,7 +423,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
+	XCTAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
 }
 
 - (void) shouldOptimallyThrottleConcurrentRequestsWhenMaxConcurrentRequestsIsSetToDefault {
@@ -456,8 +456,8 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(success, @"All requests should have succeeded");
-	STAssertTrue(highwaterRequestCount <= requestQueue.actualMaxConcurrentRequests, @"Should not have run more than the optimally max allowed requests (%@ > %@)",@(highwaterRequestCount), @(requestQueue.actualMaxConcurrentRequests));
+	XCTAssertTrue(success, @"All requests should have succeeded");
+	XCTAssertTrue(highwaterRequestCount <= requestQueue.actualMaxConcurrentRequests, @"Should not have run more than the optimally max allowed requests (%@ > %@)",@(highwaterRequestCount), @(requestQueue.actualMaxConcurrentRequests));
 }
 
 - (void) shouldThrottleConcurrentRequestsWhenMaxConcurrentRequestsIsSet {
@@ -491,8 +491,8 @@
 
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	
-	STAssertTrue(success, @"All requests should have succeeded");
-	STAssertTrue(highwaterRequestCount <= resource.maxConcurrentRequests, @"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), @(resource.maxConcurrentRequests));
+	XCTAssertTrue(success, @"All requests should have succeeded");
+	XCTAssertTrue(highwaterRequestCount <= resource.maxConcurrentRequests, @"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), @(resource.maxConcurrentRequests));
 }
 
 - (void) shouldNotThrottleConcurrentRequestsWhenMaxConcurrentRequestsIsSetToZero {
@@ -500,7 +500,7 @@
 	resource.maxConcurrentRequests = 0;
 	
 	CMRequestQueue *requestQueue = resource.requestQueue;
-	STAssertNil(requestQueue, @"Should not have a request queue when maxConcurrentRequests is zero");
+	XCTAssertNil(requestQueue, @"Should not have a request queue when maxConcurrentRequests is zero");
 	
 	__block NSUInteger highwaterRequestCount = 0;
 	__block BOOL success = YES;
@@ -531,8 +531,8 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(success, @"All requests should have succeeded");
-	STAssertTrue(highwaterRequestCount == runningCount, @"Should not have throttled requests (%@ == %@)",@(highwaterRequestCount), @(runningCount));
+	XCTAssertTrue(success, @"All requests should have succeeded");
+	XCTAssertTrue(highwaterRequestCount == runningCount, @"Should not have throttled requests (%@ == %@)",@(highwaterRequestCount), @(runningCount));
 }
 
 - (void) shouldNotThrottleBlockingRequestsWhenMaxConcurrentRequestsIsSet {
@@ -565,7 +565,7 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(finishedBeforeQueue, @"Blocking request should have completed before queued requests");
+	XCTAssertTrue(finishedBeforeQueue, @"Blocking request should have completed before queued requests");
 
 }
 
@@ -593,7 +593,7 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(anyRequestCanceledBeforeStarting, @"Some queued requests should have been canceled before they got a chance to start");
+	XCTAssertTrue(anyRequestCanceledBeforeStarting, @"Some queued requests should have been canceled before they got a chance to start");
 }
 
 
@@ -620,7 +620,7 @@
 //	}];
 //	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 //	dispatch_semaphore_signal(request_sema);
-//	//	STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+//	//	XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 //}
 
 // ========================================================================== //
@@ -648,8 +648,8 @@
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-				STAssertTrue(firstResponse.wasSuccessful, @"Response should be successful: %@", firstResponse);
-		STAssertTrue(secondResponse.wasSuccessful, @"Response should be successful: %@", secondResponse);
+				XCTAssertTrue(firstResponse.wasSuccessful, @"Response should be successful: %@", firstResponse);
+		XCTAssertTrue(secondResponse.wasSuccessful, @"Response should be successful: %@", secondResponse);
 	}];
 }
 
@@ -668,7 +668,7 @@
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 				
-		STAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
 	}];
 }
 

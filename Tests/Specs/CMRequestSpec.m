@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 
 @implementation CMRequestSpec
@@ -57,9 +57,9 @@
 
 	[request startWithCompletionBlock:nil];
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	STAssertThrows([request start], @"Should not be able to start a request twice");
+	XCTAssertThrows([request start], @"Should not be able to start a request twice");
 #else 
-	STAssertFalse([request start], @"Should not be able to start a request twice");
+	XCTAssertFalse([request start], @"Should not be able to start a request twice");
 #endif
 }
 
@@ -72,9 +72,9 @@
 	[request startWithCompletionBlock:nil];
 	[request cancel];
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	STAssertThrows([request start], @"Should not be able to start a request that is canceled");
+	XCTAssertThrows([request start], @"Should not be able to start a request that is canceled");
 #else
-	STAssertFalse([request start], @"Should not be able to start a request that is canceled");
+	XCTAssertFalse([request start], @"Should not be able to start a request that is canceled");
 #endif
 
 }
@@ -95,9 +95,9 @@
 	dispatch_semaphore_signal(request_sema);
 	
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	STAssertThrows([request start], @"Should not be able to start a request that is finished");
+	XCTAssertThrows([request start], @"Should not be able to start a request that is finished");
 #else
-	STAssertFalse([request start], @"Should not be able to start a request that is finished");
+	XCTAssertFalse([request start], @"Should not be able to start a request that is finished");
 #endif
 
 }
@@ -114,8 +114,8 @@
 	[request startWithCompletionBlock:nil];
 	[request cancel];	
 
-	STAssertTrue(request.wasCanceled, @"wasCanceled should be YES");
-	STAssertNil(request.URLResponse, @"URLResponse should be nil");
+	XCTAssertTrue(request.wasCanceled, @"wasCanceled should be YES");
+	XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
 }
 
 - (void)shouldRunCompletionBlockWhenCanceled {
@@ -138,7 +138,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	STAssertTrue(touched, @"Touched should be YES");
+	XCTAssertTrue(touched, @"Touched should be YES");
 }
 
 - (void) shouldTimeoutWhenNoResponseAfterTimeoutInterval {
@@ -157,8 +157,8 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	
-	STAssertNotNil(request.error, @"Error should not be nil");
-	STAssertTrue([request.error.domain isEqualToString:NSURLErrorDomain] && request.error.code == NSURLErrorTimedOut, @"Error should be timeout error", request.error);
+	XCTAssertNotNil(request.error, @"Error should not be nil");
+	XCTAssertTrue([request.error.domain isEqualToString:NSURLErrorDomain] && request.error.code == NSURLErrorTimedOut, @"Error should be timeout error", request.error);
 }
 
 - (void) shouldRunCompletionBlockOnTimeout {
@@ -179,16 +179,16 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	STAssertTrue(touched, @"Touched should be YES");
+	XCTAssertTrue(touched, @"Touched should be YES");
 }
 
 - (void) shouldFailToCreateARequestWithNoURLRequest {
 	CMRequest *request;
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	STAssertThrows((request = [[CMRequest alloc] initWithURLRequest:nil]), @"Should not create a request without a URL request");
+	XCTAssertThrows((request = [[CMRequest alloc] initWithURLRequest:nil]), @"Should not create a request without a URL request");
 #else
 	request = [[CMRequest alloc] initWithURLRequest:nil];
-	STAssertNil(request, @"Should not create a request without a URL request");
+	XCTAssertNil(request, @"Should not create a request without a URL request");
 #endif
 }
 
@@ -206,7 +206,7 @@
 		[NSThread sleepForTimeInterval:.001];
 	}
 	id responseInternal = [request valueForKey:@"responseInternal"];
-	STAssertNil(responseInternal, @"Internal response pointer should be nil on finish");
+	XCTAssertNil(responseInternal, @"Internal response pointer should be nil on finish");
 }
 
 - (void) shouldZeroOutResponseInternalAfterCompletionBlockRuns {
@@ -225,7 +225,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
 	id responseInternal = [request valueForKey:@"responseInternal"];
-	STAssertNil(responseInternal, @"Internal response pointer should be nil after completion block runs");
+	XCTAssertNil(responseInternal, @"Internal response pointer should be nil after completion block runs");
 }
 
 - (void) shouldZeroOutResponseInternalWhenCanceled {	
@@ -245,7 +245,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
 	id responseInternal = [request valueForKey:@"responseInternal"];
-	STAssertNil(responseInternal, @"Internal response pointer should be nil after cancelation");
+	XCTAssertNil(responseInternal, @"Internal response pointer should be nil after cancelation");
 }
 
 - (void) shouldReportCompleteForACompletedRequest {
@@ -264,7 +264,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(complete, @"Simple request should have completed");
+	XCTAssertTrue(complete, @"Simple request should have completed");
 }
 
 - (void) shouldReportCompleteForAStreamedFile {
@@ -283,7 +283,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(complete, @"Streamed request should have completed");
+	XCTAssertTrue(complete, @"Streamed request should have completed");
 }
 
 - (void) shouldReportCompleteForARangeRequest {
@@ -303,7 +303,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(complete, @"Simple request should have completed");
+	XCTAssertTrue(complete, @"Simple request should have completed");
 }
 
 - (void) shouldReportIncompleteForAnInterruptedRequest {
@@ -334,7 +334,7 @@
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertFalse(complete,@"Interrupted request should not have been complete");
+	XCTAssertFalse(complete,@"Interrupted request should not have been complete");
 }
 
 - (void) shouldReturnRequestQueryStringAsADictionary {
@@ -345,7 +345,7 @@
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	NSDictionary *query = @{ @"foo" : @"bar" };
 	
-	STAssertTrue([query isEqualToDictionary:request.queryDictionary], @"Request query dictionary should equal sent dictionary");
+	XCTAssertTrue([query isEqualToDictionary:request.queryDictionary], @"Request query dictionary should equal sent dictionary");
 }
 
 

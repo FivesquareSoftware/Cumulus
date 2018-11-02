@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 
 @implementation CMCodingSpec
@@ -57,26 +57,26 @@ static NSString *kHelloWorld = @"Hello World!";
 	NSData *data = [kHelloWorld dataUsingEncoding:NSUTF8StringEncoding];
 	CMResource *resource = [self.service resource:@"test/encoding"];
 	CMResponse *response = [resource put:data];
-	STAssertTrue([response.request.payloadEncoder isKindOfClass:[CMIdentityCoder class]], @"Payload encoder should have been an identity coder: %@", response.request.payloadEncoder);
+	XCTAssertTrue([response.request.payloadEncoder isKindOfClass:[CMIdentityCoder class]], @"Payload encoder should have been an identity coder: %@", response.request.payloadEncoder);
 	NSString *bodyString = [[NSString alloc] initWithData:response.request.URLRequest.HTTPBody encoding:NSUTF8StringEncoding];
-	STAssertEqualObjects(kHelloWorld, bodyString, @"Encoded body should equal input");
+	XCTAssertEqualObjects(kHelloWorld, bodyString, @"Encoded body should equal input");
 }
 
 - (void)shouldEncodeStringWithTextCoder {
 	CMResource *resource = [self.service resource:@"test/encoding"];
 	CMResponse *response = [resource put:kHelloWorld];
-	STAssertTrue([response.request.payloadEncoder isKindOfClass:[CMTextCoder class]], @"Payload encoder should have been a text coder: %@", response.request.payloadEncoder);
+	XCTAssertTrue([response.request.payloadEncoder isKindOfClass:[CMTextCoder class]], @"Payload encoder should have been a text coder: %@", response.request.payloadEncoder);
 	NSString *bodyString = [[NSString alloc] initWithData:response.request.URLRequest.HTTPBody encoding:NSUTF8StringEncoding];
-	STAssertEqualObjects(kHelloWorld, bodyString, @"Encoded body should equal input");
+	XCTAssertEqualObjects(kHelloWorld, bodyString, @"Encoded body should equal input");
 }
 
 - (void)shouldEncodeImageWithImageCoder {
 	UIImage *image =  [UIImage imageNamed:@"t_hero.png"];
 	CMResource *resource = [self.service resource:@"test/encoding"];
 	CMResponse *response = [resource put:image];
-	STAssertTrue([response.request.payloadEncoder isKindOfClass:[CMImageCoder class]], @"Payload encoder should have been an image coder: %@", response.request.payloadEncoder);
+	XCTAssertTrue([response.request.payloadEncoder isKindOfClass:[CMImageCoder class]], @"Payload encoder should have been an image coder: %@", response.request.payloadEncoder);
 	NSData *bodyData = response.request.URLRequest.HTTPBody;
-	STAssertEqualObjects(UIImagePNGRepresentation(image), bodyData, @"Encoded body should equal input");
+	XCTAssertEqualObjects(UIImagePNGRepresentation(image), bodyData, @"Encoded body should equal input");
 }
 
 // JSON coding
@@ -86,18 +86,18 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/encoding"];
 	resource.contentType = CMContentTypeJSON;
 	CMResponse *response = [resource put:payload];	
-	STAssertTrue([response.request.payloadEncoder isKindOfClass:[CMJSONCoder class]], @"Payload encoder should have been a JSON coder: %@", response.request.payloadEncoder);
+	XCTAssertTrue([response.request.payloadEncoder isKindOfClass:[CMJSONCoder class]], @"Payload encoder should have been a JSON coder: %@", response.request.payloadEncoder);
 	NSDictionary *bodyDictionary = [NSJSONSerialization JSONObjectWithData:response.request.URLRequest.HTTPBody options:NSJSONReadingAllowFragments error:NULL];
-	STAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
+	XCTAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
 }
 
 - (void)shouldDecodeJSONWhenServerSendsContentType {
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/json/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
-	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
+	XCTAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
 
 - (void)shouldDecodeJSONUsingAcceptWhenServerSendsWrongContentType {
@@ -105,9 +105,9 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/decoding/json/wrong-content-type"];
 	[resource setValue:@"application/json" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
-	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
+	XCTAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
 
 // XML coding
@@ -117,18 +117,18 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/encoding"];
 	resource.contentType = CMContentTypeXML;
 	CMResponse *response = [resource put:payload];	
-	STAssertTrue([response.request.payloadEncoder isKindOfClass:[CMXMLCoder class]], @"Payload encoder should have been an XML coder: %@", response.request.payloadEncoder);
+	XCTAssertTrue([response.request.payloadEncoder isKindOfClass:[CMXMLCoder class]], @"Payload encoder should have been an XML coder: %@", response.request.payloadEncoder);
 	NSDictionary *bodyDictionary = [NSPropertyListSerialization propertyListWithData:response.request.URLRequest.HTTPBody options:NSPropertyListImmutable format:NULL error:NULL];
-	STAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
+	XCTAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
 }
 
 - (void)shouldDecodeXMLWhenServerSendsContentType {
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/plist/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
-	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
+	XCTAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
 
 - (void)shouldDecodeXMLUsingAcceptWhenServerSendsWrongContentType {
@@ -136,9 +136,9 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/decoding/plist/wrong-content-type"];
 	[resource setValue:@"application/xml" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
-	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMXMLCoder class]], @"Response decoder should have been an XML coder: %@", response.request.responseDecoder);
+	XCTAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
 
 
@@ -149,18 +149,18 @@ static NSString *kHelloWorld = @"Hello World!";
 - (void)shouldDecodeTextWhenServerSendsContentType {
 	CMResource *resource = [self.service resource:@"test/decoding/text/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
-	STAssertEqualObjects(kHelloWorld, response.result, @"Response#result should equal text");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
+	XCTAssertEqualObjects(kHelloWorld, response.result, @"Response#result should equal text");
 }
 
 - (void)shouldDecodeTextUsingAcceptWhenServerSendsWrongContentType {
 	CMResource *resource = [self.service resource:@"test/decoding/text/wrong-content-type"];
 	[resource setValue:@"text/plain" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
-	STAssertEqualObjects(kHelloWorld, response.result, @"Response#result should equal text");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMTextCoder class]], @"Response decoder should have been a text coder: %@", response.request.responseDecoder);
+	XCTAssertEqualObjects(kHelloWorld, response.result, @"Response#result should equal text");
 }
 
 
@@ -170,11 +170,11 @@ static NSString *kHelloWorld = @"Hello World!";
 	UIImage *image =  [UIImage imageNamed:@"t_hero.png"];
 	CMResource *resource = [self.service resource:@"test/decoding/image/content-type"];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);
 	NSData *imageData = UIImagePNGRepresentation(image);
 	NSData *resultImageData = UIImagePNGRepresentation(response.result);
-	STAssertEqualObjects(imageData, resultImageData, @"Response#result should equal image");
+	XCTAssertEqualObjects(imageData, resultImageData, @"Response#result should equal image");
 }
 
 - (void)shouldDecodeImageUsingAcceptWhenServerSendsWrongContentType {
@@ -182,11 +182,11 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/decoding/image/wrong-content-type"];
 	[resource setValue:@"image/png" forHeaderField:kCumulusHTTPHeaderAccept];
 	CMResponse *response = [resource get];	
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMImageCoder class]], @"Response decoder should have been an image coder: %@", response.request.responseDecoder);
 	NSData *imageData = UIImagePNGRepresentation(image);
 	NSData *resultImageData = UIImagePNGRepresentation(response.result);
-	STAssertEqualObjects(imageData, resultImageData, @"Response#result should equal image");
+	XCTAssertEqualObjects(imageData, resultImageData, @"Response#result should equal image");
 }
 
 
@@ -199,18 +199,18 @@ static NSString *kHelloWorld = @"Hello World!";
 	CMResource *resource = [self.service resource:@"test/encoding.json"];
 //	resource.contentType = CMContentTypeJSON;
 	CMResponse *response = [resource put:payload];
-	STAssertTrue([response.request.payloadEncoder isKindOfClass:[CMJSONCoder class]], @"Payload encoder should have been a JSON coder: %@", response.request.payloadEncoder);
+	XCTAssertTrue([response.request.payloadEncoder isKindOfClass:[CMJSONCoder class]], @"Payload encoder should have been a JSON coder: %@", response.request.payloadEncoder);
 	NSDictionary *bodyDictionary = [NSJSONSerialization JSONObjectWithData:response.request.URLRequest.HTTPBody options:NSJSONReadingAllowFragments error:NULL];
-	STAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
+	XCTAssertEqualObjects(payload, bodyDictionary, @"Encoded body should equal input");
 }
 
 - (void)shouldDecodeBasedOnFileExtensionWhenServerSendsWrongContentType {
 	NSDictionary *content = [NSDictionary dictionaryWithObject:kHelloWorld forKey:@"message"];
 	CMResource *resource = [self.service resource:@"test/decoding/wrong-content-type.json"];
 	CMResponse *response = [resource get];
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
-	STAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
-	STAssertEqualObjects(content, response.result, @"Response#result should equal content");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@", response);
+	XCTAssertTrue([response.request.responseDecoder isKindOfClass:[CMJSONCoder class]], @"Response decoder should have been a JSON coder: %@", response.request.responseDecoder);
+	XCTAssertEqualObjects(content, response.result, @"Response#result should equal content");
 }
 
 

@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 
 @implementation CMResourceQuerySpec
@@ -56,20 +56,20 @@
 	CMResource *resource = [self.service resource:@"test/query"];
 	NSDictionary *query = [NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"];
 	CMResponse *response = [resource getWithQuery:query];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(query, response.result, @"Result should equal sent params:%@",response.result);
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertEqualObjects(query, response.result, @"Result should equal sent params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldAppendQueryArgumentToAnExistingQueryString {
 	CMResource *resource = [self.service resource:@"test/query?key=value"];
 	CMResponse *response = [resource getWithQuery:@{ @"foo" : @"bar" }];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
 	NSDictionary *mergedQuery = @{ @"key": @"value", @"foo" : @"bar" };
-	STAssertEqualObjects(mergedQuery, response.result, @"Result should equal sent params:%@",response.result);
+	XCTAssertEqualObjects(mergedQuery, response.result, @"Result should equal sent params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"key=value&foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"key=value&foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldUseMergedQuery {
@@ -81,25 +81,25 @@
 	
 	NSDictionary *query = @{ @"ping": @"pong", @"foo" : @"bar" };
 	
-	STAssertTrue([resource.mergedQuery isEqualToDictionary:query], @"Resource should use merged headers for requests");
+	XCTAssertTrue([resource.mergedQuery isEqualToDictionary:query], @"Resource should use merged headers for requests");
 	
 	CMResponse *response = [resource get];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertTrue([resource.mergedQuery isEqualToDictionary:response.result], @"Result should equal sent params:%@",response.result);
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertTrue([resource.mergedQuery isEqualToDictionary:response.result], @"Result should equal sent params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-//	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
-	STAssertTrue([queryString rangeOfString:@"foo=bar"].location != NSNotFound, @"Request URL should contain child params");
-	STAssertTrue([queryString rangeOfString:@"ping=pong"].location != NSNotFound, @"Request URL should contain parent params");
+//	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertTrue([queryString rangeOfString:@"foo=bar"].location != NSNotFound, @"Request URL should contain child params");
+	XCTAssertTrue([queryString rangeOfString:@"ping=pong"].location != NSNotFound, @"Request URL should contain parent params");
 }
 
 - (void) shouldGetWithQueryAttribute {
 	CMResource *resource = [self.service resource:@"test/query"];
 	[resource setValue:@"bar" forQueryKey:@"foo"];
 	CMResponse *response = [resource get];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(resource.query, response.result, @"Result should equal sent params:%@",response.result);
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertEqualObjects(resource.query, response.result, @"Result should equal sent params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldGetWithQueryArgumentAndBlocks {
@@ -118,28 +118,28 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	STAssertTrue(localResponse.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(query, localResponse.result, @"Result should equal sent params:%@",localResponse.result);
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should succeed");
+	XCTAssertEqualObjects(query, localResponse.result, @"Result should equal sent params:%@",localResponse.result);
 	NSString *queryString = [[localResponse.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldHeadWithQueryAttribute {
 	CMResource *resource = [self.service resource:@"test/query"];
 	[resource setValue:@"bar" forQueryKey:@"foo"];
 	CMResponse *response = [resource head];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldHeadWithQueryArgument {
 	CMResource *resource = [self.service resource:@"test/query"];
 	NSDictionary *query = [NSDictionary dictionaryWithObject:@"bar" forKey:@"foo"];
 	CMResponse *response = [resource headWithQuery:query];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldHeadWithQueryArgumentAndBlocks {
@@ -158,19 +158,19 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	STAssertTrue(localResponse.wasSuccessful, @"Response should succeed");
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should succeed");
 	NSString *queryString = [[localResponse.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldDeleteWithQueryAttribute {
 	CMResource *resource = [self.service resource:@"test/query"];
 	[resource setValue:@"bar" forQueryKey:@"foo"];
 	CMResponse *response = [resource delete];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(resource.query, response.result, @"Result should equal sent params:%@",response.result);
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertEqualObjects(resource.query, response.result, @"Result should equal sent params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldPostWithQueryAttribute {
@@ -182,10 +182,10 @@
 	[combinedParams addEntriesFromDictionary:payload];
 	
 	CMResponse *response = [resource post:payload];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(combinedParams, response.result, @"Result should equal combined payload and query params:%@",response.result);
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertEqualObjects(combinedParams, response.result, @"Result should equal combined payload and query params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldPutWithQueryAttribute {
@@ -197,10 +197,10 @@
 	[combinedParams addEntriesFromDictionary:payload];
 	
 	CMResponse *response = [resource put:payload];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(combinedParams, response.result, @"Result should equal combined payload and query params:%@",response.result);
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertEqualObjects(combinedParams, response.result, @"Result should equal combined payload and query params:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 - (void) shouldMergeQueryStringArgumentWithQueryAttribute {
@@ -212,10 +212,10 @@
 	[combinedParams addEntriesFromDictionary:argument];
 	
 	CMResponse *response = [resource getWithQuery:argument];
-	STAssertTrue(response.wasSuccessful, @"Response should succeed");
-	STAssertEqualObjects(combinedParams, response.result, @"Result should equal combined query argument and query attribute:%@",response.result);
+	XCTAssertTrue(response.wasSuccessful, @"Response should succeed");
+	XCTAssertEqualObjects(combinedParams, response.result, @"Result should equal combined query argument and query attribute:%@",response.result);
 	NSString *queryString = [[response.request.URLRequest URL] query];
-	STAssertEqualObjects(@"foo=bar&ping=pong", queryString, @"Request URL query should equal expected query string: %@", queryString);
+	XCTAssertEqualObjects(@"foo=bar&ping=pong", queryString, @"Request URL query should equal expected query string: %@", queryString);
 }
 
 

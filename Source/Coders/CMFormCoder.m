@@ -48,8 +48,6 @@
 
 - (NSData *)encodeObject:(id)object {
 
-	NSStringEncoding encoding = NSUTF8StringEncoding;
-	
 	NSMutableArray *pairs = [NSMutableArray new];
 	
 	if (NO == [object isKindOfClass:[NSDictionary class]]) {
@@ -63,11 +61,11 @@
 				value = [value description];
 			}
 		}
-		value = [self urlencodeString:value withEncoding:encoding];
+		value = [self urlencodeString:value];
 		[pairs addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
 	}
 	NSString *payloadString = [pairs componentsJoinedByString:@"&"];
-	return [payloadString dataUsingEncoding:encoding];
+	return [payloadString dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 
@@ -109,17 +107,8 @@
  * @param encoding - an enum identifying the character encoding of the inputString
  * returns the encoded result as an NSString*
  */
-- (NSString *)urlencodeString:(NSString *)inputString withEncoding:(NSStringEncoding)encoding {
-	/* Using a CF function because -stringByAddingPercentEscapesUsingEncoding:
-	 * isn't thorough enough. */
-	
-	NSString *charsToEncode = @"(){}[]<>!*'\";:@&=+$,/?#% |\\^~`";
-	NSString *outputString = (NSString *)
-	CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
-															  (CFStringRef)inputString,
-															  NULL,
-															  (CFStringRef)charsToEncode,
-															  CFStringConvertNSStringEncodingToEncoding(encoding)));
+- (NSString *)urlencodeString:(NSString *)inputString {
+	NSString *outputString = [inputString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 	return outputString;
 }
 
@@ -130,7 +119,7 @@
  * returns the decoded result as an NSString*
  */
 - (NSString *)urldecodeString:(NSString *)inputString withEncoding:(NSStringEncoding)encoding {
-	NSString *decodedString = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (CFStringRef)inputString, CFSTR(""), CFStringConvertNSStringEncodingToEncoding(encoding));
+	NSString *decodedString = [inputString stringByRemovingPercentEncoding];
 	return decodedString;
 }
 

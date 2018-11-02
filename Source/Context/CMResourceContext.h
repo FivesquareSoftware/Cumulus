@@ -54,7 +54,7 @@ extern NSString *kCMResourceContextKey;
  *  @returns An identifier that can be used to cancel requests launched from work.
  *  @note Only requests launched during the execution of the top level block are included in the scope of the work. For example, if you launch a new request from the completion block of an asynchronous request launched inside the work block, the receiver does not wait for that request to complete, nor is it part of any subsequent work scope.
  */
-- (id) performRequestsAndWait:(void(^)())work withCompletionBlock:(void(^)(BOOL success, NSSet *responses))completionBlock;
+- (id) performRequestsAndWait:(void(^)(void))work withCompletionBlock:(void(^)(BOOL success, NSSet *responses))completionBlock;
 
 /** Cancels requests launched from the top level of a work block identified by the return value of performRequestsAndWait:withCompletionBlock:. 
  *  @param identifier An identifier returned from an invocation of performRequestsAndWait:withCompletionBlock:
@@ -70,6 +70,6 @@ extern NSString *kCMResourceContextKey;
  *  @note Only requests launched during the execution of the top level block are included in the scope of the work. For example, if you launch a new request from the completion block of an asynchronous request launched inside the work block, the receiver does not control the lifecycle of that request, nor is it part of any subsequent work scope.
  *  Idea for this was stolen shamelessly from @bsneed.
 */
-- (void) performRequests:(void(^)())work inScope:(id)scope;
+- (void) performRequests:(void(^)(void))work inScope:(id)scope;
 
 @end

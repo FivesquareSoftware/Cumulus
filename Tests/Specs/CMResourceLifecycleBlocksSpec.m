@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "OCMock.h"
 
 
@@ -69,7 +69,7 @@
 	};
 	
 	[index get];
-	STAssertTrue(touched, @"Should have run preflight block");
+	XCTAssertTrue(touched, @"Should have run preflight block");
 }
 
 - (void) shouldReturnNilResponseWhenPreflightAbortsRequest {
@@ -83,8 +83,8 @@
 	
 	CMResponse *response = [index get];
 	
-	STAssertTrue(touched, @"Should have run preflight block");
-	STAssertNil(response, @"Response should be nil when preflight aborts a request");
+	XCTAssertTrue(touched, @"Should have run preflight block");
+	XCTAssertNil(response, @"Response should be nil when preflight aborts a request");
 }
 
 - (void) shouldRunRequestWhenPreflightPasses {
@@ -99,9 +99,9 @@
 	
 	CMResponse *response = [index get];
 	
-	STAssertTrue(touched, @"Should have run preflight block");
-	STAssertNotNil(response, @"Response should not be nil when preflight allows a request to run");
-	STAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	XCTAssertTrue(touched, @"Should have run preflight block");
+	XCTAssertNotNil(response, @"Response should not be nil when preflight allows a request to run");
+	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
 }
 
 - (void) shouldExecutePreflightBlockInNonBlockingMode {
@@ -119,7 +119,7 @@
 		// just so we are on the main q after preflight block, to prove we ran it
 	});
 	
-	STAssertTrue(touched, @"Should have run preflight block");
+	XCTAssertTrue(touched, @"Should have run preflight block");
 }
 
 - (void) shouldRunRequestWhenPreflightPassesInNonBlockingMode {
@@ -144,9 +144,9 @@
 	dispatch_semaphore_signal(request_sema);
 		
 	
-	STAssertTrue(touched, @"Should have run preflight block");
-	STAssertNotNil(localResponse, @"Response should not be nil when preflight allows a request to run");
-	STAssertTrue(localResponse.wasSuccessful, @"Response should be ok");
+	XCTAssertTrue(touched, @"Should have run preflight block");
+	XCTAssertNotNil(localResponse, @"Response should not be nil when preflight allows a request to run");
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should be ok");
 	
 }
 
@@ -165,7 +165,7 @@
 		// just so we are on the main q after preflight block, to prove we ran it
 	});
 	
-	STAssertTrue(mainThread, @"Should have run preflight block on main thread");
+	XCTAssertTrue(mainThread, @"Should have run preflight block on main thread");
 }
 
 
@@ -227,7 +227,7 @@
 	};
 	
 	CMResponse *response = [index get];
-	STAssertEqualObjects(@"-- OK --", response.result, @"Result should have been transformed by post-processor");
+	XCTAssertEqualObjects(@"-- OK --", response.result, @"Result should have been transformed by post-processor");
 }
 
 - (void) shouldExecutePostProcessorBlockOnHighPriorityQueue {
@@ -244,8 +244,8 @@
 	};
 	
 	CMResponse *response = [index get];
-	STAssertEqualObjects(@"-- OK --", response.result, @"Result should have been transformed by post-processor");
-	STAssertTrue(highQueue, @"Should have run post-processor block on high priority queue");
+	XCTAssertEqualObjects(@"-- OK --", response.result, @"Result should have been transformed by post-processor");
+	XCTAssertTrue(highQueue, @"Should have run post-processor block on high priority queue");
 }
 
 #pragma - -Completion
@@ -267,7 +267,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	STAssertTrue(touched, @"Should have run completion block");
+	XCTAssertTrue(touched, @"Should have run completion block");
 }
 
 - (void) shouldExecuteCompletionBlockOnMainThread {
@@ -287,7 +287,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	STAssertTrue(mainThread, @"Completion block should have run on main thread");
+	XCTAssertTrue(mainThread, @"Completion block should have run on main thread");
 }
 
 

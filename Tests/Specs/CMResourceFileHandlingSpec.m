@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "OCMock.h"
 
 
@@ -91,8 +91,8 @@
 	
 	CMProgressInfo *result = localResponse.result;
 	
-	STAssertNil(result.tempFileURL, @"When a download is canceled the result should not contain a temp file URL");
-	STAssertFalse(result.didComplete, @"When a download is canceled the result should not be complete");
+	XCTAssertNil(result.tempFileURL, @"When a download is canceled the result should not contain a temp file URL");
+	XCTAssertFalse(result.didComplete, @"When a download is canceled the result should not be complete");
 }
 
 - (void)shouldDownloadAFileToDisk {
@@ -123,20 +123,20 @@
 	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
 	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
 	
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 	
-	STAssertNotNil(filename, @"Filename should not be nil");
-	STAssertNotNil(URL, @"URL should not be nil");
-	STAssertNotNil(self.downloadedFileURL, @"Temp file URL should not be nil");
-	STAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",self.downloadedFileURL);
-	STAssertEquals([progress floatValue], 1.f, @"Final progress should have been 1: %@",progress);
+	XCTAssertNotNil(filename, @"Filename should not be nil");
+	XCTAssertNotNil(URL, @"URL should not be nil");
+	XCTAssertNotNil(self.downloadedFileURL, @"Temp file URL should not be nil");
+	XCTAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",self.downloadedFileURL);
+	XCTAssertEquals([progress floatValue], 1.f, @"Final progress should have been 1: %@",progress);
 
 	__block BOOL tempFileWasRemovedAfterCompletion = NO;
 	dispatch_sync(dispatch_get_main_queue(), ^{
 		NSFileManager *fm = [[NSFileManager alloc] init];
 		tempFileWasRemovedAfterCompletion = ![fm fileExistsAtPath:[self.downloadedFileURL path]];
 	});
-	STAssertTrue(tempFileWasRemovedAfterCompletion, @"Downloaded temp file should be cleaned up after completion: %@",self.downloadedFileURL);
+	XCTAssertTrue(tempFileWasRemovedAfterCompletion, @"Downloaded temp file should be cleaned up after completion: %@",self.downloadedFileURL);
 }
 
 - (void)shouldDownloadAFileToCustomCacheLocation {
@@ -202,14 +202,14 @@
 			
 	downloadState = [CMDownloadInfo downloadInfo];
 	massiveInfo = [downloadState objectForKey:[massiveFailure URL]];
-	STAssertNil(massiveInfo, @"Download state should have been cleaned up on a resume failure");
+	XCTAssertNil(massiveInfo, @"Download state should have been cleaned up on a resume failure");
 
 	__block BOOL tempFileWasRemovedAfterCompletion = NO;
 	dispatch_sync(dispatch_get_main_queue(), ^{
 		NSFileManager *fm = [[NSFileManager alloc] init];
 		tempFileWasRemovedAfterCompletion = ![fm fileExistsAtPath:[tempFileURL path]];
 	});
-	STAssertTrue(tempFileWasRemovedAfterCompletion, @"Temp file should have been cleaned up on a resume failure");
+	XCTAssertTrue(tempFileWasRemovedAfterCompletion, @"Temp file should have been cleaned up on a resume failure");
 }
 
 - (void) shouldRevertToDownloadingWholeFileWhenAskedToResumeAStreamedFile {
@@ -248,9 +248,9 @@
 	[massiveStream resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
-	STAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
-	STAssertTrue(firstProgress == 0.f, @"Download should have reset to a zero byte offset");
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	XCTAssertTrue(NO == hadRangeHeader, @"Request should *NOT* have included a range header");
+	XCTAssertTrue(firstProgress == 0.f, @"Download should have reset to a zero byte offset");
 	
 }
 
@@ -279,20 +279,20 @@
 	
 	NSDictionary *downloadInfo = [CMDownloadInfo downloadInfo];
 	CMDownloadInfo *downloadState = [downloadInfo objectForKey:[massive URL]];
-	STAssertNil(downloadState, @"Download state for range download should have been reset");
+	XCTAssertNil(downloadState, @"Download state for range download should have been reset");
 	
 	NSFileManager *fm = [NSFileManager new];
 	NSError *error = nil;
 	NSDictionary *attributes = [fm attributesOfItemAtPath:[copiedFileURL path] error:&error];
 	long long fileSize = (long long)[attributes fileSize];
 	
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
-	STAssertEquals(fileSize, contentRange.length, @"Downloaded file size should have equaled request range length");
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	XCTAssertEquals(fileSize, contentRange.length, @"Downloaded file size should have equaled request range length");
 }
 
 // This isnt' really exposed at the resource level, but the chunking tests exercise this
 //- (void)shouldResumeARangeAndDownloadJustTheIncompletePortion {
-//	STAssertTrue(NO, @"Unimplemented");
+//	XCTAssertTrue(NO, @"Unimplemented");
 //}
 
 - (void)shouldUploadAFileFromDisk {
@@ -325,7 +325,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
 }
 
 - (void)shouldReturnIncompleteResultWhenChunkedDownloadIsIncomplete {
@@ -355,8 +355,8 @@
 	
 	CMProgressInfo *result = localResponse.result;
 	
-	STAssertNil(result.tempFileURL, @"When a chunked download is canceled the result should not contain a temp file URL");
-	STAssertFalse(result.didComplete, @"When a chunked download is canceled the result should not be complete");
+	XCTAssertNil(result.tempFileURL, @"When a chunked download is canceled the result should not contain a temp file URL");
+	XCTAssertFalse(result.didComplete, @"When a chunked download is canceled the result should not be complete");
 }
 
 - (void)shouldDownloadAFileInChunks {
@@ -365,7 +365,7 @@
 
 	NSFileManager *fm = [NSFileManager new];
 	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
-	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
+	XCTAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
 }
 
 - (void) shouldResumeDownloadingAChunkedFileToDisk {
@@ -425,14 +425,14 @@
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 
 //	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
-	STAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
+	XCTAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
 		
 	NSFileManager *fm = [NSFileManager new];
 	NSString *resourceImagePath = [[NSBundle mainBundle] pathForResource:@"hs-2006-01-c-full_tif" ofType:@"png"];
-	STAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
+	XCTAssertTrue([fm contentsEqualAtPath:resourceImagePath andPath:[self.copiedFileURL path]], @"Completed file should be the same as if it were downloaded without using chunks.");
 }
 
 - (void)shouldCompleteChunkedDownloadWhenRemoteFileIsEmpty {
@@ -444,12 +444,12 @@
 		dispatch_semaphore_signal(request_sema);
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
 }
 
 // This is exercised by the resume chunks spec
 //- (void)shouldProperlyCancelAChunkedDownload {
-//	STAssertTrue(NO, @"Unimplemented");
+//	XCTAssertTrue(NO, @"Unimplemented");
 //}
 
 - (void)shouldNotRequestChunksWhenInitialHeadFails {
@@ -470,8 +470,8 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 
-	STAssertTrue(localResponse.wasUnsuccessful, @"Response should have failed: %@", localResponse);
-	STAssertTrue(firstProgress == 0, @"No chunk progress shoud have been reported for a failed HEAD");
+	XCTAssertTrue(localResponse.wasUnsuccessful, @"Response should have failed: %@", localResponse);
+	XCTAssertTrue(firstProgress == 0, @"No chunk progress shoud have been reported for a failed HEAD");
 }
 
 - (void) shouldComputeChunkSizesBasedOnNumberOfWorkers {
@@ -481,7 +481,7 @@
 	NSFileManager *fm = [NSFileManager new];
 	NSError *error = nil;
 	NSDictionary *fileAtts = [fm attributesOfItemAtPath:resourceImagePath error:&error];
-	STAssertNil(error, @"Error getting file size");
+	XCTAssertNil(error, @"Error getting file size");
 	unsigned long long fileSize = [fileAtts fileSize];
 	unsigned long long chunkSize = (fileSize/2ULL)+1;
 	
@@ -504,7 +504,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	
-	STAssertEquals(chunkSize, computedChunkSize, @"Chunk size should be computed based on number of workers");
+	XCTAssertEquals(chunkSize, computedChunkSize, @"Chunk size should be computed based on number of workers");
 	
 	
 }
@@ -583,21 +583,21 @@
 	NSString *filename = [localResponse.result valueForKey:kCumulusProgressInfoKeyFilename];
 	NSString *URL =  [localResponse.result valueForKey:kCumulusProgressInfoKeyURL];
 	
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
-	STAssertTrue(localResponse.wasComplete, @"Response should have been complete: %@", localResponse);
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	XCTAssertTrue(localResponse.wasComplete, @"Response should have been complete: %@", localResponse);
 	
-	STAssertNotNil(filename, @"Filename should not be nil");
-	STAssertNotNil(URL, @"URL should not be nil");	
-	STAssertNotNil(self.downloadedFileURL, @"Temp file URL should not be nil");
+	XCTAssertNotNil(filename, @"Filename should not be nil");
+	XCTAssertNotNil(URL, @"URL should not be nil");	
+	XCTAssertNotNil(self.downloadedFileURL, @"Temp file URL should not be nil");
 	
-	STAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",self.downloadedFileURL);
+	XCTAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",self.downloadedFileURL);
 
 	__block BOOL tempFileWasRemovedAfterCompletion = NO;
 	dispatch_sync(dispatch_get_main_queue(), ^{
 		NSFileManager *fm = [[NSFileManager alloc] init];
 		tempFileWasRemovedAfterCompletion = ![fm fileExistsAtPath:[self.downloadedFileURL path]];
 	});
-	STAssertTrue(tempFileWasRemovedAfterCompletion, @"Downloaded temp file should be cleaned up after completion: %@",self.downloadedFileURL);
+	XCTAssertTrue(tempFileWasRemovedAfterCompletion, @"Downloaded temp file should be cleaned up after completion: %@",self.downloadedFileURL);
 
 }
 
@@ -624,7 +624,7 @@
 	CMDownloadInfo *massiveInfo = [downloadState objectForKey:massiveCacheIdentifier];
 	NSURL *tempFileURL = massiveInfo.downloadedFileTempURL;
 	
-	STAssertNotNil(tempFileURL, @"Download state for partial download should include a temp file URL");
+	XCTAssertNotNil(tempFileURL, @"Download state for partial download should include a temp file URL");
 	
 	NSFileManager *fm = [NSFileManager new];
 	BOOL partialDownloadExists = [fm fileExistsAtPath:[tempFileURL path]];
@@ -633,7 +633,7 @@
 	long long currentOffset = (long long)[attributes fileSize];
 	
 	
-	STAssertTrue(partialDownloadExists, @"Resumable file did not exist prior to resuming");
+	XCTAssertTrue(partialDownloadExists, @"Resumable file did not exist prior to resuming");
 	
 	
 	__block float firstProgress = -1.f;
@@ -666,16 +666,16 @@
 	[massive resumeOrBeginDownloadWithProgressBlock:progressBlock completionBlock:completionBlock];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	STAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
-	STAssertTrue(hadRangeHeader, @"Request should have included a range header");
-	STAssertTrue(writesToSameTempFile, @"Download should have resumed writing to partial download");
+	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	XCTAssertTrue(hadRangeHeader, @"Request should have included a range header");
+	XCTAssertTrue(writesToSameTempFile, @"Download should have resumed writing to partial download");
 	
 	float initialProgress = (float)currentOffset/(float)localResponse.totalContentLength;
 	if (sentPartialContent) {
-		STAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
+		XCTAssertTrue(firstProgress >= initialProgress, @"Download should have started at greater than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
 	}
 	else {
-		STAssertTrue(firstProgress < initialProgress, @"Download should have started at less than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
+		XCTAssertTrue(firstProgress < initialProgress, @"Download should have started at less than initial progress: %@ > %@",@(firstProgress),@(initialProgress));
 	}
 	
 	
@@ -691,7 +691,7 @@
 		NSString *documentFilePath = [documentsDir stringByAppendingPathComponent:[self.copiedFileURL lastPathComponent]];
 		[fm copyItemAtPath:[self.copiedFileURL path] toPath:documentFilePath error:NULL];
 	}
-	STAssertTrue(equalContents, @"Completed file should be the same as if it were downloaded without interruption. (%@ != %@)",resourceAttributes,copiedFileAttributes);
+	XCTAssertTrue(equalContents, @"Completed file should be the same as if it were downloaded without interruption. (%@ != %@)",resourceAttributes,copiedFileAttributes);
 }
 
 

@@ -34,7 +34,7 @@
 	return queryString;
 }
 
-- (void) performRequestsInScope:(void(^)())work {
+- (void) performRequestsInScope:(void(^)(void))work {
 	CMResourceContext *context = [CMResourceContext withName:[NSString stringWithFormat:@"%@.%p",NSStringFromClass([self class]),self]];
 	[context performRequests:work inScope:self];
 }
