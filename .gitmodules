@@ -4,3 +4,6 @@
 [submodule "Ext/OCMock"]
 	path = Ext/OCMock
 	url = git@github.com:FivesquareSoftware/OCMock.git
+[submodule "Ext/Nimble"]
+	path = Ext/Nimble
+	url = git@github.com:Quick/Nimble.git
