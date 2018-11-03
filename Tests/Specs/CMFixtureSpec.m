@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 #import "OCMock.h"
 
 
@@ -61,8 +61,8 @@
 	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodGET];
 	resource.contentType = CMContentTypeText;
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(@"FOO"), @"Result did not equal text");
 }
 
 - (void) shouldGetADataFixture {
@@ -70,8 +70,8 @@
 	NSData *data = [@"FOO" dataUsingEncoding:NSUTF8StringEncoding];
 	[resource setFixture:data forHTTPMethod:kCumulusHTTPMethodGET];
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, data, @"Result did not equal data");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(data), @"Result did not equal data");
 }
 
 - (void) shouldGetAnItemFixture {
@@ -80,8 +80,8 @@
 	[resource setFixture:self.specHelper.item forHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.item), @"Result did not equal item");
 }
 
 - (void) shouldGetAListFixture {
@@ -90,8 +90,8 @@
 	[resource setFixture:self.specHelper.list forHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.list), @"Result did not equal list");
 }
 
 - (void) shouldGetAnImageFixture {
@@ -101,8 +101,8 @@
 	[resource setFixture:image forHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(UIImagePNGRepresentation(response.result)).toWithDescription(equal(imageData), @"Result did not equal image");
 }
 
 - (void) shouldGetAnFixtureSuppliedAsURL {
@@ -114,8 +114,8 @@
 	[resource setFixture:imageURL forHTTPMethod:kCumulusHTTPMethodGET];
 	
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(UIImagePNGRepresentation(response.result), imageData, @"Result did not equal image");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(UIImagePNGRepresentation(response.result)).toWithDescription(equal(imageData), @"Result did not equal image");
 }
 
 - (void) shouldDownloadFixture {
@@ -131,8 +131,8 @@
 	[resource setFixture:@"FOO" forHTTPMethod:kCumulusHTTPMethodPOST];
 	resource.contentType = CMContentTypeText;
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(@"OK"), @"Result did not equal expected response for GET");
 }
 
 - (void) shouldUseAGlobalFixture {
@@ -143,8 +143,8 @@
 	[Cumulus useFixtures:YES];
 	
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(@"FOO"), @"Result did not equal text");
 }
 
 - (void) shouldNotUseAGlobalFixtureWhenThereIsALocalFixture {
@@ -156,8 +156,8 @@
 	[Cumulus useFixtures:YES];
 	
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, @"FOO", @"Result did not equal text");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(@"FOO"), @"Result did not equal text");
 }
 
 - (void) shouldNotUseAGlobalFixtureWhenNotUsingFixtures {
@@ -168,8 +168,8 @@
 	[Cumulus useFixtures:NO];
 	
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, @"OK", @"Result did not equal expected response for GET");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(@"OK"), @"Result did not equal expected response for GET");
 }
 
 // ========================================================================== //
@@ -242,22 +242,22 @@
 	NSString *filename = [resultObject filename];
 	NSURL *URL =  [resultObject URL];
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@", localResponse]);
 	
-	XCTAssertNotNil(filename, @"Filename should not be nil");
-	XCTAssertNotNil(URL, @"URL should not be nil");
-	XCTAssertNotNil(downloadedFileURL, @"Temp file URL should not be nil");
+	expect(filename).toNotWithDescription(beNil(),@"Filename should not be nil");
+	expect(URL).toNotWithDescription(beNil(),@"URL should not be nil");
+	expect(downloadedFileURL).toNotWithDescription(beNil(),@"Temp file URL should not be nil");
 	
 	
-	XCTAssertTrue(fileExistedAtCompletion, @"Downloaded file should exist on disk at completion: %@",downloadedFileURL);
-	XCTAssertEqualObjects(resultData, imageData, @"Result did not equal image");
+	expect(fileExistedAtCompletion).toWithDescription(beTrue(), [NSString stringWithFormat:@"Downloaded file should exist on disk at completion: %@",downloadedFileURL]);
+	expect(resultData).toWithDescription(equal(imageData), @"Result did not equal image");
 	
 	__block BOOL tempFileWasRemovedAfterCompletion = NO;
 	dispatch_sync(dispatch_get_main_queue(), ^{
 		NSFileManager *fm = [[NSFileManager alloc] init];
 		tempFileWasRemovedAfterCompletion = ![fm fileExistsAtPath:[downloadedFileURL path]];
 	});
-	XCTAssertTrue(tempFileWasRemovedAfterCompletion, @"Downloaded temp file should be cleaned up after completion: %@",downloadedFileURL);
+	expect(tempFileWasRemovedAfterCompletion).toWithDescription(beTrue(), [NSString stringWithFormat:@"Downloaded temp file should be cleaned up after completion: %@",downloadedFileURL]);
 }
 
 

@@ -11,7 +11,7 @@
 // This class will be instantiated for you and made available in the property "self.specHelper", store your cross-test data and helper methods there
 #import "SpecHelper.h"
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 #import <sys/sysctl.h>
 
 
@@ -148,8 +148,8 @@
 	CFTimeInterval expected = 3.f;
 #endif
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldGetManySmallResourcesWithExplicitCaching {
@@ -185,8 +185,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldGetOneLargeResourceWithNoCaching {
@@ -204,8 +204,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldGetOneLargeResourceWithExplicitCaching {
@@ -225,8 +225,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldGetABunchOfComplicatedResourcesWithNoCaching {
@@ -261,8 +261,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldGetABunchOfComplicatedResourceWithExplicitCaching {
@@ -297,8 +297,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldPostManySmallResources {
@@ -332,8 +332,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldPostOneLargeResource {
@@ -351,8 +351,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldPostABunchOfComplicatedResources {
@@ -387,8 +387,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldUploadManySmallFiles {
@@ -419,8 +419,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldUploadOneLargeFile {
@@ -447,8 +447,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldDownloadManySmallFilesWithNoCaching {
@@ -482,8 +482,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldDownloadManySmallFilesWithExplicitCaching {
@@ -525,8 +525,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(success, @"Should have succeeded");
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(success).toWithDescription(beTrue(), @"Should have succeeded");
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldDownloadOneLargeFileWithNoCaching {
@@ -553,8 +553,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 - (void)shouldDownloadOneLargeFileWithExplicitCaching {
@@ -587,8 +587,8 @@
 	
 	self.currentResult.context = [NSString stringWithFormat:@"Took: %.2fs, Expected: %.2f",elapsed, expected];
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
-	XCTAssertTrue(elapsed < expected, @"Should take less than %.2fs",expected);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
+	expect(elapsed < expected).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should take less than %.2fs",expected]);
 }
 
 

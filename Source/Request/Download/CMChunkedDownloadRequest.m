@@ -10,6 +10,7 @@
 
 #import "CMRequest+Protected.h"
 #import "CMDownloadRequest.h"
+#import "CMDownloadInfo.h"
 #import "Cumulus.h"
 
 #define kCMChunkedDownloadRequestMinUpdateInterval 0.1

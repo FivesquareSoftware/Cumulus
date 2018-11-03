@@ -36,6 +36,8 @@
 #import <Foundation/Foundation.h>
 #if TARGET_OS_IPHONE == 0
 @class WebView;
+#else
+@class UIWebView;
 #endif
 
 

@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 #import "CMRequestQueue.h"
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 
 @interface CMResource (CMResourceControlSpec)
 @property (nonatomic, readonly) CMRequestQueue *requestQueue;
@@ -81,7 +81,7 @@
 	CMResource *index = [self.service resource:@"index"];
 	
 	id identifier = [index getWithCompletionBlock:^(CMResponse *response) {}];
-	XCTAssertNotNil(identifier, @"Launching a request asynchronously should return an identifier");
+	expect(identifier).toNotWithDescription(beNil(),@"Launching a request asynchronously should return an identifier");
 }
 
 - (void) shouldCancelARequestForIdentifier {
@@ -90,8 +90,8 @@
 	id identifier = [index getWithCompletionBlock:nil];
 	CMRequest *request = [index requestForIdentifier:identifier];
 	[index cancelRequestForIdentifier:identifier];
-	XCTAssertTrue(request.wasCanceled, @"wasCanceled should be YES (%@)", request);
-	XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
+	expect(request.wasCanceled).toWithDescription(beTrue(), [NSString stringWithFormat:[NSString stringWithFormat:@"wasCanceled should be YES (%@)", request]]);
+	expect(request.URLResponse).toWithDescription(beNil(), @"URLResponse should be nil");
 }
 
 - (void)shouldCancelAllRequestsWithBlock {
@@ -111,11 +111,11 @@
 	}];
 	dispatch_semaphore_wait(cancel_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue([requests count] > 0, @"There must be some requests to run this this");
+	expect([requests count] > 0).toWithDescription(beTrue(), @"There must be some requests to run this this");
 	for (CMRequest *request in requests) {
 		[NSThread sleepForTimeInterval:.05]; // let connection die
-		XCTAssertTrue(request.wasCanceled, @"wasCanceled should be YES");
-		XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
+		expect(request.wasCanceled).toWithDescription(beTrue(), @"wasCanceled should be YES");
+		expect(request.URLResponse).toWithDescription(beNil(), @"URLResponse should be nil");
 	}
 }
 
@@ -131,7 +131,7 @@
 	NSMutableSet *requests = smallResource.requests; // the ones that are still running at the moment
 	[smallResource cancelRequests];
 	
-	XCTAssertTrue([requests count] > 0, @"There must be some requests to run this this");
+	expect([requests count] > 0).toWithDescription(beTrue(), @"There must be some requests to run this this");
 	
 	BOOL anyRequestWasCanceled = NO;
 	for (CMRequest *request in requests) {
@@ -140,12 +140,12 @@
 		if (NO == anyRequestWasCanceled) {
 			anyRequestWasCanceled = request.wasCanceled;
 		}
-		XCTAssertTrue(request.wasCanceled || request.finished, @"wasCanceled or finished should be YES");
+		expect(request.wasCanceled || request.finished).toWithDescription(beTrue(), @"wasCanceled or finished should be YES");
 		if (request.wasCanceled) {
-			XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
+			expect(request.URLResponse).toWithDescription(beNil(), @"URLResponse should be nil");
 		}
 	}
-	XCTAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled");
+	expect(anyRequestWasCanceled).toWithDescription(beTrue(), @"At least one request should have been canceled");
 }
 
 - (void) shouldNotRemoveRequestsOnCancelation {
@@ -168,7 +168,7 @@
 //		[smallResource cancelRequests];
 	afterCancelRequestsCount = smallResource.requests.count;
 	
-	XCTAssertTrue(afterCancelRequestsCount > 0, @"Canceled requests should be allowed to remove themselves from their completion block (afterCancelRequestsCount: %@)",@(afterCancelRequestsCount));
+	expect(afterCancelRequestsCount > 0).toWithDescription(beTrue(), [NSString stringWithFormat:@"Canceled requests should be allowed to remove themselves from their completion block (afterCancelRequestsCount: %@)", @(afterCancelRequestsCount)]);
 	
 //	for (CMRequest *request in smallResource.requests) {
 		[NSThread sleepForTimeInterval:.05]; // let connections die before we start next spec
@@ -187,7 +187,7 @@
 	});
 	
 	NSUInteger requestsCount = smallResource.requests.count;
-	XCTAssertTrue(requestsCount == 0, @"Aborted requests should not be tracked as part of the resources in flight requests");
+	expect(requestsCount == 0).toWithDescription(beTrue(), @"Aborted requests should not be tracked as part of the resources in flight requests");
 }
 
 #if TARGET_OS_IPHONE
@@ -209,7 +209,7 @@
 	});
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	
-	XCTAssertFalse([[UIApplication sharedApplication] isNetworkActivityIndicatorVisible], @"Activity spinner should not be running");
+	expect([[UIApplication sharedApplication] isNetworkActivityIndicatorVisible]).toWithDescription(beFalse(), @"Activity spinner should not be running");
 }
 #endif
 
@@ -227,7 +227,7 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
 }
 
 - (void) shouldRunAsynchronouslyFromTheMainQueueWithPreflightBlock {
@@ -249,8 +249,8 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
-	XCTAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
+		expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
+	expect(preflightBlockRan).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
 }
 
 - (void) shouldRunFromTheMainThreadWithPreflightBlock {
@@ -277,8 +277,8 @@
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-				XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
-		XCTAssertTrue(preflightBlockRan, @"Response should be successful: %@", localResponse);
+				expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
+		expect(preflightBlockRan).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
 	}];
 }
 
@@ -291,7 +291,7 @@
 	CMResource *index = [self.service resource:@"index"];
 	
 	id identifier = [index getWithCompletionBlock:^(CMResponse *response) {}];
-	XCTAssertNotNil(identifier, @"Launching a request asynchronously from the main thread should return an identifier");
+	expect(identifier).toNotWithDescription(beNil(),@"Launching a request asynchronously from the main thread should return an identifier");
 }
 
 - (void) shouldRunAsynchronouslyFromConcurrentQueue {
@@ -309,7 +309,7 @@
 		}];
 	});
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThread {
@@ -321,7 +321,8 @@
 	CMResource *index = [self.service resource:@"index"];
 	CMResponse *response = [index get];
 
-	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
+	expect(response.wasSuccessful).toWithDescription(beTrue(),@"Response should be successful");
+	
 }
 
 - (void) shouldBeAbleToLaunchARequestFromACompletionBlock {
@@ -355,7 +356,7 @@
 	index.requestDelegateQueue = [NSOperationQueue mainQueue];
 	CMResponse *response = [index get];
 	
-	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
+	expect(response.wasSuccessful).toWithDescription(beTrue(),@"Response should be successful");
 }
 
 - (void) shouldRunABlockingRequestUsingAPrivateQueueAsDelegateQueue {
@@ -363,7 +364,7 @@
 	index.requestDelegateQueue = [NSOperationQueue new];
 	CMResponse *response = [index get];
 	
-	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
+	expect(response.wasSuccessful).toWithDescription(beTrue(),@"Response should be successful");
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThreadUsingTheMainQueueAsDelegateQueue {
@@ -376,7 +377,7 @@
 	index.requestDelegateQueue = [NSOperationQueue mainQueue];
 	CMResponse *response = [index get];
 	
-	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
+	expect(response.wasSuccessful).toWithDescription(beTrue(),@"Response should be successful");
 }
 
 - (void) shouldRunABlockingRequestFromTheMainThreadUsingAPrivateQueueAsDelegateQueue {
@@ -389,7 +390,7 @@
 	index.requestDelegateQueue = [NSOperationQueue new];
 	CMResponse *response = [index get];
 	
-	XCTAssertTrue(response.wasSuccessful,@"Response should be successful");
+	expect(response.wasSuccessful).toWithDescription(beTrue(),@"Response should be successful");
 }
 
 - (void) shouldRunANonBlockingRequestUsingTheMainQueueAsDelegateQueue {
@@ -406,7 +407,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(),@"Response should be successful");
 }
 
 - (void) shouldRunANonBlockingRequestUsingAPrivateQueueAsDelegateQueue {
@@ -423,7 +424,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful,@"Response should be successful");
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(),@"Response should be successful");
 }
 
 - (void) shouldOptimallyThrottleConcurrentRequestsWhenMaxConcurrentRequestsIsSetToDefault {
@@ -456,8 +457,8 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(success, @"All requests should have succeeded");
-	XCTAssertTrue(highwaterRequestCount <= requestQueue.actualMaxConcurrentRequests, @"Should not have run more than the optimally max allowed requests (%@ > %@)",@(highwaterRequestCount), @(requestQueue.actualMaxConcurrentRequests));
+	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
+	expect(highwaterRequestCount <= requestQueue.actualMaxConcurrentRequests).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the optimally max allowed requests (%@ > %@)",@(highwaterRequestCount), @(requestQueue.actualMaxConcurrentRequests)]);
 }
 
 - (void) shouldThrottleConcurrentRequestsWhenMaxConcurrentRequestsIsSet {
@@ -491,8 +492,8 @@
 
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	
-	XCTAssertTrue(success, @"All requests should have succeeded");
-	XCTAssertTrue(highwaterRequestCount <= resource.maxConcurrentRequests, @"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), @(resource.maxConcurrentRequests));
+	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
+	expect(highwaterRequestCount <= resource.maxConcurrentRequests).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), @(resource.maxConcurrentRequests)]);
 }
 
 - (void) shouldNotThrottleConcurrentRequestsWhenMaxConcurrentRequestsIsSetToZero {
@@ -500,7 +501,7 @@
 	resource.maxConcurrentRequests = 0;
 	
 	CMRequestQueue *requestQueue = resource.requestQueue;
-	XCTAssertNil(requestQueue, @"Should not have a request queue when maxConcurrentRequests is zero");
+	expect(requestQueue).toWithDescription(beNil(), @"Should not have a request queue when maxConcurrentRequests is zero");
 	
 	__block NSUInteger highwaterRequestCount = 0;
 	__block BOOL success = YES;
@@ -531,8 +532,8 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(success, @"All requests should have succeeded");
-	XCTAssertTrue(highwaterRequestCount == runningCount, @"Should not have throttled requests (%@ == %@)",@(highwaterRequestCount), @(runningCount));
+	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
+	expect(highwaterRequestCount == runningCount).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have throttled requests (%@ == %@)",@(highwaterRequestCount), @(runningCount)]);
 }
 
 - (void) shouldNotThrottleBlockingRequestsWhenMaxConcurrentRequestsIsSet {
@@ -565,7 +566,7 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(finishedBeforeQueue, @"Blocking request should have completed before queued requests");
+	expect(finishedBeforeQueue).toWithDescription(beTrue(), @"Blocking request should have completed before queued requests");
 
 }
 
@@ -593,7 +594,7 @@
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(anyRequestCanceledBeforeStarting, @"Some queued requests should have been canceled before they got a chance to start");
+	expect(anyRequestCanceledBeforeStarting).toWithDescription(beTrue(), @"Some queued requests should have been canceled before they got a chance to start");
 }
 
 
@@ -620,7 +621,7 @@
 //	}];
 //	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 //	dispatch_semaphore_signal(request_sema);
-//	//	XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+//	//	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
 //}
 
 // ========================================================================== //
@@ -648,8 +649,8 @@
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
-				XCTAssertTrue(firstResponse.wasSuccessful, @"Response should be successful: %@", firstResponse);
-		XCTAssertTrue(secondResponse.wasSuccessful, @"Response should be successful: %@", secondResponse);
+				expect(firstResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", firstResponse]);
+		expect(secondResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", secondResponse]);
 	}];
 }
 
@@ -668,7 +669,7 @@
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 				
-		XCTAssertTrue(localResponse.wasSuccessful, @"Response should be successful: %@", localResponse);
+		expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be successful: %@", localResponse]);
 	}];
 }
 

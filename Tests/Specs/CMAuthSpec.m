@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 #import "OCMock.h"
 
 #import <Security/Security.h>
@@ -71,28 +71,28 @@
 
 - (void) shouldBeUnauthorized {
 	CMResponse *response = [self.protectedResource get];
-	XCTAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
+	expect([response HTTPUnauthorized]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be unauthorized: %@",response]);
 }
 
 - (void) shouldFailAuthorizationWithBadCredentials {
 	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"foo" password:@"bar"];
 	[self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-	XCTAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
+	expect([response HTTPUnauthorized]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be unauthorized: %@",response]);
 }
 
 - (void) shouldBeAuthorized {
 	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"test" password:@"test"];
 	[self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void) shouldBeAuthorizedWithAReallyLongUsernameAndPassword {
 	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1" password:@"bb43c2d91e0fdaa616d2a8c29b86732c09e518b08be80ecafd54b1c351e9688cb78e1f39c8d3936050cbe9e0184c7b745d372fc6f1e7b8e09c6581e0146ca2c1"];
 	[self.service addAuthProvider:authProvider];
 	CMResponse *response = [self.protectedResource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void) shouldContinueWhenProviderReturnsNilCredential {
@@ -103,7 +103,7 @@
 	
 	[self.protectedResource addAuthProvider:mockAuthProvider];
 	CMResponse *response = [self.protectedResource get];
-	XCTAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
+	expect([response HTTPUnauthorized]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be unauthorized: %@",response]);
 	
 	[mockAuthProvider verify];
 }
@@ -120,7 +120,7 @@
 	
 	[self.service addAuthProvider:mockAuthProvider];
 	CMResponse *response = [self.protectedResource get];
-	XCTAssertTrue([response HTTPUnauthorized], @"Response should be unauthorized: %@",response);
+	expect([response HTTPUnauthorized]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be unauthorized: %@",response]);
 	
 	[mockAuthProvider verify];
 }
@@ -130,7 +130,7 @@
 	[self.SSLService addAuthProvider:authProvider];
 	CMResource *untrustedServer = [self.SSLService resource:@"index"];
 	CMResponse *response = [untrustedServer get];
-	XCTAssertTrue([response ErrorUserCancelledAuthentication], @"Response should be untrusted certificate: %@",response);
+	expect([response ErrorUserCancelledAuthentication]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should be untrusted certificate: %@",response]);
 }
 
 - (void) shouldAcceptSelfSignedCertWhenInsecure {
@@ -139,7 +139,7 @@
 	[self.SSLService addAuthProvider:authProvider];
 	CMResource *untrustedServer = [self.SSLService resource:@"index"];
 	CMResponse *response = [untrustedServer get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 @end

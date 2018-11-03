@@ -10,4 +10,7 @@
    <FileRef
       location = "group:Ext/OCMock/Source/OCMock.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Ext/Nimble/Nimble.xcodeproj">
+   </FileRef>
 </Workspace>

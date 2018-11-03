@@ -12,8 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
-
+@import Nimble;
 
 @implementation CMResourceConfigSpec
 
@@ -52,19 +51,19 @@
 - (void) shouldConstructResourcesUsingStrings {
 	CMResource *resource = [self.service resource:@"abc123"];
 	NSURL *URL = [[self.service	 URL] URLByAppendingPathComponent:@"abc123"];
-	XCTAssertEqualObjects(resource.URL, URL, @"URL should contain string arg");
+	expect(resource.URL).toWithDescription(equal(URL), @"URL should contain string arg");
 }
 
 - (void) shouldConstructResourcesUsingNumbers {
 	CMResource *resource = [self.service resource:[NSNumber numberWithInt:123]];
 	NSURL *URL = [[self.service	 URL] URLByAppendingPathComponent:@"123"];
-	XCTAssertEqualObjects(resource.URL, URL, @"URL should contain resource number");
+	expect(resource.URL).toWithDescription(equal(URL), @"URL should contain resource number");
 }
 
 - (void) shouldConstructResourcesUsingFormatStrings {
 	CMResource *resource = [self.service resourceWithFormat:@"abc%@",[NSNumber numberWithInt:123]];
 	NSURL *URL = [[self.service	 URL] URLByAppendingPathComponent:@"abc123"];
-	XCTAssertEqualObjects(resource.URL, URL, @"URL should contain resource format and arguments");
+	expect(resource.URL).toWithDescription(equal(URL), @"URL should contain resource format and arguments");
 }
 
 - (void)shouldSetJSONContentTypeHeadersCorrectly {
@@ -75,7 +74,7 @@
 							 @"application/json", kCumulusHTTPHeaderContentType
 							 , @"application/json", kCumulusHTTPHeaderAccept
 							 , nil];
-	XCTAssertEqualObjects(resource.headers, headers, @"Should set resource headsers from content type");
+	expect(resource.headers).toWithDescription(equal(headers), @"Should set resource headsers from content type");
 }
 
 - (void)shouldCreateAuthProviderFromUsernameAndPassword {
@@ -85,22 +84,22 @@
 	
 	CMBasicAuthProvider *provider = [CMBasicAuthProvider withUsername:@"foo" password:@"bar"];
 	
-	XCTAssertNotNil([resource.mergedAuthProviders lastObject], @"Default auth provider should not be nil");
-	XCTAssertEqualObjects([resource.mergedAuthProviders lastObject], provider, @"Providers should contain the BASIC provider");
+	expect([resource.mergedAuthProviders lastObject]).toNotWithDescription(beNil(), @"Default auth provider should not be nil");
+	expect([resource.mergedAuthProviders lastObject]).toWithDescription(equal(provider), @"Providers should contain the BASIC provider");
 }
 
 - (void)shouldStandardizeURLsWithLeadingSlashes {
 	CMResource *childOne = [self.service resource:@"child"];
 	CMResource *childTwo = [self.service resource:@"/child"];
 	
-	XCTAssertEqualObjects([childOne.URL absoluteString], [childTwo.URL absoluteString], @"Should standardize URLs with leading slashes");
+	expect([childOne.URL absoluteString]).toWithDescription(equal([childTwo.URL absoluteString]), @"Should standardize URLs with leading slashes");
 }
 
 - (void)shouldStandardizeURLsWithMultipleLeadingSlashes {
 	CMResource *childOne = [self.service resource:@"child"];
 	CMResource *childTwo = [self.service resource:@"///child"];
 	
-	XCTAssertEqualObjects([childOne.URL absoluteString], [childTwo.URL absoluteString], @"Should standardize URLs with mutliple leading slashes");
+	expect([childOne.URL absoluteString]).toWithDescription(equal([childTwo.URL absoluteString]), @"Should standardize URLs with mutliple leading slashes");
 }
 
 - (void)shouldStandardizeURLsWithExtraSlashes {
@@ -110,7 +109,7 @@
 	
 	
 	NSURL *fullURL = [[self.service	 URL] URLByAppendingPathComponent:@"ancestor/parent/child"];
-	XCTAssertEqualObjects([fullURL absoluteString], [child.URL absoluteString], @"Should standardize URLs with extra slashes");
+	expect([fullURL absoluteString]).toWithDescription(equal([child.URL absoluteString]), @"Should standardize URLs with extra slashes");
 }
 
 - (void)shouldStandardizeURLsWithExtraDots {
@@ -120,27 +119,27 @@
 	
 	
 	NSURL *fullURL = [[self.service	 URL] URLByAppendingPathComponent:@"ancestor/child"];
-	XCTAssertEqualObjects([fullURL absoluteString], [child.URL absoluteString], @"Should standardize URLs with extra dots");
+	expect([fullURL absoluteString]).toWithDescription(equal([child.URL absoluteString]), @"Should standardize URLs with extra dots");
 }
 
 - (void) shouldCorrectlyInitializeFromURLWithQueryString {
 	CMResource *resource = [CMResource withURL:@"http://example.com?foo==bar"];
 	NSString *URLString = @"http://example.com?foo==bar";
-	XCTAssertEqualObjects([resource.URL absoluteString], URLString, @"URL with query string should be equal to URL string");
+	expect([resource.URL absoluteString]).toWithDescription(equal(URLString), @"URL with query string should be equal to URL string");
 }
 
 - (void) shouldParseQueryStringProperly {
 	CMResource *resource = [self.service resource:@"resource"];
 	CMResource *childWithQueryString = [resource resource:@"child?foo=bar"];
 	
-	XCTAssertEqualObjects(@"foo=bar", childWithQueryString.queryString, @"Should properly append a query string");
+	expect(@"foo=bar").toWithDescription(equal(childWithQueryString.queryString), @"Should properly append a query string");
 }
 
 - (void) shouldConvertNonStringHeaderFieldValuesToStrings {
 	CMResource *resource = [self.service resource:@"abc123"];
 	[resource setValue:[NSNumber numberWithInt:42] forHeaderField:@"Foo"];
 	id headerField = [resource valueForHeaderField:@"Foo"];
-	XCTAssertTrue([headerField isKindOfClass:[NSString class]], @"Header fields should be converted to strings");
+	expect(headerField).toWithDescription(beAKindOf([NSString class]), @"Header fields should be converted to strings");
 }
 
 @end

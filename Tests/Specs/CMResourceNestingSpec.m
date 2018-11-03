@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 #import "CMRequestQueue.h"
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 
 @interface CMResource (ResourceNestingSpecs)
 @property (nonatomic, readonly) CMRequestQueue *requestQueue;
@@ -63,7 +63,7 @@
 
 - (void)shouldProperlyBuildNestedURLs {
 	NSURL *fullURL = [[self.service  URL] URLByAppendingPathComponent:@"ancestor/parent/child"];
-	XCTAssertEqualObjects(fullURL, [self.child URL], @"Child URL should be parent URL plus child URL");
+	expect(fullURL).toWithDescription(equal([self.child URL]), @"Child URL should be parent URL plus child URL");
 }
 
 - (void)shouldStronglyReferenceParentResource {
@@ -72,10 +72,11 @@
 	CMResource *referencingChild = [parent resource:@"child"];
 
 	ancestor = nil;
-	XCTAssertNotNil(referencingChild.parent.parent, @"Ancestors should be strongly referenced by children");
+	expect(referencingChild.parent.parent).toNotWithDescription(beNil(),@"Ancestors should be strongly referenced by children");
+
 
 	parent = nil;
-	XCTAssertNotNil(referencingChild.parent, @"Parents should be strongly referenced by children");
+	expect(referencingChild.parent).toNotWithDescription(beNil(),@"Parents should be strongly referenced by children");
 }
 
 // Headers
@@ -87,10 +88,10 @@
 	
 	NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"foo" forKey:@"bar"];
 	[headers setValue:@"baz" forKey:@"bing"];
-	XCTAssertEqualObjects(self.parent.mergedHeaders, headers, @"Parent headers should equal parent headers merged with ancestor's headers");
+	expect(self.parent.mergedHeaders).toWithDescription(equal(headers), @"Parent headers should equal parent headers merged with ancestor's headers");
 	
 	[headers setValue:@"ping" forKey:@"pong"];
-	XCTAssertEqualObjects(self.child.mergedHeaders, headers, @"Child headers should equal child headers merged with all ancestor headers");
+	expect(self.child.mergedHeaders).toWithDescription(equal(headers), @"Child headers should equal child headers merged with all ancestor headers");
 }
 
 // Query
@@ -102,10 +103,10 @@
 	
 	NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:@"foo" forKey:@"bar"];
 	[query setValue:@"baz" forKey:@"bing"];
-	XCTAssertEqualObjects(self.parent.mergedQuery, query, @"Parent headers should equal parent headers merged with ancestor's headers");
+	expect(self.parent.mergedQuery).toWithDescription(equal(query), @"Parent headers should equal parent headers merged with ancestor's headers");
 	
 	[query setValue:@"ping" forKey:@"pong"];
-	XCTAssertEqualObjects(self.child.mergedQuery, query, @"Child headers should equal child headers merged with all ancestor headers");
+	expect(self.child.mergedQuery).toWithDescription(equal(query), @"Child headers should equal child headers merged with all ancestor headers");
 }
 
 // Auth
@@ -119,12 +120,12 @@
 	[self.parent addAuthProvider:two];
 
 	NSMutableArray *providers = [NSMutableArray arrayWithObjects:two,one,nil];
-	XCTAssertEqualObjects(self.parent.mergedAuthProviders, providers, @"Child should inherit merged providers from ancestors");
+	expect(self.parent.mergedAuthProviders).toWithDescription(equal(providers), @"Child should inherit merged providers from ancestors");
 
 	[self.child addAuthProvider:three];
 
 	providers = [NSMutableArray arrayWithObjects:three,two,one,nil];
-	XCTAssertEqualObjects(self.child.mergedAuthProviders, providers, @"Child auth providers should be equal to child providers merged with all ancestor providers");
+	expect(self.child.mergedAuthProviders).toWithDescription(equal(providers), @"Child auth providers should be equal to child providers merged with all ancestor providers");
 	
 }
 
@@ -135,12 +136,12 @@
 	[self.parent addAuthProvider:two];
 	
 	NSMutableArray *providers = [NSMutableArray arrayWithObjects:two,nil];
-	XCTAssertEqualObjects(self.child.mergedAuthProviders, providers, @"Child should inherit parent auth providers");
+	expect(self.child.mergedAuthProviders).toWithDescription(equal(providers), @"Child should inherit parent auth providers");
 	
 	[self.child addAuthProvider:one];
 
 	providers = [NSMutableArray arrayWithObjects:one,two,nil];	
-	XCTAssertEqualObjects(self.child.mergedAuthProviders, providers, @"Child providers should take precedence over ancestor providers");
+	expect(self.child.mergedAuthProviders).toWithDescription(equal(providers), @"Child providers should take precedence over ancestor providers");
 }
 
 
@@ -148,23 +149,23 @@
 
 - (void)shouldInheritTimeoutFromParent {
 	self.parent.timeout = 30;
-	XCTAssertTrue(self.child.timeout == 30, @"Child should inherit timeout from parent");
+	expect(self.child.timeout == 30).toWithDescription(beTrue(), @"Child should inherit timeout from parent");
 }
 
 - (void)shouldUseOwnTimeoutOverParents {
 	self.parent.timeout = 30;
 	self.child.timeout = 60;
-	XCTAssertTrue(self.child.timeout == 60, @"Child should use own timeout over parent's");
+	expect(self.child.timeout == 60).toWithDescription(beTrue(), @"Child should use own timeout over parent's");
 }
 
 - (void)shouldInheritTimeoutFromFirstParentOnlyIfSet {
 	self.child.timeout = 60;
-	XCTAssertTrue(self.child.timeout == 60, @"Child should use parent's timeout only if set");
+	expect(self.child.timeout == 60).toWithDescription(beTrue(), @"Child should use parent's timeout only if set");
 }
 
 - (void)shouldInheritTimeoutFromAnyParent {
 	self.ancestor.timeout = 30;
-	XCTAssertTrue(self.child.timeout == 30, @"Child should inherit timeout from any parent");
+	expect(self.child.timeout == 30).toWithDescription(beTrue(), @"Child should inherit timeout from any parent");
 }
 
 
@@ -172,23 +173,23 @@
 
 - (void)shouldInheritContentTypeFromParent {
 	self.parent.contentType = CMContentTypeJSON;
-	XCTAssertTrue(self.child.contentType == CMContentTypeJSON, @"Child should inherit content type from parent");
+	expect(self.child.contentType == CMContentTypeJSON).toWithDescription(beTrue(), @"Child should inherit content type from parent");
 }
 
 - (void)shouldUseOwnContentTypeOverParents {
 	self.parent.contentType = CMContentTypeJSON;
 	self.child.contentType = CMContentTypeXML;
-	XCTAssertTrue(self.child.contentType == CMContentTypeXML, @"Child should use own content type over parent's");
+	expect(self.child.contentType == CMContentTypeXML).toWithDescription(beTrue(), @"Child should use own content type over parent's");
 }
 
 - (void)shouldInheritContentTypeFromFirstParentOnlyIfSet {
 	self.child.contentType = CMContentTypeJSON;
-	XCTAssertTrue(self.child.contentType == CMContentTypeJSON, @"Child should use parent's content type only if set");
+	expect(self.child.contentType == CMContentTypeJSON).toWithDescription(beTrue(), @"Child should use parent's content type only if set");
 }
 
 - (void)shouldInheritContentTypeFromAnyParent {
 	self.ancestor.contentType = CMContentTypeJSON;
-	XCTAssertTrue(self.child.contentType == CMContentTypeJSON, @"Child should inherit content type from any parent");
+	expect(self.child.contentType == CMContentTypeJSON).toWithDescription(beTrue(), @"Child should inherit content type from any parent");
 }
 
 // Preflight block
@@ -197,7 +198,7 @@
 - (void)shouldInheritPreflightBlockFromParent {
 	CMPreflightBlock block = ^(CMRequest *request) { return NO; };
 	self.parent.preflightBlock = block;
-	XCTAssertEqualObjects(self.child.preflightBlock, block, @"Child should inherit preflight block from parent");
+	expect((id)self.child.preflightBlock).toWithDescription(equal((id)block), @"Child should inherit preflight block from parent");
 }
 
 - (void)shouldUseOwnPreflightBlockOverParents {
@@ -211,19 +212,19 @@
 	};
 	self.parent.preflightBlock = blockOne;
 	self.child.preflightBlock = blockTwo;
-	XCTAssertEqualObjects(self.child.preflightBlock, blockTwo, @"Child should prefer own preflight block over parent's");
+	expect((id)self.child.preflightBlock).toWithDescription(equal((id)blockTwo), @"Child should prefer own preflight block over parent's");
 }
 
 - (void)shouldInheritPreflightBlockFromFirstParentOnlyIfSet {
 	CMPreflightBlock block = ^(CMRequest *request) { return NO; };
 	self.child.preflightBlock = block;
-	XCTAssertEqualObjects(self.child.preflightBlock, block, @"Child should inherit preflight block from parent only if set");
+	expect((id)self.child.preflightBlock).toWithDescription(equal((id)block), @"Child should inherit preflight block from parent only if set");
 }
 
 - (void)shouldInheritPreflightBlockFromAnyParent {
 	CMPreflightBlock block = ^(CMRequest *request) { return NO; };
 	self.ancestor.preflightBlock = block;
-	XCTAssertEqualObjects(self.child.preflightBlock, block, @"Child should inherit preflight block from any parent");
+	expect((id)self.child.preflightBlock).toWithDescription(equal((id)block), @"Child should inherit preflight block from any parent");
 }
 
 // Postprocessor block
@@ -231,7 +232,7 @@
 - (void)shouldInheritPotsprocessorBlockFromParent {
 	CMPostProcessorBlock block = ^(CMResponse *response, id result) { return result; };
 	self.parent.postProcessorBlock = block;
-	XCTAssertEqualObjects(self.child.postProcessorBlock, block, @"Child should inherit postprocessor block from parent");
+	expect((id)self.child.postProcessorBlock).toWithDescription(equal((id)block), @"Child should inherit postprocessor block from parent");
 }
 
 - (void)shouldUseOwnPotsprocessorBlockOverParents {
@@ -245,72 +246,72 @@
 	};
 	self.parent.postProcessorBlock = blockOne;
 	self.child.postProcessorBlock = blockTwo;
-	XCTAssertEqualObjects(self.child.postProcessorBlock, blockTwo, @"Child should prefer own postprocessor block over parent's");
+	expect((id)self.child.postProcessorBlock).toWithDescription(equal((id)blockTwo), @"Child should prefer own postprocessor block over parent's");
 }
 
 - (void)shouldInheritPotsprocessorBlockFromFirstParentOnlyIfSet {
 	CMPostProcessorBlock block = ^(CMResponse *response, id result) { return result; };
 	self.child.postProcessorBlock = block;
-	XCTAssertEqualObjects(self.child.postProcessorBlock, block, @"Child should inherit postprocessor block from parent only if set");
+	expect((id)self.child.postProcessorBlock).toWithDescription(equal((id)block), @"Child should inherit postprocessor block from parent only if set");
 }
 
 - (void)shouldInheritPotsprocessorBlockFromAnyParent {
 	CMPostProcessorBlock block = ^(CMResponse *response, id result) { return result; };
 	self.ancestor.postProcessorBlock = block;
-	XCTAssertEqualObjects(self.child.postProcessorBlock, block, @"Child should inherit postprocessor block from any parent");
+	expect((id)self.child.postProcessorBlock).toWithDescription(equal((id)block), @"Child should inherit postprocessor block from any parent");
 }
 
 // Caching
 
 - (void)shouldInheritCachePolicyFromParent {
 	self.parent.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-	XCTAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should inherit cache policy from parent");
+	expect(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData).toWithDescription(beTrue(), @"Child should inherit cache policy from parent");
 }
 
 - (void)shouldUseOwnCachePolicyOverParents {
 	self.parent.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
 	self.child.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-	XCTAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should use own cache policy over parent's");
+	expect(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData).toWithDescription(beTrue(), @"Child should use own cache policy over parent's");
 }
 
 - (void)shouldInheritCachePolicyFromFirstParentOnlyIfSet {
 	self.child.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-	XCTAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should use parent's cache policy only if set");
+	expect(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData).toWithDescription(beTrue(), @"Child should use parent's cache policy only if set");
 }
 
 - (void)shouldInheritCachePolicyFromAnyParent {
 	self.ancestor.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-	XCTAssertTrue(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData, @"Child should inherit cache policy from any parent");
+	expect(self.child.cachePolicy == NSURLRequestReloadIgnoringCacheData).toWithDescription(beTrue(), @"Child should inherit cache policy from any parent");
 }
 
 // Max Concurrent Requests
 
 - (void)shouldInheritMaxConcurrentRequestsFromParent {
 	self.parent.maxConcurrentRequests = 5;
-	XCTAssertTrue(self.child.maxConcurrentRequests == 5, @"Child should inherit maxConcurrentRequests from parent");
+	expect(self.child.maxConcurrentRequests == 5).toWithDescription(beTrue(), @"Child should inherit maxConcurrentRequests from parent");
 }
 
 - (void)shouldUseOwnMaxConcurrentRequestsOverParents {
 	self.parent.maxConcurrentRequests = 5;
 	self.child.maxConcurrentRequests = 10;
-	XCTAssertTrue(self.child.maxConcurrentRequests == 10, @"Child should use own maxConcurrentRequests over parent's");
+	expect(self.child.maxConcurrentRequests == 10).toWithDescription(beTrue(), @"Child should use own maxConcurrentRequests over parent's");
 }
 
 - (void)shouldInheritMaxConcurrentRequestsFromFirstParentOnlyIfSet {
 	self.child.maxConcurrentRequests = 10;
-	XCTAssertTrue(self.child.maxConcurrentRequests == 10, @"Child should use parent's maxConcurrentRequests only if set");
+	expect(self.child.maxConcurrentRequests == 10).toWithDescription(beTrue(), @"Child should use parent's maxConcurrentRequests only if set");
 }
 
 - (void)shouldInheritMaxConcurrentRequestsFromAnyParent {
 	self.ancestor.maxConcurrentRequests = 5;
-	XCTAssertTrue(self.child.maxConcurrentRequests == 5, @"Child should inherit maxConcurrentRequests from any parent");
+	expect(self.child.maxConcurrentRequests == 5).toWithDescription(beTrue(), @"Child should inherit maxConcurrentRequests from any parent");
 }
 
 - (void)shouldInheritRequestQueueFromParent {
 	self.parent.maxConcurrentRequests = 5;
 	CMRequestQueue *parentRequestQueue = self.parent.requestQueue;
 	CMRequestQueue *childRequestQueue = self.child.requestQueue;
-	XCTAssertEqualObjects(parentRequestQueue, childRequestQueue, @"Child should inherit requestQueue from parent");
+	expect(parentRequestQueue).toWithDescription(equal(childRequestQueue), @"Child should inherit requestQueue from parent");
 }
 
 - (void)shouldUseOwnRequestQueueOverParents {
@@ -318,15 +319,15 @@
 	self.child.maxConcurrentRequests = 10;
 	CMRequestQueue *parentRequestQueue = self.parent.requestQueue;
 	CMRequestQueue *childRequestQueue = self.child.requestQueue;
-	XCTAssertNotNil(parentRequestQueue, @"Parent must have a request queue for this test");
-	XCTAssertFalse(parentRequestQueue == childRequestQueue, @"Child should use own requestQueue over parent's");
+	expect(parentRequestQueue).toNotWithDescription(beNil(),@"Parent must have a request queue for this test");
+	expect(parentRequestQueue == childRequestQueue).toWithDescription(beFalse(), @"Child should use own requestQueue over parent's");
 }
 
 - (void)shouldInheritRequestQueueFromAnyAncestor {
 	self.ancestor.maxConcurrentRequests = 5;
 	CMRequestQueue *ancestorRequestQueue = self.ancestor.requestQueue;
 	CMRequestQueue *childRequestQueue = self.child.requestQueue;
-	XCTAssertEqualObjects(ancestorRequestQueue, childRequestQueue, @"Child should inherit requestQueue from any parent");
+	expect(ancestorRequestQueue).toWithDescription(equal(childRequestQueue), @"Child should inherit requestQueue from any parent");
 }
 
 - (void)shouldUseOwnRequestQueueOverAncestors {
@@ -334,18 +335,18 @@
 	self.child.maxConcurrentRequests = 10;
 	CMRequestQueue *ancestorRequestQueue = self.ancestor.requestQueue;
 	CMRequestQueue *childRequestQueue = self.child.requestQueue;
-	XCTAssertNotNil(ancestorRequestQueue, @"Ancestor must have a request queue for this test");
-	XCTAssertFalse(ancestorRequestQueue == childRequestQueue, @"Child should use own requestQueue over ancestor's");
+	expect(ancestorRequestQueue).toNotWithDescription(beNil(),@"Ancestor must have a request queue for this test");
+	expect(ancestorRequestQueue == childRequestQueue).toWithDescription(beFalse(), @"Child should use own requestQueue over ancestor's");
 }
 
 - (void) shouldInheritANilRequestQueueWFromParent {
 	self.parent.maxConcurrentRequests = 0;
-	XCTAssertNil(self.child.requestQueue, @"Child should inherit a nil requestQueue from parent");
+	expect(self.child.requestQueue).toWithDescription(beNil(), @"Child should inherit a nil requestQueue from parent");
 }
 
 - (void) shouldInheritANilRequestQueueWFromAnyAncestor {
 	self.ancestor.maxConcurrentRequests = 0;
-	XCTAssertNil(self.child.requestQueue, @"Child should inherit a nil requestQueue from ancestors");
+	expect(self.child.requestQueue).toWithDescription(beNil(), @"Child should inherit a nil requestQueue from ancestors");
 }
 
 

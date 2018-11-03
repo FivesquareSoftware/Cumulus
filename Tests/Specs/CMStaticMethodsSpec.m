@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 #import "CMRequestQueue.h"
 
 @interface CMRequestQueue (CMStaticMethodsSpec)
@@ -66,7 +66,7 @@
 - (void) shouldSetHeaders {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	CMResponse *response = [Cumulus get:endpoint];
-	XCTAssertEqualObjects(response.request.headers, [Cumulus headers], @"Request haeaders should equal static headers");
+	expect(response.request.headers).toWithDescription(equal([Cumulus headers]), @"Request haeaders should equal static headers");
 }
 
 - (void)shouldBeAuthorized {
@@ -74,13 +74,13 @@
 	CMBasicAuthProvider *authProvider = [CMBasicAuthProvider withUsername:@"test" password:@"test"];
 	[Cumulus setAuthProviders:[NSMutableArray arrayWithObject:authProvider]];
 	CMResponse *response = [Cumulus get:endpoint];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void)shouldGet {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	CMResponse *response = [Cumulus get:endpoint];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void)shouldGetWithCompletionBlock {
@@ -96,7 +96,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldGetWithProgressBlockAndCompletionBlock {
@@ -120,13 +120,13 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldHead {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	CMResponse *response = [Cumulus head:endpoint];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void)shouldHeadWithCompletionBlock {
@@ -142,13 +142,13 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldDelete {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	CMResponse *response = [Cumulus delete:endpoint];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void)shouldDeleteWithCompletionBlock {
@@ -164,13 +164,13 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldPost {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	CMResponse *response = [Cumulus post:endpoint payload:self.specHelper.item];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void)shouldPostWithCompletionBlock {
@@ -186,7 +186,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldPostWithProgressBlockAndCompletionBlock {
@@ -210,13 +210,13 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldPut {
 	NSString *endpoint = [NSString stringWithFormat:@"%@/index",kTestServerHost];
 	CMResponse *response = [Cumulus put:endpoint payload:self.specHelper.item];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void)shouldPutWithCompletionBlock {
@@ -232,7 +232,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldPutWithProgressBlockAndCompletionBlock {
@@ -256,7 +256,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void)shouldDownloadWithProgressBlockAndCompletionBlock {
@@ -279,7 +279,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
 	
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@", localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@", localResponse]);
 }
 
 - (void)shouldUploadWithProgressBlockAndCompletionBlock {
@@ -306,7 +306,7 @@
 	
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should have succeeded: %@",localResponse);
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",localResponse]);
 }
 
 - (void) shouldOptimallyThrottleAllConcurrentRequestsWhenMaxConcurrentRequestsIsSetToDefault {
@@ -356,8 +356,8 @@
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	
 	
-	XCTAssertTrue(success, @"All requests should have succeeded");
-	XCTAssertTrue(highwaterRequestCount <= [requestQueue actualMaxConcurrentRequests], @"Should not have run more than the optimal max allowed requests (%@ > %@)",@(highwaterRequestCount), [requestQueue actualMaxConcurrentRequests]);
+	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
+	expect(highwaterRequestCount <= [requestQueue actualMaxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the optimal max allowed requests (%@ > %@)",@(highwaterRequestCount), [requestQueue actualMaxConcurrentRequests]]);
 }
 
 - (void) shouldThrottleAllConcurrentRequestsWhenMaxConcurrentRequestsIsSet {
@@ -408,8 +408,8 @@
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 
 	
-	XCTAssertTrue(success, @"All requests should have succeeded");
-	XCTAssertTrue(highwaterRequestCount <= [Cumulus maxConcurrentRequests], @"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]);
+	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
+	expect(highwaterRequestCount <= [Cumulus maxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]]);
 }
 
 - (void) shouldNotThrottleAnyConcurrentRequestsWhenMaxConcurrentRequestsIsSetToZero {
@@ -460,8 +460,8 @@
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	
 	
-	XCTAssertTrue(success, @"All requests should have succeeded");
-	XCTAssertTrue(highwaterRequestCount == [Cumulus maxConcurrentRequests], @"Should not have throttled concurrent requests (%@ == %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]);
+	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
+	expect(highwaterRequestCount == [Cumulus maxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have throttled concurrent requests (%@ == %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]]);
 }
 
 

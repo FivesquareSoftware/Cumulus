@@ -49,6 +49,8 @@
 #import "NSDictionary+Cumulus.h"
 #import "NSString+Cumulus.h"
 
+#import "CMChunkedDownloadRequest.h"
+#import "CMUploadRequest.h"
 
 #if defined(DEBUG) & DEBUG
 /** NSURLRequest () category to allow use of private method in debug.

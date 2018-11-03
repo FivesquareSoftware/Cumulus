@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 
 
 @implementation CMResourceIfModifiedSpec
@@ -52,28 +52,28 @@
 - (void)shouldSendIfModifiedHeaderIfLastModifiedIsSet {
 	CMResource *index = [self.service resource:@"index"];
 	index.lastModified = [NSDate date];
-	XCTAssertNotNil([index valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince], @"If modified since header should have been set");
+	expect([index valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince]).toNotWithDescription(beNil(),@"If modified since header should have been set");
 }
 
 - (void)shouldNotSendIfModifiedHeaderIfLastModifiedIsNotSet {
 	CMResource *index = [self.service resource:@"index"];
-	XCTAssertNil([index valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince], @"If modified since header should have been set");
+	expect([index valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince]).toWithDescription(beNil(), @"If modified since header should have been set");
 }
 
 - (void)shouldNotSendIfModifiedHeaderIfLastModifiedIsSetToNil {
 	CMResource *index = [self.service resource:@"index"];
 	index.lastModified = nil;
-	XCTAssertNil([index valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince], @"If modified since header should have been set");
+	expect([index valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince]).toWithDescription(beNil(), @"If modified since header should have been set");
 }
 
 - (void)shouldSendIfModifiedHeaderIfTrackingLastModifiedAndLastModifiedSetInResponse {
 	CMResource *tracksModified = [self.service resource:@"/test/last-modified"];
 	tracksModified.automaticallyTracksLastModified = YES;
 	CMResponse *response = [tracksModified get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertNotNil(tracksModified.lastModified, @"Last modified should have been set by response");
-	XCTAssertNotNil([tracksModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince], @"If modified since header should have been set");
-	XCTAssertEqualObjects(tracksModified.lastModified, response.lastModified, @"Resource last modified should equal response last modified");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(tracksModified.lastModified).toNotWithDescription(beNil(),@"Last modified should have been set by response");
+	expect([tracksModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince]).toNotWithDescription(beNil(),@"If modified since header should have been set");
+	expect(tracksModified.lastModified).toWithDescription(equal(response.lastModified), @"Resource last modified should equal response last modified");
 }
 
 - (void)shouldSendIfModifiedHeaderIfTrackingLastModifiedAndLastModifiedNotSetInResponseButWasPreviouslySet {
@@ -82,35 +82,35 @@
 	NSDate *modified = [NSDate date];
 	tracksModified.lastModified = modified;
 	CMResponse *response = [tracksModified get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertNotNil(tracksModified.lastModified, @"Last modified should be set");
-	XCTAssertNotNil([tracksModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince], @"If modified since header should have been set");
-	XCTAssertEqualObjects(tracksModified.lastModified, modified, @"Resource last modified should equal response last modified");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(tracksModified.lastModified).toNotWithDescription(beNil(),@"Last modified should be set");
+	expect([tracksModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince]).toNotWithDescription(beNil(),@"If modified since header should have been set");
+	expect(tracksModified.lastModified).toWithDescription(equal(modified), @"Resource last modified should equal response last modified");
 }
 
 - (void)shouldBeNotModifiedWhenSendingLastModifiedToAnUnmodifiedResource {
 	CMResource *notModified = [self.service resource:@"/test/if-modified/not"];
 	notModified.automaticallyTracksLastModified = YES;
 	CMResponse *response = [notModified get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertNotNil(notModified.lastModified, @"Last modified should have been set by initial response");
-	XCTAssertNotNil([notModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince], @"If modified since header should have been set by initial response");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(notModified.lastModified).toNotWithDescription(beNil(),@"Last modified should have been set by initial response");
+	expect([notModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince]).toNotWithDescription(beNil(),@"If modified since header should have been set by initial response");
 	
 	response = [notModified get];
-	XCTAssertTrue(response.wasNotModified, @"Subsequent response should have been not modified: %@",response);
+	expect(response.wasNotModified).toWithDescription(beTrue(), [NSString stringWithFormat:@"Subsequent response should have been not modified: %@",response]);
 }
 
 - (void)shouldBeModifiedWhenSendingLastModifiedToAModifiedResource {
 	CMResource *wasModified = [self.service resource:@"/test/if-modified/is"];
 	wasModified.automaticallyTracksLastModified = YES;
 	CMResponse *response = [wasModified get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertNotNil(wasModified.lastModified, @"Last modified should have been set by initial response");
-	XCTAssertNotNil([wasModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince], @"If modified since header should have been set by initial response");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(wasModified.lastModified).toNotWithDescription(beNil(),@"Last modified should have been set by initial response");
+	expect([wasModified valueForHeaderField:kCumulusHTTPHeaderIfModifiedSince]).toNotWithDescription(beNil(),@"If modified since header should have been set by initial response");
 	
 	response = [wasModified get];
-	XCTAssertFalse(response.wasNotModified, @"Subsequent response should have been modified: %@",response);
-	XCTAssertTrue(response.wasSuccessful, @"Subsequent response should have been successful: %@",response);
+	expect(response.wasNotModified).toWithDescription(beFalse(),[NSString stringWithFormat:@"Subsequent response should have been modified: %@", response]);
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Subsequent response should have been successful: %@",response]);
 }
 
 

@@ -35,7 +35,7 @@
 
 #import "CMDownloadRequest.h"
 #import "CMRequest+Protected.h"
-
+#import "CMDownloadInfo.h"
 #import "Cumulus.h"
 
 

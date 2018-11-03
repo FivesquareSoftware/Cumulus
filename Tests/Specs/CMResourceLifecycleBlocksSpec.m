@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 #import "OCMock.h"
 
 
@@ -69,7 +69,7 @@
 	};
 	
 	[index get];
-	XCTAssertTrue(touched, @"Should have run preflight block");
+	expect(touched).toWithDescription(beTrue(), @"Should have run preflight block");
 }
 
 - (void) shouldReturnNilResponseWhenPreflightAbortsRequest {
@@ -83,8 +83,9 @@
 	
 	CMResponse *response = [index get];
 	
-	XCTAssertTrue(touched, @"Should have run preflight block");
-	XCTAssertNil(response, @"Response should be nil when preflight aborts a request");
+	expect(touched).toWithDescription(beTrue(), @"Should have run preflight block");
+	expect(response).toWithDescription(beNil(), @"Response should be nil when preflight aborts a request");
+	
 }
 
 - (void) shouldRunRequestWhenPreflightPasses {
@@ -99,9 +100,9 @@
 	
 	CMResponse *response = [index get];
 	
-	XCTAssertTrue(touched, @"Should have run preflight block");
-	XCTAssertNotNil(response, @"Response should not be nil when preflight allows a request to run");
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
+	expect(touched).toWithDescription(beTrue(), @"Should have run preflight block");
+	expect(response).toNotWithDescription(beNil(),@"Response should not be nil when preflight allows a request to run");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
 }
 
 - (void) shouldExecutePreflightBlockInNonBlockingMode {
@@ -119,7 +120,7 @@
 		// just so we are on the main q after preflight block, to prove we ran it
 	});
 	
-	XCTAssertTrue(touched, @"Should have run preflight block");
+	expect(touched).toWithDescription(beTrue(), @"Should have run preflight block");
 }
 
 - (void) shouldRunRequestWhenPreflightPassesInNonBlockingMode {
@@ -144,9 +145,9 @@
 	dispatch_semaphore_signal(request_sema);
 		
 	
-	XCTAssertTrue(touched, @"Should have run preflight block");
-	XCTAssertNotNil(localResponse, @"Response should not be nil when preflight allows a request to run");
-	XCTAssertTrue(localResponse.wasSuccessful, @"Response should be ok");
+	expect(touched).toWithDescription(beTrue(), @"Should have run preflight block");
+	expect(localResponse).toNotWithDescription(beNil(),@"Response should not be nil when preflight allows a request to run");
+	expect(localResponse.wasSuccessful).toWithDescription(beTrue(), @"Response should be ok");
 	
 }
 
@@ -165,7 +166,7 @@
 		// just so we are on the main q after preflight block, to prove we ran it
 	});
 	
-	XCTAssertTrue(mainThread, @"Should have run preflight block on main thread");
+	expect(mainThread).toWithDescription(beTrue(), @"Should have run preflight block on main thread");
 }
 
 
@@ -227,7 +228,7 @@
 	};
 	
 	CMResponse *response = [index get];
-	XCTAssertEqualObjects(@"-- OK --", response.result, @"Result should have been transformed by post-processor");
+	expect(@"-- OK --").toWithDescription(equal(response.result), @"Result should have been transformed by post-processor");
 }
 
 - (void) shouldExecutePostProcessorBlockOnHighPriorityQueue {
@@ -244,8 +245,8 @@
 	};
 	
 	CMResponse *response = [index get];
-	XCTAssertEqualObjects(@"-- OK --", response.result, @"Result should have been transformed by post-processor");
-	XCTAssertTrue(highQueue, @"Should have run post-processor block on high priority queue");
+	expect(@"-- OK --").toWithDescription(equal(response.result), @"Result should have been transformed by post-processor");
+	expect(highQueue).toWithDescription(beTrue(), @"Should have run post-processor block on high priority queue");
 }
 
 #pragma - -Completion
@@ -267,7 +268,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	XCTAssertTrue(touched, @"Should have run completion block");
+	expect(touched).toWithDescription(beTrue(), @"Should have run completion block");
 }
 
 - (void) shouldExecuteCompletionBlockOnMainThread {
@@ -287,7 +288,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	XCTAssertTrue(mainThread, @"Completion block should have run on main thread");
+	expect(mainThread).toWithDescription(beTrue(), @"Completion block should have run on main thread");
 }
 
 

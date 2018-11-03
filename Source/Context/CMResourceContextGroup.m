@@ -9,6 +9,7 @@
 #import "CMResourceContextGroup.h"
 
 #import "Cumulus.h"
+#import "CMRequest.h"
 
 @interface CMResourceContextGroup ()
 

@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 
 
 @implementation CMRequestSpec
@@ -59,7 +59,7 @@
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	XCTAssertThrows([request start], @"Should not be able to start a request twice");
 #else 
-	XCTAssertFalse([request start], @"Should not be able to start a request twice");
+	expect([request start]).toWithDescription(beFalse(), @"Should not be able to start a request twice");
 #endif
 }
 
@@ -74,7 +74,7 @@
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	XCTAssertThrows([request start], @"Should not be able to start a request that is canceled");
 #else
-	XCTAssertFalse([request start], @"Should not be able to start a request that is canceled");
+	expect([request start]).toWithDescription(beFalse(), @"Should not be able to start a request that is canceled");
 #endif
 
 }
@@ -97,7 +97,7 @@
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
 	XCTAssertThrows([request start], @"Should not be able to start a request that is finished");
 #else
-	XCTAssertFalse([request start], @"Should not be able to start a request that is finished");
+	expect([request start]).toWithDescription(beFalse(), @"Should not be able to start a request that is finished");
 #endif
 
 }
@@ -114,8 +114,8 @@
 	[request startWithCompletionBlock:nil];
 	[request cancel];	
 
-	XCTAssertTrue(request.wasCanceled, @"wasCanceled should be YES");
-	XCTAssertNil(request.URLResponse, @"URLResponse should be nil");
+	expect(request.wasCanceled).toWithDescription(beTrue(), @"wasCanceled should be YES");
+	expect(request.URLResponse).toWithDescription(beNil(), @"URLResponse should be nil");
 }
 
 - (void)shouldRunCompletionBlockWhenCanceled {
@@ -138,7 +138,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	XCTAssertTrue(touched, @"Touched should be YES");
+	expect(touched).toWithDescription(beTrue(), @"Touched should be YES");
 }
 
 - (void) shouldTimeoutWhenNoResponseAfterTimeoutInterval {
@@ -157,8 +157,8 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 	
-	XCTAssertNotNil(request.error, @"Error should not be nil");
-	XCTAssertTrue([request.error.domain isEqualToString:NSURLErrorDomain] && request.error.code == NSURLErrorTimedOut, @"Error should be timeout error", request.error);
+	expect(request.error).toNotWithDescription(beNil(),@"Error should not be nil");
+	expect([request.error.domain isEqualToString:NSURLErrorDomain] && request.error.code == NSURLErrorTimedOut).toWithDescription(beTrue(), [NSString stringWithFormat:@"Error should be timeout error", request.error]);
 }
 
 - (void) shouldRunCompletionBlockOnTimeout {
@@ -179,7 +179,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 	dispatch_semaphore_signal(request_sema);
 		
-	XCTAssertTrue(touched, @"Touched should be YES");
+	expect(touched).toWithDescription(beTrue(), @"Touched should be YES");
 }
 
 - (void) shouldFailToCreateARequestWithNoURLRequest {
@@ -188,7 +188,7 @@
 	XCTAssertThrows((request = [[CMRequest alloc] initWithURLRequest:nil]), @"Should not create a request without a URL request");
 #else
 	request = [[CMRequest alloc] initWithURLRequest:nil];
-	XCTAssertNil(request, @"Should not create a request without a URL request");
+	expect(request).toWithDescription(beNil(), @"Should not create a request without a URL request");
 #endif
 }
 
@@ -206,7 +206,7 @@
 		[NSThread sleepForTimeInterval:.001];
 	}
 	id responseInternal = [request valueForKey:@"responseInternal"];
-	XCTAssertNil(responseInternal, @"Internal response pointer should be nil on finish");
+	expect(responseInternal).toWithDescription(beNil(), @"Internal response pointer should be nil on finish");
 }
 
 - (void) shouldZeroOutResponseInternalAfterCompletionBlockRuns {
@@ -225,7 +225,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
 	id responseInternal = [request valueForKey:@"responseInternal"];
-	XCTAssertNil(responseInternal, @"Internal response pointer should be nil after completion block runs");
+	expect(responseInternal).toWithDescription(beNil(), @"Internal response pointer should be nil after completion block runs");
 }
 
 - (void) shouldZeroOutResponseInternalWhenCanceled {	
@@ -245,7 +245,7 @@
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
 	id responseInternal = [request valueForKey:@"responseInternal"];
-	XCTAssertNil(responseInternal, @"Internal response pointer should be nil after cancelation");
+	expect(responseInternal).toWithDescription(beNil(), @"Internal response pointer should be nil after cancelation");
 }
 
 - (void) shouldReportCompleteForACompletedRequest {
@@ -264,7 +264,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(complete, @"Simple request should have completed");
+	expect(complete).toWithDescription(beTrue(), @"Simple request should have completed");
 }
 
 - (void) shouldReportCompleteForAStreamedFile {
@@ -283,7 +283,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(complete, @"Streamed request should have completed");
+	expect(complete).toWithDescription(beTrue(), @"Streamed request should have completed");
 }
 
 - (void) shouldReportCompleteForARangeRequest {
@@ -303,7 +303,7 @@
 	}];
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(complete, @"Simple request should have completed");
+	expect(complete).toWithDescription(beTrue(), @"Simple request should have completed");
 }
 
 - (void) shouldReportIncompleteForAnInterruptedRequest {
@@ -334,7 +334,7 @@
 
 	dispatch_semaphore_wait(request_sema, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertFalse(complete,@"Interrupted request should not have been complete");
+	expect(complete).toWithDescription(beFalse(), @"Interrupted request should not have been complete");
 }
 
 - (void) shouldReturnRequestQueryStringAsADictionary {
@@ -345,7 +345,7 @@
 	CMRequest *request = [[CMRequest alloc] initWithURLRequest:URLRequest];
 	NSDictionary *query = @{ @"foo" : @"bar" };
 	
-	XCTAssertTrue([query isEqualToDictionary:request.queryDictionary], @"Request query dictionary should equal sent dictionary");
+	expect([query isEqualToDictionary:request.queryDictionary]).toWithDescription(beTrue(), @"Request query dictionary should equal sent dictionary");
 }
 
 

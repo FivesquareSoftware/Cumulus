@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 #import <objc/runtime.h>
 
 @interface CMResourceContext (CMResourceContextSpec)
@@ -113,9 +113,9 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localSuccess, @"Group should have succeeded");
-	XCTAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
-	XCTAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
+	expect(localSuccess).toWithDescription(beTrue(), @"Group should have succeeded");
+	expect(localResponses.count == 2).toWithDescription(beTrue(), [NSString stringWithFormat:@"Group should have passed along contained responses: %@",localResponses]);
+	expect(completionBlockRan).toWithDescription(beTrue(), @"Completion block of asynchronous get should have run");
 }
 
 - (void) shouldRunMultipleWorkBlocksConcurrentlyWithoutMixingThemUp {
@@ -153,8 +153,8 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	
 	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 	
-	XCTAssertTrue(localSuccess, @"Groups should have succeeded");
-	XCTAssertTrue(localResponseCountCorrect, @"Groups should have passed along contained responses");
+	expect(localSuccess).toWithDescription(beTrue(), @"Groups should have succeeded");
+	expect(localResponseCountCorrect).toWithDescription(beTrue(), @"Groups should have passed along contained responses");
 }
 
 - (void) shouldNotExistLongerThanGroupWorkWhenNotRetained {
@@ -184,7 +184,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	
 	[self.specRunner deferResult:self.currentResult untilDone:^{
 		dispatch_semaphore_wait(context_semaphore, DISPATCH_TIME_FOREVER);
-				XCTAssertNil(context, @"Context should no longer exist!");
+				expect(context).toWithDescription(beNil(), @"Context should no longer exist!");
 	}];
 }
 
@@ -222,7 +222,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 		}
 	}];
 	
-	XCTAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled: %@",localResponses);
+	expect(anyRequestWasCanceled).toWithDescription(beTrue(), [NSString stringWithFormat:@"At least one request should have been canceled: %@",localResponses]);
 }
 
 
@@ -260,7 +260,7 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 		}
 	}];
 	
-	XCTAssertTrue(anyRequestWasCanceled, @"At least one request should have been canceled: %@",localResponses);
+	expect(anyRequestWasCanceled).toWithDescription(beTrue(), [NSString stringWithFormat:@"At least one request should have been canceled: %@",localResponses]);
 }
 
 - (void) shouldCancelRequestsWhenTheirScopeDisappears {
@@ -331,8 +331,8 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 		} while (running == YES);
 
 		
-		//		XCTAssertTrue(lastRequest.wasCanceled, @"Request should have been canceled: %@",lastRequest);
-		XCTAssertTrue(anyRequestCanceled, @"At least one request should have been canceled: %@",requests);
+		//		expect(lastRequest.wasCanceled).toWithDescription(beTrue(), [NSString stringWithFormat:@"Request should have been canceled: %@",lastRequest]);
+		expect(anyRequestCanceled).toWithDescription(beTrue(), [NSString stringWithFormat:@"At least one request should have been canceled: %@",requests]);
 	}];
 }
 
@@ -366,10 +366,10 @@ static const NSString *kNSObject_CMResourceContext_shutdownHook;
 	
 	dispatch_semaphore_wait(group_semaphore, DISPATCH_TIME_FOREVER);
 		
-	XCTAssertTrue(localSuccess, @"Group should have succeeded");
-	XCTAssertTrue(localResponses.count == 2, @"Group should have passed along contained responses: %@",localResponses);
-	XCTAssertTrue(completionBlockRan, @"Completion block of asynchronous get should have run");
-	XCTAssertTrue(subCompletionBlockRan, @"Completion block of asynchronous sub request should have run");
+	expect(localSuccess).toWithDescription(beTrue(), @"Group should have succeeded");
+	expect(localResponses.count == 2).toWithDescription(beTrue(), [NSString stringWithFormat:@"Group should have passed along contained responses: %@",localResponses]);
+	expect(completionBlockRan).toWithDescription(beTrue(), @"Completion block of asynchronous get should have run");
+	expect(subCompletionBlockRan).toWithDescription(beTrue(), @"Completion block of asynchronous sub request should have run");
 }
 
 */

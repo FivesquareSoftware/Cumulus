@@ -12,7 +12,7 @@
 #import "SpecHelper.h"
 
 
-#import <XCTest/XCTest.h>
+@import Nimble;
 
 @implementation CMResourceHTTPMethodsSpec
 
@@ -61,29 +61,29 @@
 - (void) shouldGetAnItem {
 	CMResource *resource = [self.service resource:@"test/get/item"];
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.item), @"Result did not equal item");
 }
 
 - (void) shouldGetAList {
 	CMResource *resource = [self.service resource:@"test/get/list"];
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.list), @"Result did not equal list");
 }
 
 - (void) shouldGetALargeResource {
 	CMResource *resource = [self.service resource:@"test/get/large-list"];
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.largeList, @"Result did not equal large resource");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.largeList), @"Result did not equal large resource");
 }
 
 - (void) shouldGetAComplicatedResource {
 	CMResource *resource = [self.service resource:@"test/get/complicated-list"];
 	CMResponse *response = [resource get];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.complicatedList, @"Result did not equal complicated resource");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.complicatedList), @"Result did not equal complicated resource");
 }
 
 
@@ -95,15 +95,15 @@
 - (void)shouldHeadItem {
 	CMResource *resource = [self.service resource:@"test/head/item"];
 	CMResponse *response = [resource head];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertNil(response.result, @"Head request should have no body");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(beNil(), @"Head request should have no body");
 }
 
 - (void)shouldHeadList {
 	CMResource *resource = [self.service resource:@"test/head/list"];
 	CMResponse *response = [resource head];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertNil(response.result, @"Head request should have no body");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(beNil(), @"Head request should have no body");
 }
 
 
@@ -114,15 +114,15 @@
 - (void)shouldDeleteItem {
 	CMResource *resource = [self.service resource:@"test/delete/item"];
 	CMResponse *response = [resource delete];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.item), @"Result did not equal item");
 }
 
 - (void)shouldDeleteList {
 	CMResource *resource = [self.service resource:@"test/delete/list"];
 	CMResponse *response = [resource delete];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.list), @"Result did not equal list");
 }
 
 
@@ -132,32 +132,32 @@
 - (void) shouldPostItem {
 	CMResource *resource = [self.service resource:@"test/post/item"];
 	CMResponse *response = [resource post:self.specHelper.item];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.item), @"Result did not equal item");
 }
 
 - (void) shouldPostList {
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.list forKey:@"list"];  // our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/post/list"];
 	CMResponse *response = [resource post:payload];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.list), @"Result did not equal list");
 }
 
 - (void) shouldPostLargeResource {
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.largeList forKey:@"list"];	// our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/post/large-list"];
 	CMResponse *response = [resource post:payload];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.largeList, @"Result did not equal large resource");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.largeList), @"Result did not equal large resource");
 }
 
 - (void) shouldPostComplicatedResource {
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.complicatedList forKey:@"list"];  // our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/post/complicated-list"];
 	CMResponse *response = [resource post:payload];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.complicatedList, @"Result did not equal complicated resource");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.complicatedList), @"Result did not equal complicated resource");
 }
 
 
@@ -167,16 +167,16 @@
 - (void) shouldPutItem {
 	CMResource *resource = [self.service resource:@"test/put/item"];
 	CMResponse *response = [resource put:self.specHelper.item];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.item, @"Result did not equal item");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.item), @"Result did not equal item");
 }
 
 - (void) shouldPutList {
 	NSDictionary  *payload = [NSDictionary dictionaryWithObject:self.specHelper.list forKey:@"list"];  // our service likes hashes not arrays as the payload
 	CMResource *resource = [self.service resource:@"test/put/list"];
 	CMResponse *response = [resource put:payload];
-	XCTAssertTrue(response.wasSuccessful, @"Response should have succeeded: %@",response);
-	XCTAssertEqualObjects(response.result, self.specHelper.list, @"Result did not equal list");
+	expect(response.wasSuccessful).toWithDescription(beTrue(), [NSString stringWithFormat:@"Response should have succeeded: %@",response]);
+	expect(response.result).toWithDescription(equal(self.specHelper.list), @"Result did not equal list");
 }
 
 

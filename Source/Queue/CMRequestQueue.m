@@ -9,6 +9,8 @@
 #import "CMRequestQueue.h"
 
 #import "Cumulus.h"
+
+#import "CMRequest.h"
 #import <sys/sysctl.h>
 
 
