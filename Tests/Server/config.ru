@@ -1,5 +1,5 @@
 require 'rack'
 use Rack::ContentLength
 
-require 'main'
+require_relative 'main'
 run Sinatra::Application

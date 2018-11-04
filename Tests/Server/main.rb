@@ -1,12 +1,11 @@
 require 'rubygems'
-require 'ruby-debug'
 
 require 'bundler/setup'
 
 require 'sinatra'
-require 'dependencies'
-require 'requires'
-require 'configuration'
+require_relative 'dependencies'
+require_relative 'requires'
+require_relative 'configuration'
 
 
 

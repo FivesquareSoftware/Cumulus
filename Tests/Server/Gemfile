@@ -1,7 +1,7 @@
 source :rubygems
 
 group :sinatra do
-    gem "sinatra", '~>1.0'
+    gem "sinatra", '>=2.0'
     gem "thin"
 end
 
@@ -12,8 +12,11 @@ group :misc do
 end
 
 group :test do 
-	gem "rack-test", '~>0.5.3'
+	gem "rack-test"
 	gem "rspec"
-	gem 'ruby-debug'
+end
+
+group :debug do
+	gem 'byebug'
 	gem 'pry'
 end

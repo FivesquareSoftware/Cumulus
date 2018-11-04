@@ -14,7 +14,7 @@
 
 - (NSTimeInterval) timeRemaining {
 	NSTimeInterval timeRemaining = 0;
-	if (_bytesPerSecond > 0) {
+	if ([_bytesPerSecond unsignedIntegerValue] > 0) {
 		timeRemaining = ( (double)([_contentLength longLongValue]-[_fileOffset longLongValue]) / [_bytesPerSecond doubleValue] );
 	}	
 	return timeRemaining;

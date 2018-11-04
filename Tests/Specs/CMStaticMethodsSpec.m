@@ -357,7 +357,7 @@
 	
 	
 	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
-	expect(highwaterRequestCount <= [requestQueue actualMaxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the optimal max allowed requests (%@ > %@)",@(highwaterRequestCount), [requestQueue actualMaxConcurrentRequests]]);
+	expect(highwaterRequestCount <= [requestQueue actualMaxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the optimal max allowed requests (%@ > %@)",@(highwaterRequestCount), @([requestQueue actualMaxConcurrentRequests])]);
 }
 
 - (void) shouldThrottleAllConcurrentRequestsWhenMaxConcurrentRequestsIsSet {
@@ -409,7 +409,7 @@
 
 	
 	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
-	expect(highwaterRequestCount <= [Cumulus maxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]]);
+	expect(highwaterRequestCount <= [Cumulus maxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have run more than the max allowed requests (%@ > %@)",@(highwaterRequestCount), @([Cumulus maxConcurrentRequests])]);
 }
 
 - (void) shouldNotThrottleAnyConcurrentRequestsWhenMaxConcurrentRequestsIsSetToZero {
@@ -461,7 +461,7 @@
 	
 	
 	expect(success).toWithDescription(beTrue(), @"All requests should have succeeded");
-	expect(highwaterRequestCount == [Cumulus maxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have throttled concurrent requests (%@ == %@)",@(highwaterRequestCount), [Cumulus maxConcurrentRequests]]);
+	expect(highwaterRequestCount == [Cumulus maxConcurrentRequests]).toWithDescription(beTrue(), [NSString stringWithFormat:@"Should not have throttled concurrent requests (%@ == %@)",@(highwaterRequestCount), @([Cumulus maxConcurrentRequests])]);
 }
 
 

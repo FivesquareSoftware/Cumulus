@@ -90,7 +90,7 @@
 	id identifier = [index getWithCompletionBlock:nil];
 	CMRequest *request = [index requestForIdentifier:identifier];
 	[index cancelRequestForIdentifier:identifier];
-	expect(request.wasCanceled).toWithDescription(beTrue(), [NSString stringWithFormat:[NSString stringWithFormat:@"wasCanceled should be YES (%@)", request]]);
+	expect(request.wasCanceled).toWithDescription(beTrue(), [NSString stringWithFormat:@"wasCanceled should be YES (%@)", request]);
 	expect(request.URLResponse).toWithDescription(beNil(), @"URLResponse should be nil");
 }
 

@@ -57,7 +57,7 @@
 
 	[request startWithCompletionBlock:nil];
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	XCTAssertThrows([request start], @"Should not be able to start a request twice");
+	expect([request start]).toWithDescription(raiseException(), @"Should not be able to start a request twice");
 #else 
 	expect([request start]).toWithDescription(beFalse(), @"Should not be able to start a request twice");
 #endif
@@ -72,7 +72,7 @@
 	[request startWithCompletionBlock:nil];
 	[request cancel];
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	XCTAssertThrows([request start], @"Should not be able to start a request that is canceled");
+	expect([request start]).toWithDescription(raiseException(), @"Should not be able to start a request that is canceled");
 #else
 	expect([request start]).toWithDescription(beFalse(), @"Should not be able to start a request that is canceled");
 #endif
@@ -95,7 +95,7 @@
 	dispatch_semaphore_signal(request_sema);
 	
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	XCTAssertThrows([request start], @"Should not be able to start a request that is finished");
+	expect([request start]).toWithDescription(raiseException(), @"Should not be able to start a request that is finished");
 #else
 	expect([request start]).toWithDescription(beFalse(), @"Should not be able to start a request that is finished");
 #endif
@@ -158,7 +158,7 @@
 	dispatch_semaphore_signal(request_sema);
 	
 	expect(request.error).toNotWithDescription(beNil(),@"Error should not be nil");
-	expect([request.error.domain isEqualToString:NSURLErrorDomain] && request.error.code == NSURLErrorTimedOut).toWithDescription(beTrue(), [NSString stringWithFormat:@"Error should be timeout error", request.error]);
+	expect([request.error.domain isEqualToString:NSURLErrorDomain] && request.error.code == NSURLErrorTimedOut).toWithDescription(beTrue(), [NSString stringWithFormat:@"Error should be timeout error %@", request.error]);
 }
 
 - (void) shouldRunCompletionBlockOnTimeout {
@@ -183,9 +183,9 @@
 }
 
 - (void) shouldFailToCreateARequestWithNoURLRequest {
-	CMRequest *request;
+	__block CMRequest *request;
 #if !defined(NS_BLOCK_ASSERTIONS) || NS_BLOCK_ASSERTIONS == 0
-	XCTAssertThrows((request = [[CMRequest alloc] initWithURLRequest:nil]), @"Should not create a request without a URL request");
+	expect(request = [[CMRequest alloc] initWithURLRequest:nil]).toWithDescription(raiseException(), @"Should not create a request without a URL request");
 #else
 	request = [[CMRequest alloc] initWithURLRequest:nil];
 	expect(request).toWithDescription(beNil(), @"Should not create a request without a URL request");
