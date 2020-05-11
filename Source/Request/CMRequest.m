@@ -71,8 +71,10 @@ static BOOL __networkActivityIndicatorVisible = NO;
 //		CMLog(@"__requestCount++: %@ ** %@ **",@(__requestCount),context);
 #if TARGET_OS_IPHONE
 		if (__requestCount > 0 && NO == __networkActivityIndicatorVisible) {
-			[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-			__networkActivityIndicatorVisible = YES;
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+				__networkActivityIndicatorVisible = YES;
+			});
 		}
 #endif
 	});
