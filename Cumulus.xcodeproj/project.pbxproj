@@ -21,6 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		07E9A662187F345D00987917 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07E9A661187F345D00987917 /* libOCMock.a */; };
+		07F9C4FF187F275500A73726 /* libCumulus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4213DB459200F96152 /* libCumulus.a */; };
+		07F9C501187F275B00A73726 /* libOCSpec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07F9C500187F275B00A73726 /* libOCSpec.a */; };
 		A406BD2217A9E54D001070F0 /* CMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A406BD2017A9E54D001070F0 /* CMRequest.m */; };
 		A406BD2317A9E54D001070F0 /* CMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A406BD2017A9E54D001070F0 /* CMRequest.m */; };
 		A406BD2417A9E54D001070F0 /* CMRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A406BD2117A9E54D001070F0 /* CMRequest.h */; };
@@ -52,7 +55,6 @@
 		A409B3431408E890003495BA /* CMBasicAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3411408E890003495BA /* CMBasicAuthProvider.m */; };
 		A409B3BC1410597D003495BA /* CMConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A409B3BA1410597C003495BA /* CMConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A409B3BD1410597D003495BA /* CMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A409B3BB1410597D003495BA /* CMConstants.m */; };
-		A409B3CD141A530C003495BA /* libCumulus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A414FD4213DB459200F96152 /* libCumulus.a */; };
 		A40EE26714D9BC9500EBD8C3 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = A40EE26514D9BC9500EBD8C3 /* NSData+Base64.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A40EE26814D9BC9500EBD8C3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A40EE26614D9BC9500EBD8C3 /* NSData+Base64.m */; };
 		A410FE8517B444E000024F2D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A410FE8417B444E000024F2D /* MessageUI.framework */; };
@@ -77,7 +79,6 @@
 		A414FD4C13DB459200F96152 /* Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD4B13DB459200F96152 /* Cumulus.m */; };
 		A414FD5913DB466600F96152 /* CMResource.h in Headers */ = {isa = PBXBuildFile; fileRef = A414FD5713DB466600F96152 /* CMResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A414FD5A13DB466600F96152 /* CMResource.m in Sources */ = {isa = PBXBuildFile; fileRef = A414FD5813DB466600F96152 /* CMResource.m */; };
-		A416122A14411A800008A235 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A416122914411A800008A235 /* libOCMock.a */; };
 		A41C901114F2ED4800E16A9E /* NSString+Cumulus.h in Headers */ = {isa = PBXBuildFile; fileRef = A41C900F14F2ED4800E16A9E /* NSString+Cumulus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A41C901214F2ED4800E16A9E /* NSString+Cumulus.m in Sources */ = {isa = PBXBuildFile; fileRef = A41C901014F2ED4800E16A9E /* NSString+Cumulus.m */; };
 		A432B46E149D0B56006582DB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B3991408F193003495BA /* Security.framework */; };
@@ -150,7 +151,6 @@
 		A46269A314198ED3005544D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A409B2BF14002529003495BA /* UIKit.framework */; };
 		A46269A614198ED3005544D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46269A514198ED3005544D6 /* CoreGraphics.framework */; };
 		A4626A4D14199082005544D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A4626A1414199082005544D6 /* main.m */; };
-		A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4626A931419993E005544D6 /* libOCSpec.a */; };
 		A468A774149FA73900612DA9 /* CMClientCertificateAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = A468A772149FA73900612DA9 /* CMClientCertificateAuthProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A468A775149FA73900612DA9 /* CMClientCertificateAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A468A773149FA73900612DA9 /* CMClientCertificateAuthProvider.m */; };
 		A498AA5317B2E9B000190AD5 /* CMResource+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = A498AA5217B2E9B000190AD5 /* CMResource+Protected.h */; };
@@ -206,6 +206,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07E9A65F187F344600987917 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Ext/OCMock/Source/build/Debug/OCMock.framework; sourceTree = "<group>"; };
+		07E9A661187F345D00987917 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = Ext/OCMock/Source/build/Debug/libOCMock.a; sourceTree = "<group>"; };
+		07F9C500187F275B00A73726 /* libOCSpec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCSpec.a; path = "Ext/OCSpec/build/Debug-iphoneos/libOCSpec.a"; sourceTree = "<group>"; };
+		07F9C502187F276200A73726 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = "Ext/OCMock/Source/build/Debug-iphoneos/libOCMock.a"; sourceTree = "<group>"; };
 		A406BD2017A9E54D001070F0 /* CMRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMRequest.m; sourceTree = "<group>"; };
 		A406BD2117A9E54D001070F0 /* CMRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMRequest.h; sourceTree = "<group>"; };
 		A406BD2717A9E5B2001070F0 /* CMUploadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUploadRequest.h; sourceTree = "<group>"; };
@@ -397,15 +401,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07E9A662187F345D00987917 /* libOCMock.a in Frameworks */,
+				07F9C4FF187F275500A73726 /* libCumulus.a in Frameworks */,
+				07F9C501187F275B00A73726 /* libOCSpec.a in Frameworks */,
 				A410FE8517B444E000024F2D /* MessageUI.framework in Frameworks */,
 				A432B46E149D0B56006582DB /* Security.framework in Frameworks */,
 				A4A8CC64147EDFA200BE6C0E /* MobileCoreServices.framework in Frameworks */,
 				A4D4FFC7141A5A4E00E58873 /* SenTestingKit.framework in Frameworks */,
 				A46269A314198ED3005544D6 /* UIKit.framework in Frameworks */,
 				A46269A614198ED3005544D6 /* CoreGraphics.framework in Frameworks */,
-				A409B3CD141A530C003495BA /* libCumulus.a in Frameworks */,
-				A4626A941419993E005544D6 /* libOCSpec.a in Frameworks */,
-				A416122A14411A800008A235 /* libOCMock.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,6 +488,10 @@
 		A414FD4413DB459200F96152 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				07E9A661187F345D00987917 /* libOCMock.a */,
+				07E9A65F187F344600987917 /* OCMock.framework */,
+				07F9C502187F276200A73726 /* libOCMock.a */,
+				07F9C500187F275B00A73726 /* libOCSpec.a */,
 				A4A8CC5F147ED43700BE6C0E /* Cumulus */,
 				A4A8CC60147ED44700BE6C0E /* Specs */,
 				A43E63A1152A47E6006AEBCD /* Other Frameworks */,
@@ -1319,6 +1327,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1356,6 +1365,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1385,6 +1395,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;
 				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1400,6 +1411,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Cumulus;
 				PUBLIC_HEADERS_FOLDER_PATH = "Headers/$(PRODUCT_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1425,9 +1437,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "CumulusFramework-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Cumulus;
-				SDKROOT = macosx;
 				VERSIONING_SYSTEM = "apple-generic";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1456,7 +1466,6 @@
 				INFOPLIST_FILE = "CumulusFramework-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = Cumulus;
-				SDKROOT = macosx;
 				VERSIONING_SYSTEM = "apple-generic";
 				WRAPPER_EXTENSION = framework;
 			};

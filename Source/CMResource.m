@@ -385,8 +385,7 @@
 	
 	//rdar: 10487909, must remove preceding slash because URLByAppendingPathComponent is adding one incorrectly
 	relativePath = [relativePath stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
-	relativePath = [relativePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	
+
 	NSString *queryString = [relativePath queryString:&relativePath];
 	
 	NSURL *resourceURL = [_URL URLByAppendingPathComponent:relativePath];
