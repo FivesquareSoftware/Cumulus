@@ -131,6 +131,9 @@
 /** When set, the request will include the appropriate 'Range' and 'if-Range' along with 'ETag' and/or 'Last-Modified' headers to request a range of the resource. */
 @property (nonatomic) CMContentRange range;
 
+// The URL if any to which the request was redirected; nil otherwise.
+@property (nonatomic, strong) NSString *redirectURL;
+
 
 
 // ========================================================================== //

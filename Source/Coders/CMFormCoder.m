@@ -51,23 +51,31 @@
 	NSStringEncoding encoding = NSUTF8StringEncoding;
 	
 	NSMutableArray *pairs = [NSMutableArray new];
-	
-	if (NO == [object isKindOfClass:[NSDictionary class]]) {
-		return nil;
-	}
-	
-	for (NSString *key in [object allKeys]) {
-		id value = [object valueForKey:key];
-		if (NO == [value isKindOfClass:[NSString class]]) {
-			if ([value respondsToSelector:@selector(description)]) {
-				value = [value description];
+
+	NSData *payloadData = nil;
+
+	if (YES == [object isKindOfClass:[NSDictionary class]]) {
+		for (NSString *key in [object allKeys]) {
+			id value = [object valueForKey:key];
+			if (NO == [value isKindOfClass:[NSString class]]) {
+				if ([value respondsToSelector:@selector(description)]) {
+					value = [value description];
+				}
 			}
+			value = [self urlencodeString:value withEncoding:encoding];
+			[pairs addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
 		}
-		value = [self urlencodeString:value withEncoding:encoding];
-		[pairs addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
+		NSString *payloadString = [pairs componentsJoinedByString:@"&"];
+		payloadData = [payloadString dataUsingEncoding:encoding];
 	}
-	NSString *payloadString = [pairs componentsJoinedByString:@"&"];
-	return [payloadString dataUsingEncoding:encoding];
+	else if (YES == [object isKindOfClass:[NSString class]]) {
+		// Preformatted payload string of form @"key1=value1&key2=value2"
+		NSAssert([object containsString:@"="], @"A form payload of type NSString should contain key=value pairs");
+		NSString *payloadString = (NSString *)object;
+		payloadData = [payloadString dataUsingEncoding:encoding];
+	}
+
+	return payloadData;
 }
 
 

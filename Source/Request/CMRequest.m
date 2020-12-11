@@ -678,6 +678,13 @@ static BOOL __networkActivityIndicatorVisible = NO;
 
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response {
+	NSHTTPURLResponse *httpURLResponse = (NSHTTPURLResponse *)response;
+	if (httpURLResponse) {
+		if (httpURLResponse.statusCode >= kHTTPStatusMultipleChoices && httpURLResponse.statusCode < kHTTPStatusBadRequest) {
+			// it's a redirect
+			self.redirectURL = [[httpURLResponse allHeaderFields] valueForKey:@"Location"];
+		}
+	}
 	if (response && self.authProviders.count > 0) {
 		NSMutableURLRequest *authorizedRequest = [request mutableCopy];
 		for (id<CMAuthProvider> authProvider in self.authProviders) {
