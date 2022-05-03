@@ -10,13 +10,15 @@ GEM
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
     method_source (0.8.1)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
     plist (3.1.0)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rack (1.5.2)
-    rack-protection (1.5.0)
+    rack (2.2.3)
+    rack-protection (2.2.0)
       rack
     rack-test (0.5.7)
       rack (>= 1.0)
@@ -34,16 +36,18 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
-    sinatra (1.4.2)
-      rack (~> 1.5, >= 1.5.2)
-      rack-protection (~> 1.4)
-      tilt (~> 1.3, >= 1.3.4)
+    ruby2_keywords (0.0.5)
+    sinatra (2.2.0)
+      mustermann (~> 1.0)
+      rack (~> 2.2)
+      rack-protection (= 2.2.0)
+      tilt (~> 2.0)
     slop (3.4.4)
     thin (1.5.1)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
-    tilt (1.3.7)
+    tilt (2.0.10)
     to_xml (0.1.1)
 
 PLATFORMS
@@ -56,6 +60,6 @@ DEPENDENCIES
   rack-test (~> 0.5.3)
   rspec
   ruby-debug
-  sinatra (~> 1.0)
+  sinatra (~> 2.2)
   thin
   to_xml

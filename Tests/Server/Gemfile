@@ -1,7 +1,7 @@
 source :rubygems
 
 group :sinatra do
-    gem "sinatra", '~>1.0'
+    gem "sinatra", '~>2.2'
     gem "thin"
 end
 
